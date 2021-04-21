@@ -19,6 +19,7 @@ const NavBar = ({ onPress, navText }: NavProps) => {
           name="chevron-back-outline"
           size={27}
           color={COLORS.light.black}
+          style={styles.backIcon}
         />
       </TouchableOpacity>
 
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   navigationBar: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     width: wpercent("90%"),
     marginTop: hp(21),
   },
@@ -40,7 +41,11 @@ const styles = StyleSheet.create({
     fontSize: wp(20),
     fontWeight: "bold",
     color: COLORS.light.black,
-    marginLeft: wpercent("28%"),
+    width: wpercent("80%"),
+    textAlign: "center",
+  },
+  backIcon: {
+    width: wpercent("7%"),
   },
 });
 

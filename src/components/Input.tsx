@@ -155,8 +155,9 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     paddingHorizontal: wp("5.6%"),
     paddingVertical: hp("1.47%"),
-    color: COLORS.light.inputText,
+    // color: COLORS.light.inputText,
     height: hp("6.15%"),
+    color: "red",
   },
   errorContainer: {
     marginVertical: 0,

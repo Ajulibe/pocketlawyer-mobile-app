@@ -1,30 +1,19 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  StatusBar,
-  SafeAreaView,
-  Text,
-  useColorScheme,
-} from "react-native";
+import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import {
-  widthPercentageToDP as wpercent,
-  heightPercentageToDP as hpercent,
-} from "react-native-responsive-screen";
-import { RootStackParamList } from "../../navigation/MainNavigator";
-import { ROUTES } from "../../navigation/Routes";
-import COLORS from "../../utils/Colors";
-import { wp, hp } from "../../utils/Dimensions";
-import { Input, Layout } from "@ui-kitten/components";
-import NavBar from "../../components/NavBar";
-import PLButton from "../../components/Button";
+import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
+import { RootStackParamList } from "../../../navigation/MainNavigator";
+import { ROUTES } from "../../../navigation/Routes";
+import COLORS from "../../../utils/Colors";
+import { wp, hp } from "../../../utils/Dimensions";
+import { Input } from "@ui-kitten/components";
+import NavBar from "../../../components/NavBar";
+import PLButton from "../../../components/PLButton/PLButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { IndexPath, Select, SelectItem } from "@ui-kitten/components";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "../../types";
+import { CountryCode, Country, CallingCode } from "../../../types";
+import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -65,34 +54,34 @@ const AuthGetStarted = ({ navigation }: Props) => {
       />
       <View style={styles.contentWraper}>
         <Text style={styles.welcomeMessage}>
-          Welcome to Pocket Lawyer! Create an account to access top notch legal
-          services.
+          Welcome to Pocket Lawyer! To create an account, please enter your
+          <Text style={styles.CompanyDetails}> company details.</Text>
         </Text>
+
         <View>
-          <Text style={styles.inputText}>First Name</Text>
-          <Input
-            style={styles.input}
-            placeholder="Type your first name"
+          <Text style={styles.inputText}>Name of Company</Text>
+          <PLTextInput
             textContentType="name"
-            textStyle={styles.textStyle}
-          />
-        </View>
-        <View>
-          <Text style={styles.inputText}>Last Name</Text>
-          <Input
             style={styles.input}
-            placeholder="Type your last name"
-            textContentType="familyName"
-            textStyle={styles.textStyle}
+            placeholder="TType the name of your company"
           />
         </View>
+
         <View>
           <Text style={styles.inputText}>Email Address</Text>
-          <Input
+          <PLTextInput
+            style={styles.input}
+            placeholder="Type your company’s email address"
+            textContentType="emailAddress"
+          />
+        </View>
+
+        <View>
+          <Text style={styles.inputText}>Email Address</Text>
+          <PLTextInput
             style={styles.input}
             placeholder="Type your email address"
             textContentType="emailAddress"
-            textStyle={styles.textStyle}
           />
         </View>
 
@@ -120,6 +109,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               textStyle={styles.textStyle}
               placeholder="906 3782 2828"
               textContentType="telephoneNumber"
+              placeholderTextColor={COLORS.light.darkgrey}
             />
           </View>
         </View>
@@ -135,7 +125,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
+          onClick={() =>
+            navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME)
+          }
         />
         <View style={styles.loginWrapper}>
           <Text
@@ -169,7 +161,6 @@ const styles = StyleSheet.create({
     lineHeight: hp(20),
     textAlign: "left",
     color: COLORS.light.black,
-
     marginBottom: hp(39),
   },
   contentWraper: {
@@ -233,7 +224,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: "#f0f0f0",
+    borderColor: COLORS.light.textinputborder,
   },
   loginWrapper: {
     flexDirection: "row",
@@ -253,9 +244,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 2,
     borderRightWidth: 1,
-    borderRightColor: "#f0f0f0",
+    borderRightColor: COLORS.light.textinputborder,
     paddingLeft: wpercent("2%"),
     width: wpercent("26%"),
+  },
+  CompanyDetails: {
+    fontFamily: "Roboto-Medium",
+    fontSize: wp(14),
+    lineHeight: hp(20),
+    color: COLORS.light.primary,
   },
 });
 

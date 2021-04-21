@@ -1,24 +1,14 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  StatusBar,
-  SafeAreaView,
-  Text,
-} from "react-native";
+import { View, StyleSheet, Image, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import {
-  widthPercentageToDP as wpercent,
-  heightPercentageToDP as hpercent,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../navigation/MainNavigator";
 import { ROUTES } from "../../navigation/Routes";
 import COLORS from "../../utils/Colors";
 import IMAGES from "../../utils/Images";
 import { wp, hp } from "../../utils/Dimensions";
-
-import PLButton from "../../components/Button";
+import PLButton from "../../components/PLButton/PLButton";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -49,7 +39,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
       />
       <View style={styles.loginWrapper}>
         <Text>Already have an account?</Text>
-        <Text style={styles.login}>Log in</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_LOGIN);
+          }}
+        >
+          <Text style={styles.login}>Log in</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -60,7 +56,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: COLORS.light.offwhite,
   },
   image: {
     marginTop: hp(78),

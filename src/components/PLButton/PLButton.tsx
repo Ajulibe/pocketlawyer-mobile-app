@@ -1,23 +1,15 @@
 import React from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  Image,
-  GestureResponderEvent,
-} from "react-native";
-import IMAGES from "../utils/Images";
-import { wp, hp } from "../utils/Dimensions";
-import COLORS from "../utils/Colors";
+import { StyleSheet, GestureResponderEvent } from "react-native";
+import { wp, hp } from "../../utils/Dimensions";
+import COLORS from "../../utils/Colors";
 import { Button } from "@ui-kitten/components";
 
 type Props = {
   textColor: string;
-  btnText: string;
-  onClick: (event: GestureResponderEvent) => void;
+  btnText?: string;
+  onClick?: (event: GestureResponderEvent) => void;
   isLoading?: boolean;
-  style: any;
+  style?: any;
 };
 
 export default function PLButton({
@@ -39,7 +31,6 @@ const styles = StyleSheet.create({
   container: {
     width: wp(375),
     borderWidth: 1,
-    // alignItems: "center",
   },
   btn: {
     width: wp(312),

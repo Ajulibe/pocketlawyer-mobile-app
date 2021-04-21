@@ -1,26 +1,29 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  StatusBar,
-  SafeAreaView,
-  Text,
-} from "react-native";
+import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../navigation/MainNavigator";
-import { ROUTES } from "../../navigation/Routes";
-import COLORS from "../../utils/Colors";
-import { wp, hp } from "../../utils/Dimensions";
-
-import PLButton from "../../components/Button";
-
+import { RootStackParamList } from "../../../navigation/MainNavigator";
+import { ROUTES } from "../../../navigation/Routes";
+import COLORS from "../../../utils/Colors";
+import { wp, hp } from "../../../utils/Dimensions";
+import PLButton from "../../../components/PLButton/PLButton";
 import { Radio, RadioGroup } from "@ui-kitten/components";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  console.log(selectedIndex);
+
+  const selectCategory = () => {
+    if (selectedIndex === 0) {
+      navigation.navigate(ROUTES.AUTH_SIGN_UP);
+    } else if (selectedIndex === 1) {
+      navigation.navigate(ROUTES.AUTH_SIGN_UP);
+    } else {
+      navigation.navigate(ROUTES.AUTH_SIGN_UP);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -77,7 +80,6 @@ const styles = StyleSheet.create({
   radiobtnFirstWrapper: {
     width: wp(335),
     height: hp(208),
-
     marginTop: hp(139),
     justifyContent: "center",
   },

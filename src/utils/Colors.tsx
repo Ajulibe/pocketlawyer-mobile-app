@@ -8,6 +8,7 @@ export default {
     checkpurple: "rgba(243, 242, 253, 0.7)",
     carouselBtn: "#6e58b3",
     darkgrey: "#a3a3a3",
+    textinputborder: "#F0F0F0",
 
     primaryDark: "#0e8852",
     secondary: "#EA5F33",
