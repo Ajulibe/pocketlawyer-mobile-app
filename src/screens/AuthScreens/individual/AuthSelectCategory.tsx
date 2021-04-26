@@ -19,7 +19,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     } else if (selectedIndex === 1) {
       navigation.navigate(ROUTES.AUTH_SIGN_UP_SME);
     } else {
-      Alert.alert("service provider not configured");
+      navigation.navigate(ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR);
     }
   };
 

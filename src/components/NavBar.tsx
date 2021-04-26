@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TextStyle } from "react-native";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import COLORS from "../utils/Colors";
 import { wp, hp } from "../utils/Dimensions";
@@ -9,9 +9,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 interface NavProps {
   onPress: any;
   navText: string;
+  textStyle?: TextStyle;
 }
 
-const NavBar = ({ onPress, navText }: NavProps) => {
+const NavBar = ({ onPress, navText, textStyle }: NavProps) => {
   return (
     <View style={styles.navigationBar}>
       <TouchableOpacity onPress={onPress}>
@@ -23,7 +24,7 @@ const NavBar = ({ onPress, navText }: NavProps) => {
         />
       </TouchableOpacity>
 
-      <Text style={styles.navText}>{navText}</Text>
+      <Text style={[styles.navText, textStyle]}>{navText}</Text>
     </View>
   );
 };

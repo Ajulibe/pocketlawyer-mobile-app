@@ -2,18 +2,21 @@ import React, { useState } from "react";
 import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
+import { RootStackParamList } from "../../../../navigation/MainNavigator";
+import { ROUTES } from "../../../../navigation/Routes";
+import COLORS from "../../../../utils/Colors";
+import { wp, hp } from "../../../../utils/Dimensions";
+import NavBar from "../../../../components/NavBar";
+import PLButton from "../../../../components/PLButton/PLButton";
+import { PLPasswordInput } from "../../../../components/PLPasswordInput/PLPasswordInput";
+import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "../../../components/PLModal";
+import { PLModal } from "../../../../components/PLModal";
 
-type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
+type Props = StackScreenProps<
+  RootStackParamList,
+  ROUTES.AUTH_SIGN_UP_SECTION_TWO
+>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
@@ -22,32 +25,21 @@ const AuthGetStarted = ({ navigation }: Props) => {
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP);
+          navigation.navigate(ROUTES.AUTH_SIGN_UP_LAWYER);
         }}
-        navText="Login"
+        navText="Create Password"
       />
       <View style={styles.contentWraper}>
-        <Text style={styles.welcomeMessage}>
-          Welcome back! Log in to continue.
-        </Text>
-
-        <View>
-          <Text style={styles.inputText}>Email</Text>
-          <PLTextInput
-            textContentType="emailAddress"
-            style={styles.input}
-            placeholder="Type your email address"
-          />
-          <TouchableOpacity onPress={() => setVisible(true)}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.welcomeMessage}>Create your Password</Text>
 
         <View>
           <Text style={styles.inputText}>Password</Text>
           <View style={styles.phoneNumberWrapper}>
-            <PLPasswordInput placeholder="Enter your Password" />
+            <PLPasswordInput placeholder="Create your Password" />
           </View>
+          <TouchableOpacity onPress={() => setVisible(true)}>
+            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          </TouchableOpacity>
         </View>
 
         {/* RESET PASSWORD MODAL */}
@@ -73,15 +65,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
         <PLButton
           style={styles.plButton}
           textColor={COLORS.light.white}
-          btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-          }
+          btnText={"Sign up "}
+          onClick={() => navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER)}
         />
         <View style={styles.loginWrapper}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
-          >
+          <TouchableOpacity>
             <Text
               style={{
                 textAlign: "center",
@@ -90,8 +78,10 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 color: COLORS.light.black,
               }}
             >
-              Do not have an account?
-              <Text style={styles.login}> Sign up </Text>
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services</Text>{" "}
+              <Text>and</Text>{" "}
+              <Text style={styles.login}> Privacy policy </Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -160,7 +150,7 @@ const styles = StyleSheet.create({
     marginTop: hp(12),
   },
   forgotPassword: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     color: COLORS.light.lightpurple,
     textAlign: "right",
     fontSize: wp(12),
@@ -172,7 +162,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(306),
+    marginTop: hp(390),
   },
   carouselWrapper: {
     justifyContent: "center",

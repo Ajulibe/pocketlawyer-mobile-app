@@ -9,6 +9,8 @@ export default {
     carouselBtn: "#6e58b3",
     darkgrey: "#a3a3a3",
     textinputborder: "#F0F0F0",
+    imageinputbg: "rgba(234, 234, 234, 0.3)",
+    imageinputborder: "#D5D3D3",
 
     primaryDark: "#0e8852",
     secondary: "#EA5F33",

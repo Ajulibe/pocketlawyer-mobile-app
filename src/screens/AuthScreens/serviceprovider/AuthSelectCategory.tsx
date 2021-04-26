@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../../navigation/MainNavigator";
 import { ROUTES } from "../../../navigation/Routes";
@@ -7,30 +7,38 @@ import COLORS from "../../../utils/Colors";
 import { wp, hp } from "../../../utils/Dimensions";
 import PLButton from "../../../components/PLButton/PLButton";
 import { Radio, RadioGroup } from "@ui-kitten/components";
+import NavBar from "../../../components/NavBar";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-  console.log(selectedIndex);
-
   const selectCategory = () => {
     if (selectedIndex === 0) {
-      navigation.navigate(ROUTES.AUTH_SIGN_UP);
+      navigation.navigate(ROUTES.AUTH_SIGN_UP_LAWYER);
     } else if (selectedIndex === 1) {
-      navigation.navigate(ROUTES.AUTH_SIGN_UP);
+      Alert.alert("solicitor");
+      navigation.navigate(ROUTES.AUTH_SIGN_UP_SOLICITOR);
     } else {
-      navigation.navigate(ROUTES.AUTH_SIGN_UP);
+      navigation.navigate(ROUTES.AUTH_SIGN_UP_LAWFIRM);
     }
   };
 
   return (
     <SafeAreaView style={styles.wrapper}>
+      <NavBar
+        onPress={() => {
+          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME);
+        }}
+        navText="Select Option"
+        textStyle={styles.navBarText}
+      />
+
       <View style={styles.welcomeText}>
-        <Text style={styles.Hello}>Hello 👋</Text>
         <Text style={styles.selectText}>
-          Please select the category that best describes you.{" "}
+          Please select the category that best describes you as a service
+          provider
         </Text>
       </View>
 
@@ -39,9 +47,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
           selectedIndex={selectedIndex}
           onChange={(index) => setSelectedIndex(index)}
         >
-          <Radio style={styles.radioBtn}>Individual</Radio>
-          <Radio style={styles.radioBtn}>SME/Business</Radio>
-          <Radio style={styles.radioBtn}>Service Provider</Radio>
+          <Radio style={styles.radioBtn}>Lawyer</Radio>
+          <Radio style={styles.radioBtn}>Solicitor</Radio>
+          <Radio style={styles.radioBtn}>Law Firm</Radio>
         </RadioGroup>
       </View>
 
@@ -49,7 +57,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         style={styles.plButton}
         textColor={COLORS.light.white}
         btnText={"Next"}
-        onClick={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
+        onClick={selectCategory}
       />
     </SafeAreaView>
   );
@@ -62,20 +70,19 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: COLORS.light.white,
   },
-  Hello: {
-    fontFamily: "Roboto-Bold",
-    fontSize: wp(20),
-    color: COLORS.light.black,
-  },
+
   selectText: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
     color: COLORS.light.black,
-    marginTop: hp(20),
   },
   welcomeText: {
     textAlign: "left",
     marginTop: hp(33),
+    width: wp(320),
+  },
+  navBarText: {
+    color: COLORS.light.primary,
   },
   radiobtnFirstWrapper: {
     width: wp(335),

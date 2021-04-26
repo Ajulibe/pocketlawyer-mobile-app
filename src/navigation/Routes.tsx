@@ -15,4 +15,16 @@ export enum ROUTES {
   AUTH_SIGN_UP_SME = "AuthSignUpSme",
   AUTH_SIGN_UP_SECTION_TWO_SME = "AuthSignupSectionTwoSme",
   AUTH_LOGIN_SME = "AuthLoginSme",
+
+  //SERIVCE PROVIDER
+  SERVICE_PROVIDER_CATEGORY_SELECTOR = "ServiceProviderCategory",
+  AUTH_SIGN_UP_LAWYER = "AuthSignUpLawyer",
+  AUTH_PASSWORD_LAWYER = "AuthPasswordLawyer",
+  AUTH_EDUCATION_LAWYER = "AuthEducationLawyer",
+  AUTH_PROFILE_IMAGE_LAWYER = "AuthProfileImageLawyer",
+  AUTH_LAW_CATEGORY_LAWYER = "AuthLawCategoryLawyer",
+  AUTH_SIGN_UP_SOLICITOR = "AuthSignUpSolicitor",
+  AUTH_SIGN_UP_LAWFIRM = "AuthSignUpLawFirm",
+  AUTH_SIGN_UP_LAWFIRM_SECTION_TWO = "AuthSignUpLawFirmSectionTwo",
+  AUTH_CAC_LAWFIRM = "AuthCACLawFirm",
 }

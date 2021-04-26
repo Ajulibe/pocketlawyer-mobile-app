@@ -41,5 +41,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     fontSize: wp(15.94),
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowColor: "black",
+    shadowOpacity: 0.2,
   },
 });
