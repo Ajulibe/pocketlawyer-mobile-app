@@ -28,7 +28,11 @@ import AuthSignUpLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/Au
 import AuthSignUpLawFirmSectionTwo from "../screens/AuthScreens/serviceprovider/lawfirm/AuthSignUpSectionTwo";
 import AuthCACLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/CACDocument";
 
+//TABS SCREENS STACK
+import BottomTabStack from "./BottomTabStack";
+
 import { ROUTES } from "./Routes";
+import Colors from "utils/Colors";
 
 export type RootStackParamList = {
   [ROUTES.AUTH_BLANK_SCREEN]: undefined;
@@ -58,18 +62,23 @@ export type RootStackParamList = {
   [ROUTES.AUTH_SIGN_UP_LAWFIRM_SECTION_TWO]: undefined;
   [ROUTES.AUTH_LAW_CATEGORY_LAWYER]: undefined;
   [ROUTES.AUTH_CAC_LAWFIRM]: undefined;
+  //TABS SCREENS STACK
+  [ROUTES.TABSCREEN_STACK]: undefined;
 };
 
 const MainStack = createStackNavigator<RootStackParamList>();
 export default function MainNavigator() {
   return (
-    // <MainStack.Navigator
-    //   initialRouteName={ROUTES.AUTH_BLANK_SCREEN}
-    //   headerMode={"none"}
-    // >
     <MainStack.Navigator
-      initialRouteName={ROUTES.AUTH_PASSWORD_LAWYER}
+      initialRouteName={ROUTES.TABSCREEN_STACK}
+      // initialRouteName={ROUTES.AUTH_PASSWORD_LAWYER}
       headerMode={"none"}
+      screenOptions={{
+        headerStyle: {
+          // backgroundColor: "#fff",
+        },
+        cardStyle: { backgroundColor: Colors.light.white },
+      }}
     >
       <MainStack.Screen
         name={ROUTES.AUTH_BLANK_SCREEN}
@@ -177,6 +186,11 @@ export default function MainNavigator() {
         name={ROUTES.AUTH_CAC_LAWFIRM}
         component={AuthCACLawFirm}
         options={{ headerShown: false }}
+      />
+      {/* DASHBOARD STACK...  */}
+      <MainStack.Screen
+        name={ROUTES.TABSCREEN_STACK}
+        component={BottomTabStack}
       />
     </MainStack.Navigator>
   );
