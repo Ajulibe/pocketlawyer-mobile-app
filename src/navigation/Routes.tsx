@@ -27,4 +27,19 @@ export enum ROUTES {
   AUTH_SIGN_UP_LAWFIRM = "AuthSignUpLawFirm",
   AUTH_SIGN_UP_LAWFIRM_SECTION_TWO = "AuthSignUpLawFirmSectionTwo",
   AUTH_CAC_LAWFIRM = "AuthCACLawFirm",
+
+  // TABS...
+  TABSCREEN_STACK = "TabScreenStack",
+  //HOME STACK
+  HOME_STACK = "HomeStack",
+  HOME_SCREEN = "HomeScreen",
+  // SERIVE STACK...
+  SERVICE_STACK = "ServiceStack",
+  SERVICE_SCREEN = "ServiceScreen",
+  // HISTORY STACK...
+  HISTORY_STACK = "HistoryStack",
+  HISTORY_SCREEN = "HistoryScreen",
+  // ACCOUNT STACK...
+  ACCOUNT_STACK = "AccountStack",
+  ACCOUNT_SCREEN = "AccountSCreen",
 }
