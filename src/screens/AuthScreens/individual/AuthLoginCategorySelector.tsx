@@ -348,6 +348,12 @@ const styles = StyleSheet.create({
     height: hp(44),
     justifyContent: "center",
     alignItems: "center",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowColor: COLORS.light.primaryLight,
+    shadowOpacity: 0.2,
   },
   skip: {
     fontFamily: "Roboto-Medium",

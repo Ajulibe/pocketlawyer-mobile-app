@@ -21,7 +21,9 @@ export default function App() {
       "Roboto-Bold": require("./src/assets/fonts/Roboto-Bold.ttf"),
       "Roboto-Light": require("./src/assets/fonts/Roboto-Light.ttf"),
       "Roboto-Medium": require("./src/assets/fonts/Roboto-Medium.ttf"),
+      "Roboto-MediumItalic": require("./src/assets/fonts/Roboto-MediumItalic.ttf"),
       "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
+      Roboto: require("./src/assets/fonts/Roboto-Regular.ttf"),
       "Roboto-Thin": require("./src/assets/fonts/Roboto-Thin.ttf"),
     });
   };

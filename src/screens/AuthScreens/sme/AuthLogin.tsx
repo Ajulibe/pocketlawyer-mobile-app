@@ -13,7 +13,10 @@ import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { PLModal } from "../../../components/PLModal";
 
-type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
+type Props = StackScreenProps<
+  RootStackParamList,
+  ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME
+>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
@@ -22,7 +25,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP);
+          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME);
         }}
         navText="Login"
       />
@@ -38,9 +41,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
             style={styles.input}
             placeholder="Type your email address"
           />
-          <TouchableOpacity onPress={() => setVisible(true)}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </TouchableOpacity>
         </View>
 
         <View>
@@ -48,6 +48,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <View style={styles.phoneNumberWrapper}>
             <PLPasswordInput placeholder="Enter your Password" />
           </View>
+          <TouchableOpacity onPress={() => setVisible(true)}>
+            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          </TouchableOpacity>
         </View>
 
         {/* RESET PASSWORD MODAL */}
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
     marginTop: hp(12),
   },
   forgotPassword: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     color: COLORS.light.lightpurple,
     textAlign: "right",
     fontSize: wp(12),

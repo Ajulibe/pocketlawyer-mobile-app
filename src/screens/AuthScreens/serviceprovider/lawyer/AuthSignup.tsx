@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
+import { RootStackParamList } from "../../../../navigation/MainNavigator";
+import { ROUTES } from "../../../../navigation/Routes";
+import COLORS from "../../../../utils/Colors";
+import { wp, hp } from "../../../../utils/Dimensions";
 import { Input } from "@ui-kitten/components";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
+import NavBar from "../../../../components/NavBar";
+import PLButton from "../../../../components/PLButton/PLButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "../../../types";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
-import { states } from "../../../utils/nigerianStates";
+import { CountryCode, Country, CallingCode } from "../../../../types";
+import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
+import { states } from "../../../../utils/nigerianStates";
 import { Picker, Form, Icon } from "native-base";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -41,12 +40,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [withFilter, setWithFilter] = useState<boolean>(true);
   const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(true);
   const [withCallingCode, setWithCallingCode] = useState<boolean>(true);
-  const [selectedstate, setSelectedState] = useState<string>("");
-  const [
-    selectedBusinessCategory,
-    setSelectedBusinessCategory,
-  ] = useState<string>("");
-
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
     setCountry(country);
@@ -57,22 +50,31 @@ const AuthGetStarted = ({ navigation }: Props) => {
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+          navigation.navigate(ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR);
         }}
         navText="Sign Up"
       />
       <View style={styles.contentWraper}>
         <Text style={styles.welcomeMessage}>
           Welcome to Pocket Lawyer! To create an account, please enter your
-          <Text style={styles.CompanyDetails}> company details.</Text>
+          <Text style={styles.CompanyDetails}> personal details.</Text>
         </Text>
 
         <View>
-          <Text style={styles.inputText}>Name of Company</Text>
+          <Text style={styles.inputText}>First Name</Text>
           <PLTextInput
             textContentType="name"
             style={styles.input}
-            placeholder="Type the name of your company"
+            placeholder="Type your first name"
+          />
+        </View>
+
+        <View>
+          <Text style={styles.inputText}>Last Name</Text>
+          <PLTextInput
+            textContentType="familyName"
+            style={styles.input}
+            placeholder="Type your last name"
           />
         </View>
 
@@ -80,8 +82,17 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <Text style={styles.inputText}>Email Address</Text>
           <PLTextInput
             style={styles.input}
-            placeholder="Type your company’s email address"
+            placeholder="Type your email address"
             textContentType="emailAddress"
+          />
+        </View>
+
+        <View>
+          <Text style={styles.inputText}>Supreme Court Number</Text>
+          <PLTextInput
+            textContentType="none"
+            style={styles.input}
+            placeholder="Type your supreme court number"
           />
         </View>
 
@@ -130,60 +141,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
           </View>
         </View>
 
-        <View>
-          <Text style={styles.inputText}>Nature of Business</Text>
-          <Form>
-            <Picker
-              mode="dropdown"
-              iosIcon={
-                <Entypo
-                  name="chevron-small-down"
-                  size={24}
-                  color={COLORS.light.black}
-                />
-              }
-              placeholder="Select State"
-              placeholderStyle={{
-                color: COLORS.light.darkgrey,
-                fontFamily: "Roboto-Regular",
-                fontSize: 12,
-              }}
-              placeholderIconColor={COLORS.light.darkgrey}
-              style={styles.business}
-            >
-              {states.map(function (item) {
-                return (
-                  <Picker.Item
-                    key={item.state}
-                    label={item.state}
-                    value={item.state}
-                  />
-                );
-              })}
-            </Picker>
-          </Form>
-        </View>
-        <View>
-          <Text style={styles.inputText}>Password</Text>
-          <View style={styles.phoneNumberWrapper}>
-            <PLPasswordInput placeholder="Create your Password" />
-          </View>
-        </View>
-
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <Entypo name="circle" size={10} color={COLORS.light.primary} />
-          </View>
-        </View>
-
         <PLButton
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME)
-          }
+          onClick={() => navigation.navigate(ROUTES.AUTH_PASSWORD_LAWYER)}
         />
         <View style={styles.loginWrapper}>
           <Text
@@ -211,13 +173,27 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: COLORS.light.white,
   },
+  stateWrapper: {
+    width: wp(334),
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  city: {
+    width: wp(156),
+    borderColor: COLORS.light.textinputborder,
+    borderWidth: 0.5,
+    borderRadius: 4,
+    height: wp(40),
+    paddingRight: wp(4),
+  },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
     lineHeight: hp(20),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(20),
+
+    marginBottom: hp(39),
   },
   contentWraper: {
     width: wpercent("90%"),
@@ -230,22 +206,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
   },
-  city: {
-    width: wp(156),
-    borderColor: COLORS.light.textinputborder,
-    borderWidth: 0.5,
-    borderRadius: 4,
-    height: wp(40),
-    paddingRight: wp(4),
-  },
-  business: {
-    width: wp(334),
-    borderColor: COLORS.light.textinputborder,
-    borderWidth: 0.5,
-    borderRadius: 4,
-    height: wp(40),
-    paddingRight: wp(4),
-  },
   inputPhoneNumber: {
     width: wp(230),
     height: wp(40),
@@ -253,11 +213,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
     borderLeftWidth: 0,
     borderColor: "#fff",
-  },
-  stateWrapper: {
-    width: wp(334),
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
 
   textStyle: {
@@ -283,18 +238,7 @@ const styles = StyleSheet.create({
   plButton: {
     marginTop: hp(31),
   },
-  carouselWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: hp(14),
-    width: wpercent("90%"),
-  },
-  carouselIcon: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: wpercent("7%"),
-  },
+
   phoneNumberWrapper: {
     width: wpercent("90%"),
     flexDirection: "row",
