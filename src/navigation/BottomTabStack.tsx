@@ -39,19 +39,19 @@ export default function HomeBottomTabStack() {
     switch (index) {
       case 0:
         title = "Home";
-        color = focused ? COLORS.light.primary : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.disabled;
         break;
       case 1:
         title = "Services";
-        color = focused ? COLORS.light.primary : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.disabled;
         break;
       case 2:
         title = "History";
-        color = focused ? COLORS.light.primary : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.disabled;
         break;
       default:
         title = "Account";
-        color = focused ? COLORS.light.primary : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.disabled;
         break;
     }
     return (
@@ -72,7 +72,8 @@ export default function HomeBottomTabStack() {
     <Tab.Navigator
       tabBarOptions={{
         style: {
-          height: Platform.OS === "ios" ? 90 : 80,
+          backgroundColor: COLORS.light.primary,
+          // height: Platform.OS === "ios" ? 90 : 80,
           shadowOffset: {
             width: 0,
             height: 1,
