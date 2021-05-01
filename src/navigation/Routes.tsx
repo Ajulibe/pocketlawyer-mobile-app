@@ -33,6 +33,8 @@ export enum ROUTES {
   //HOME STACK
   HOME_STACK = "HomeStack",
   HOME_SCREEN = "HomeScreen",
+  PICK_LAWYER_SCREEN = "PickLawyer",
+  LAWYER_DETAIL_SCREEN = "LawyerDetail",
   // SERIVE STACK...
   SERVICE_STACK = "ServiceStack",
   SERVICE_SCREEN = "ServiceScreen",

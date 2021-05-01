@@ -1,11 +1,7 @@
 import React, { useReducer, useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
-import InputValidation from "../utils/InputValidation";
 
 const INPUT_CHANGE = "INPUT_CHANGE";
 const INPUT_BLUR = "INPUT_BLUR";
@@ -23,7 +19,7 @@ interface IAction {
 }
 
 interface Props {
-  id: string;
+  id?: string;
   keyboardType: any;
   secureTextEntry: boolean;
   required: boolean;
@@ -43,7 +39,7 @@ interface Props {
   placeholder?: string;
   placeholderTextColor?: any;
   onInputChange: (id?: string, x?: string, y?: boolean) => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
 }
 
 const inputReducer = (state: InitialStateType, action: IAction) => {
@@ -75,29 +71,11 @@ const Input: React.FC<Props> = (props) => {
   const [isTouched, setIsTouched] = useState(false);
   const [errorText, setErrorText] = useState("");
 
-  const { onInputChange, onSubmit, id, touched } = props;
-
-  // useEffect(() => {
-  //   if (touched && inputState.value == "") {
-  //     setIsTouched(true);
-  //   }
-  //   onInputChange(id, inputState.value, inputState.isValid);
-  // }, [inputState, onInputChange, id, touched]);
-
   const textChangeHandler = (text: string) => {
     let isValid = true;
     if (props.required && text.trim().length === 0) {
       isValid = false;
     }
-    //Email Validation
-    // if (props.email) {
-    //   if (!InputValidation.isValidEmail(text.toLowerCase()).isValid) {
-    //     isValid = false;
-    //     setErrorText(
-    //       InputValidation.isValidEmail(text.toLocaleLowerCase()).message
-    //     );
-    //   }
-    // }
 
     if (props.min != null && +text < props.min) {
       isValid = false;
@@ -131,10 +109,6 @@ const Input: React.FC<Props> = (props) => {
         placeholderTextColor={COLORS.light.inputText}
         value={inputState.value!}
         onChangeText={textChangeHandler}
-        // onBlur={lostFocusHandler}
-        // onSubmitEditing={() =>
-        //   onSubmit(id, inputState.value, inputState.isValid)
-        // }
       />
       {props.errorText != "" && (inputState.touched || isTouched) && (
         <View style={styles.errorContainer}>
@@ -150,20 +124,21 @@ const styles = StyleSheet.create({
   },
   input: {
     borderRadius: 4,
-    backgroundColor: COLORS.light.inputBg,
-    fontSize: wp("4.26%"),
+    backgroundColor: COLORS.light.white,
+    fontSize: wp(12),
     fontFamily: "Roboto-Regular",
-    paddingHorizontal: wp("5.6%"),
-    paddingVertical: hp("1.47%"),
-    // color: COLORS.light.inputText,
-    height: hp("6.15%"),
-    color: "red",
+    paddingHorizontal: wp(16),
+    paddingVertical: hp(8),
+    minHeight: hp(40),
+    borderColor: "#F0F0F0",
+    borderWidth: 1,
+    color: "#A3A3A3",
   },
   errorContainer: {
     marginVertical: 0,
   },
   errorText: {
-    marginTop: hp("1%"),
+    marginTop: hp(2),
     fontFamily: "Roboto-Regular",
     color: COLORS.light.red,
     fontSize: 13,

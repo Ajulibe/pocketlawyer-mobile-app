@@ -6,9 +6,13 @@ import {
 import { ROUTES } from "./Routes";
 import COLORS from "../utils/Colors";
 import HomeScreen from "../screens/TabScreens/Home/HomeScreen";
+import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
+import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN]: undefined;
+  [ROUTES.PICK_LAWYER_SCREEN]: undefined;
+  [ROUTES.LAWYER_DETAIL_SCREEN]: undefined;
 };
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -36,6 +40,16 @@ export default function HomeNavigationStack() {
       <HomeStack.Screen
         name={ROUTES.HOME_SCREEN}
         component={HomeScreen}
+        options={headerOptions}
+      />
+      <HomeStack.Screen
+        name={ROUTES.PICK_LAWYER_SCREEN}
+        component={PickLawyer}
+        options={headerOptions}
+      />
+      <HomeStack.Screen
+        name={ROUTES.LAWYER_DETAIL_SCREEN}
+        component={LawyerDetail}
         options={headerOptions}
       />
     </HomeStack.Navigator>
