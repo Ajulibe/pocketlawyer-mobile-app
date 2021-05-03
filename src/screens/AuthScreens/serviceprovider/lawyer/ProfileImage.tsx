@@ -27,6 +27,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -81,15 +82,22 @@ const AuthGetStarted = ({ navigation }: Props) => {
         <View style={styles.fileSelectBox}>
           <TouchableOpacity onPress={pickImage} style={styles.inputButton}>
             <Ionicons name="camera" size={24} color={COLORS.light.primary} />
-            <Text style={styles.selectText}>Select a Photo</Text>
-            {image ? (
-              <Image
-                source={{ uri: image }}
-                style={{ width: wp(197), height: hp(138) }}
-              />
-            ) : null}
+            <Text style={styles.selectText}>
+              {image ? "Change Photo" : "Select a Photo"}
+            </Text>
           </TouchableOpacity>
         </View>
+
+        <Animatable.View animation="fadeIn" style={styles.fileSelectBox_2}>
+          {image ? (
+            <Animatable.Image
+              animation="fadeIn"
+              easing="ease-in"
+              source={{ uri: image }}
+              style={{ width: wp(120), height: hp(100), borderRadius: wp(7) }}
+            />
+          ) : null}
+        </Animatable.View>
 
         <View style={styles.carouselWrapper}>
           <View style={styles.carouselIcon}>
@@ -175,6 +183,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: hp(71),
   },
+  fileSelectBox_2: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp(20),
+    height: hp(120),
+  },
   selectText: {
     color: COLORS.light.primary,
     fontSize: 12,
@@ -218,7 +233,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: hp(44),
+    height: wp(45),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {
@@ -266,7 +281,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(287),
+    marginTop: hp(150),
     width: wpercent("90%"),
   },
   identification: {

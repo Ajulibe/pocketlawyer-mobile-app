@@ -9,6 +9,7 @@ import IMAGES from "../../utils/Images";
 import { wp, hp } from "../../utils/Dimensions";
 import PLButton from "../../components/PLButton/PLButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -17,7 +18,7 @@ type Props = StackScreenProps<
 
 const AuthGetStarted = ({ navigation }: Props) => {
   return (
-    <View style={styles.wrapper}>
+    <Animatable.View animation="fadeIn" style={styles.wrapper}>
       <Image
         source={IMAGES.getstarted}
         resizeMode="contain"
@@ -25,9 +26,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
       />
       <Text style={styles.textHeader}>Access Highly Skilled Laywers</Text>
       <View style={styles.textWrapper}>
-        <Text style={{ textAlign: "center" }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit amet,
-          consectetur
+        <Text style={styles.intro}>
+          We provide easy access to competent, verified and highly skilled
+          lawyers at affordable rates
         </Text>
       </View>
 
@@ -38,7 +39,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         onClick={() => navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY)}
       />
       <View style={styles.loginWrapper}>
-        <Text>Already have an account?</Text>
+        <Text style={styles.already}>Already have an account?</Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate(ROUTES.AUTH_LOGIN);
@@ -47,7 +48,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <Text style={styles.login}>Log in</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </Animatable.View>
   );
 };
 
@@ -56,12 +57,24 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: COLORS.light.white,
   },
   image: {
     marginTop: hp(78),
+    width: wpercent("90%"),
+    height: hp(252),
   },
   plButton: {
-    marginTop: hp(149.67),
+    marginTop: hp(115),
+  },
+  intro: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(14),
+    width: wp(260),
+    fontStyle: "normal",
+    lineHeight: hp(24),
+    color: COLORS.light.black,
   },
   textWrapper: {
     width: wpercent("80%"),
@@ -74,13 +87,20 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: wp(20),
     color: COLORS.light.primary,
-    marginTop: hp(72),
+    marginTop: hp(78),
+  },
+  already: {
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(14),
+    lineHeight: hp(20),
+    color: COLORS.light.black,
   },
   loginWrapper: {
     flexDirection: "row",
     width: wpercent("60%"),
     justifyContent: "space-around",
     marginTop: hp(21),
+    alignItems: "center",
   },
   login: {
     fontFamily: "Roboto-Bold",

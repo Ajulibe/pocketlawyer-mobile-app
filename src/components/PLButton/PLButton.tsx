@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: wp(312),
-    height: hp(44),
+    height: wp(45),
     backgroundColor: COLORS.light.primary,
     borderWidth: 0,
     justifyContent: "center",
@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
     },
     shadowColor: "black",
     shadowOpacity: 0.2,
+    borderRadius: wp(7),
   },
 });

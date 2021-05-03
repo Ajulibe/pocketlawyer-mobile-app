@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Alert,
+  KeyboardAvoidingView,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../../navigation/MainNavigator";
@@ -12,6 +19,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
 import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
 import { PLDatePicker } from "../../../components/PLDatePicker";
+import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -24,41 +32,42 @@ const AuthGetStarted = ({ navigation }: Props) => {
         }}
         navText="Sign Up"
       />
-      <View style={styles.contentWraper}>
+      <Animatable.View animation="fadeIn" style={styles.contentWraper}>
         <Text style={styles.welcomeMessage}>
           Welcome to Pocket Lawyer! Create an account to access top notch legal
           services.
         </Text>
-
-        <View>
-          <Text style={styles.inputText}>State</Text>
-          <PLTextInput
-            textContentType="addressCity"
-            style={styles.input}
-            placeholder="Select your location"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>City</Text>
-          <PLTextInput
-            textContentType="addressCity"
-            style={styles.input}
-            placeholder="Select your location"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Date of Birth</Text>
-          <PLDatePicker />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Password</Text>
-          <View style={styles.phoneNumberWrapper}>
-            <PLPasswordInput placeholder="Create your Password" />
+        <KeyboardAvoidingView>
+          <View>
+            <Text style={styles.inputText}>State</Text>
+            <PLTextInput
+              textContentType="addressCity"
+              style={styles.input}
+              placeholder="Select your location"
+            />
           </View>
-        </View>
+
+          <View>
+            <Text style={styles.inputText}>City</Text>
+            <PLTextInput
+              textContentType="addressCity"
+              style={styles.input}
+              placeholder="Select your location"
+            />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>Date of Birth</Text>
+            <PLDatePicker />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>Password</Text>
+            <View style={styles.phoneNumberWrapper}>
+              <PLPasswordInput placeholder="Create your Password" />
+            </View>
+          </View>
+        </KeyboardAvoidingView>
 
         <View style={styles.carouselWrapper}>
           <View style={styles.carouselIcon}>
@@ -71,23 +80,19 @@ const AuthGetStarted = ({ navigation }: Props) => {
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_LOGIN)}
+          // onClick={() => navigation.navigate(ROUTES.AUTH_LOGIN)}
+          onClick={() => {
+            Alert.alert("Signed up");
+          }}
         />
         <View style={styles.loginWrapper}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Roboto-Regular",
-              fontSize: wp(14),
-              color: COLORS.light.black,
-            }}
-          >
+          <Text style={styles.signUpText}>
             By signing up, you agree with the
             <Text style={styles.login}> Terms of services </Text>and{" "}
             <Text style={styles.login}>Privacy policy </Text>
           </Text>
         </View>
-      </View>
+      </Animatable.View>
     </SafeAreaView>
   );
 };
@@ -106,6 +111,13 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: COLORS.light.black,
     marginBottom: hp(39),
+  },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: hp(14),
   },
   contentWraper: {
     width: wpercent("90%"),
@@ -169,8 +181,8 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(16),
+    fontSize: wp(11),
+    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },

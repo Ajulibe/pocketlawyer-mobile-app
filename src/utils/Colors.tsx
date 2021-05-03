@@ -11,6 +11,7 @@ export default {
     textinputborder: "#F0F0F0",
     imageinputbg: "rgba(234, 234, 234, 0.3)",
     imageinputborder: "#D5D3D3",
+    splashscreenbg: "#F7F6FE",
 
     primaryDark: "#0e8852",
     secondary: "#EA5F33",

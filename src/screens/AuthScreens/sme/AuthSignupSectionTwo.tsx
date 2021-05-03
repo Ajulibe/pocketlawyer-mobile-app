@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../../navigation/MainNavigator";
@@ -46,11 +46,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
         navText="Sign Up"
       />
       <View style={styles.contentWraper}>
-        <Text style={styles.welcomeMessage}>
-          Please add details of a{" "}
-          <Text style={styles.ContactPerson}>contact person</Text> for your
-          company.
-        </Text>
+        <View style={styles.TextWrapper}>
+          <Text style={styles.welcomeMessage}>
+            Please add details of a
+            <Text style={styles.ContactPerson}> contact person</Text> for your
+            company.
+          </Text>
+        </View>
 
         <View>
           <Text style={styles.inputText}>First Name</Text>
@@ -128,17 +130,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_LOGIN_SME)}
+          // onClick={() => navigation.navigate(ROUTES.AUTH_LOGIN_SME)}
+          onClick={() => Alert.alert("Signed Up")}
         />
         <View style={styles.loginWrapper}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Roboto-Regular",
-              fontSize: wp(14),
-              color: COLORS.light.black,
-            }}
-          >
+          <Text style={styles.signUpText}>
             By signing up, you agree with the
             <Text style={styles.login}> Terms of services </Text>and{" "}
             <Text style={styles.login}>Privacy policy </Text>
@@ -156,6 +152,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: COLORS.light.white,
   },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: hp(14),
+  },
+  TextWrapper: {
+    width: wpercent("90%"),
+  },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
@@ -164,7 +170,6 @@ const styles = StyleSheet.create({
     color: COLORS.light.black,
     marginBottom: hp(16),
     width: wpercent("90%"),
-    marginLeft: wp(10),
   },
   contentWraper: {
     width: wpercent("90%"),

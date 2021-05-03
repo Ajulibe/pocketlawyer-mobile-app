@@ -11,7 +11,7 @@ const AuthBlankScreen = ({ navigation }: Props) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate(ROUTES.AUTH_SPLASH_SCREEN);
-    }, 2000);
+    }, 1000);
   });
 
   return (

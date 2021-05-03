@@ -6,17 +6,16 @@ import { RootStackParamList } from "../../../navigation/MainNavigator";
 import { ROUTES } from "../../../navigation/Routes";
 import COLORS from "../../../utils/Colors";
 import { wp, hp } from "../../../utils/Dimensions";
-import { Input } from "@ui-kitten/components";
 import NavBar from "../../../components/NavBar";
 import PLButton from "../../../components/PLButton/PLButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "../../../types";
 import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
 import { states } from "../../../utils/nigerianStates";
 import { Picker, Form, Icon } from "native-base";
 import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
+import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -61,11 +60,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
         }}
         navText="Sign Up"
       />
-      <View style={styles.contentWraper}>
-        <Text style={styles.welcomeMessage}>
-          Welcome to Pocket Lawyer! To create an account, please enter your
-          <Text style={styles.CompanyDetails}> company details.</Text>
-        </Text>
+      <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+        <View style={styles.TextWrapper}>
+          <Text style={styles.welcomeMessage}>
+            Welcome to Pocket Lawyer! To create an account, please enter your
+            <Text style={styles.CompanyDetails}> company details.</Text>
+          </Text>
+        </View>
 
         <View>
           <Text style={styles.inputText}>Name of Company</Text>
@@ -142,7 +143,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                   color={COLORS.light.black}
                 />
               }
-              placeholder="Select State"
+              placeholder="Select your business category"
               placeholderStyle={{
                 color: COLORS.light.darkgrey,
                 fontFamily: "Roboto-Regular",
@@ -186,20 +187,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
           }
         />
         <View style={styles.loginWrapper}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Roboto-Regular",
-              fontSize: wp(14),
-              color: COLORS.light.black,
-            }}
-          >
+          <Text style={styles.signUpText}>
             By signing up, you agree with the
             <Text style={styles.login}> Terms of services </Text>and{" "}
             <Text style={styles.login}>Privacy policy </Text>
           </Text>
         </View>
-      </View>
+      </Animatable.View>
     </SafeAreaView>
   );
 };
@@ -224,6 +218,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: hp(38),
   },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: hp(14),
+  },
   input: {
     width: wp(334),
     height: wp(40),
@@ -237,6 +238,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     height: wp(40),
     paddingRight: wp(4),
+  },
+  TextWrapper: {
+    width: wpercent("90%"),
   },
   business: {
     width: wp(334),
@@ -311,8 +315,8 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(16),
+    fontSize: wp(11),
+    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },

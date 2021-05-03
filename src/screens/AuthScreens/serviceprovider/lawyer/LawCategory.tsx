@@ -28,6 +28,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { Radio, RadioGroup } from "@ui-kitten/components";
+import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -53,12 +54,16 @@ const AuthGetStarted = ({ navigation }: Props) => {
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_PASSWORD_LAWYER);
+          navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER);
         }}
         navText="Select your category of law"
       />
 
-      <View style={styles.radiobtnFirstWrapper}>
+      <Animatable.View
+        animation="fadeIn"
+        easing="ease-in"
+        style={styles.radiobtnFirstWrapper}
+      >
         <RadioGroup
           selectedIndex={selectedIndex}
           onChange={(index) => setSelectedIndex(index)}
@@ -70,7 +75,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <Radio style={styles.radioBtn}>Legal Advice and Consultancy</Radio>
           <Radio style={styles.radioBtn}>Legal Drafting</Radio>
         </RadioGroup>
-      </View>
+      </Animatable.View>
 
       <View style={styles.contentWraper}>
         <View style={styles.carouselWrapper}>

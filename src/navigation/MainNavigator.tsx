@@ -63,12 +63,8 @@ export type RootStackParamList = {
 const MainStack = createStackNavigator<RootStackParamList>();
 export default function MainNavigator() {
   return (
-    // <MainStack.Navigator
-    //   initialRouteName={ROUTES.AUTH_BLANK_SCREEN}
-    //   headerMode={"none"}
-    // >
     <MainStack.Navigator
-      initialRouteName={ROUTES.AUTH_PASSWORD_LAWYER}
+      initialRouteName={ROUTES.AUTH_BLANK_SCREEN}
       headerMode={"none"}
     >
       <MainStack.Screen

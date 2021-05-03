@@ -9,6 +9,7 @@ import useCachedResources from "./src/hooks/useCachedResources";
 import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
 import { default as theme } from "./src/theme.json";
+import * as Animatable from "react-native-animatable";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
