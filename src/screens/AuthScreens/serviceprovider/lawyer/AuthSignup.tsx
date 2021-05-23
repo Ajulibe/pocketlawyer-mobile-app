@@ -30,9 +30,8 @@ const useInputState = (initialValue = "") => {
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -152,7 +151,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             style={{
               textAlign: "center",
               fontFamily: "Roboto-Regular",
-              fontSize: wp(14),
+              fontSize: wp(11),
               color: COLORS.light.black,
             }}
           >
@@ -189,16 +188,16 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
-
+    width: "100%",
     marginBottom: hp(39),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(20),
   },
   input: {
     width: wp(334),
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: COLORS.light.black,
     marginBottom: hp(12),
-    marginTop: hp(12),
+    marginTop: hp(4),
   },
   codeText: {
     fontFamily: "Roboto-Medium",
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(31),
+    marginTop: hp(40),
   },
 
   phoneNumberWrapper: {
@@ -255,7 +254,7 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
+    fontSize: wp(11),
     lineHeight: hp(16),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,

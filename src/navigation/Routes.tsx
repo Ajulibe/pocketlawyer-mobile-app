@@ -10,11 +10,14 @@ export enum ROUTES {
   AUTH_LOGIN = "AuthLogin",
   AUTH_LOGIN_CATEGORY_SELECTOR = "LoginCategorySelector",
   AUTH_SIGN_UP_SECTION_TWO = "AuthSignupSectionTwo",
+  AUTH_VALIDATE_EMAIL = "ValidateEmail",
 
   //SME
   AUTH_SIGN_UP_SME = "AuthSignUpSme",
   AUTH_SIGN_UP_SECTION_TWO_SME = "AuthSignupSectionTwoSme",
   AUTH_LOGIN_SME = "AuthLoginSme",
+  AUTH_VALIDATE_EMAIL_SME = "ValidateEmailSme",
+  AUTH_CONGRATS_SME = "CongratSme",
 
   //SERIVCE PROVIDER
   SERVICE_PROVIDER_CATEGORY_SELECTOR = "ServiceProviderCategory",
@@ -27,4 +30,22 @@ export enum ROUTES {
   AUTH_SIGN_UP_LAWFIRM = "AuthSignUpLawFirm",
   AUTH_SIGN_UP_LAWFIRM_SECTION_TWO = "AuthSignUpLawFirmSectionTwo",
   AUTH_CAC_LAWFIRM = "AuthCACLawFirm",
+  AUTH_VALIDATE_EMAIL_LAWFIRM = "ValidateEmail",
+
+  // TABS...
+  TABSCREEN_STACK = "TabScreenStack",
+  //HOME STACK
+  HOME_STACK = "HomeStack",
+  HOME_SCREEN = "HomeScreen",
+  PICK_LAWYER_SCREEN = "PickLawyer",
+  LAWYER_DETAIL_SCREEN = "LawyerDetail",
+  // SERIVE STACK...
+  SERVICE_STACK = "ServiceStack",
+  SERVICE_SCREEN = "ServiceScreen",
+  // HISTORY STACK...
+  HISTORY_STACK = "HistoryStack",
+  HISTORY_SCREEN = "HistoryScreen",
+  // ACCOUNT STACK...
+  ACCOUNT_STACK = "AccountStack",
+  ACCOUNT_SCREEN = "AccountSCreen",
 }

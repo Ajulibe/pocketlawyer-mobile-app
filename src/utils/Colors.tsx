@@ -1,4 +1,4 @@
-export default {
+const COLORS = {
   light: {
     primary: "#1B1464",
     white: "#ffffff",
@@ -8,7 +8,7 @@ export default {
     checkpurple: "rgba(243, 242, 253, 0.7)",
     carouselBtn: "#6e58b3",
     darkgrey: "#a3a3a3",
-    textinputborder: "#F0F0F0",
+    textinputborder: "#E4E9F2",
     imageinputbg: "rgba(234, 234, 234, 0.3)",
     imageinputborder: "#D5D3D3",
     splashscreenbg: "#F7F6FE",
@@ -44,3 +44,4 @@ export default {
     background: "#000",
   },
 };
+export default COLORS;

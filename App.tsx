@@ -10,6 +10,8 @@ import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
 import { default as theme } from "./src/theme.json";
 import * as Animatable from "react-native-animatable";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "components/PLToast";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -24,6 +26,7 @@ export default function App() {
       "Roboto-Medium": require("./src/assets/fonts/Roboto-Medium.ttf"),
       "Roboto-MediumItalic": require("./src/assets/fonts/Roboto-MediumItalic.ttf"),
       "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
+      Roboto: require("./src/assets/fonts/Roboto-Regular.ttf"),
       "Roboto-Thin": require("./src/assets/fonts/Roboto-Thin.ttf"),
     });
   };
@@ -48,6 +51,7 @@ export default function App() {
       <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
         <Navigation colorScheme={colorScheme} />
         <StatusBar />
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </ApplicationProvider>
     );
   }

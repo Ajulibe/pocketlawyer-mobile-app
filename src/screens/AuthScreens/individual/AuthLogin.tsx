@@ -83,7 +83,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
+            // onPress={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
+            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           >
             <Text
               style={{

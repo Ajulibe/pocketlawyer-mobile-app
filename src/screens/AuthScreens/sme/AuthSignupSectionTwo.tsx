@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Alert,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../../navigation/MainNavigator";
@@ -15,15 +23,15 @@ import { PLDatePicker } from "../../../components/PLDatePicker";
 import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "../../../types";
 import { Input } from "@ui-kitten/components";
+import { ScrollView } from "react-native-gesture-handler";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -39,108 +47,124 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP);
-        }}
-        navText="Sign Up"
-      />
-      <View style={styles.contentWraper}>
-        <View style={styles.TextWrapper}>
-          <Text style={styles.welcomeMessage}>
-            Please add details of a
-            <Text style={styles.ContactPerson}> contact person</Text> for your
-            company.
-          </Text>
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>First Name</Text>
-          <PLTextInput
-            textContentType="name"
-            style={styles.input}
-            placeholder="Type your first name"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Last Name</Text>
-          <PLTextInput
-            textContentType="familyName"
-            style={styles.input}
-            placeholder="Type your last name"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Email Address</Text>
-          <PLTextInput
-            style={styles.input}
-            placeholder="Type your email address"
-            textContentType="emailAddress"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Phone Number</Text>
-          <View style={styles.phoneNumberWrapper}>
-            <View style={styles.countryPickerWrapper}>
-              <CountryPicker
-                {...{
-                  countryCode,
-                  withFilter,
-                  withFlag,
-                  withCountryNameButton,
-                  withAlphaFilter,
-                  withCallingCode,
-                  withEmoji,
-                  onSelect,
-                }}
-              />
-              <Text style={styles.codeText}>+{callingCode}</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+        keyboardVerticalOffset={wp(0)}
+      >
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL_SME);
+          }}
+          navText="Sign Up"
+        />
+        <ScrollView>
+          <View style={styles.contentWraper}>
+            <View style={styles.TextWrapper}>
+              <Text style={styles.welcomeMessage}>
+                Please add details of a
+                <Text style={styles.ContactPerson}> contact person</Text> for
+                your company.
+              </Text>
             </View>
 
-            <Input
-              style={styles.inputPhoneNumber}
-              textStyle={styles.textStyle}
-              placeholder="906 3782 2828"
-              textContentType="telephoneNumber"
-              placeholderTextColor={COLORS.light.darkgrey}
+            <View>
+              <Text style={styles.inputText}>First Name</Text>
+              <PLTextInput
+                textContentType="name"
+                style={styles.input}
+                placeholder="Type your first name"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Last Name</Text>
+              <PLTextInput
+                textContentType="familyName"
+                style={styles.input}
+                placeholder="Type your last name"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Email Address</Text>
+              <PLTextInput
+                style={styles.input}
+                placeholder="Type your email address"
+                textContentType="emailAddress"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Phone Number</Text>
+              <View style={styles.phoneNumberWrapper}>
+                <View style={styles.countryPickerWrapper}>
+                  <CountryPicker
+                    {...{
+                      countryCode,
+                      withFilter,
+                      withFlag,
+                      withCountryNameButton,
+                      withAlphaFilter,
+                      withCallingCode,
+                      withEmoji,
+                      onSelect,
+                    }}
+                  />
+                  <Text style={styles.codeText}>+{callingCode}</Text>
+                </View>
+
+                <Input
+                  style={styles.inputPhoneNumber}
+                  textStyle={styles.textStyle}
+                  placeholder="906 3782 2828"
+                  textContentType="telephoneNumber"
+                  placeholderTextColor={COLORS.light.darkgrey}
+                />
+              </View>
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Designation</Text>
+              <PLTextInput
+                style={styles.input}
+                placeholder="Type the job designation"
+                textContentType="none"
+              />
+            </View>
+
+            <View style={styles.carouselWrapper}>
+              <View style={styles.carouselIcon}>
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+              </View>
+            </View>
+
+            <PLButton
+              style={styles.plButton}
+              textColor={COLORS.light.white}
+              btnText={"Next"}
+              onClick={() => navigation.navigate(ROUTES.AUTH_CONGRATS_SME)}
+              //   onClick={() => Alert.alert("Signed Up")}
             />
+            <View style={styles.loginWrapper}>
+              <Text style={styles.signUpText}>
+                By signing up, you agree with the
+                <Text style={styles.login}> Terms of services </Text>and{" "}
+                <Text style={styles.login}>Privacy policy </Text>
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Designation</Text>
-          <PLTextInput
-            style={styles.input}
-            placeholder="Type the job designation"
-            textContentType="none"
-          />
-        </View>
-
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-          </View>
-        </View>
-
-        <PLButton
-          style={styles.plButton}
-          textColor={COLORS.light.white}
-          btnText={"Next"}
-          // onClick={() => navigation.navigate(ROUTES.AUTH_LOGIN_SME)}
-          onClick={() => Alert.alert("Signed Up")}
-        />
-        <View style={styles.loginWrapper}>
-          <Text style={styles.signUpText}>
-            By signing up, you agree with the
-            <Text style={styles.login}> Terms of services </Text>and{" "}
-            <Text style={styles.login}>Privacy policy </Text>
-          </Text>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -165,16 +189,16 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(16),
+    marginBottom: hp(10),
     width: wpercent("90%"),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(25),
   },
   input: {
     width: wp(334),
@@ -203,7 +227,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(31),
+    marginTop: hp(20),
   },
   carouselWrapper: {
     justifyContent: "center",
@@ -233,8 +257,8 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(16),
+    fontSize: wp(11),
+    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },

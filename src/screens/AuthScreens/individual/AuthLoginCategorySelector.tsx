@@ -2,27 +2,87 @@ import React from "react";
 import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
 import { CheckBox as RNECheckBox } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import PLButton from "../../../components/PLButton/PLButton";
+import PLButton from "components/PLButton/PLButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { PLToast } from "components/PLToast";
+import axiosClient from "utils/axiosClient";
+import { submitCategories } from "navigation/interfaces";
+import FullPageLoader from "components/FullPageLoader";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
-  const [preincorporation, setPreIncorporation] = React.useState(false);
-  const [companysecretarial, setCompanysecretarial] = React.useState(false);
-  const [postincorporation, setPostincorporation] = React.useState(false);
-  const [reviewofLegal, setReviewofLegal] = React.useState(false);
-  const [legaladvice, setLegaladvice] = React.useState(false);
-  const [legaldrafting, setLegaldrafting] = React.useState(false);
+  const [preincorporation, setPreIncorporation] =
+    React.useState<boolean>(false);
+  const [companysecretarial, setCompanysecretarial] =
+    React.useState<boolean>(false);
+  const [postincorporation, setPostincorporation] =
+    React.useState<boolean>(false);
+  const [reviewofLegal, setReviewofLegal] = React.useState<boolean>(false);
+  const [legaladvice, setLegaladvice] = React.useState<boolean>(false);
+  const [legaldrafting, setLegaldrafting] = React.useState<boolean>(false);
 
-  return (
+  //--> loading state
+  const [loading, setLoading] = React.useState(false);
+
+  const selectedCategories = [
+    { name: "Pre-Incorporation", value: preincorporation },
+    { name: "Company Secretarial Services", value: companysecretarial },
+    { name: "Post-Incorporation", value: postincorporation },
+    { name: "reviewofLegal", value: reviewofLegal },
+    { name: "Legal Advice and Consultancy", value: legaladvice },
+    { name: "Review of Legal Documents", value: legaldrafting },
+  ];
+
+  const filterCategories = () => {
+    const fliteredCategories = selectedCategories.filter((item) => {
+      return item.value === true;
+    });
+    console.log(fliteredCategories);
+
+    const Categorylist = fliteredCategories.map((item) => {
+      return { CategoryCode: item.name, CategoryName: item.name };
+    });
+
+    const Payload: submitCategories = {
+      UserId: 1,
+      UserType: 1,
+      Categorylist: Categorylist,
+    };
+
+    submitCategories(Payload);
+  };
+
+  const submitCategories = async (Payload: submitCategories) => {
+    setLoading(true);
+    try {
+      const response = await axiosClient.post(
+        "api/Category/AddUSerCategory",
+        Payload
+      );
+      console.log(response, "result");
+      PLToast({ message: "Categories Saved", type: "success" });
+      // setTimeout(() => {
+      //   navigation.navigate(ROUTES.TABSCREEN_STACK);
+      // }, 1000);
+    } catch (error) {
+      setLoading(false);
+      PLToast({ message: "Error Saving Categories", type: "success" });
+
+      return;
+    }
+  };
+
+  return loading ? (
+    <FullPageLoader message="SUBMITTING CATEGORIES" />
+  ) : (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.contentWraper}>
         <Text style={styles.heading}>Select your preferred category</Text>
@@ -270,9 +330,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         <View style={styles.btnWrapper}>
           <TouchableOpacity
             style={styles.skipButton}
-            onPress={() =>
-              navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-            }
+            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           >
             <Text style={styles.skip}>Skip</Text>
           </TouchableOpacity>
@@ -281,9 +339,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             style={styles.nextButton}
             textColor={COLORS.light.white}
             btnText={"Next"}
-            onClick={() =>
-              navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-            }
+            onClick={filterCategories}
           />
         </View>
       </View>

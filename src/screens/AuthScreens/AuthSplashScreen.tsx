@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet, StatusBar } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../navigation/MainNavigator";
-import { ROUTES } from "../../navigation/Routes";
-import COLORS from "../../utils/Colors";
-import IMAGES from "../../utils/Images";
-import { wp, hp } from "../../utils/Dimensions";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import IMAGES from "utils/Images";
+import { wp, hp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SPLASH_SCREEN>;

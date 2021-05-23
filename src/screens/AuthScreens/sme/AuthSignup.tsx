@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../../navigation/MainNavigator";
@@ -16,6 +23,7 @@ import { states } from "../../../utils/nigerianStates";
 import { Picker, Form, Icon } from "native-base";
 import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
 import * as Animatable from "react-native-animatable";
+import { ScrollView } from "react-native-gesture-handler";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -30,9 +38,8 @@ const useInputState = (initialValue = "") => {
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -41,10 +48,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(true);
   const [withCallingCode, setWithCallingCode] = useState<boolean>(true);
   const [selectedstate, setSelectedState] = useState<string>("");
-  const [
-    selectedBusinessCategory,
-    setSelectedBusinessCategory,
-  ] = useState<string>("");
+  const [selectedBusinessCategory, setSelectedBusinessCategory] =
+    useState<string>("");
 
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
@@ -54,151 +59,168 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-        }}
-        navText="Sign Up"
-      />
-      <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-        <View style={styles.TextWrapper}>
-          <Text style={styles.welcomeMessage}>
-            Welcome to Pocket Lawyer! To create an account, please enter your
-            <Text style={styles.CompanyDetails}> company details.</Text>
-          </Text>
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Name of Company</Text>
-          <PLTextInput
-            textContentType="name"
-            style={styles.input}
-            placeholder="Type the name of your company"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Email Address</Text>
-          <PLTextInput
-            style={styles.input}
-            placeholder="Type your company’s email address"
-            textContentType="emailAddress"
-          />
-        </View>
-
-        <View style={styles.stateWrapper}>
-          <View>
-            <Text style={styles.inputText}>State</Text>
-            <Form>
-              <Picker
-                mode="dropdown"
-                iosIcon={
-                  <Entypo
-                    name="chevron-small-down"
-                    size={24}
-                    color={COLORS.light.black}
-                  />
-                }
-                placeholder="Select State"
-                placeholderStyle={{
-                  color: COLORS.light.darkgrey,
-                  fontFamily: "Roboto-Regular",
-                  fontSize: 12,
-                }}
-                placeholderIconColor={COLORS.light.darkgrey}
-                style={styles.city}
-              >
-                {states.map(function (item) {
-                  return (
-                    <Picker.Item
-                      key={item.state}
-                      label={item.state}
-                      value={item.state}
-                    />
-                  );
-                })}
-              </Picker>
-            </Form>
-          </View>
-
-          <View>
-            <Text style={styles.inputText}>City</Text>
-            <PLTextInput
-              style={[styles.input, styles.city]}
-              placeholder="Enter City"
-              textContentType="none"
-            />
-          </View>
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Nature of Business</Text>
-          <Form>
-            <Picker
-              mode="dropdown"
-              iosIcon={
-                <Entypo
-                  name="chevron-small-down"
-                  size={24}
-                  color={COLORS.light.black}
-                />
-              }
-              placeholder="Select your business category"
-              placeholderStyle={{
-                color: COLORS.light.darkgrey,
-                fontFamily: "Roboto-Regular",
-                fontSize: 12,
-              }}
-              placeholderIconColor={COLORS.light.darkgrey}
-              style={styles.business}
-            >
-              {states.map(function (item) {
-                return (
-                  <Picker.Item
-                    key={item.state}
-                    label={item.state}
-                    value={item.state}
-                  />
-                );
-              })}
-            </Picker>
-          </Form>
-        </View>
-        <View>
-          <Text style={styles.inputText}>Password</Text>
-          <View style={styles.phoneNumberWrapper}>
-            <PLPasswordInput placeholder="Create your Password" />
-          </View>
-        </View>
-
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <Entypo name="circle" size={10} color={COLORS.light.primary} />
-          </View>
-        </View>
-
-        <PLButton
-          style={styles.plButton}
-          textColor={COLORS.light.white}
-          btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME)
-          }
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+        keyboardVerticalOffset={wp(0)}
+      >
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+          }}
+          navText="Sign Up"
         />
-        <View style={styles.loginWrapper}>
-          <Text style={styles.signUpText}>
-            By signing up, you agree with the
-            <Text style={styles.login}> Terms of services </Text>and{" "}
-            <Text style={styles.login}>Privacy policy </Text>
-          </Text>
-        </View>
-      </Animatable.View>
+        <ScrollView>
+          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+            <View style={styles.TextWrapper}>
+              <Text style={styles.welcomeMessage}>
+                Welcome to Pocket Lawyer! To create an account, please enter
+                your
+                <Text style={styles.CompanyDetails}> company details.</Text>
+              </Text>
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Name of Company</Text>
+              <PLTextInput
+                textContentType="name"
+                style={styles.input}
+                placeholder="Type the name of your company"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Email Address</Text>
+              <PLTextInput
+                style={styles.input}
+                placeholder="Type your company’s email address"
+                textContentType="emailAddress"
+              />
+            </View>
+
+            <View style={styles.stateWrapper}>
+              <View>
+                <Text style={styles.inputText}>State</Text>
+                <Form>
+                  <Picker
+                    mode="dropdown"
+                    iosIcon={
+                      <Entypo
+                        name="chevron-small-down"
+                        size={24}
+                        color={COLORS.light.black}
+                      />
+                    }
+                    placeholder="Select State"
+                    placeholderStyle={{
+                      color: COLORS.light.darkgrey,
+                      fontFamily: "Roboto-Regular",
+                      fontSize: 12,
+                    }}
+                    placeholderIconColor={COLORS.light.darkgrey}
+                    style={styles.city}
+                  >
+                    {states.map(function (item) {
+                      return (
+                        <Picker.Item
+                          key={item.state}
+                          label={item.state}
+                          value={item.state}
+                        />
+                      );
+                    })}
+                  </Picker>
+                </Form>
+              </View>
+
+              <View>
+                <Text style={styles.inputText}>City</Text>
+                <PLTextInput
+                  style={[styles.input, styles.city]}
+                  placeholder="Enter City"
+                  textContentType="none"
+                />
+              </View>
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>Nature of Business</Text>
+              <Form>
+                <Picker
+                  mode="dropdown"
+                  iosIcon={
+                    <Entypo
+                      name="chevron-small-down"
+                      size={24}
+                      color={COLORS.light.black}
+                    />
+                  }
+                  placeholder="Select your business category"
+                  placeholderStyle={{
+                    color: COLORS.light.darkgrey,
+                    fontFamily: "Roboto-Regular",
+                    fontSize: 12,
+                  }}
+                  placeholderIconColor={COLORS.light.darkgrey}
+                  style={styles.business}
+                >
+                  {states.map(function (item) {
+                    return (
+                      <Picker.Item
+                        key={item.state}
+                        label={item.state}
+                        value={item.state}
+                      />
+                    );
+                  })}
+                </Picker>
+              </Form>
+            </View>
+            <View>
+              <Text style={styles.inputText}>Password</Text>
+              <View style={styles.phoneNumberWrapper}>
+                <PLPasswordInput placeholder="Create your Password" />
+              </View>
+            </View>
+
+            <View style={styles.carouselWrapper}>
+              <View style={styles.carouselIcon}>
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+                <Entypo name="circle" size={10} color={COLORS.light.primary} />
+              </View>
+            </View>
+
+            <PLButton
+              style={styles.plButton}
+              textColor={COLORS.light.white}
+              btnText={"Next"}
+              onClick={() =>
+                navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL_SME)
+              }
+            />
+            <View style={styles.loginWrapper}>
+              <Text style={styles.signUpText}>
+                By signing up, you agree with the
+                <Text style={styles.login}> Terms of services </Text>and{" "}
+                <Text style={styles.login}>Privacy policy </Text>
+              </Text>
+            </View>
+          </Animatable.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   wrapper: {
     flex: 1,
     alignItems: "center",
@@ -208,7 +230,7 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
     marginBottom: hp(20),
@@ -216,7 +238,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(20),
   },
   signUpText: {
     textAlign: "center",
@@ -285,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(31),
+    marginTop: hp(27),
   },
   carouselWrapper: {
     justifyContent: "center",

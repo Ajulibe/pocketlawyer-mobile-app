@@ -7,21 +7,18 @@ import COLORS from "../../utils/Colors";
 
 const CalendarIcon = () => <AntDesign name="calendar" size={12} color="grey" />;
 
-export const PLDatePicker = () => {
+interface PLDatePicker {
+  onSelect: (date: Date) => void;
+  initial: string;
+  selectedDate: string;
+}
+
+export const PLDatePicker: React.FC<PLDatePicker> = ({
+  onSelect,
+  initial,
+  selectedDate,
+}) => {
   const min = new Date(1960, 11, 24);
-
-  const useDatepickerState = (initialDate = new Date()) => {
-    const [date, setDate] = React.useState(initialDate);
-    return { date, onSelect: setDate };
-  };
-
-  const { onSelect, date } = useDatepickerState();
-
-  const month = date.getMonth();
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const initial = date.toString();
-  const selectedDate = `${month}/${day}/${year}`;
 
   return (
     <View style={styles.DatepickerWrapper}>
@@ -35,6 +32,7 @@ export const PLDatePicker = () => {
         onSelect={onSelect}
         accessoryRight={CalendarIcon}
       />
+
       <View style={styles.cover}>
         <Text
           style={[
@@ -61,6 +59,8 @@ const styles = StyleSheet.create({
     width: wp(334),
     height: wp(40),
     backgroundColor: COLORS.light.white,
+    borderWidth: 0,
+    justifyContent: "center",
   },
   DatePicker: {
     width: "100%",
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   controlStyle: {
     backgroundColor: COLORS.light.white,
     borderColor: COLORS.light.textinputborder,
+    borderWidth: 1,
     color: COLORS.light.black,
   },
   backdropStyle: {
@@ -79,9 +80,9 @@ const styles = StyleSheet.create({
   cover: {
     position: "absolute",
     width: wp(200),
-    height: wp(35),
+    height: wp(30),
     backgroundColor: COLORS.light.white,
-    top: hp(3),
+    top: hp(5),
     left: wp(7),
     justifyContent: "center",
     paddingLeft: wp(9),

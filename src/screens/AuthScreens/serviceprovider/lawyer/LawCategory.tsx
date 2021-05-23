@@ -89,9 +89,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         <View style={styles.btnWrapper}>
           <TouchableOpacity
             style={styles.skipButton}
-            onPress={() =>
-              navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-            }
+            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           >
             <Text style={styles.skip}>Skip</Text>
           </TouchableOpacity>
@@ -100,7 +98,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             style={styles.nextButton}
             textColor={COLORS.light.white}
             btnText={"Submit"}
-            onClick={() => navigation.navigate(ROUTES.AUTH_LAW_CATEGORY_LAWYER)}
+            onClick={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           />
         </View>
       </View>

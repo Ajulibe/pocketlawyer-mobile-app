@@ -10,11 +10,20 @@ import AuthSelectCategory from "../screens/AuthScreens/individual/AuthSelectCate
 import AuthSignUp from "../screens/AuthScreens/individual/AuthSignup";
 import AuthSignupSectionTwo from "../screens/AuthScreens/individual/AuthSignupSectionTwo";
 import AuthLogin from "../screens/AuthScreens/individual/AuthLogin";
+import AuthValidateEmail from "../screens/AuthScreens/individual/ValidateEmail";
+
+//------------------INTERFACE----------------->
+import {
+  IndividualSignUpInterface,
+  IndividualSignUpInterfaceSectionTwo,
+} from "./interfaces";
 
 //SME
 import AuthSignUpSme from "../screens/AuthScreens/sme/AuthSignup";
 import AuthSignupSectionTwoSme from "../screens/AuthScreens/sme/AuthSignupSectionTwo";
 import AuthLoginSme from "../screens/AuthScreens/sme/AuthLogin";
+import AuthValidateEmailSme from "../screens/AuthScreens/sme/ValidateEmail";
+import CongratSme from "../screens/AuthScreens/sme/Congrats";
 
 //SERVICE PROVIDER
 import ServiceProviderCategory from "../screens/AuthScreens/serviceprovider/AuthSelectCategory";
@@ -28,7 +37,11 @@ import AuthSignUpLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/Au
 import AuthSignUpLawFirmSectionTwo from "../screens/AuthScreens/serviceprovider/lawfirm/AuthSignUpSectionTwo";
 import AuthCACLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/CACDocument";
 
+//TABS SCREENS STACK
+import BottomTabStack from "./BottomTabStack";
+
 import { ROUTES } from "./Routes";
+import Colors from "utils/Colors";
 
 export type RootStackParamList = {
   [ROUTES.AUTH_BLANK_SCREEN]: undefined;
@@ -41,11 +54,14 @@ export type RootStackParamList = {
   [ROUTES.AUTH_SIGN_UP]: undefined;
   [ROUTES.AUTH_SIGN_UP_SECTION_TWO]: undefined;
   [ROUTES.AUTH_LOGIN]: undefined;
+  [ROUTES.AUTH_VALIDATE_EMAIL]: undefined;
 
   //SME
   [ROUTES.AUTH_SIGN_UP_SME]: undefined;
   [ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME]: undefined;
   [ROUTES.AUTH_LOGIN_SME]: undefined;
+  [ROUTES.AUTH_VALIDATE_EMAIL_SME]: undefined;
+  [ROUTES.AUTH_CONGRATS_SME]: undefined;
 
   //SERVICE PROVIDER
   [ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR]: undefined;
@@ -58,6 +74,9 @@ export type RootStackParamList = {
   [ROUTES.AUTH_SIGN_UP_LAWFIRM_SECTION_TWO]: undefined;
   [ROUTES.AUTH_LAW_CATEGORY_LAWYER]: undefined;
   [ROUTES.AUTH_CAC_LAWFIRM]: undefined;
+  [ROUTES.AUTH_VALIDATE_EMAIL_LAWFIRM]: undefined;
+  //TABS SCREENS STACK
+  [ROUTES.TABSCREEN_STACK]: undefined;
 };
 
 const MainStack = createStackNavigator<RootStackParamList>();
@@ -65,7 +84,14 @@ export default function MainNavigator() {
   return (
     <MainStack.Navigator
       initialRouteName={ROUTES.AUTH_BLANK_SCREEN}
+      // initialRouteName={ROUTES.TABSCREEN_STACK}
       headerMode={"none"}
+      screenOptions={{
+        headerStyle: {
+          // backgroundColor: "#fff",
+        },
+        cardStyle: { backgroundColor: Colors.light.white },
+      }}
     >
       <MainStack.Screen
         name={ROUTES.AUTH_BLANK_SCREEN}
@@ -88,6 +114,11 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP}
         component={AuthSignUp}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
+        name={ROUTES.AUTH_VALIDATE_EMAIL}
+        component={AuthValidateEmail}
         options={{ headerShown: false }}
       />
       <MainStack.Screen
@@ -118,8 +149,18 @@ export default function MainNavigator() {
         options={{ headerShown: false }}
       />
       <MainStack.Screen
+        name={ROUTES.AUTH_VALIDATE_EMAIL_SME}
+        component={AuthValidateEmailSme}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
         name={ROUTES.AUTH_LOGIN_SME}
         component={AuthLoginSme}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
+        name={ROUTES.AUTH_CONGRATS_SME}
+        component={CongratSme}
         options={{ headerShown: false }}
       />
 
@@ -173,6 +214,11 @@ export default function MainNavigator() {
         name={ROUTES.AUTH_CAC_LAWFIRM}
         component={AuthCACLawFirm}
         options={{ headerShown: false }}
+      />
+      {/* DASHBOARD STACK...  */}
+      <MainStack.Screen
+        name={ROUTES.TABSCREEN_STACK}
+        component={BottomTabStack}
       />
     </MainStack.Navigator>
   );

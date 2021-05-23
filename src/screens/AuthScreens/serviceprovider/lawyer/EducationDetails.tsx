@@ -45,7 +45,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <Text style={styles.verifyEmail}>
             An email has been sent to you to verify your email address.
           </Text>
-          Kindly fill in your{" "}
+          &nbsp; Kindly fill in your &nbsp;
           <Text style={styles.educationDetails}>education details </Text> to
           complete your profile as a lawyer.
         </Text>
@@ -165,16 +165,16 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     alignSelf: "flex-start",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginBottom: hp(20),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(28),
   },
   educationDetails: {
     fontFamily: "Roboto-Medium",
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: hp(44),
+    height: wp(45),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: COLORS.light.black,
     marginBottom: hp(12),
-    marginTop: hp(12),
+    marginTop: hp(10),
   },
   forgotPassword: {
     fontFamily: "Roboto-Medium",

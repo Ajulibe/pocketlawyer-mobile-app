@@ -22,6 +22,9 @@ import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "../../../types";
 import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
 import * as Animatable from "react-native-animatable";
+import { ScrollView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IndividualSignUpInterface } from "../../../navigation/interfaces";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -34,11 +37,11 @@ const useInputState = (initialValue = "") => {
 };
 
 const AuthGetStarted = ({ navigation }: Props) => {
+  //--> country component info
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -52,111 +55,188 @@ const AuthGetStarted = ({ navigation }: Props) => {
     setCallingCode(country.callingCode);
   };
 
+  //--> state values
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+
+  //--> check to ensure all values are filled and enable button
+  React.useEffect(() => {
+    //--> check if the payload has be completely filled
+    if (
+      email === "" ||
+      firstName === "" ||
+      lastName === "" ||
+      phonenumber === ""
+    ) {
+      return;
+    }
+
+    setDisabled(false);
+  }, [firstName, lastName, email, phonenumber]);
+
+  //--> disabling button
+  const [disabled, setDisabled] = useState<boolean>(true);
+
+  //--> creating payload and saving to async
+  const onClick = () => {
+    const Payload = {
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      phone: phonenumber,
+    };
+    navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
+
+    //-->  saving payload to local staorage
+    const storeData = async (Payload: IndividualSignUpInterface) => {
+      try {
+        await AsyncStorage.setItem("@signup_payload", JSON.stringify(Payload));
+      } catch (e) {
+        //-->  saving error
+      }
+    };
+
+    storeData(Payload);
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-        }}
-        navText="Sign Up"
-      />
-      <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-        <View style={styles.TextWrapper}>
-          <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
-            Welcome to Pocket Lawyer! Create an account to access top notch
-            legal services.
-          </Animatable.Text>
-        </View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
-        >
-          <View>
-            <Text style={styles.inputText}>First Name</Text>
-            <PLTextInput
-              textContentType="name"
-              style={styles.input}
-              placeholder="Type your first name"
-            />
-          </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+          }}
+          navText="Sign Up"
+        />
+        <ScrollView>
+          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+            <View style={styles.TextWrapper}>
+              <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
+                Welcome to Pocket Lawyer! Create an account to access top notch
+                legal services.
+              </Animatable.Text>
+            </View>
 
-          <View>
-            <Text style={styles.inputText}>Last Name</Text>
-            <PLTextInput
-              textContentType="familyName"
-              style={styles.input}
-              placeholder="Type your last name"
-            />
-          </View>
-
-          <View>
-            <Text style={styles.inputText}>Email Address</Text>
-            <PLTextInput
-              style={styles.input}
-              placeholder="Type your email address"
-              textContentType="emailAddress"
-            />
-          </View>
-
-          <View>
-            <Text style={styles.inputText}>Phone Number</Text>
-            <View style={styles.phoneNumberWrapper}>
-              <View style={styles.countryPickerWrapper}>
-                <CountryPicker
-                  {...{
-                    countryCode,
-                    withFilter,
-                    withFlag,
-                    withCountryNameButton,
-                    withAlphaFilter,
-                    withCallingCode,
-                    withEmoji,
-                    onSelect,
-                  }}
-                />
-                <Text style={styles.codeText}>+{callingCode}</Text>
-              </View>
-
-              <Input
-                style={styles.inputPhoneNumber}
-                textStyle={styles.textStyle}
-                placeholder="906 3782 2828"
-                textContentType="telephoneNumber"
-                returnKeyType="next"
-                placeholderTextColor={COLORS.light.darkgrey}
+            <View>
+              <PLTextInput
+                labelText="First Name"
+                labelTextRequired={true}
+                error={false}
+                name="FirstName"
+                onChangeText={setFirstName}
+                value={firstName}
+                textContentType="name"
+                style={styles.input}
+                placeholder="Type your first name"
               />
             </View>
-          </View>
-        </KeyboardAvoidingView>
 
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <Entypo name="circle" size={10} color={COLORS.light.primary} />
-          </View>
-        </View>
+            <View>
+              <PLTextInput
+                labelText="Last Name"
+                labelTextRequired={true}
+                error={false}
+                name="LastName"
+                onChangeText={setLastName}
+                value={lastName}
+                textContentType="familyName"
+                style={styles.input}
+                placeholder="Type your last name"
+              />
+            </View>
 
-        <PLButton
-          style={styles.plButton}
-          textColor={COLORS.light.white}
-          btnText={"Next"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO)}
-        />
-        <View style={styles.loginWrapper}>
-          <Text style={styles.signUpText}>
-            By signing up, you agree with the
-            <Text style={styles.login}> Terms of services </Text>and{" "}
-            <Text style={styles.login}>Privacy policy </Text>
-          </Text>
-        </View>
-      </Animatable.View>
+            <View>
+              <PLTextInput
+                labelText="Email Address"
+                labelTextRequired={true}
+                error={false}
+                name="Email"
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                value={email}
+                style={styles.input}
+                placeholder="Type your email address"
+                textContentType="emailAddress"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>
+                Phone Number <Text style={styles.required}>*</Text>
+              </Text>
+              <View style={styles.phoneNumberWrapper}>
+                <View style={styles.countryPickerWrapper}>
+                  <CountryPicker
+                    {...{
+                      countryCode,
+                      withFilter,
+                      withFlag,
+                      withCountryNameButton,
+                      withAlphaFilter,
+                      withCallingCode,
+                      withEmoji,
+                      onSelect,
+                    }}
+                  />
+                  <Text style={styles.codeText}>+{callingCode}</Text>
+                </View>
+
+                <Input
+                  maxLength={11}
+                  style={styles.inputPhoneNumber}
+                  onChangeText={setPhonenumber}
+                  value={phonenumber}
+                  textStyle={styles.textStyle}
+                  placeholder="906 3782 2828"
+                  textContentType="telephoneNumber"
+                  keyboardType="numeric"
+                  returnKeyType="next"
+                  placeholderTextColor={COLORS.light.darkgrey}
+                />
+              </View>
+            </View>
+
+            <View style={styles.carouselWrapper}>
+              <View style={styles.carouselIcon}>
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+                <Entypo name="circle" size={10} color={COLORS.light.primary} />
+              </View>
+            </View>
+
+            <PLButton
+              style={styles.plButton}
+              disabled={disabled}
+              textColor={COLORS.light.white}
+              btnText={"Next"}
+              onClick={onClick}
+            />
+            <View style={styles.loginWrapper}>
+              <Text style={styles.signUpText}>
+                By signing up, you agree with the
+                <Text style={styles.login}> Terms of services </Text>and{" "}
+                <Text style={styles.login}>Privacy policy </Text>
+              </Text>
+            </View>
+          </Animatable.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
+    alignItems: "center",
   },
   wrapper: {
     flex: 1,
@@ -167,12 +247,14 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
     marginBottom: hp(39),
+    width: wpercent("90%"),
   },
   contentWraper: {
+    flex: 1,
     width: wpercent("90%"),
     alignItems: "center",
     marginTop: hp(38),
@@ -193,12 +275,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
     borderLeftWidth: 0,
     borderColor: "#fff",
+    color: COLORS.light.black,
   },
 
   textStyle: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(12),
-    color: COLORS.light.darkgrey,
+    fontSize: wp(11),
+    color: COLORS.light.black,
   },
   signUpText: {
     textAlign: "center",
@@ -213,12 +296,12 @@ const styles = StyleSheet.create({
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(12),
+    marginBottom: hp(4),
     marginTop: hp(12),
   },
   codeText: {
     fontFamily: "Roboto-Medium",
-    color: COLORS.light.darkgrey,
+    color: COLORS.light.black,
     fontSize: wp(12),
   },
   plButton: {
@@ -227,7 +310,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(84),
+    marginTop: hp(64),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -265,6 +348,9 @@ const styles = StyleSheet.create({
     borderRightColor: COLORS.light.textinputborder,
     paddingLeft: wpercent("2%"),
     width: wpercent("26%"),
+  },
+  required: {
+    color: "red",
   },
 });
 

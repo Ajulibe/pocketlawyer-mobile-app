@@ -47,7 +47,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           selectedIndex={selectedIndex}
           onChange={(index) => setSelectedIndex(index)}
         >
-          <Radio style={styles.radioBtn}>Lawyer</Radio>
+          <Radio style={styles.radioBtn}>Barrister & Solicitor</Radio>
           <Radio style={styles.radioBtn}>Solicitor</Radio>
           <Radio style={styles.radioBtn}>Law Firm</Radio>
         </RadioGroup>
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   selectText: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
+    lineHeight: hp(27),
     color: COLORS.light.black,
   },
   welcomeText: {

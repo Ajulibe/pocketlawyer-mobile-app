@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   image: {
-    marginTop: hp(78),
+    marginTop: hp(40),
     width: wpercent("90%"),
     height: hp(252),
   },
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   textWrapper: {
     width: wpercent("80%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(20),
   },
   textHeader: {
     width: wp(264),
