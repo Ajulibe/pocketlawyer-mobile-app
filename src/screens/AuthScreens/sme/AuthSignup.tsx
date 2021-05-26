@@ -1,22 +1,32 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Platform,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import { Input } from "@ui-kitten/components";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "../../../types";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
-import { states } from "../../../utils/nigerianStates";
-import { Picker, Form, Icon } from "native-base";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import { states } from "utils/nigerianStates";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import * as Animatable from "react-native-animatable";
+import { ScrollView } from "react-native-gesture-handler";
+import { smeSignupSectionOne } from "navigation/interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BottomSheet, ListItem } from "react-native-elements";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -31,9 +41,8 @@ const useInputState = (initialValue = "") => {
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -42,10 +51,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(true);
   const [withCallingCode, setWithCallingCode] = useState<boolean>(true);
   const [selectedstate, setSelectedState] = useState<string>("");
-  const [
-    selectedBusinessCategory,
-    setSelectedBusinessCategory,
-  ] = useState<string>("");
+  const [selectedBusinessCategory, setSelectedBusinessCategory] =
+    useState<string>("");
 
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
@@ -53,158 +60,403 @@ const AuthGetStarted = ({ navigation }: Props) => {
     setCallingCode(country.callingCode);
   };
 
+  //--> state values
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState("Select your location");
+  const [statePlaceholder, setStatePlaceholder] = useState(0);
+  const [city, setCity] = useState("");
+  const [business, setBusiness] = useState("Select your business category");
+  const [stateBusinessPlaceholder, setBusinessStatePlaceholder] = useState(0);
+  const [password, setPassword] = useState("");
+
+  //--> state  for bottom sheet
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isVisibleBusiness, setIsVisibleBusiness] = useState<boolean>(false);
+
+  //-->  data for bottom sheet
+  const Statelist = [
+    {
+      title: "Cancel",
+      containerStyle: {
+        backgroundColor: COLORS.light.primary,
+      },
+      titleStyle: { color: "white" },
+      onPress: () => setIsVisible(false),
+    },
+  ];
+
+  const Businesslist = [
+    {
+      title: "Cancel",
+      containerStyle: {
+        backgroundColor: COLORS.light.primary,
+      },
+      titleStyle: { color: "white" },
+      onPress: () => setIsVisibleBusiness(false),
+    },
+  ];
+
+  //--> check to ensure all values are filled and enable button
+  React.useEffect(() => {
+    //--> check if the payload has be completely filled
+    if (
+      email === "" ||
+      company === "" ||
+      state === "" ||
+      business === "" ||
+      password === "" ||
+      city === ""
+    ) {
+      return;
+    }
+
+    setDisabled(false);
+  }, [company, state, email, business, password, city]);
+
+  //--> disabling button
+  const [disabled, setDisabled] = useState<boolean>(true);
+
+  //--> creating payload and saving to async
+  const onClick = () => {
+    const Payload = {
+      email: email,
+      userType: 2,
+      password: password,
+      address: `${city},${state}`,
+      company: {
+        name: company,
+        CompanyType: 1,
+      },
+    };
+    //-->  saving payload to local staorage
+    const storeData = async (Payload: smeSignupSectionOne) => {
+      try {
+        await AsyncStorage.setItem("@signup_payload", JSON.stringify(Payload));
+        await AsyncStorage.setItem("@email", JSON.stringify(email));
+        navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME);
+      } catch (e) {
+        //-->  saving error
+      }
+    };
+
+    storeData(Payload);
+  };
+
+  React.useEffect(() => {
+    if (state === "Select your location") {
+      return;
+    }
+    setIsVisible(false);
+    setStatePlaceholder(statePlaceholder + 1);
+  }, [state]);
+
+  React.useEffect(() => {
+    if (business === "Select your business category") {
+      return;
+    }
+    setIsVisibleBusiness(false);
+    setBusinessStatePlaceholder(statePlaceholder + 1);
+  }, [business]);
+
   return (
     <SafeAreaView style={styles.wrapper}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-        }}
-        navText="Sign Up"
-      />
-      <View style={styles.contentWraper}>
-        <Text style={styles.welcomeMessage}>
-          Welcome to Pocket Lawyer! To create an account, please enter your
-          <Text style={styles.CompanyDetails}> company details.</Text>
-        </Text>
-
-        <View>
-          <Text style={styles.inputText}>Name of Company</Text>
-          <PLTextInput
-            textContentType="name"
-            style={styles.input}
-            placeholder="Type the name of your company"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Email Address</Text>
-          <PLTextInput
-            style={styles.input}
-            placeholder="Type your company’s email address"
-            textContentType="emailAddress"
-          />
-        </View>
-
-        <View style={styles.stateWrapper}>
-          <View>
-            <Text style={styles.inputText}>State</Text>
-            <Form>
-              <Picker
-                mode="dropdown"
-                iosIcon={
-                  <Entypo
-                    name="chevron-small-down"
-                    size={24}
-                    color={COLORS.light.black}
-                  />
-                }
-                placeholder="Select State"
-                placeholderStyle={{
-                  color: COLORS.light.darkgrey,
-                  fontFamily: "Roboto-Regular",
-                  fontSize: 12,
-                }}
-                placeholderIconColor={COLORS.light.darkgrey}
-                style={styles.city}
-              >
-                {states.map(function (item) {
-                  return (
-                    <Picker.Item
-                      key={item.state}
-                      label={item.state}
-                      value={item.state}
-                    />
-                  );
-                })}
-              </Picker>
-            </Form>
-          </View>
-
-          <View>
-            <Text style={styles.inputText}>City</Text>
-            <PLTextInput
-              style={[styles.input, styles.city]}
-              placeholder="Enter City"
-              textContentType="none"
-            />
-          </View>
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Nature of Business</Text>
-          <Form>
-            <Picker
-              mode="dropdown"
-              iosIcon={
-                <Entypo
-                  name="chevron-small-down"
-                  size={24}
-                  color={COLORS.light.black}
-                />
-              }
-              placeholder="Select State"
-              placeholderStyle={{
-                color: COLORS.light.darkgrey,
-                fontFamily: "Roboto-Regular",
-                fontSize: 12,
-              }}
-              placeholderIconColor={COLORS.light.darkgrey}
-              style={styles.business}
-            >
-              {states.map(function (item) {
-                return (
-                  <Picker.Item
-                    key={item.state}
-                    label={item.state}
-                    value={item.state}
-                  />
-                );
-              })}
-            </Picker>
-          </Form>
-        </View>
-        <View>
-          <Text style={styles.inputText}>Password</Text>
-          <View style={styles.phoneNumberWrapper}>
-            <PLPasswordInput placeholder="Create your Password" />
-          </View>
-        </View>
-
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <Entypo name="circle" size={10} color={COLORS.light.primary} />
-          </View>
-        </View>
-
-        <PLButton
-          style={styles.plButton}
-          textColor={COLORS.light.white}
-          btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME)
-          }
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+        keyboardVerticalOffset={wp(0)}
+      >
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+          }}
+          navText="Sign Up"
         />
-        <View style={styles.loginWrapper}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Roboto-Regular",
-              fontSize: wp(14),
-              color: COLORS.light.black,
-            }}
-          >
-            By signing up, you agree with the
-            <Text style={styles.login}> Terms of services </Text>and{" "}
-            <Text style={styles.login}>Privacy policy </Text>
-          </Text>
-        </View>
-      </View>
+        <ScrollView>
+          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+            <View style={styles.TextWrapper}>
+              <Text style={styles.welcomeMessage}>
+                Welcome to Pocket Lawyer! To create an account, please enter
+                your
+                <Text style={styles.CompanyDetails}> company details.</Text>
+              </Text>
+            </View>
+
+            <View>
+              <PLTextInput
+                labelText="Name of Company"
+                onChangeText={setCompany}
+                labelTextRequired={true}
+                textContentType="name"
+                style={styles.input}
+                placeholder="Type the name of your company"
+              />
+            </View>
+
+            <View>
+              <PLTextInput
+                labelText="Email Address"
+                labelTextRequired={true}
+                onChangeText={setEmail}
+                style={styles.input}
+                placeholder="Type your company’s email address"
+                textContentType="emailAddress"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>
+                State <Text style={styles.required}>*</Text>
+              </Text>
+              <View
+                style={{
+                  borderWidth: 1,
+                  width: wp(334),
+                  height: wp(40),
+                  borderRadius: 4,
+                  borderColor: COLORS.light.textinputborder,
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(true);
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <View style={{ width: wp(300) }}>
+                      <Text
+                        style={{
+                          marginLeft: wp(16),
+                          fontSize: 12,
+                          fontFamily: "Roboto-Regular",
+                          color:
+                            statePlaceholder === 0
+                              ? COLORS.light.darkgrey
+                              : COLORS.light.black,
+                        }}
+                      >
+                        {state}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        width: wp(30),
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Entypo
+                        name="chevron-small-down"
+                        size={20}
+                        color="grey"
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <BottomSheet
+                modalProps={{
+                  visible: isVisible,
+                  statusBarTranslucent: true,
+                }}
+                isVisible={isVisible}
+                containerStyle={{ backgroundColor: COLORS.light.primary }}
+              >
+                {states.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    onPress={() => {
+                      setState(l.state);
+                    }}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        <Text>{l.state}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+                {Statelist.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    containerStyle={l.containerStyle}
+                    onPress={l.onPress}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title style={l.titleStyle}>
+                        <Text>{l.title}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+              </BottomSheet>
+            </View>
+
+            <View style={styles.stateWrapper}>
+              <PLTextInput
+                labelText="City"
+                onChangeText={setCity}
+                labelTextRequired={true}
+                style={[styles.input, styles.city]}
+                placeholder="Enter City"
+                textContentType="none"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>
+                Nature of Business <Text style={styles.required}>*</Text>
+              </Text>
+              <View
+                style={{
+                  borderWidth: 1,
+                  width: wp(334),
+                  height: wp(40),
+                  borderRadius: 4,
+                  borderColor: COLORS.light.textinputborder,
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisibleBusiness(true);
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <View style={{ width: wp(300) }}>
+                      <Text
+                        style={{
+                          marginLeft: wp(16),
+                          fontSize: 12,
+                          fontFamily: "Roboto-Regular",
+                          color:
+                            stateBusinessPlaceholder === 0
+                              ? COLORS.light.darkgrey
+                              : COLORS.light.black,
+                        }}
+                      >
+                        {state}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        width: wp(30),
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Entypo
+                        name="chevron-small-down"
+                        size={20}
+                        color="grey"
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <BottomSheet
+                modalProps={{
+                  visible: isVisibleBusiness,
+                  statusBarTranslucent: true,
+                }}
+                isVisible={isVisibleBusiness}
+                containerStyle={{ backgroundColor: COLORS.light.primary }}
+              >
+                {states.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    onPress={() => {
+                      setBusiness(l.state);
+                    }}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        <Text>{l.state}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+                {Businesslist.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    containerStyle={l.containerStyle}
+                    onPress={l.onPress}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title style={l.titleStyle}>
+                        <Text>{l.title}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+              </BottomSheet>
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>
+                Password <Text style={styles.required}>*</Text>
+              </Text>
+              <View style={styles.phoneNumberWrapper}>
+                <PLPasswordInput
+                  placeholder="Create your Password"
+                  onChangeText={setPassword}
+                />
+              </View>
+            </View>
+
+            <View style={styles.carouselWrapper}>
+              <View style={styles.carouselIcon}>
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+                <Entypo name="circle" size={10} color={COLORS.light.primary} />
+              </View>
+            </View>
+
+            <PLButton
+              disabled={disabled}
+              style={styles.plButton}
+              textColor={COLORS.light.white}
+              btnText={"Next"}
+              onClick={onClick}
+            />
+            <View style={styles.loginWrapper}>
+              <Text style={styles.signUpText}>
+                By signing up, you agree with the
+                <Text style={styles.login}> Terms of services </Text>and{" "}
+                <Text style={styles.login}>Privacy policy </Text>
+              </Text>
+            </View>
+          </Animatable.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   wrapper: {
     flex: 1,
     alignItems: "center",
@@ -214,15 +466,22 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(20),
+    marginBottom: hp(8),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(15),
+  },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: hp(14),
   },
   input: {
     width: wp(334),
@@ -231,12 +490,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   city: {
-    width: wp(156),
+    width: wp(334),
     borderColor: COLORS.light.textinputborder,
     borderWidth: 0.5,
     borderRadius: 4,
     height: wp(40),
     paddingRight: wp(4),
+  },
+  TextWrapper: {
+    width: wpercent("90%"),
   },
   business: {
     width: wp(334),
@@ -272,7 +534,7 @@ const styles = StyleSheet.create({
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(12),
+    marginBottom: hp(4),
     marginTop: hp(12),
   },
   codeText: {
@@ -281,12 +543,12 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(31),
+    marginTop: hp(10),
   },
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(14),
+    marginTop: hp(10),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -311,8 +573,8 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(16),
+    fontSize: wp(11),
+    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
@@ -330,6 +592,9 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
     lineHeight: hp(20),
     color: COLORS.light.primary,
+  },
+  required: {
+    color: "red",
   },
 });
 

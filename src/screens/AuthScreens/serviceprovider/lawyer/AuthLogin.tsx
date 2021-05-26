@@ -74,7 +74,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               style={{
                 textAlign: "center",
                 fontFamily: "Roboto-Regular",
-                fontSize: wp(14),
+                fontSize: wp(11),
                 color: COLORS.light.black,
               }}
             >
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
+    fontSize: wp(11),
     lineHeight: hp(16),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
