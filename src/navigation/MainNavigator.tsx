@@ -28,6 +28,7 @@ import CongratSme from "../screens/AuthScreens/sme/Congrats";
 //SERVICE PROVIDER
 import ServiceProviderCategory from "../screens/AuthScreens/serviceprovider/AuthSelectCategory";
 import AuthSignUpLawyer from "../screens/AuthScreens/serviceprovider/lawyer/AuthSignup";
+import AuthSignUpLawyerSectionTwo from "../screens/AuthScreens/serviceprovider/lawyer/AuthSignupSectionTwo";
 import AuthPasswordLawyer from "../screens/AuthScreens/serviceprovider/lawyer/AuthLogin";
 import AuthEducationLawyer from "../screens/AuthScreens/serviceprovider/lawyer/EducationDetails";
 import AuthProfileImageLawyer from "../screens/AuthScreens/serviceprovider/lawyer/ProfileImage";
@@ -66,6 +67,7 @@ export type RootStackParamList = {
   //SERVICE PROVIDER
   [ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR]: undefined;
   [ROUTES.AUTH_SIGN_UP_LAWYER]: undefined;
+  [ROUTES.AUTH_SIGN_UP_SECTION_TWO_LAWYER]: undefined;
   [ROUTES.AUTH_PASSWORD_LAWYER]: undefined;
   [ROUTES.AUTH_EDUCATION_LAWYER]: undefined;
   [ROUTES.AUTH_PROFILE_IMAGE_LAWYER]: undefined;
@@ -134,7 +136,7 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR}
         component={AuthLoginCategorySelector}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
 
       {/* SME */}
@@ -161,7 +163,7 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_CONGRATS_SME}
         component={CongratSme}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
 
       {/* SERVICE PROVIDER */}
@@ -173,6 +175,11 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_LAWYER}
         component={AuthSignUpLawyer}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
+        name={ROUTES.AUTH_SIGN_UP_SECTION_TWO_LAWYER}
+        component={AuthSignUpLawyerSectionTwo}
         options={{ headerShown: false }}
       />
       <MainStack.Screen

@@ -1,13 +1,13 @@
 import React from "react";
 import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import PLButton from "../../../components/PLButton/PLButton";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import PLButton from "components/PLButton/PLButton";
 import { Radio, RadioGroup } from "@ui-kitten/components";
-import NavBar from "../../../components/NavBar";
+import NavBar from "components/NavBar";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -29,7 +29,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME);
+          navigation.goBack();
         }}
         navText="Select Option"
         textStyle={styles.navBarText}
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     textAlign: "left",
-    marginTop: hp(33),
+    marginTop: hp(23),
     width: wp(320),
   },
   navBarText: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   radiobtnFirstWrapper: {
     width: wp(335),
     height: hp(208),
-    marginTop: hp(139),
+    marginTop: hp(110),
     justifyContent: "center",
   },
   radioBtn: {

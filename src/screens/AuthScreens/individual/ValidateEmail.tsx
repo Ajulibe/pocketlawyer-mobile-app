@@ -2,23 +2,21 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import ActivityIndicatorPage from "../../../components/ActivityIndicator";
+import ActivityIndicatorPage from "components/ActivityIndicator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const ValidateEmail = ({ navigation, route }: Props) => {
-  const IndividualSignUpObject = route.params;
-
-  // console.log(IndividualSignUpObject.firstName);
-
+  const [email, setEmail] = useState("");
   //--> Otp state
   const [OTP, setOTP] = useState<string>("");
   const [validating, setSetValidating] = useState<boolean>(false);
@@ -49,19 +47,33 @@ const ValidateEmail = ({ navigation, route }: Props) => {
     validateOTP();
   }, [OTP]);
 
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@email");
+
+      jsonValue != null ? setEmail(JSON.parse(jsonValue)) : null;
+    } catch (e) {
+      //--> error reading value
+    }
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP);
+          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
         }}
         navText="Validate email address"
       />
       <View style={styles.contentWraper}>
         <View style={styles.TextWrapper}>
           <Text style={styles.welcomeMessage}>
-            A validation code has been sent to{" "}
-            <Text style={styles.ContactPerson}>bosedeajayi8@gmail.com</Text>
+            A validation code has been sent to &nbsp;
+            <Text style={styles.ContactPerson}>{email}</Text>
           </Text>
         </View>
 
@@ -91,12 +103,19 @@ const ValidateEmail = ({ navigation, route }: Props) => {
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(
-              ROUTES.AUTH_SIGN_UP_SECTION_TWO,
-              IndividualSignUpObject
-            )
-          }
+          onClick={async () => {
+            const path = await AsyncStorage.getItem("previousPath");
+            //--> check the previous Path
+            if (
+              path === "barrister" ||
+              path === "solicitor" ||
+              path === "lawfirm"
+            ) {
+              navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
+            } else if (path === null) {
+              navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
+            }
+          }}
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
@@ -173,7 +192,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(390),
+    marginTop: hp(340),
   },
   carouselWrapper: {
     justifyContent: "center",

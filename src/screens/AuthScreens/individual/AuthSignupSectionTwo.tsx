@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,36 +6,63 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  RefreshControlBase,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
 import { FontAwesome } from "@expo/vector-icons";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
-import { PLDatePicker } from "../../../components/PLDatePicker";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import { PLDatePicker } from "components/PLDatePicker";
 import * as Animatable from "react-native-animatable";
 import { states } from "utils/nigerianStates";
 import { Picker, Form } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axiosClient from "../../../utils/axiosClient";
-import { RegisterInterface } from "../.././../navigation/interfaces";
+import axiosClient from "utils/axiosClient";
+import { RegisterInterface } from "navigation/interfaces";
 import { PLToast } from "components/PLToast";
+import { BottomSheet, ListItem } from "react-native-elements";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   //--> state values for the section
-  const [state, setState] = useState("");
+  const [state, setState] = useState("Select your location");
+  const [statePlaceholder, setStatePlaceholder] = useState(0);
   const [city, setCity] = useState("");
   const [password, setPassword] = useState("");
+
+  //--> state  for bottom sheet
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (state === "Select your location") {
+      return;
+    }
+    setIsVisible(false);
+    setStatePlaceholder(statePlaceholder + 1);
+  }, [state]);
+
+  //-->  data for bottom sheet
+  const list = [
+    {
+      title: "Cancel",
+      containerStyle: {
+        backgroundColor: COLORS.light.primary,
+      },
+      titleStyle: { color: "white" },
+      onPress: () => setIsVisible(false),
+    },
+  ];
 
   //--> state from the other screen
   const [initialState, setInitialState] = useState({
@@ -48,7 +75,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     address: "",
     phone: "",
   });
-  const [initialload, setInitialLoad] = useState(true);
+  const [initialload, setInitialLoad] = useState(0);
 
   //--> loading state of the page
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +124,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   //--> make api call for registration
   React.useEffect(() => {
-    if (initialload) {
+    if (initialload === 0) {
       return;
     } else {
       //---> payload to be sent to the backend
@@ -121,21 +148,26 @@ const AuthGetStarted = ({ navigation }: Props) => {
     console.log(individualPayload);
 
     try {
-      const response = await axiosClient.post("api/User", individualPayload);
+      const { data } = await axiosClient.post("User", individualPayload);
       setIsLoading(false);
       PLToast({ message: "Successfully Registered", type: "success" });
 
-      // const { token } = data.token;
-      console.log(response);
+      //--> setting async stoarage data for usage later
+      const { token } = data.data;
+      const { userType } = data.data;
+      const { userID } = data.data;
 
       //--> setting the received token in local storage
-      // await AsyncStorage.setItem("token", JSON.stringify(token));
+      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("userType", JSON.stringify(userType));
+      await AsyncStorage.setItem("userID", JSON.stringify(userID));
 
-      // setTimeout(() => {
-      //   navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR);
-      // }, 1000);
+      setTimeout(() => {
+        navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
+      }, 1000);
     } catch (error) {
-      PLToast({ message: "An error has Occured", type: "error" });
+      const { message } = error?.response.data;
+      PLToast({ message: message, type: "error" });
       setIsLoading(false);
       return;
     }
@@ -162,7 +194,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
             <View>
               <Text style={styles.inputText}>
-                Date of Birth<Text style={styles.required}>*</Text>
+                Date of Birth<Text style={styles.required}> *</Text>
               </Text>
               <PLDatePicker
                 onSelect={onSelect}
@@ -175,43 +207,98 @@ const AuthGetStarted = ({ navigation }: Props) => {
               <Text style={styles.inputText}>
                 State <Text style={styles.required}>*</Text>
               </Text>
-              <Form>
-                <Picker
-                  mode="dropdown"
-                  selectedValue={state}
-                  onValueChange={setState}
-                  iosIcon={
-                    <Entypo
-                      name="chevron-small-down"
-                      size={24}
-                      color={COLORS.light.black}
-                    />
-                  }
-                  textStyle={{
-                    fontFamily: "Roboto-Regular",
-                    fontSize: wp(12),
-                    color: COLORS.light.black,
+              <View
+                style={{
+                  borderWidth: 1,
+                  width: wp(334),
+                  height: wp(40),
+                  borderRadius: 4,
+                  borderColor: COLORS.light.textinputborder,
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(true);
                   }}
-                  placeholder="Select your location"
-                  placeholderStyle={{
-                    color: COLORS.light.darkgrey,
-                    fontFamily: "Roboto-Regular",
-                    fontSize: wp(12),
-                  }}
-                  placeholderIconColor={COLORS.light.darkgrey}
-                  style={styles.city}
                 >
-                  {states.map(function (item) {
-                    return (
-                      <Picker.Item
-                        key={item.state}
-                        label={item.state}
-                        value={item.state}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <View style={{ width: wp(300) }}>
+                      <Text
+                        style={{
+                          marginLeft: wp(16),
+                          fontSize: 12,
+                          fontFamily: "Roboto-Regular",
+                          color:
+                            statePlaceholder === 0
+                              ? COLORS.light.darkgrey
+                              : COLORS.light.black,
+                        }}
+                      >
+                        {state}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        width: wp(30),
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Entypo
+                        name="chevron-small-down"
+                        size={20}
+                        color="grey"
                       />
-                    );
-                  })}
-                </Picker>
-              </Form>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <BottomSheet
+                modalProps={{
+                  visible: isVisible,
+                  statusBarTranslucent: true,
+                }}
+                isVisible={isVisible}
+                containerStyle={{ backgroundColor: COLORS.light.primary }}
+              >
+                {states.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    // containerStyle={l.containerStyle}
+                    onPress={() => {
+                      setState(l.state);
+                    }}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        <Text>{l.state}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+                {list.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    containerStyle={l.containerStyle}
+                    onPress={l.onPress}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title style={l.titleStyle}>
+                        <Text>{l.title}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+              </BottomSheet>
             </View>
 
             <View>
@@ -271,7 +358,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                       ? setInitialState(JSON.parse(jsonValue))
                       : null;
 
-                    setInitialLoad(false);
+                    setInitialLoad(initialload + 1);
                   } catch (e) {
                     //--> error reading value
                   }

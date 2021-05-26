@@ -19,7 +19,13 @@ type Props = StackScreenProps<
 const AuthGetStarted = ({ navigation }: Props) => {
   return (
     <Animatable.View animation="fadeIn" style={styles.wrapper}>
-      <Text style={styles.textHeader}>You're all set!</Text>
+      <Animatable.Text
+        animation="zoomIn"
+        easing="ease-in"
+        style={styles.textHeader}
+      >
+        You're all set!
+      </Animatable.Text>
       <Image
         source={IMAGES.getstarted}
         resizeMode="contain"

@@ -22,6 +22,7 @@ export enum ROUTES {
   //SERIVCE PROVIDER
   SERVICE_PROVIDER_CATEGORY_SELECTOR = "ServiceProviderCategory",
   AUTH_SIGN_UP_LAWYER = "AuthSignUpLawyer",
+  AUTH_SIGN_UP_SECTION_TWO_LAWYER = "AuthSignUpLawyerSectionTwo",
   AUTH_PASSWORD_LAWYER = "AuthPasswordLawyer",
   AUTH_EDUCATION_LAWYER = "AuthEducationLawyer",
   AUTH_PROFILE_IMAGE_LAWYER = "AuthProfileImageLawyer",

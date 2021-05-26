@@ -15,6 +15,8 @@ import { PLToast } from "components/PLToast";
 import axiosClient from "utils/axiosClient";
 import { submitCategories } from "navigation/interfaces";
 import FullPageLoader from "components/FullPageLoader";
+import { CommonActions } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -36,45 +38,61 @@ const AuthGetStarted = ({ navigation }: Props) => {
     { name: "Pre-Incorporation", value: preincorporation },
     { name: "Company Secretarial Services", value: companysecretarial },
     { name: "Post-Incorporation", value: postincorporation },
-    { name: "reviewofLegal", value: reviewofLegal },
+    { name: "Review of Legal Documents", value: reviewofLegal },
     { name: "Legal Advice and Consultancy", value: legaladvice },
-    { name: "Review of Legal Documents", value: legaldrafting },
+    { name: "Legal Drafting", value: legaldrafting },
   ];
 
-  const filterCategories = () => {
+  const filterCategories = async () => {
     const fliteredCategories = selectedCategories.filter((item) => {
       return item.value === true;
     });
-    console.log(fliteredCategories);
 
     const Categorylist = fliteredCategories.map((item) => {
       return { CategoryCode: item.name, CategoryName: item.name };
     });
 
-    const Payload: submitCategories = {
-      UserId: 1,
-      UserType: 1,
-      Categorylist: Categorylist,
-    };
+    try {
+      //--> reading async storage value
+      const userType = await AsyncStorage.getItem("userType");
+      const userID = await AsyncStorage.getItem("userID");
 
-    submitCategories(Payload);
+      const Payload: submitCategories = {
+        UserId: userID === null ? "" : JSON.parse(userID),
+        UserType: userType === null ? "" : JSON.parse(userType),
+        Categorylist: Categorylist,
+      };
+
+      submitCategories(Payload);
+    } catch (error) {
+      //---> return the error
+    }
   };
 
   const submitCategories = async (Payload: submitCategories) => {
     setLoading(true);
+
+    console.log(Payload);
     try {
       const response = await axiosClient.post(
-        "api/Category/AddUSerCategory",
+        "Category/AddUSerCategory",
         Payload
       );
-      console.log(response, "result");
+
       PLToast({ message: "Categories Saved", type: "success" });
-      // setTimeout(() => {
-      //   navigation.navigate(ROUTES.TABSCREEN_STACK);
-      // }, 1000);
+
+      setTimeout(() => {
+        //--> reset navigation state after registration
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: ROUTES.TABSCREEN_STACK }],
+          })
+        );
+      }, 1000);
     } catch (error) {
       setLoading(false);
-      PLToast({ message: "Error Saving Categories", type: "success" });
+      PLToast({ message: "Error Saving Categories", type: "error" });
 
       return;
     }

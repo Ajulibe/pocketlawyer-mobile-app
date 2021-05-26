@@ -2,20 +2,25 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, Layout, Text } from "@ui-kitten/components";
+import { ApplicationProvider } from "@ui-kitten/components";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import useCachedResources from "./src/hooks/useCachedResources";
 import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
 import { default as theme } from "./src/theme.json";
-import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "components/PLToast";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+
+  //--> reactotron debugger setup
+  if (__DEV__) {
+    import("config/ReactotronConfig").then(() =>
+      console.log("Reactotron Configured")
+    );
+  }
 
   //load fonts
   const fetchFonts = () => {

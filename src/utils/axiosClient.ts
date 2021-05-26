@@ -3,7 +3,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const config = {
-  BASE_URL: "https://3emru0yz2e.execute-api.eu-west-1.amazonaws.com/dev/",
+  BASE_URL: "https://3emru0yz2e.execute-api.eu-west-1.amazonaws.com/dev/api/",
 };
 
 const axiosClient = axios.create({

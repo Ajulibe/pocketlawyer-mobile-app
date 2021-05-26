@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
@@ -16,59 +16,97 @@ import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "../../../types";
 import { Input } from "@ui-kitten/components";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const ValidateEmail = ({ navigation }: Props) => {
-  const [countryCode, setCountryCode] = useState<CountryCode>("NG");
-  const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] =
-    useState<boolean>(false);
-  const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
+  //--> Otp state
+  const [OTP, setOTP] = useState<string>("");
+  const [validating, setSetValidating] = useState<boolean>(false);
+  const [errors, setErrors] = useState<boolean>(true);
+  const [email, setEmail] = useState("");
 
-  const [withFlag, setWithFlag] = useState<boolean>(true);
-  const [withEmoji, setWithEmoji] = useState<boolean>(true);
-  const [withFilter, setWithFilter] = useState<boolean>(true);
-  const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(true);
-  const [withCallingCode, setWithCallingCode] = useState<boolean>(true);
-  const onSelect = (country: Country) => {
-    setCountryCode(country.cca2);
-    setCountry(country);
-    setCallingCode(country.callingCode);
+  //--> validate OTP
+  const validateOTP = () => {
+    // console.log(OTP);
+  };
+
+  //-> listen to OTP Change and call validation
+  useEffect(() => {
+    if (OTP === "" || OTP.length < 6) {
+      setErrors(true);
+      return;
+    }
+    //--> disable the text input button when making the api call
+    setSetValidating(true);
+    setErrors(true);
+
+    //--> simulation for a real API call to remove errors and enable button
+    setTimeout(() => {
+      //--> enable the text input button after making the api call
+      setSetValidating(false);
+      setErrors(false);
+    }, 3000);
+
+    validateOTP();
+  }, [OTP]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@email");
+
+      jsonValue != null ? setEmail(JSON.parse(jsonValue)) : null;
+    } catch (e) {
+      //--> error reading value
+    }
   };
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP_SME);
+          navigation.goBack();
         }}
         navText="Validate email address"
       />
       <View style={styles.contentWraper}>
         <View style={styles.TextWrapper}>
           <Text style={styles.welcomeMessage}>
-            A validation code has been sent to{" "}
-            <Text style={styles.ContactPerson}>bosedeajayi8@gmail.com</Text>
+            A validation code has been sent to &nbsp;
+            <Text style={styles.ContactPerson}>email</Text>
           </Text>
         </View>
 
-        <View>
+        <View style={{ height: wp(130) }}>
           <Text style={styles.inputText}>Code</Text>
           <PLTextInput
+            maxLength={6}
+            disabled={validating}
             textContentType="name"
+            onChangeText={setOTP}
             style={styles.input}
             placeholder="Enter code "
           />
+          {!errors ? (
+            <Text style={[styles.inputText, styles.successText]}>
+              Code has been verified &nbsp; &#10003;
+            </Text>
+          ) : null}
         </View>
 
         <PLButton
+          isLoading={validating}
+          loadingText="Validating..."
+          disabled={errors}
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME)
-          }
+          onClick={() => navigation.navigate(ROUTES.AUTH_CONGRATS_SME)}
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
@@ -145,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(420),
+    marginTop: hp(340),
   },
   carouselWrapper: {
     justifyContent: "center",
@@ -202,6 +240,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
     borderLeftWidth: 0,
     borderColor: "#fff",
+  },
+  successText: {
+    color: "green",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(10),
+    marginTop: hp(6),
   },
 });
 

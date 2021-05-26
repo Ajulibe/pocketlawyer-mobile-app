@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { wp, hp } from "../../utils/Dimensions";
+import { wp, hp } from "utils/Dimensions";
 import { Input } from "@ui-kitten/components";
-import COLORS from "../../utils/Colors";
+import COLORS from "utils/Colors";
 
 interface Props {
   id?: string;
