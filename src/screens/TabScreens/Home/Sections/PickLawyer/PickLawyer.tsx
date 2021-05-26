@@ -34,38 +34,30 @@ export default function PickLawyer({ navigation }: Props) {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <KeyboardAvoidingView
-          behavior={"padding"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}
+        <CustomAppbar
+          navigation={navigation}
+          title="Business Name Registration"
+          showBorderBottom={true}
+        />
+        <View
+          style={[styles.container, { flexGrow: 1 }]}
+          // keyboardShouldPersistTaps="handled"
+          // bounces={false}
         >
-          <CustomAppbar
-            navigation={navigation}
-            title="Business Name Registration"
-            showBorderBottom={true}
+          <Text style={globalStyles.H2Style}>Pick a Lawyer</Text>
+          <View style={{ height: hp(13) }} />
+          <FlatList
+            data={data}
+            renderItem={({ item }) => (
+              <LawyerTile
+                onClick={() => navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN)}
+              />
+            )}
+            //Setting the number of column
+            numColumns={3}
+            keyExtractor={(item, index) => index.toString()}
           />
-          <ScrollView
-            contentContainerStyle={[styles.container, { flexGrow: 1 }]}
-            keyboardShouldPersistTaps="handled"
-            bounces={false}
-          >
-            <Text style={globalStyles.H2Style}>Pick a Lawyer</Text>
-            <View style={{ height: hp(13) }} />
-            <FlatList
-              data={data}
-              renderItem={({ item }) => (
-                <LawyerTile
-                  onClick={() =>
-                    navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN)
-                  }
-                />
-              )}
-              //Setting the number of column
-              numColumns={3}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </ScrollView>
-        </KeyboardAvoidingView>
+        </View>
       </SafeAreaView>
     </>
   );
@@ -75,5 +67,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: wp(20),
     paddingVertical: hp(18),
+    flex: 1,
   },
 });

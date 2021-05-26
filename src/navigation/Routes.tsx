@@ -35,6 +35,7 @@ export enum ROUTES {
   HOME_SCREEN = "HomeScreen",
   PICK_LAWYER_SCREEN = "PickLawyer",
   LAWYER_DETAIL_SCREEN = "LawyerDetail",
+  CHECKOUT_SCREEN = "CheckoutScreen",
   // SERIVE STACK...
   SERVICE_STACK = "ServiceStack",
   SERVICE_SCREEN = "ServiceScreen",
@@ -44,4 +45,5 @@ export enum ROUTES {
   // ACCOUNT STACK...
   ACCOUNT_STACK = "AccountStack",
   ACCOUNT_SCREEN = "AccountSCreen",
+  UPDATE_PASSWORD = "UpdatePasswordScreen",
 }

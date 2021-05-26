@@ -52,6 +52,7 @@ export default function LawyerDetail({ navigation }: Props) {
     <>
       <BottomSheetModal
         closeModal={() => setModalVisibility(false)}
+        navigation={navigation}
         modalVisible={modalVisibility}
       />
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
