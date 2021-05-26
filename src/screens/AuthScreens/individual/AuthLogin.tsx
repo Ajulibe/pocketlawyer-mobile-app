@@ -25,7 +25,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     <SafeAreaView style={styles.wrapper}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
+          navigation.navigate(ROUTES.AUTH_GET_STARTED_SCREEN);
         }}
         navText="Login"
       />
@@ -83,7 +83,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
+            // onPress={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
+            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           >
             <Text
               style={{

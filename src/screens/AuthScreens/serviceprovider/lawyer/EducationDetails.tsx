@@ -1,22 +1,35 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../../navigation/MainNavigator";
-import { ROUTES } from "../../../../navigation/Routes";
-import COLORS from "../../../../utils/Colors";
-import { wp, hp } from "../../../../utils/Dimensions";
-import NavBar from "../../../../components/NavBar";
-import PLButton from "../../../../components/PLButton/PLButton";
-import { PLPasswordInput } from "../../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "../../../../components/PLModal";
-import { states } from "../../../../utils/nigerianStates";
+import { PLModal } from "components/PLModal";
 import { Picker, Form, Icon } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import { FontAwesome } from "@expo/vector-icons";
+import { BottomSheet, ListItem } from "react-native-elements";
+import { states } from "utils/nigerianStates";
+import { ScrollView } from "react-native-gesture-handler";
+import axiosClient from "utils/axiosClient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DocUploadUserInfo } from "navigation/interfaces";
+import axios from "axios";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -26,136 +39,371 @@ type Props = StackScreenProps<
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
 
-  const pickDocument = async () => {
-    let result = await DocumentPicker.getDocumentAsync({});
+  //--> state  for bottom sheet
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
-    console.log(result);
+  //-->  data for bottom sheet
+  const list = [
+    {
+      title: "Cancel",
+      containerStyle: {
+        backgroundColor: COLORS.light.primary,
+      },
+      titleStyle: { color: "white" },
+      onPress: () => setIsVisible(false),
+    },
+  ];
+
+  //--> state values
+  const [school, setSchool] = useState("");
+  const [CGPA, setCGPA] = useState("");
+  const [Identification, setIdentification] = useState(
+    "Select your means of Identification"
+  );
+  const [identificationPlaceholder, setIdentificationPlaceholder] = useState(0);
+  interface uploadInterfaace {
+    name: string;
+    size: number;
+    uri: string;
+    type: string;
+  }
+  const [idNumber, setIdNumber] = useState("");
+  const [resume, setResume] = useState<uploadInterfaace[]>([
+    {
+      name: "",
+      size: 0,
+      uri: "",
+      type: "",
+    },
+  ]);
+  const [resumeName, setResumeName] = useState("Select from files");
+
+  //--> setting resume data
+  const pickDocument = async () => {
+    await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+      copyToCacheDirectory: true,
+    }).then((response) => {
+      if (response.type == "success") {
+        let { name, size, uri } = response;
+        let nameParts = name.split(".");
+        let fileType = nameParts[nameParts.length - 1];
+        var fileToUpload = [
+          {
+            name: name,
+            size: size,
+            uri: uri,
+            type: "application/" + fileType,
+          },
+        ];
+        console.log(fileToUpload, "...............file");
+        setResumeName(name);
+        setResume(fileToUpload);
+      }
+    });
   };
+
+  React.useEffect(() => {
+    const { name, size, uri, type } = resume[0];
+    if (name === "" || size === 0 || uri === "" || type === "") {
+      return;
+    }
+    //--> get the user id from async storage
+    AsyncStorage.getItem("userID").then((res) => {
+      const payload: DocUploadUserInfo = {
+        fileName: name,
+        fileType: 1,
+        isfor: "Certificate",
+        contentType: type,
+        userID: Number(res),
+      };
+
+      postDocument(payload);
+    });
+  }, [resume]);
+
+  //--> posting resume data
+  const postDocument = async (payload: DocUploadUserInfo) => {
+    try {
+      await axiosClient.post("Upload/Generates3URL", payload).then((res) => {
+        const { url, uploadID, fileName } = res.data.data;
+
+        // console.log(fileName);
+        const formData = new FormData();
+        formData.append("Certificate", resume[0] as any);
+        formData.append("fileName", fileName);
+        console.log(formData);
+        console.log(url);
+
+        //--> post document to the received s3 url
+        // axios({
+        //   method: "PUT",
+        //   url: url,
+        //   data: formData,
+        //   headers: { "Content-Type": "application/octet-stream" },
+        // })
+        //   .then(function (response) {
+        //     console.log(response);
+        //   })
+        //   .catch(function (er) {
+        //     console.log(er.toString());
+        //     return;
+        //   });
+
+        //--> confirm upload
+        const confirmPayload = {
+          fileName: fileName,
+          fileType: 1,
+          userID: payload.userID,
+          uploadID: uploadID,
+        };
+      });
+    } catch (error) {}
+  };
+
+  //--> disabling button
+  const [disabled, setDisabled] = useState<boolean>(true);
+
+  //--> to change placeholder color when indentification is set
+  React.useEffect(() => {
+    if (Identification === "Select your means of Identification") {
+      return;
+    }
+    setIsVisible(false);
+    setIdentificationPlaceholder(identificationPlaceholder + 1);
+  }, [Identification]);
+
+  //--> check to ensure all values are filled and enable button
+  React.useEffect(() => {
+    //--> check if the payload has be completely filled
+    if (
+      school === "" ||
+      CGPA === "" ||
+      Identification === "" ||
+      idNumber === "" ||
+      resume[0].name === ""
+    ) {
+      setDisabled(true);
+      return;
+    }
+
+    setDisabled(false);
+  }, [CGPA, Identification, school, idNumber, resume]);
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_PASSWORD_LAWYER);
-        }}
-        navText="Create Password"
-      />
-      <View style={styles.contentWraper}>
-        <Text style={styles.welcomeMessage}>
-          <Text style={styles.verifyEmail}>
-            An email has been sent to you to verify your email address.
-          </Text>
-          Kindly fill in your{" "}
-          <Text style={styles.educationDetails}>education details </Text> to
-          complete your profile as a lawyer.
-        </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_PASSWORD_LAWYER);
+          }}
+          navText="Education Details"
+        />
+        <ScrollView>
+          <View style={styles.contentWraper}>
+            <Text style={styles.welcomeMessage}>
+              <Text style={styles.verifyEmail}>
+                An email has been sent to you to verify your email address.
+              </Text>
+              &nbsp; Kindly fill in your &nbsp;
+              <Text style={styles.educationDetails}>education details </Text> to
+              complete your profile as a lawyer.
+            </Text>
 
-        <View>
-          <Text style={styles.inputText}>School</Text>
-          <PLTextInput
-            textContentType="none"
-            style={styles.input}
-            placeholder="Type the name of institution attended"
-          />
-        </View>
+            <View>
+              <PLTextInput
+                onChangeText={setSchool}
+                labelText="School"
+                error={false}
+                name="School"
+                textContentType="none"
+                style={styles.input}
+                placeholder="Type the name of institution attended"
+              />
+            </View>
 
-        <View>
-          <Text style={styles.inputText}>CGPA</Text>
-          <PLTextInput
-            textContentType="none"
-            style={styles.input}
-            placeholder="Type your grade"
-          />
-        </View>
+            <View>
+              <PLTextInput
+                onChangeText={setCGPA}
+                labelText="CGPA"
+                error={false}
+                name="CGPA"
+                textContentType="none"
+                keyboardType="numeric"
+                style={styles.input}
+                placeholder="Type your grade"
+              />
+            </View>
 
-        <View>
-          <Text style={styles.inputText}>Means of Identification</Text>
-          <Form>
-            <Picker
-              mode="dropdown"
-              iosIcon={
-                <Entypo
-                  name="chevron-small-down"
-                  size={24}
+            <View style={{ marginTop: wp(4) }}>
+              <Text style={styles.inputText}>State</Text>
+              <View
+                style={{
+                  borderWidth: 1,
+                  width: wp(334),
+                  height: wp(40),
+                  borderRadius: 4,
+                  borderColor: COLORS.light.textinputborder,
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(true);
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <View style={{ width: wp(300) }}>
+                      <Text
+                        style={{
+                          marginLeft: wp(16),
+                          fontSize: 12,
+                          fontFamily: "Roboto-Regular",
+                          color:
+                            identificationPlaceholder === 0
+                              ? COLORS.light.darkgrey
+                              : COLORS.light.black,
+                        }}
+                      >
+                        {Identification}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        width: wp(30),
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Entypo
+                        name="chevron-small-down"
+                        size={20}
+                        color="grey"
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <BottomSheet
+                modalProps={{
+                  visible: isVisible,
+                  statusBarTranslucent: true,
+                }}
+                isVisible={isVisible}
+                containerStyle={{ backgroundColor: COLORS.light.primary }}
+              >
+                {states.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    onPress={() => {
+                      setIdentification(l.state);
+                    }}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        <Text>{l.state}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+                {list.map((l, i) => (
+                  <ListItem
+                    key={i}
+                    containerStyle={l.containerStyle}
+                    onPress={l.onPress}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title style={l.titleStyle}>
+                        <Text>{l.title}</Text>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+              </BottomSheet>
+            </View>
+
+            <View>
+              <PLTextInput
+                onChangeText={setIdNumber}
+                labelText="ID Number"
+                error={false}
+                name="ID Number"
+                textContentType="none"
+                style={styles.input}
+                placeholder="Type identification number"
+              />
+            </View>
+
+            <View style={styles.fileSelectBox}>
+              <Text style={styles.inputText}>Resume</Text>
+              <TouchableOpacity
+                onPress={pickDocument}
+                style={styles.inputButton}
+              >
+                <Text style={styles.selectText}>{resumeName}</Text>
+                <FontAwesome
+                  name="file-pdf-o"
+                  size={14}
                   color={COLORS.light.black}
                 />
-              }
-              placeholder="Select your means of identification"
-              placeholderStyle={{
-                color: COLORS.light.darkgrey,
-                fontFamily: "Roboto-Regular",
-                fontSize: 12,
-              }}
-              placeholderIconColor={COLORS.light.darkgrey}
-              style={styles.identification}
-            >
-              {states.map(function (item) {
-                return (
-                  <Picker.Item
-                    key={item.state}
-                    label={item.state}
-                    value={item.state}
-                  />
-                );
-              })}
-            </Picker>
-          </Form>
-        </View>
+              </TouchableOpacity>
+            </View>
 
-        <View>
-          <Text style={styles.inputText}>ID Number</Text>
-          <PLTextInput
-            textContentType="none"
-            style={styles.input}
-            placeholder="Type identification number"
-          />
-        </View>
+            <View style={styles.carouselWrapper}>
+              <View style={styles.carouselIcon}>
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+                <Entypo name="circle" size={10} color={COLORS.light.primary} />
+                <Entypo name="circle" size={10} color={COLORS.light.primary} />
+              </View>
+            </View>
 
-        <View style={styles.fileSelectBox}>
-          <Text style={styles.inputText}>Resume</Text>
-          <TouchableOpacity onPress={pickDocument} style={styles.inputButton}>
-            <Text style={styles.selectText}>Select from files</Text>
-            <FontAwesome
-              name="file-pdf-o"
-              size={14}
-              color={COLORS.light.black}
-            />
-          </TouchableOpacity>
-        </View>
+            <View style={styles.btnWrapper}>
+              <TouchableOpacity
+                style={styles.skipButton}
+                onPress={() =>
+                  navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
+                }
+              >
+                <Text style={styles.skip}>Skip</Text>
+              </TouchableOpacity>
 
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <Entypo name="circle" size={10} color={COLORS.light.primary} />
-            <Entypo name="circle" size={10} color={COLORS.light.primary} />
+              <PLButton
+                disabled={disabled}
+                style={styles.nextButton}
+                textColor={COLORS.light.white}
+                btnText={"Next"}
+                onClick={() =>
+                  navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
+                }
+              />
+            </View>
           </View>
-        </View>
-
-        <View style={styles.btnWrapper}>
-          <TouchableOpacity
-            style={styles.skipButton}
-            // onPress={() =>
-            // //   navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-            // }
-          >
-            <Text style={styles.skip}>Skip</Text>
-          </TouchableOpacity>
-
-          <PLButton
-            style={styles.nextButton}
-            textColor={COLORS.light.white}
-            btnText={"Next"}
-            onClick={() =>
-              navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
-            }
-          />
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   wrapper: {
     flex: 1,
     alignItems: "center",
@@ -165,16 +413,16 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     alignSelf: "flex-start",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginBottom: hp(12),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(28),
   },
   educationDetails: {
     fontFamily: "Roboto-Medium",
@@ -245,7 +493,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: hp(44),
+    height: wp(45),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {
@@ -272,8 +520,8 @@ const styles = StyleSheet.create({
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(12),
-    marginTop: hp(12),
+    marginBottom: hp(4),
+    marginTop: hp(10),
   },
   forgotPassword: {
     fontFamily: "Roboto-Medium",

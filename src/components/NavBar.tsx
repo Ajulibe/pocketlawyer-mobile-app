@@ -5,6 +5,7 @@ import COLORS from "../utils/Colors";
 import { wp, hp } from "../utils/Dimensions";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Animatable from "react-native-animatable";
 
 interface NavProps {
   onPress: any;
@@ -24,7 +25,9 @@ const NavBar = ({ onPress, navText, textStyle }: NavProps) => {
         />
       </TouchableOpacity>
 
-      <Text style={[styles.navText, textStyle]}>{navText}</Text>
+      <Animatable.Text animation="fadeIn" style={[styles.navText, textStyle]}>
+        {navText}
+      </Animatable.Text>
     </View>
   );
 };
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Bold",
     fontSize: wp(20),
     fontWeight: "bold",
-    color: COLORS.light.black,
+    color: COLORS.light.primary,
     width: wpercent("80%"),
     textAlign: "center",
   },

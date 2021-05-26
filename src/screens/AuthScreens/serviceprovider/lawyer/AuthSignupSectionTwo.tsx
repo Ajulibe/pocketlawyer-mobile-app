@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -13,30 +13,28 @@ import { RootStackParamList } from "navigation/MainNavigator";
 import { ROUTES } from "navigation/Routes";
 import COLORS from "utils/Colors";
 import { wp, hp } from "utils/Dimensions";
-import { Input } from "@ui-kitten/components";
 import NavBar from "components/NavBar";
 import PLButton from "components/PLButton/PLButton";
-import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "types";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
 import * as Animatable from "react-native-animatable";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IndividualSignUpInterface } from "navigation/interfaces";
+import axiosClient from "utils/axiosClient";
+import { RegisterInterface } from "navigation/interfaces";
+import { PLToast } from "components/PLToast";
+import { CountryCode, Country, CallingCode } from "types";
+import CountryPicker from "react-native-country-picker-modal";
+import { Input } from "@ui-kitten/components";
+import axios from "axios";
 
-type Props = StackScreenProps<
-  RootStackParamList,
-  ROUTES.AUTH_GET_STARTED_SCREEN
->;
-
-const useInputState = (initialValue = "") => {
-  const [value, setValue] = React.useState(initialValue);
-  return { value, onChangeText: setValue };
-};
+type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
+  //--> state values for the section
+  const [phonenumber, setPhonenumber] = useState("");
+  const [password, setPassword] = useState("");
+
   //--> country component info
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
@@ -55,51 +53,91 @@ const AuthGetStarted = ({ navigation }: Props) => {
     setCallingCode(country.callingCode);
   };
 
-  //--> state values
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
+  //--> state from the other screen
+  const [initialState, setInitialState] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    userType: 1,
+    password: "",
+    address: "",
+    phone: "",
+    dob: "",
+    SuppremeCourtNumber: "",
+  });
 
-  //--> check to ensure all values are filled and enable button
+  const [initialload, setInitialLoad] = useState(0);
+
+  //--> loading state of the page
+  const [isLoading, setIsLoading] = useState(false);
+
+  //--> Next button disabled state
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  //--> check the state of the input forms and enable the button when all fields are complete
   React.useEffect(() => {
-    //--> check if the payload has be completely filled
-    if (
-      email === "" ||
-      firstName === "" ||
-      lastName === "" ||
-      phonenumber === ""
-    ) {
+    if (phonenumber.length === 0 || password.length === 0) {
+      setIsDisabled(true);
+      return;
+    } else {
+      setIsDisabled(false);
+    }
+  }, [phonenumber, password]);
+
+  //--> make api call for registration
+  React.useEffect(() => {
+    if (initialload === 0) {
+      return;
+    } else {
+      //---> payload to be sent to the backend
+      const individualPayload = {
+        firstName: initialState.firstName,
+        lastName: initialState.lastName,
+        email: initialState.email,
+        userType: initialState.userType,
+        password: password,
+        address: initialState.address,
+        phone: phonenumber,
+        dob: "2/1/20",
+        SuppremeCourtNumber: initialState.SuppremeCourtNumber,
+      };
+
+      register(individualPayload);
+    }
+  }, [initialload]);
+
+  const register = async (individualPayload: RegisterInterface) => {
+    setIsLoading(true);
+    // console.log(individualPayload);
+
+    try {
+      const { data } = await axiosClient.post("User", individualPayload);
+
+      setIsLoading(false);
+      PLToast({ message: "Successfully Registered", type: "success" });
+
+      //--> setting async stoarage data for usage later
+      const { token } = data.data;
+      const { userType } = data.data;
+      const { userID } = data.data;
+
+      //--> setting the received token in local storage
+      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("userType", JSON.stringify(userType));
+      await AsyncStorage.setItem("userID", JSON.stringify(userID));
+
+      //--> setting lawyer as the prvios path
+      await AsyncStorage.setItem("previousPath", "barrister");
+
+      setTimeout(() => {
+        navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
+      }, 1000);
+    } catch (error) {
+      const { message } = error?.response.data;
+      PLToast({ message: message, type: "error" });
+      setIsLoading(false);
       return;
     }
-
-    setDisabled(false);
-  }, [firstName, lastName, email, phonenumber]);
-
-  //--> disabling button
-  const [disabled, setDisabled] = useState<boolean>(true);
-
-  //--> creating payload and saving to async
-  const onClick = () => {
-    const Payload = {
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      phone: phonenumber,
-    };
-
-    //-->  saving payload to local staorage
-    const storeData = async (Payload: IndividualSignUpInterface) => {
-      try {
-        await AsyncStorage.setItem("@signup_payload", JSON.stringify(Payload));
-        await AsyncStorage.setItem("@email", JSON.stringify(email));
-        navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
-      } catch (e) {
-        //-->  saving error
-      }
-    };
-
-    storeData(Payload);
   };
 
   return (
@@ -107,64 +145,19 @@ const AuthGetStarted = ({ navigation }: Props) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
+        keyboardVerticalOffset={wp(0)}
       >
         <NavBar
           onPress={() => {
-            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+            navigation.goBack();
           }}
-          navText="Sign Up"
+          navText="Complete Account Setup"
         />
         <ScrollView>
           <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-            <View style={styles.TextWrapper}>
-              <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
-                Welcome to Pocket Lawyer! Create an account to access top notch
-                legal services.
-              </Animatable.Text>
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="First Name"
-                labelTextRequired={true}
-                error={false}
-                name="FirstName"
-                onChangeText={setFirstName}
-                value={firstName}
-                textContentType="name"
-                style={styles.input}
-                placeholder="Type your first name"
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Last Name"
-                labelTextRequired={true}
-                error={false}
-                name="LastName"
-                onChangeText={setLastName}
-                value={lastName}
-                textContentType="familyName"
-                style={styles.input}
-                placeholder="Type your last name"
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Email Address"
-                labelTextRequired={true}
-                error={false}
-                name="Email"
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                value={email}
-                style={styles.input}
-                placeholder="Type your email address"
-                textContentType="emailAddress"
-              />
-            </View>
+            <Text style={styles.welcomeMessage}>
+              Complete your account setup.
+            </Text>
 
             <View>
               <Text style={styles.inputText}>
@@ -202,6 +195,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
               </View>
             </View>
 
+            <View>
+              <Text style={styles.inputText}>
+                Password <Text style={styles.required}>*</Text>
+              </Text>
+              <View style={styles.phoneNumberWrapper}>
+                <PLPasswordInput
+                  placeholder="Create your Password"
+                  onChangeText={setPassword}
+                />
+              </View>
+            </View>
+
             <View style={styles.carouselWrapper}>
               <View style={styles.carouselIcon}>
                 <FontAwesome
@@ -209,16 +214,41 @@ const AuthGetStarted = ({ navigation }: Props) => {
                   size={12}
                   color={COLORS.light.primary}
                 />
-                <Entypo name="circle" size={10} color={COLORS.light.primary} />
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
               </View>
             </View>
 
             <PLButton
+              disabled={isDisabled}
+              isLoading={isLoading}
+              loadingText="Submitting..."
               style={styles.plButton}
-              disabled={disabled}
               textColor={COLORS.light.white}
               btnText={"Next"}
-              onClick={onClick}
+              onClick={() => {
+                //--> reading async storage value
+                const getData = async () => {
+                  try {
+                    const jsonValue = await AsyncStorage.getItem(
+                      "lawyerPayload"
+                    );
+
+                    jsonValue != null
+                      ? setInitialState(JSON.parse(jsonValue))
+                      : null;
+
+                    setInitialLoad(initialload + 1);
+                  } catch (e) {
+                    //--> error reading value
+                  }
+                };
+
+                getData();
+              }}
             />
             <View style={styles.loginWrapper}>
               <Text style={styles.signUpText}>
@@ -251,11 +281,25 @@ const styles = StyleSheet.create({
     lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginBottom: hp(19),
     width: wpercent("90%"),
   },
+  city: {
+    width: wp(334),
+    borderColor: COLORS.light.textinputborder,
+    borderWidth: 0.5,
+    borderRadius: 4,
+    height: wp(40),
+    paddingRight: wp(4),
+  },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: hp(14),
+  },
   contentWraper: {
-    flex: 1,
     width: wpercent("90%"),
     alignItems: "center",
     marginTop: hp(38),
@@ -266,31 +310,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
   },
-  TextWrapper: {
-    width: wpercent("90%"),
-  },
-  inputPhoneNumber: {
-    width: wp(230),
-    height: wp(40),
-    borderRadius: 0,
-    backgroundColor: COLORS.light.white,
-    borderLeftWidth: 0,
-    borderColor: "#fff",
+  textStyle: {
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(12),
     color: COLORS.light.black,
   },
 
-  textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
-    color: COLORS.light.black,
-  },
-  signUpText: {
-    textAlign: "center",
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
-    color: COLORS.light.black,
-    lineHeight: hp(14),
-  },
   inputText: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(12),
@@ -311,7 +336,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(64),
+    marginTop: hp(274),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -346,12 +371,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 2,
     borderRightWidth: 1,
-    borderRightColor: COLORS.light.textinputborder,
+    borderRightColor: "#f0f0f0",
     paddingLeft: wpercent("2%"),
     width: wpercent("26%"),
   },
   required: {
     color: "red",
+  },
+  inputPhoneNumber: {
+    width: wp(230),
+    height: wp(40),
+    borderRadius: 0,
+    backgroundColor: COLORS.light.white,
+    borderLeftWidth: 0,
+    borderColor: "#fff",
+    color: COLORS.light.black,
   },
 });
 

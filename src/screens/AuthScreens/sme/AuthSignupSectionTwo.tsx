@@ -1,29 +1,38 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
 import { FontAwesome } from "@expo/vector-icons";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
-import { PLDatePicker } from "../../../components/PLDatePicker";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "../../../types";
 import { Input } from "@ui-kitten/components";
+import { ScrollView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PLToast } from "components/PLToast";
+import { smeSignupSectionTwo } from "navigation/interfaces";
+import axiosClient from "utils/axiosClient";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -37,139 +46,296 @@ const AuthGetStarted = ({ navigation }: Props) => {
     setCallingCode(country.callingCode);
   };
 
+  //--> state values
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [designation, setDesignation] = useState("");
+
+  //--> state from the other screen
+  const [initialState, setInitialState] = useState({
+    email: "",
+    userType: 2,
+    password: "",
+    address: "",
+    phone: "",
+    company: {
+      name: "",
+      CompanyType: 1,
+      ContactFirstName: "",
+      ContactLastName: "",
+      ContactEmail: "",
+      ContactPhone: "",
+    },
+  });
+
+  const [initialload, setInitialLoad] = useState(0);
+
+  //--> loading state of the page
+  const [isLoading, setIsLoading] = useState(false);
+
+  //--> Next button disabled state
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  //--> check the state of the input forms and enable the button when all fields are complete
+  React.useEffect(() => {
+    if (
+      firstName.length === 0 ||
+      lastName.length === 0 ||
+      phonenumber.length === 0 ||
+      designation.length === 0
+    ) {
+      setIsDisabled(true);
+      return;
+    } else {
+      setIsDisabled(false);
+    }
+  }, [firstName, lastName, phonenumber, designation]);
+
+  //--> make api call for registration
+  React.useEffect(() => {
+    if (initialload === 0) {
+      return;
+    } else {
+      //---> payload to be sent to the backend
+      const smePayload = {
+        email: initialState.email,
+        userType: 2,
+        password: initialState.password,
+        address: initialState.password,
+        phone: phonenumber,
+        company: {
+          name: initialState.company.name,
+          CompanyType: 1,
+          ContactFirstName: firstName,
+          ContactLastName: lastName,
+          ContactEmail: initialState.email,
+          ContactPhone: phonenumber,
+        },
+      };
+
+      register(smePayload);
+    }
+  }, [initialload]);
+
+  const register = async (smePayload: smeSignupSectionTwo) => {
+    setIsLoading(true);
+
+    try {
+      const { data } = await axiosClient.post("User", smePayload);
+      setIsLoading(false);
+      PLToast({ message: "Successfully Registered", type: "success" });
+
+      //--> setting async stoarage data for usage later
+      const { token } = data.data;
+      const { userType } = data.data;
+      const { userID } = data.data;
+
+      //--> setting the received token in local storage
+      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("userType", JSON.stringify(userType));
+      await AsyncStorage.setItem("userID", JSON.stringify(userID));
+
+      setTimeout(() => {
+        navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL_SME);
+      }, 1000);
+    } catch (error) {
+      const { message } = error?.response.data;
+      // if (error.message === "Request failed with status code 400") {
+      //   PLToast({ message: "Email already taken", type: "error" });
+      // } else {
+
+      PLToast({ message: message, type: "error" });
+    }
+    setIsLoading(false);
+    return;
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP);
-        }}
-        navText="Sign Up"
-      />
-      <View style={styles.contentWraper}>
-        <Text style={styles.welcomeMessage}>
-          Please add details of a{" "}
-          <Text style={styles.ContactPerson}>contact person</Text> for your
-          company.
-        </Text>
-
-        <View>
-          <Text style={styles.inputText}>First Name</Text>
-          <PLTextInput
-            textContentType="name"
-            style={styles.input}
-            placeholder="Type your first name"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Last Name</Text>
-          <PLTextInput
-            textContentType="familyName"
-            style={styles.input}
-            placeholder="Type your last name"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Email Address</Text>
-          <PLTextInput
-            style={styles.input}
-            placeholder="Type your email address"
-            textContentType="emailAddress"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Phone Number</Text>
-          <View style={styles.phoneNumberWrapper}>
-            <View style={styles.countryPickerWrapper}>
-              <CountryPicker
-                {...{
-                  countryCode,
-                  withFilter,
-                  withFlag,
-                  withCountryNameButton,
-                  withAlphaFilter,
-                  withCallingCode,
-                  withEmoji,
-                  onSelect,
-                }}
-              />
-              <Text style={styles.codeText}>+{callingCode}</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+        keyboardVerticalOffset={wp(0)}
+      >
+        <NavBar
+          onPress={() => {
+            navigation.goBack();
+          }}
+          navText="Sign Up"
+        />
+        <ScrollView>
+          <View style={styles.contentWraper}>
+            <View style={styles.TextWrapper}>
+              <Text style={styles.welcomeMessage}>
+                Please add details of a
+                <Text style={styles.ContactPerson}> contact person</Text> for
+                your company.
+              </Text>
             </View>
 
-            <Input
-              style={styles.inputPhoneNumber}
-              textStyle={styles.textStyle}
-              placeholder="906 3782 2828"
-              textContentType="telephoneNumber"
-              placeholderTextColor={COLORS.light.darkgrey}
+            <View>
+              <PLTextInput
+                labelText="First Name"
+                labelTextRequired={true}
+                onChangeText={setFirstName}
+                error={false}
+                textContentType="name"
+                style={styles.input}
+                placeholder="Type your first name"
+              />
+            </View>
+
+            <View>
+              <PLTextInput
+                labelText="Last Name"
+                labelTextRequired={true}
+                error={false}
+                onChangeText={setLastName}
+                textContentType="familyName"
+                style={styles.input}
+                placeholder="Type your last name"
+              />
+            </View>
+
+            <View>
+              <Text style={styles.inputText}>
+                Phone Number <Text style={styles.required}>*</Text>
+              </Text>
+              <View style={styles.phoneNumberWrapper}>
+                <View style={styles.countryPickerWrapper}>
+                  <CountryPicker
+                    {...{
+                      countryCode,
+                      withFilter,
+                      withFlag,
+                      withCountryNameButton,
+                      withAlphaFilter,
+                      withCallingCode,
+                      withEmoji,
+                      onSelect,
+                    }}
+                  />
+                  <Text style={styles.codeText}>+{callingCode}</Text>
+                </View>
+
+                <Input
+                  style={styles.inputPhoneNumber}
+                  onChangeText={setPhonenumber}
+                  value={phonenumber}
+                  keyboardType="numeric"
+                  textStyle={styles.textStyle}
+                  placeholder="906 3782 2828"
+                  textContentType="telephoneNumber"
+                  placeholderTextColor={COLORS.light.darkgrey}
+                />
+              </View>
+            </View>
+
+            <View>
+              <PLTextInput
+                labelText="Designation"
+                labelTextRequired={true}
+                error={false}
+                name="Email"
+                onChangeText={setDesignation}
+                style={styles.input}
+                placeholder="Type the job designation"
+                textContentType="none"
+              />
+            </View>
+
+            <View style={styles.carouselWrapper}>
+              <View style={styles.carouselIcon}>
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+                <FontAwesome
+                  name="circle"
+                  size={12}
+                  color={COLORS.light.primary}
+                />
+              </View>
+            </View>
+
+            <PLButton
+              disabled={isDisabled}
+              isLoading={isLoading}
+              loadingText="Submitting..."
+              style={styles.plButton}
+              textColor={COLORS.light.white}
+              btnText={"Next"}
+              onClick={() => {
+                //--> reading async storage value
+                const getData = async () => {
+                  try {
+                    const jsonValue = await AsyncStorage.getItem(
+                      "@signup_payload"
+                    );
+
+                    jsonValue != null
+                      ? setInitialState(JSON.parse(jsonValue))
+                      : null;
+
+                    setInitialLoad(initialload + 1);
+                  } catch (e) {
+                    //--> error reading value
+                  }
+                };
+
+                getData();
+              }}
             />
+            <View style={styles.loginWrapper}>
+              <Text style={styles.signUpText}>
+                By signing up, you agree with the
+                <Text style={styles.login}> Terms of services </Text>and{" "}
+                <Text style={styles.login}>Privacy policy </Text>
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <View>
-          <Text style={styles.inputText}>Designation</Text>
-          <PLTextInput
-            style={styles.input}
-            placeholder="Type the job designation"
-            textContentType="none"
-          />
-        </View>
-
-        <View style={styles.carouselWrapper}>
-          <View style={styles.carouselIcon}>
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-            <FontAwesome name="circle" size={12} color={COLORS.light.primary} />
-          </View>
-        </View>
-
-        <PLButton
-          style={styles.plButton}
-          textColor={COLORS.light.white}
-          btnText={"Next"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_LOGIN_SME)}
-        />
-        <View style={styles.loginWrapper}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Roboto-Regular",
-              fontSize: wp(14),
-              color: COLORS.light.black,
-            }}
-          >
-            By signing up, you agree with the
-            <Text style={styles.login}> Terms of services </Text>and{" "}
-            <Text style={styles.login}>Privacy policy </Text>
-          </Text>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   wrapper: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: COLORS.light.white,
   },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: hp(14),
+  },
+  TextWrapper: {
+    width: wpercent("90%"),
+  },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(16),
+    marginBottom: hp(10),
     width: wpercent("90%"),
-    marginLeft: wp(10),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(25),
   },
   input: {
     width: wp(334),
@@ -180,7 +346,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(12),
-    color: COLORS.light.darkgrey,
+    color: COLORS.light.black,
   },
 
   inputText: {
@@ -189,7 +355,7 @@ const styles = StyleSheet.create({
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(12),
+    marginBottom: hp(4),
     marginTop: hp(12),
   },
   codeText: {
@@ -198,12 +364,12 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(31),
+    marginTop: hp(20),
   },
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(23),
+    marginTop: hp(133),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -228,8 +394,8 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(16),
+    fontSize: wp(11),
+    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
@@ -255,6 +421,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
     borderLeftWidth: 0,
     borderColor: "#fff",
+    color: COLORS.light.black,
+  },
+  required: {
+    color: "red",
   },
 });
 
