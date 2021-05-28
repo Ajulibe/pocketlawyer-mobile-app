@@ -5,6 +5,8 @@ const IMAGES = {
   "service-inactive": require("../assets/images/service-inactive.png"),
   "account-inactive": require("../assets/images/account-inactive.png"),
   "history-inactive": require("../assets/images/history-inactive.png"),
+  "cat-company-reg": require("../assets/images/cat-company-reg.png"),
+  "cat-pre-incorporation": require("../assets/images/cat-pre-incorporation.png"),
   // chat: require("../assets/images/icon-chat.png"),
   // share: require("../assets/images/icon-share.png"),
   // phone: require("../assets/images/icon-phone.png"),
