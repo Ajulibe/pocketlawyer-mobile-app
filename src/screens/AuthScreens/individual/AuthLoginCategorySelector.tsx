@@ -17,6 +17,7 @@ import { submitCategories } from "navigation/interfaces";
 import FullPageLoader from "components/FullPageLoader";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CategoryDb } from "database/CategoryDb";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -34,13 +35,45 @@ const AuthGetStarted = ({ navigation }: Props) => {
   //--> loading state
   const [loading, setLoading] = React.useState(false);
 
+  // const selectedCategories = [
+  //   { name: "Pre-Incorporation", value: preincorporation },
+  //   { name: "Company Secretarial Services", value: companysecretarial },
+  //   { name: "Post-Incorporation", value: postincorporation },
+  //   { name: "Review of Legal Documents", value: reviewofLegal },
+  //   { name: "Legal Advice and Consultancy", value: legaladvice },
+  //   { name: "Legal Drafting", value: legaldrafting },
+  // ];
   const selectedCategories = [
-    { name: "Pre-Incorporation", value: preincorporation },
-    { name: "Company Secretarial Services", value: companysecretarial },
-    { name: "Post-Incorporation", value: postincorporation },
-    { name: "Review of Legal Documents", value: reviewofLegal },
-    { name: "Legal Advice and Consultancy", value: legaladvice },
-    { name: "Legal Drafting", value: legaldrafting },
+    {
+      name: CategoryDb.categories[0].categoryName,
+      code: CategoryDb.categories[0].categoryCode,
+      value: preincorporation,
+    },
+    {
+      name: CategoryDb.categories[1].categoryName,
+      code: CategoryDb.categories[1].categoryCode,
+      value: companysecretarial,
+    },
+    {
+      name: CategoryDb.categories[2].categoryName,
+      code: CategoryDb.categories[2].categoryCode,
+      value: postincorporation,
+    },
+    {
+      name: CategoryDb.categories[3].categoryName,
+      code: CategoryDb.categories[3].categoryCode,
+      value: reviewofLegal,
+    },
+    {
+      name: CategoryDb.categories[4].categoryName,
+      code: CategoryDb.categories[4].categoryCode,
+      value: legaladvice,
+    },
+    {
+      name: CategoryDb.categories[5].categoryName,
+      code: CategoryDb.categories[5].categoryCode,
+      value: legaldrafting,
+    },
   ];
 
   const filterCategories = async () => {
@@ -49,7 +82,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     });
 
     const Categorylist = fliteredCategories.map((item) => {
-      return { CategoryCode: item.name, CategoryName: item.name };
+      return { CategoryCode: item.code, CategoryName: item.name };
     });
 
     try {

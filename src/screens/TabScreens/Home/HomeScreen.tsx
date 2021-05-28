@@ -11,16 +11,40 @@ import {
   View,
   Image,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import axiosClient from "utils/axiosClient";
 import CONSTANTS from "utils/Constants";
 import { hp } from "utils/Dimensions";
+import { Category } from "database/DBData";
 import ServiceCard from "./Components/ServiceCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
+import { CategoryDb } from "database/CategoryDb";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  const [category, setCategory] = React.useState<Category[]>([]);
+  React.useEffect(() => {
+    (async () => {
+      const userID = await AsyncStorageUtil.getUserId();
+      // const token = await AsyncStorageUtil.getToken();
+      // console.log(token);
+
+      const getCats = await axiosClient.get(
+        "Category/GetUserCategories/" + userID
+      );
+      if (getCats != null) {
+        const cats: Category[] = getCats?.data?.data;
+        setCategory(cats);
+      }
+    })();
+    // await AsyncStorage.setItem("token", token);
+    // await AsyncStorage.setItem("userType", JSON.stringify(userType));
+    // await AsyncStorage.setItem("userID", JSON.stringify(userID));
+  }, []);
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -40,7 +64,7 @@ const HomeScreen = ({ navigation }: Props) => {
           </View>
           <ServiceSearch />
           <View style={styles.titleWithViewMore}>
-            <Text style={globalStyles.H2Style}>Your Services</Text>
+            <Text style={globalStyles.H2Style}>Your Categories</Text>
             <TouchableOpacity
               onPress={() => navigation.push(ROUTES.PICK_LAWYER_SCREEN)}
             >
@@ -48,9 +72,12 @@ const HomeScreen = ({ navigation }: Props) => {
             </TouchableOpacity>
           </View>
           <View style={{ display: "flex", flexDirection: "row" }}>
-            <ServiceCard />
-            <ServiceCard />
-            <ServiceCard />
+            <FlatList
+              horizontal={true}
+              data={category}
+              renderItem={({ item }) => <ServiceCard category={item} />}
+              keyExtractor={(item, index) => index.toString()}
+            />
           </View>
           <Text
             style={[

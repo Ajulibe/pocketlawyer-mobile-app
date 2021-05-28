@@ -15,6 +15,7 @@ import BottomSheetContent from "./BottomSheetContent";
 
 interface Props {
   modalVisible: boolean;
+  navigation: any;
   closeModal: () => void;
 }
 
@@ -46,7 +47,10 @@ export default function SendMoneyModal(props: Props) {
           >
             <TouchableWithoutFeedback>
               <View>
-                <BottomSheetContent />
+                <BottomSheetContent
+                  navigation={props.navigation}
+                  closeModal={props.closeModal}
+                />
               </View>
             </TouchableWithoutFeedback>
           </Animatable.View>
