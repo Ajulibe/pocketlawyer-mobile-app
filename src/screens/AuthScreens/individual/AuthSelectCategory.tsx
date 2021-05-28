@@ -7,6 +7,7 @@ import COLORS from "../../../utils/Colors";
 import { wp, hp } from "../../../utils/Dimensions";
 import PLButton from "../../../components/PLButton/PLButton";
 import { Radio, RadioGroup } from "@ui-kitten/components";
+import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -26,13 +27,19 @@ const AuthGetStarted = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.welcomeText}>
-        <Text style={styles.Hello}>Hello 👋</Text>
+        <Animatable.Text animation="slideInDown" style={styles.Hello}>
+          Hello 👋
+        </Animatable.Text>
         <Text style={styles.selectText}>
           Please select the category that best describes you.{" "}
         </Text>
       </View>
 
-      <View style={styles.radiobtnFirstWrapper}>
+      <Animatable.View
+        animation="fadeIn"
+        easing="ease-in"
+        style={styles.radiobtnFirstWrapper}
+      >
         <RadioGroup
           selectedIndex={selectedIndex}
           onChange={(index) => setSelectedIndex(index)}
@@ -41,7 +48,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <Radio style={styles.radioBtn}>SME/Business</Radio>
           <Radio style={styles.radioBtn}>Service Provider</Radio>
         </RadioGroup>
-      </View>
+      </Animatable.View>
 
       <PLButton
         style={styles.plButton}
@@ -63,7 +70,7 @@ const styles = StyleSheet.create({
   Hello: {
     fontFamily: "Roboto-Bold",
     fontSize: wp(20),
-    color: COLORS.light.black,
+    color: COLORS.light.primary,
   },
   selectText: {
     fontFamily: "Roboto-Regular",

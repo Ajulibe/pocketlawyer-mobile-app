@@ -271,26 +271,22 @@ const AuthGetStarted = ({ navigation }: Props) => {
           <PLButton
             style={styles.skipButton}
             textColor={COLORS.light.primary}
-            // appearance="ghost"
             btnText={"Skip"}
-            onClick={() =>
-              navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-            }
+            onClick={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           />
 
           <PLButton
             style={styles.nextButton}
             textColor={COLORS.light.white}
             btnText={"Next"}
-            onClick={() =>
-              navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-            }
+            onClick={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
           />
         </View>
       </View>
     </SafeAreaView>
   );
 };
+s;
 
 const styles = StyleSheet.create({
   wrapper: {

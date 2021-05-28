@@ -7,9 +7,13 @@ import COLORS from "../../utils/Colors";
 
 interface Props {
   placeholder: string;
+  onChangeText: any;
 }
 
-export const PLPasswordInput: React.FC<Props> = ({ placeholder }) => {
+export const PLPasswordInput: React.FC<Props> = ({
+  placeholder,
+  onChangeText,
+}) => {
   const [value, setValue] = React.useState("");
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
@@ -30,11 +34,10 @@ export const PLPasswordInput: React.FC<Props> = ({ placeholder }) => {
   return (
     <View style={[styles.InputWrapper]}>
       <Input
-        value={value}
+        onChangeText={onChangeText}
         placeholder={placeholder}
         accessoryRight={renderIcon}
         secureTextEntry={secureTextEntry}
-        onChangeText={(nextValue) => setValue(nextValue)}
         style={styles.Input}
         textStyle={styles.textStyle}
         placeholderTextColor={COLORS.light.darkgrey}
@@ -47,12 +50,13 @@ const styles = StyleSheet.create({
   InputWrapper: {
     width: "100%",
     height: wp(40),
+    borderWidth: 0,
   },
   Input: {
     borderRadius: 4,
     backgroundColor: "white",
     borderColor: COLORS.light.textinputborder,
-    borderWidth: 0.5,
+    borderWidth: 0,
   },
   textStyle: {
     fontSize: 12,
