@@ -62,12 +62,14 @@ export interface smeSignupSectionTwo {
   };
 }
 export interface lawyerPayload {
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   userType: number;
   address: string;
-  SuppremeCourtNumber: string;
+  SuppremeCourtNumber?: string;
+  companyName?: string;
+  officeaddress?: string;
 }
 
 export interface lawyerRegister extends lawyerPayload {

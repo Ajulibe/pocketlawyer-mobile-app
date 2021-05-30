@@ -4,6 +4,7 @@ const USER_TYPE = "userType";
 const TOKEN = "token";
 const USER_ID = "userID";
 const USER = "user";
+const PREVIOUSPATH = "previousPath";
 
 class AsyncStorageUtil {
   // Token
@@ -33,6 +34,14 @@ class AsyncStorageUtil {
   };
   static getUser = async (): Promise<string | null> => {
     return await AsyncStorage.getItem(USER);
+  };
+  //previous path
+  static setPreviousPath = async (previousPath: string) => {
+    return await AsyncStorage.setItem(PREVIOUSPATH, previousPath);
+  };
+
+  static getPreviousPath = async (): Promise<string | null> => {
+    return await AsyncStorage.getItem(PREVIOUSPATH);
   };
 }
 

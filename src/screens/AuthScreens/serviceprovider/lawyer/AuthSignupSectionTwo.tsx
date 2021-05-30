@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -26,7 +26,7 @@ import { PLToast } from "components/PLToast";
 import { CountryCode, Country, CallingCode } from "types";
 import CountryPicker from "react-native-country-picker-modal";
 import { Input } from "@ui-kitten/components";
-import axios from "axios";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -34,6 +34,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   //--> state values for the section
   const [phonenumber, setPhonenumber] = useState("");
   const [password, setPassword] = useState("");
+  const [destination, setDestination] = useState("");
 
   //--> country component info
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
@@ -66,6 +67,34 @@ const AuthGetStarted = ({ navigation }: Props) => {
     SuppremeCourtNumber: "",
   });
 
+  const [lawfirmState, setLawFirmState] = useState({
+    firstpayload: {
+      address: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      userType: 0,
+    },
+    secondpayload: {
+      address: "",
+      companyName: "",
+      email: "",
+      officeaddress: "",
+      userType: 3,
+    },
+    // email: "",
+    // userType: 2,
+    // password: "",
+    // address: "",
+    // phone: "",
+    // company: {
+    //   name: "",
+    //   CompanyType: 1,
+    //   ContactFirstName: "",
+    //   ContactLastName: "",
+    //   ContactEmail: "",
+    //   ContactPhone: "",
+  });
   const [initialload, setInitialLoad] = useState(0);
 
   //--> loading state of the page
@@ -74,15 +103,47 @@ const AuthGetStarted = ({ navigation }: Props) => {
   //--> Next button disabled state
   const [isDisabled, setIsDisabled] = useState(true);
 
+  //--> setting the previous path
+  const [previous, setPrevious] = useState<any>("");
+
+  // React.useEffect(() => {
+  //   if (previous === "") {
+  //     AsyncStorage.getItem("previousPath").then((res) => {
+  //       console.log(res);
+  //       setPrevious(res);
+  //     });
+  //   } else {
+  //     return;
+  //   }
+  // }, []);
+
   //--> check the state of the input forms and enable the button when all fields are complete
   React.useEffect(() => {
-    if (phonenumber.length === 0 || password.length === 0) {
-      setIsDisabled(true);
-      return;
+    if (previous === "") {
+      AsyncStorage.getItem("previousPath").then((res) => {
+        console.log(res);
+        setPrevious(res);
+      });
+    } else if (previous == "lawfirm") {
+      if (
+        phonenumber.length === 0 ||
+        password.length === 0 ||
+        destination.length === 0
+      ) {
+        setIsDisabled(true);
+        return;
+      } else {
+        setIsDisabled(false);
+      }
     } else {
-      setIsDisabled(false);
+      if (phonenumber.length === 0 || password.length === 0) {
+        setIsDisabled(true);
+        return;
+      } else {
+        setIsDisabled(false);
+      }
     }
-  }, [phonenumber, password]);
+  }, [phonenumber, password, previous, destination]);
 
   //--> make api call for registration
   React.useEffect(() => {
@@ -90,28 +151,84 @@ const AuthGetStarted = ({ navigation }: Props) => {
       return;
     } else {
       //---> payload to be sent to the backend
-      const individualPayload = {
+      //--> solicitors payload
+      const solicitorPayload = {
         firstName: initialState.firstName,
         lastName: initialState.lastName,
         email: initialState.email,
-        userType: initialState.userType,
+        userType: 4,
         password: password,
         address: initialState.address,
         phone: phonenumber,
         dob: "2/1/20",
-        SuppremeCourtNumber: initialState.SuppremeCourtNumber,
       };
 
-      register(individualPayload);
+      //--> lawyers payload
+      const individualPayload = {
+        ...solicitorPayload,
+        SuppremeCourtNumber: initialState.SuppremeCourtNumber,
+        userType: 3,
+      };
+
+      console.log(lawfirmState);
+
+      //--> contact person information
+      const { email, firstName, lastName } = lawfirmState.firstpayload;
+
+      //--> company information
+      const {
+        companyName,
+        email: companyEmail,
+        officeaddress,
+      } = lawfirmState.secondpayload;
+
+      const lawfirmPayload = {
+        email: email,
+        userType: 2,
+        password: password,
+        address: officeaddress,
+        phone: phonenumber,
+        company: {
+          name: companyName,
+          CompanyType: 1,
+          ContactFirstName: firstName,
+          ContactLastName: lastName,
+          ContactEmail: companyEmail,
+          ContactPhone: phonenumber,
+        },
+      };
+
+      callRegister(individualPayload, solicitorPayload, lawfirmPayload);
     }
   }, [initialload]);
 
-  const register = async (individualPayload: RegisterInterface) => {
+  //--> explicit interfaces to be configured later
+  const callRegister = async (
+    individualPayload: any,
+    solicitorPayload: any,
+    lawfirmPayload: any
+  ) => {
+    try {
+      const previousPath = await AsyncStorage.getItem("previousPath");
+
+      if (previousPath === "solicitor") {
+        register(solicitorPayload);
+      } else if (previousPath === "lawfirm") {
+        register(lawfirmPayload);
+      } else {
+        register(individualPayload);
+      }
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const register = async (Payload: RegisterInterface) => {
     setIsLoading(true);
     // console.log(individualPayload);
 
     try {
-      const { data } = await axiosClient.post("User", individualPayload);
+      const { data } = await axiosClient.post("User", Payload);
 
       setIsLoading(false);
       PLToast({ message: "Successfully Registered", type: "success" });
@@ -159,7 +276,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               Complete your account setup.
             </Text>
 
-            <View>
+            <View style={styles.inputBMargins}>
               <Text style={styles.inputText}>
                 Phone Number <Text style={styles.required}>*</Text>
               </Text>
@@ -195,7 +312,22 @@ const AuthGetStarted = ({ navigation }: Props) => {
               </View>
             </View>
 
-            <View>
+            {previous === "lawfirm" && (
+              <View style={styles.inputBMargins}>
+                <PLTextInput
+                  onChangeText={setDestination}
+                  labelText="Designation of Contact Person"
+                  labelTextRequired={true}
+                  error={false}
+                  name="Designation"
+                  textContentType="name"
+                  style={styles.input}
+                  placeholder="Type the job designation"
+                />
+              </View>
+            )}
+
+            <View style={styles.inputBMargins}>
               <Text style={styles.inputText}>
                 Password <Text style={styles.required}>*</Text>
               </Text>
@@ -236,6 +368,22 @@ const AuthGetStarted = ({ navigation }: Props) => {
                     const jsonValue = await AsyncStorage.getItem(
                       "lawyerPayload"
                     );
+                    const lawfirmPayload = await AsyncStorage.getItem(
+                      "lawfirmPayload"
+                    );
+
+                    const previousPath = await AsyncStorage.getItem(
+                      "previousPath"
+                    );
+
+                    if (previousPath === "lawfirm") {
+                      jsonValue && lawfirmPayload != null
+                        ? setLawFirmState({
+                            firstpayload: JSON.parse(jsonValue),
+                            secondpayload: JSON.parse(lawfirmPayload),
+                          })
+                        : null;
+                    }
 
                     jsonValue != null
                       ? setInitialState(JSON.parse(jsonValue))
@@ -336,7 +484,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(274),
+    marginTop: hp(140),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -386,6 +534,9 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderColor: "#fff",
     color: COLORS.light.black,
+  },
+  inputBMargins: {
+    marginBottom: wp(10),
   },
 });
 

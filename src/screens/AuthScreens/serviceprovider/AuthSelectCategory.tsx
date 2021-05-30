@@ -18,7 +18,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
     if (selectedIndex === 0) {
       navigation.navigate(ROUTES.AUTH_SIGN_UP_LAWYER);
     } else if (selectedIndex === 1) {
-      Alert.alert("solicitor");
       navigation.navigate(ROUTES.AUTH_SIGN_UP_SOLICITOR);
     } else {
       navigation.navigate(ROUTES.AUTH_SIGN_UP_LAWFIRM);
