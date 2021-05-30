@@ -83,3 +83,10 @@ export interface DocUploadUserInfo {
   contentType: string;
   userID: number;
 }
+
+export interface confirmLawyerResume {
+  fileName: string;
+  fileType: number;
+  userID: number;
+  uploadID: number;
+}

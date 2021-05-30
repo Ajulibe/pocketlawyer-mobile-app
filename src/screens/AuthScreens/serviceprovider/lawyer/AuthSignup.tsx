@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(20),
+    marginTop: hp(10),
   },
   input: {
     width: wp(334),

@@ -35,12 +35,28 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [loading, setLoading] = React.useState(false);
 
   const selectedCategories = [
-    { name: "Pre-Incorporation", value: preincorporation },
-    { name: "Company Secretarial Services", value: companysecretarial },
-    { name: "Post-Incorporation", value: postincorporation },
-    { name: "Review of Legal Documents", value: reviewofLegal },
-    { name: "Legal Advice and Consultancy", value: legaladvice },
-    { name: "Legal Drafting", value: legaldrafting },
+    { name: "Pre-Incorporation", categoryCode: "01", value: preincorporation },
+    {
+      name: "Company Secretarial Services",
+      categoryCode: "02",
+      value: companysecretarial,
+    },
+    {
+      name: "Post-Incorporation",
+      categoryCode: "03",
+      value: postincorporation,
+    },
+    {
+      name: "Review of Legal Documents",
+      categoryCode: "04",
+      value: reviewofLegal,
+    },
+    {
+      name: "Legal Advice and Consultancy",
+      categoryCode: "05",
+      value: legaladvice,
+    },
+    { name: "Legal Drafting", categoryCode: "06", value: legaldrafting },
   ];
 
   const filterCategories = async () => {
@@ -49,7 +65,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     });
 
     const Categorylist = fliteredCategories.map((item) => {
-      return { CategoryCode: item.name, CategoryName: item.name };
+      return { CategoryCode: item.categoryCode, CategoryName: item.name };
     });
 
     try {
