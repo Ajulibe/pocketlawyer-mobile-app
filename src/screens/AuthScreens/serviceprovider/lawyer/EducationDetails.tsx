@@ -6,6 +6,7 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
@@ -15,11 +16,8 @@ import COLORS from "utils/Colors";
 import { wp, hp } from "utils/Dimensions";
 import NavBar from "components/NavBar";
 import PLButton from "components/PLButton/PLButton";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
 import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "components/PLModal";
-import { Picker, Form, Icon } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import { FontAwesome } from "@expo/vector-icons";
@@ -28,8 +26,9 @@ import { states } from "utils/nigerianStates";
 import { ScrollView } from "react-native-gesture-handler";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DocUploadUserInfo } from "navigation/interfaces";
+import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
 import axios from "axios";
+import { PLToast } from "components/PLToast";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -41,6 +40,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   //--> state  for bottom sheet
   const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  //--> check for uploaded state
+  const [isUploaded, setIsUploaded] = useState<boolean | null>(null);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   //-->  data for bottom sheet
   const list = [
@@ -61,6 +65,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
     "Select your means of Identification"
   );
   const [identificationPlaceholder, setIdentificationPlaceholder] = useState(0);
+  const [errors, setErrors] = useState<boolean>(false);
+
+  const [userID, setUserID] = useState(0);
   interface uploadInterfaace {
     name: string;
     size: number;
@@ -76,6 +83,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       type: "",
     },
   ]);
+  const [uri, setUri] = useState("");
   const [resumeName, setResumeName] = useState("Select from files");
 
   //--> setting resume data
@@ -88,6 +96,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         let { name, size, uri } = response;
         let nameParts = name.split(".");
         let fileType = nameParts[nameParts.length - 1];
+        setUri(uri);
         var fileToUpload = [
           {
             name: name,
@@ -96,20 +105,37 @@ const AuthGetStarted = ({ navigation }: Props) => {
             type: "application/" + fileType,
           },
         ];
-        console.log(fileToUpload, "...............file");
-        setResumeName(name);
-        setResume(fileToUpload);
+        if (fileToUpload[0].type !== "application/pdf") {
+          setResumeName("Invalid file type");
+          setErrors(false);
+          PLToast({ message: "Only PDF is allowed", type: "error" });
+          return;
+        }
+
+        if (fileToUpload[0].size >= 1 * 1024 * 1024) {
+          setResumeName("File is too large");
+          setErrors(true);
+          PLToast({ message: "File must be less than 1MB", type: "error" });
+          return;
+        } else {
+          setErrors(false);
+          setResumeName(name);
+          setResume(fileToUpload);
+        }
+
+        // console.log(fileToUpload, "...............file");
       }
     });
   };
 
   React.useEffect(() => {
-    const { name, size, uri, type } = resume[0];
-    if (name === "" || size === 0 || uri === "" || type === "") {
+    const { name, uri, type } = resume[0];
+    if (name === "" || uri === "" || type === "") {
       return;
     }
     //--> get the user id from async storage
     AsyncStorage.getItem("userID").then((res) => {
+      setUserID(Number(res));
       const payload: DocUploadUserInfo = {
         fileName: name,
         fileType: 1,
@@ -124,41 +150,57 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   //--> posting resume data
   const postDocument = async (payload: DocUploadUserInfo) => {
+    setIsUploaded(false);
     try {
       await axiosClient.post("Upload/Generates3URL", payload).then((res) => {
         const { url, uploadID, fileName } = res.data.data;
 
-        // console.log(fileName);
         const formData = new FormData();
-        formData.append("Certificate", resume[0] as any);
+        formData.append("resume", resume[0] as any);
         formData.append("fileName", fileName);
-        console.log(formData);
-        console.log(url);
 
         //--> post document to the received s3 url
-        // axios({
-        //   method: "PUT",
-        //   url: url,
-        //   data: formData,
-        //   headers: { "Content-Type": "application/octet-stream" },
-        // })
-        //   .then(function (response) {
-        //     console.log(response);
-        //   })
-        //   .catch(function (er) {
-        //     console.log(er.toString());
-        //     return;
-        //   });
+        axios
+          .put(url, payload, {
+            headers: {
+              "Content-Type": "application/pdf",
+            },
+          })
+          .then((res) => {
+            //--> confirm upload
+            const confirmPayload = {
+              fileName: fileName,
+              fileType: 1,
+              userID: payload.userID,
+              uploadID: uploadID,
+            };
 
-        //--> confirm upload
-        const confirmPayload = {
-          fileName: fileName,
-          fileType: 1,
-          userID: payload.userID,
-          uploadID: uploadID,
-        };
+            confirmUpload<confirmLawyerResume>(confirmPayload);
+          })
+
+          .catch(function (error) {
+            const { message } = error?.response.data;
+            PLToast({ message: message, type: "error" });
+          });
       });
     } catch (error) {}
+  };
+
+  const confirmUpload = async <T,>(confirmPayload: T) => {
+    try {
+      //--> confirm the upload
+      const { data } = await axiosClient.post(
+        "Upload/ConfirmUpload",
+        confirmPayload
+      );
+
+      PLToast({ message: data.message, type: "success" });
+      setIsUploaded(true);
+    } catch (error) {
+      const { message } = error?.response.data;
+      PLToast({ message: message, type: "success" });
+      setIsUploaded(null);
+    }
   };
 
   //--> disabling button
@@ -181,14 +223,59 @@ const AuthGetStarted = ({ navigation }: Props) => {
       CGPA === "" ||
       Identification === "" ||
       idNumber === "" ||
-      resume[0].name === ""
+      resume[0].name === "" ||
+      !isUploaded
     ) {
       setDisabled(true);
       return;
     }
 
     setDisabled(false);
-  }, [CGPA, Identification, school, idNumber, resume]);
+  }, [CGPA, Identification, school, idNumber, resume, isUploaded]);
+
+  //--> submit all lawyers metadata
+  const submitMetadata = async () => {
+    if (userID === 0) {
+      return;
+    }
+    setIsLoading(true);
+
+    try {
+      const payload = [
+        {
+          key: "SchoolName",
+          value: school,
+          userID: userID,
+        },
+        {
+          key: "CGPA",
+          value: CGPA,
+          userID: userID,
+        },
+        {
+          key: "Identification",
+          value: Identification,
+          userID: 1,
+        },
+        {
+          key: "idNumber",
+          value: idNumber,
+          userID: userID,
+        },
+      ];
+
+      const { data } = await axiosClient.post("User/AddMetadataUser", payload);
+      setIsLoading(false);
+      PLToast({ message: data.message, type: "success" });
+      setTimeout(() => {
+        navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER);
+      }, 1000);
+    } catch (error) {
+      setIsLoading(false);
+      const { message } = error?.response.data;
+      PLToast({ message: message, type: "error" });
+    }
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -202,7 +289,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           }}
           navText="Education Details"
         />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.contentWraper}>
             <Text style={styles.welcomeMessage}>
               <Text style={styles.verifyEmail}>
@@ -239,7 +326,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             </View>
 
             <View style={{ marginTop: wp(4) }}>
-              <Text style={styles.inputText}>State</Text>
+              <Text style={styles.inputText}>Means of Identification</Text>
               <View
                 style={{
                   borderWidth: 1,
@@ -346,7 +433,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
             </View>
 
             <View style={styles.fileSelectBox}>
-              <Text style={styles.inputText}>Resume</Text>
+              <Text style={styles.inputText}>
+                Resume
+                <Text style={styles.required}>
+                  &nbsp; * must be less than 1MB
+                </Text>
+              </Text>
               <TouchableOpacity
                 onPress={pickDocument}
                 style={styles.inputButton}
@@ -358,6 +450,25 @@ const AuthGetStarted = ({ navigation }: Props) => {
                   color={COLORS.light.black}
                 />
               </TouchableOpacity>
+              {errors ? (
+                <View style={styles.errorView}>
+                  <Text style={[styles.inputText, styles.errorText]}>
+                    File must be less than 1MB
+                  </Text>
+                </View>
+              ) : null}
+              <View style={styles.errorView}>
+                {isUploaded === false ? (
+                  <View style={styles.progressView}>
+                    <Text style={[styles.inputText, styles.progressText]}>
+                      Uploading File..Please wait
+                    </Text>
+                    <Text>&nbsp;</Text>
+                    <Text>&nbsp;</Text>
+                    <ActivityIndicator />
+                  </View>
+                ) : null}
+              </View>
             </View>
 
             <View style={styles.carouselWrapper}>
@@ -384,12 +495,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
               <PLButton
                 disabled={disabled}
+                isLoading={isLoading}
+                loadingText="Submitting..."
                 style={styles.nextButton}
                 textColor={COLORS.light.white}
                 btnText={"Next"}
-                onClick={() =>
-                  navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
-                }
+                onClick={submitMetadata}
               />
             </View>
           </View>
@@ -417,12 +528,12 @@ const styles = StyleSheet.create({
     textAlign: "left",
     alignSelf: "flex-start",
     color: COLORS.light.black,
-    marginBottom: hp(12),
+    marginBottom: hp(4),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(28),
+    marginTop: hp(5),
   },
   educationDetails: {
     fontFamily: "Roboto-Medium",
@@ -435,7 +546,7 @@ const styles = StyleSheet.create({
     height: wp(40),
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
-    borderColor: COLORS.light.textinputborder,
+    // borderColor: COLORS.light.textinputborder,
   },
   inputButton: {
     flexDirection: "row",
@@ -451,6 +562,14 @@ const styles = StyleSheet.create({
   fileSelectBox: {
     width: "100%",
     justifyContent: "center",
+  },
+  errorView: {
+    height: wp(40),
+  },
+  progressView: {
+    height: wp(40),
+    flexDirection: "row",
+    alignItems: "baseline",
   },
   selectText: {
     color: COLORS.light.darkgrey,
@@ -587,6 +706,20 @@ const styles = StyleSheet.create({
     borderRightColor: "#f0f0f0",
     paddingLeft: wpercent("2%"),
     width: wpercent("26%"),
+  },
+  errorText: {
+    color: "red",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(10),
+  },
+  progressText: {
+    color: COLORS.light.primary,
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(12),
+  },
+  required: {
+    color: "red",
+    fontSize: wp(10),
   },
 });
 

@@ -23,8 +23,16 @@ const ValidateEmail = ({ navigation, route }: Props) => {
   const [errors, setErrors] = useState<boolean>(true);
 
   //--> validate OTP
-  const validateOTP = () => {
-    // console.log(OTP);
+  const validateOTP = async () => {
+    //--> make the OTP api call and in the .then add this navigation
+
+    const path = await AsyncStorage.getItem("previousPath");
+    //--> check the previous Path
+    if (path === "barrister" || path === "solicitor" || path === "lawfirm") {
+      navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
+    } else if (path === null) {
+      navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
+    }
   };
 
   //-> listen to OTP Change and call validation
@@ -43,6 +51,8 @@ const ValidateEmail = ({ navigation, route }: Props) => {
       setSetValidating(false);
       setErrors(false);
     }, 3000);
+
+    //--> chcek to see the previous route and redirect
 
     validateOTP();
   }, [OTP]);
@@ -96,7 +106,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
 
         {validating && <ActivityIndicatorPage />}
 
-        <PLButton
+        {/* <PLButton
           isLoading={validating}
           loadingText="Validating..."
           disabled={errors}
@@ -116,7 +126,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
               navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
             }
           }}
-        />
+        /> */}
         <View style={styles.loginWrapper}>
           <TouchableOpacity
             onPress={() => {
@@ -218,7 +228,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: wpercent("80%"),
     justifyContent: "space-around",
-    marginTop: hp(18),
+    marginTop: hp(390),
   },
   login: {
     fontFamily: "Roboto-Medium",

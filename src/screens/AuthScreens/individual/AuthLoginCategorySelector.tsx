@@ -35,14 +35,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
   //--> loading state
   const [loading, setLoading] = React.useState(false);
 
-  // const selectedCategories = [
-  //   { name: "Pre-Incorporation", value: preincorporation },
-  //   { name: "Company Secretarial Services", value: companysecretarial },
-  //   { name: "Post-Incorporation", value: postincorporation },
-  //   { name: "Review of Legal Documents", value: reviewofLegal },
-  //   { name: "Legal Advice and Consultancy", value: legaladvice },
-  //   { name: "Legal Drafting", value: legaldrafting },
-  // ];
   const selectedCategories = [
     {
       name: CategoryDb.categories[0].categoryName,
