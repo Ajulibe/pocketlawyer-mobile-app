@@ -28,8 +28,8 @@ type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 const HomeScreen = ({ navigation }: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   React.useEffect(() => {
-    // getCategories();
-    getLawyers();
+    getCategories();
+    // getLawyers();
   }, []);
 
   const getCategories = async () => {
@@ -41,7 +41,7 @@ const HomeScreen = ({ navigation }: Props) => {
       const cats: Category[] = getCats?.data?.data;
       setCategory(cats);
     } else {
-      setCategory(CategoryDb.categories.slice(0, 5));
+      setCategory(CategoryDb.categories.slice(0, 4));
     }
   };
 
