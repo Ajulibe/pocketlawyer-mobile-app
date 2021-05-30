@@ -10,17 +10,17 @@ import {
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../../navigation/MainNavigator";
-import { ROUTES } from "../../../../navigation/Routes";
-import COLORS from "../../../../utils/Colors";
-import { wp, hp } from "../../../../utils/Dimensions";
-import NavBar from "../../../../components/NavBar";
-import PLButton from "../../../../components/PLButton/PLButton";
-import { PLPasswordInput } from "../../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "../../../../components/PLModal";
-import { states } from "../../../../utils/nigerianStates";
+import { PLModal } from "components/PLModal";
+import { states } from "utils/nigerianStates";
 import { Picker, Form, Icon } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
@@ -28,6 +28,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
+import axiosClient from "utils/axiosClient";
+import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -37,6 +41,8 @@ type Props = StackScreenProps<
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
   const [image, setImage] = useState<string>("");
+  const [userID, setUserID] = useState(0);
+  const imageSelected = React.useRef<any>({});
 
   React.useEffect(() => {
     (async () => {
@@ -51,17 +57,84 @@ const AuthGetStarted = ({ navigation }: Props) => {
   }, []);
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    console.log(result);
+      imageSelected.current = result;
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+      if (!result.cancelled) {
+        setImage(result.uri);
+        let { type, uri } = result;
+        let nameParts = uri.split(".");
+        let fileType = nameParts[nameParts.length - 1];
+        const contentType = `${type}/${fileType}`;
+
+        try {
+          //--> get the user id from async storage
+          const res = await AsyncStorage.getItem("userID");
+
+          setUserID(Number(res));
+          const payload: DocUploadUserInfo = {
+            fileName: "bb.jpg",
+            fileType: 1,
+            isfor: "Avatar",
+            contentType: "image/jpeg",
+            userID: Number(res),
+          };
+
+          //-> upload to a signed url
+          try {
+            axiosClient.post("Upload/Generates3URL", payload).then((res) => {
+              const { url, uploadID, fileName } = res.data.data;
+
+              const { uri } = imageSelected.current;
+
+              var fileToUpload = [
+                {
+                  name: fileName,
+                  uri: uri,
+                  type: "image/jpeg",
+                },
+              ];
+
+              const formData = new FormData();
+              formData.append("resume", fileToUpload[0] as any);
+
+              //--> post document to the received s3 url
+              axios
+                .put(url, formData, {
+                  headers: {
+                    "Content-Type": "application/octet-stream",
+                  },
+                })
+                .then((res) => {
+                  console.log(res.data);
+                  //--> confirm upload
+                  // const confirmPayload = {
+                  //   fileName: fileName,
+                  //   fileType: 1,
+                  //   userID: payload.userID,
+                  //   uploadID: uploadID,
+                  // };
+
+                  // confirmUpload<confirmLawyerResume>(confirmPayload);
+                })
+
+                .catch(function (error) {
+                  // const { message } = error?.response.data;
+                  // PLToast({ message: message, type: "error" });
+                });
+            });
+          } catch (error) {}
+        } catch (error) {}
+      }
+    } catch (error) {
+      Alert.alert("error setting image");
     }
   };
 
