@@ -4,16 +4,7 @@ import { ROUTES } from "navigation/Routes";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import LawyerTile from "./Components/LawyerTile";
 

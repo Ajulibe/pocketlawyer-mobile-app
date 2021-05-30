@@ -2,10 +2,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
+import { ServiceDb } from "database/ServiceDb";
 import { ROUTES } from "navigation/Routes";
 import { ServiceStackParamList } from "navigation/ServiceStack";
 import React, { useState } from "react";
 import {
+  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -41,14 +43,17 @@ const ServiceScreen = ({ navigation }: Props) => {
           >
             <ServiceSearch />
             <View style={{ height: hp(13) }} />
-            <ServiceCardTile />
-            <ServiceCardTile />
-            <ServiceCardTile />
-            <ServiceCardTile />
-            <ServiceCardTile />
-            <ServiceCardTile />
-            <ServiceCardTile />
-            <ServiceCardTile />
+            <FlatList
+              data={ServiceDb.services}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <ServiceCardTile
+                  service={item}
+                  onClick={() => navigation.navigate(ROUTES.PICK_LAWYER_SCREEN)}
+                />
+              )}
+            />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
