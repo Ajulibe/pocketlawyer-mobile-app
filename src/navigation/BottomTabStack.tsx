@@ -23,13 +23,19 @@ export default function HomeBottomTabStack() {
   const tabBarIcon = (index: number, focused: boolean) => {
     switch (index) {
       case 0:
-        return focused ? IMAGES["logo"] : IMAGES["logo"];
+        return focused ? IMAGES["home-active"] : IMAGES["home-active"];
       case 1:
-        return focused ? IMAGES["logo"] : IMAGES["logo"];
+        return focused
+          ? IMAGES["service-inactive"]
+          : IMAGES["service-inactive"];
       case 2:
-        return focused ? IMAGES["logo"] : IMAGES["logo"];
+        return focused
+          ? IMAGES["history-inactive"]
+          : IMAGES["history-inactive"];
       default:
-        return focused ? IMAGES["logo"] : IMAGES["logo"];
+        return focused
+          ? IMAGES["account-inactive"]
+          : IMAGES["account-inactive"];
     }
   };
   const Title = ({ index, focused }: { index: number; focused: boolean }) => {
@@ -80,7 +86,7 @@ export default function HomeBottomTabStack() {
           },
           shadowColor: COLORS.light.textinputborder,
           shadowOpacity: 0.2,
-          paddingTop: hp(16),
+          // paddingTop: hp(16),
         },
         activeTintColor: COLORS.light.secondary,
         inactiveTintColor: COLORS.light.tint,
@@ -143,12 +149,12 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: hp(12),
     lineHeight: hp(16),
-    marginBottom: hp(12),
+    // marginBottom: hp(12),
   },
   tabBarImage: {
     resizeMode: "contain",
     width: wp(20),
     height: hp(20),
-    marginBottom: hp(2),
+    // marginBottom: hp(2),
   },
 });

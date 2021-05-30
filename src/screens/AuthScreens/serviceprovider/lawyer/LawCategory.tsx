@@ -17,6 +17,7 @@ import { submitCategories } from "navigation/interfaces";
 import FullPageLoader from "components/FullPageLoader";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CategoryDb } from "database/CategoryDb";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -39,33 +40,33 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   const selectedCategories = [
     {
-      categoryName: "Pre-Incorporation",
-      categoryCode: "01",
+      name: CategoryDb.categories[0].categoryName,
+      code: CategoryDb.categories[0].categoryCode,
       value: preincorporation,
     },
     {
-      categoryName: "Company Secretarial Services",
-      categoryCode: "02",
+      name: CategoryDb.categories[1].categoryName,
+      code: CategoryDb.categories[1].categoryCode,
       value: companysecretarial,
     },
     {
-      categoryName: "Post-Incorporation",
-      categoryCode: "03",
+      name: CategoryDb.categories[2].categoryName,
+      code: CategoryDb.categories[2].categoryCode,
       value: postincorporation,
     },
     {
-      categoryName: "Review of Legal Documents",
-      categoryCode: "04",
+      name: CategoryDb.categories[3].categoryName,
+      code: CategoryDb.categories[3].categoryCode,
       value: reviewofLegal,
     },
     {
-      categoryName: "Legal Advice and Consultancy",
-      categoryCode: "05",
+      name: CategoryDb.categories[4].categoryName,
+      code: CategoryDb.categories[4].categoryCode,
       value: legaladvice,
     },
     {
-      categoryName: "Legal Drafting",
-      categoryCode: "06",
+      name: CategoryDb.categories[5].categoryName,
+      code: CategoryDb.categories[5].categoryCode,
       value: legaldrafting,
     },
   ];
@@ -76,10 +77,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     });
 
     const Categorylist = fliteredCategories.map((item) => {
-      return {
-        CategoryCode: item.categoryCode,
-        CategoryName: item.categoryName,
-      };
+      return { CategoryCode: item.code, CategoryName: item.name };
     });
 
     try {
@@ -110,7 +108,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
       );
 
       console.log(response);
-      setLoading(false);
 
       PLToast({ message: "Categories Saved", type: "success" });
 

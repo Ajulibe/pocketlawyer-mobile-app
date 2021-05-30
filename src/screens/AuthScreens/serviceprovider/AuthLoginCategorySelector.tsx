@@ -286,7 +286,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
     </SafeAreaView>
   );
 };
-s;
 
 const styles = StyleSheet.create({
   wrapper: {

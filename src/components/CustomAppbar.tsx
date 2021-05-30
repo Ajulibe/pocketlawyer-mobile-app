@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     paddingVertical: hp(16),
-    paddingHorizontal: wp(30),
-    // height: hp(60),
+    paddingHorizontal: wp(6),
     borderBottomColor: "rgba(32,47,68,.06)",
     borderBottomWidth: 0.8,
   },
@@ -72,6 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    width: 40,
   },
   textContainer: {
     flex: 1,
@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
   },
   trailing: {
     alignItems: "flex-end",
-    minWidth: 50,
+    minWidth: 40,
   },
 });

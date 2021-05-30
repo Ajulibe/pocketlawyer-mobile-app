@@ -31,6 +31,7 @@ import axiosClient from "utils/axiosClient";
 import { RegisterInterface } from "navigation/interfaces";
 import { PLToast } from "components/PLToast";
 import { BottomSheet, ListItem } from "react-native-elements";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -158,9 +159,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
       const { userID } = data.data;
 
       //--> setting the received token in local storage
+
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
+      await AsyncStorageUtil.setUser(JSON.stringify(data));
 
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);

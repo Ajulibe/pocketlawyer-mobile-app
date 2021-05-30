@@ -2,6 +2,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
+import { ROUTES } from "navigation/Routes";
+import { ServiceStackParamList } from "navigation/ServiceStack";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -15,8 +17,8 @@ import {
 import { hp, wp } from "utils/Dimensions";
 import ServiceCardTile from "./Components/ServiceCardTile";
 
-// type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
-type Props = StackScreenProps<any>;
+type Props = StackScreenProps<ServiceStackParamList, ROUTES.SERVICE_SCREEN>;
+// type Props = StackScreenProps<any>;
 
 const ServiceScreen = ({ navigation }: Props) => {
   return (

@@ -4,18 +4,26 @@ import React from "react";
 import { Image, StyleSheet, Text } from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
+import { Category } from "database/DBData";
 import { hp, wp } from "utils/Dimensions";
+import { CategoryDb } from "database/CategoryDb";
 
-export default function ServiceCard() {
+interface Props {
+  category: Category;
+}
+
+export default function ServiceCard({ category }: Props) {
+  React.useEffect(() => {
+    console.log(category);
+  }, []);
+
   return (
     <View style={styles.wrapper}>
       <Image
-        source={{
-          uri: CONSTANTS.icon,
-        }}
+        source={CategoryDb.findByCode({ catCode: category.categoryCode }).image}
         style={styles.icon}
       />
-      <Text style={styles.title}>Company registration</Text>
+      <Text style={styles.title}>{category.categoryName}-</Text>
     </View>
   );
 }
