@@ -18,7 +18,7 @@ import axiosClient from "utils/axiosClient";
 import CONSTANTS from "utils/Constants";
 import { hp } from "utils/Dimensions";
 import { Category } from "database/DBData";
-import ServiceCard from "./Components/ServiceCard";
+import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
 import { CategoryDb } from "database/CategoryDb";
@@ -28,23 +28,43 @@ type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 const HomeScreen = ({ navigation }: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   React.useEffect(() => {
-    (async () => {
-      const userID = await AsyncStorageUtil.getUserId();
-      // const token = await AsyncStorageUtil.getToken();
-      // console.log(token);
-
-      const getCats = await axiosClient.get(
-        "Category/GetUserCategories/" + userID
-      );
-      if (getCats != null) {
-        const cats: Category[] = getCats?.data?.data;
-        setCategory(cats);
-      }
-    })();
-    // await AsyncStorage.setItem("token", token);
-    // await AsyncStorage.setItem("userType", JSON.stringify(userType));
-    // await AsyncStorage.setItem("userID", JSON.stringify(userID));
+    // getCategories();
+    getLawyers();
   }, []);
+
+  const getCategories = async () => {
+    const userID = await AsyncStorageUtil.getUserId();
+    const getCats = await axiosClient.get(
+      `Category/GetUserCategories/${userID}`
+    );
+    if (getCats != null) {
+      const cats: Category[] = getCats?.data?.data;
+      setCategory(cats);
+    } else {
+      setCategory(CategoryDb.categories.slice(0, 5));
+    }
+  };
+
+  const getLawyers = async () => {
+    const userID = await AsyncStorageUtil.getToken();
+
+    const getSP = axiosClient.get("Category/GetSPUserCategories");
+    getSP
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    // if (getSP != null) {
+    //   const cats: Category[] = getSP?.data?.data;
+    //   setCategory(cats);
+    // } else {
+    //   setCategory(CategoryDb.categories.slice(0, 5));
+    // }
+  };
+
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -66,7 +86,7 @@ const HomeScreen = ({ navigation }: Props) => {
           <View style={styles.titleWithViewMore}>
             <Text style={globalStyles.H2Style}>Your Categories</Text>
             <TouchableOpacity
-              onPress={() => navigation.push(ROUTES.PICK_LAWYER_SCREEN)}
+              onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}
             >
               <Text style={styles.viewMore}>View all</Text>
             </TouchableOpacity>
@@ -75,8 +95,14 @@ const HomeScreen = ({ navigation }: Props) => {
             <FlatList
               horizontal={true}
               data={category}
-              renderItem={({ item }) => <ServiceCard category={item} />}
+              showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <CategoryCard
+                  category={item}
+                  onClick={() => navigation.navigate(ROUTES.PICK_LAWYER_SCREEN)}
+                />
+              )}
             />
           </View>
           <Text

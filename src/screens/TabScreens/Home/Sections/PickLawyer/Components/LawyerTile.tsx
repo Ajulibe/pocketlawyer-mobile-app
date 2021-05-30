@@ -19,7 +19,7 @@ export default function LawyerTile(props: Props) {
         style={styles.user}
       />
       <Text style={styles.name}>Comoye Afosa</Text>
-      <Text style={styles.price}>N56,000</Text>
+      {/* <Text style={styles.price}>N56,000</Text> */}
       <Text style={styles.location}>Lagos</Text>
       <StarRating
         maxStars={5}

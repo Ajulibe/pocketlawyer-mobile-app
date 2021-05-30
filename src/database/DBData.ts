@@ -49,9 +49,9 @@ export const allCategories:Category[] = [
 
 
 export interface Service{
-    serviceCode:String,
-    serviceName:String,
-    categoryCode:String,
+    serviceCode:string,
+    serviceName:string,
+    categoryCode:string,
     image:any,
 }
 export const allServices:Service[] = [
@@ -60,7 +60,7 @@ export const allServices:Service[] = [
         serviceCode: '01', 
         serviceName: "Company name registration",  
         categoryCode: '01', 
-        image: IMAGES["cat-company-reg"] 
+        image: IMAGES["cat-company-reg"] ,
     },
     { 
         serviceCode: '02', 

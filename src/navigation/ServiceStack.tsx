@@ -6,9 +6,11 @@ import {
 import { ROUTES } from "./Routes";
 import COLORS from "../utils/Colors";
 import ServiceScreen from "../screens/TabScreens/Services/ServiceScreen";
+import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
 
 export type ServiceStackParamList = {
   [ROUTES.SERVICE_SCREEN]: undefined;
+  [ROUTES.PICK_LAWYER_SCREEN]: undefined;
 };
 
 const ServiceStack = createStackNavigator<ServiceStackParamList>();
@@ -36,6 +38,11 @@ export default function ServiceNavigationStack() {
       <ServiceStack.Screen
         name={ROUTES.SERVICE_SCREEN}
         component={ServiceScreen}
+        options={headerOptions}
+      />
+      <ServiceStack.Screen
+        name={ROUTES.PICK_LAWYER_SCREEN}
+        component={PickLawyer}
         options={headerOptions}
       />
     </ServiceStack.Navigator>
