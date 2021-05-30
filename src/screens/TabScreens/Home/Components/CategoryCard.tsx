@@ -1,7 +1,7 @@
 import globalStyles from "css/GlobalCss";
 import { View } from "native-base";
 import React from "react";
-import { Image, StyleSheet, Text } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { Category } from "database/DBData";
@@ -10,21 +10,18 @@ import { CategoryDb } from "database/CategoryDb";
 
 interface Props {
   category: Category;
+  onClick: () => void;
 }
 
-export default function ServiceCard({ category }: Props) {
-  React.useEffect(() => {
-    console.log(category);
-  }, []);
-
+export default function CategoryCard({ category, onClick }: Props) {
   return (
-    <View style={styles.wrapper}>
+    <TouchableOpacity style={styles.wrapper} onPress={() => onClick()}>
       <Image
         source={CategoryDb.findByCode({ catCode: category.categoryCode }).image}
         style={styles.icon}
       />
       <Text style={styles.title}>{category.categoryName}-</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

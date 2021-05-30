@@ -9,9 +9,11 @@ import HomeScreen from "../screens/TabScreens/Home/HomeScreen";
 import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
 import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
 import Checkout from "../screens/TabScreens/Home/Sections/Checkout/Checkout";
+import AllCategory from "../screens/TabScreens/Home/Sections/AllCategory/AllCategory";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN]: undefined;
+  [ROUTES.ALL_CATEGORY_SCREEN]: undefined;
   [ROUTES.PICK_LAWYER_SCREEN]: undefined;
   [ROUTES.LAWYER_DETAIL_SCREEN]: undefined;
   [ROUTES.CHECKOUT_SCREEN]: undefined;
@@ -42,6 +44,11 @@ export default function HomeNavigationStack() {
       <HomeStack.Screen
         name={ROUTES.HOME_SCREEN}
         component={HomeScreen}
+        options={headerOptions}
+      />
+      <HomeStack.Screen
+        name={ROUTES.ALL_CATEGORY_SCREEN}
+        component={AllCategory}
         options={headerOptions}
       />
       <HomeStack.Screen

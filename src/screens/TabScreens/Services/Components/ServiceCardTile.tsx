@@ -1,29 +1,40 @@
 import { View } from "native-base";
 import React from "react";
-import { Image, StyleSheet, Text } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 import StarRating from "react-native-star-rating";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import globalStyles from "css/GlobalCss";
+import { Service } from "database/DBData";
+import { ServiceDb } from "database/ServiceDb";
 
-export default function ServiceCardTile() {
+interface Props {
+  service: Service;
+  onClick: () => void;
+}
+export default function ServiceCardTile({ service, onClick }: Props) {
   return (
-    <View style={[styles.wrapper, globalStyles.shadowLight]}>
-      <MaterialCommunityIcons
-        name="card-bulleted-off-outline"
-        size={24}
-        color={COLORS.light.primary}
+    <TouchableOpacity
+      style={[styles.wrapper, globalStyles.shadowLight]}
+      onPress={onClick}
+    >
+      <Image
+        source={
+          ServiceDb.findByServiceCode({ serviceCode: service.serviceCode })
+            .image
+        }
+        style={styles.icon}
       />
 
-      <Text style={styles.title}>Business Name Registration</Text>
+      <Text style={styles.title}>{service.serviceName}</Text>
       <MaterialIcons
         name="keyboard-arrow-right"
         size={24}
         color={COLORS.light.primary}
       />
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -46,5 +57,9 @@ const styles = StyleSheet.create({
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
     marginLeft: wp(16),
+  },
+  icon: {
+    width: wp(30),
+    height: wp(30),
   },
 });
