@@ -38,8 +38,9 @@ interface Props {
   returnKeyType: any;
   placeholder?: string;
   placeholderTextColor?: any;
-  onInputChange: (id?: string, x?: string, y?: boolean) => void;
+  onInputChange?: (id?: string, x?: string, y?: boolean) => void;
   onSubmit?: () => void;
+  onChangeText: any;
 }
 
 const inputReducer = (state: InitialStateType, action: IAction) => {
@@ -71,6 +72,7 @@ const Input: React.FC<Props> = (props) => {
   const [isTouched, setIsTouched] = useState(false);
   const [errorText, setErrorText] = useState("");
 
+  //--> commented out cause i dont know what its doing here
   const textChangeHandler = (text: string) => {
     let isValid = true;
     if (props.required && text.trim().length === 0) {
@@ -107,8 +109,8 @@ const Input: React.FC<Props> = (props) => {
           styles.input,
         ]}
         placeholderTextColor={COLORS.light.inputText}
-        value={inputState.value!}
-        onChangeText={textChangeHandler}
+        // onChangeText={textChangeHandler}
+        onChangeText={props.onChangeText}
       />
       {props.errorText != "" && (inputState.touched || isTouched) && (
         <View style={styles.errorContainer}>

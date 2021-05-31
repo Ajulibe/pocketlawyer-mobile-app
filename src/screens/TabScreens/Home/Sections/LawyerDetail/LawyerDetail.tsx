@@ -20,7 +20,9 @@ import BottomSheetModal from "../BottomSheet/BottomSheetModal";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
-export default function LawyerDetail({ navigation }: Props) {
+export default function LawyerDetail({ navigation, route }: Props) {
+  const data = route.params;
+
   const [modalVisibility, setModalVisibility] = React.useState(false);
   const DescTile = ({
     leading,
@@ -54,6 +56,8 @@ export default function LawyerDetail({ navigation }: Props) {
         closeModal={() => setModalVisibility(false)}
         navigation={navigation}
         modalVisible={modalVisibility}
+        serviceName={data?.serviceName}
+        serviceCode={data?.serviceCode}
       />
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar navigation={navigation} title="" />
@@ -68,10 +72,10 @@ export default function LawyerDetail({ navigation }: Props) {
             }}
             style={styles.userPhoto}
           />
-          <Text style={styles.name}>Omoye Afosa</Text>
+          <Text style={styles.name}>{data?.item?.name}</Text>
           <View style={styles.userDetails}>
             <Text style={styles.descTitle}>Brief Description</Text>
-            <DescTile leading="Location:" value="Lagos" />
+            <DescTile leading="Location:" value={data?.item?.address} />
             <DescTile leading="Price:" value="N56, 000" />
             <DescTile leading="Years of Experience:" value="2yrs" />
             <Text style={styles.aboutUser}>

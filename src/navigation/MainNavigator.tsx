@@ -86,7 +86,7 @@ export default function MainNavigator() {
   return (
     <MainStack.Navigator
       initialRouteName={ROUTES.AUTH_BLANK_SCREEN}
-      // initialRouteName={ROUTES.AUTH_PROFILE_IMAGE_LAWYER}
+      // initialRouteName={ROUTES.TABSCREEN_STACK}
       headerMode={"none"}
       screenOptions={{
         headerStyle: {

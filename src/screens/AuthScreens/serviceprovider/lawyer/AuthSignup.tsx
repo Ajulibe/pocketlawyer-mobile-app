@@ -115,6 +115,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
         JSON.stringify(lawyerPayload)
       );
 
+      await AsyncStorage.setItem("previousPath", "lawyer");
+
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO_LAWYER);
       }, 1000);

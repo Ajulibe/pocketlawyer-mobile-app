@@ -43,6 +43,9 @@
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-elements": "^3.3.2",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-paystack": "^3.4.0",
+    "react-native-paystack-popup": "^1.0.0",
+    "react-native-paystack-webview": "^3.2.1",
     "react-native-reanimated": "~2.1.0",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-screens": "~3.0.0",
@@ -51,6 +54,7 @@
     "react-native-toast-message": "^1.4.9",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "11.2.3",
     "redux": "^4.0.5"
   },
   "devDependencies": {

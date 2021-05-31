@@ -7,20 +7,27 @@ import { hp, wp } from "utils/Dimensions";
 
 interface Props {
   onClick?: () => void;
+  data: {
+    address: string;
+    avatar: any;
+    categoryName: string;
+    name: string;
+    serviceProviderID: number;
+  };
 }
 
-export default function LawyerTile(props: Props) {
+export default function LawyerTile({ data, onClick }: Props) {
   return (
-    <TouchableOpacity style={styles.wrapper} onPress={props.onClick}>
+    <TouchableOpacity style={styles.wrapper} onPress={onClick}>
       <Image
         source={{
           uri: CONSTANTS.user,
         }}
         style={styles.user}
       />
-      <Text style={styles.name}>Comoye Afosa</Text>
+      <Text style={styles.name}>{data.name}</Text>
       {/* <Text style={styles.price}>N56,000</Text> */}
-      <Text style={styles.location}>Lagos</Text>
+      <Text style={styles.location}>{data.address}</Text>
       <StarRating
         maxStars={5}
         rating={3}
