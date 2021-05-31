@@ -1,10 +1,13 @@
+import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import { HomeStackParamList } from "navigation/HomeStack";
 import { ROUTES } from "navigation/Routes";
-import React, { useState } from "react";
+import PaystackWebView from "components/PaystackSDK/index";
+
+// @ts-ignore
 import {
   Image,
   KeyboardAvoidingView,
@@ -71,6 +74,32 @@ const Checkout = ({ navigation }: Props) => {
 
           <CustomButton btnText="Proceed to Pay" onClick={() => null} />
         </ScrollView>
+
+        <View style={{ flex: 1 }}>
+          <PaystackWebView
+            refNumber={"" + Math.floor(Math.random() * 1000000000 + 1)}
+            buttonText="Pay Now"
+            showPayButton={true}
+            paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
+            amount={100}
+            currency="NGN"
+            billingEmail="a.ajulibe@gmail.com"
+            billingMobile="0531714677"
+            billingName="Akachukwu Ajulibe"
+            channels={JSON.stringify(["card", "bank"])}
+            ActivityIndicatorColor="green"
+            SafeAreaViewContainer={{ marginTop: 5 }}
+            SafeAreaViewContainerModal={{ marginTop: 5 }}
+            handleWebViewMessage={(e: any) => {}}
+            onCancel={(resp: any) => {
+              console.log(resp);
+            }}
+            onSuccess={(resp: any) => {
+              console.log(resp);
+            }}
+            autoStart={false}
+          />
+        </View>
       </SafeAreaView>
     </>
   );

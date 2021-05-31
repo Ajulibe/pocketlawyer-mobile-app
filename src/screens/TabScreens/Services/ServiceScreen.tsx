@@ -31,11 +31,11 @@ const ServiceScreen = ({ navigation }: Props) => {
           style={{ flex: 1 }}
           keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}
         >
-          <CustomAppbar
+          {/* <CustomAppbar
             navigation={navigation}
             title="Services"
             showBorderBottom={false}
-          />
+          /> */}
           <ScrollView
             contentContainerStyle={[styles.container, { flexGrow: 1 }]}
             keyboardShouldPersistTaps="handled"
@@ -50,7 +50,13 @@ const ServiceScreen = ({ navigation }: Props) => {
               renderItem={({ item }) => (
                 <ServiceCardTile
                   service={item}
-                  onClick={() => navigation.navigate(ROUTES.PICK_LAWYER_SCREEN)}
+                  //send the selected service name as a param
+                  onClick={() =>
+                    navigation.navigate(
+                      ROUTES.PICK_LAWYER_SCREEN,
+                      item.serviceCode
+                    )
+                  }
                 />
               )}
             />

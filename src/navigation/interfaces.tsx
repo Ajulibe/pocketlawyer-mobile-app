@@ -92,3 +92,11 @@ export interface confirmLawyerResume {
   userID: number;
   uploadID: number;
 }
+
+export interface Lawyerdata {
+  address: string;
+  avatar: any;
+  categoryName: string;
+  name: string;
+  serviceProviderID: number;
+}

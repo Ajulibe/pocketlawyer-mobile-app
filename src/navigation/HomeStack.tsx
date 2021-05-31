@@ -10,12 +10,13 @@ import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawye
 import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
 import Checkout from "../screens/TabScreens/Home/Sections/Checkout/Checkout";
 import AllCategory from "../screens/TabScreens/Home/Sections/AllCategory/AllCategory";
+import { Lawyerdata } from "navigation/interfaces";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN]: undefined;
   [ROUTES.ALL_CATEGORY_SCREEN]: undefined;
   [ROUTES.PICK_LAWYER_SCREEN]: undefined;
-  [ROUTES.LAWYER_DETAIL_SCREEN]: undefined;
+  [ROUTES.LAWYER_DETAIL_SCREEN]: any;
   [ROUTES.CHECKOUT_SCREEN]: undefined;
 };
 

@@ -10,7 +10,7 @@ import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawye
 
 export type ServiceStackParamList = {
   [ROUTES.SERVICE_SCREEN]: undefined;
-  [ROUTES.PICK_LAWYER_SCREEN]: undefined;
+  [ROUTES.PICK_LAWYER_SCREEN]: any;
 };
 
 const ServiceStack = createStackNavigator<ServiceStackParamList>();

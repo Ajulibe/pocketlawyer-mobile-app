@@ -11,15 +11,22 @@ import {
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
-import BottomSheetContent from "./BottomSheetContent";
+import { BusinessNameAndRegistration } from "./BottomSheetServices/BusinessNameAndRegistration";
 
 interface Props {
   modalVisible: boolean;
   navigation: any;
   closeModal: () => void;
+  serviceName: string;
+  serviceCode: string;
 }
 
+const ServiceNames = {
+  COMPANY_REGISTRATION: "Company name registration",
+};
+
 export default function SendMoneyModal(props: Props) {
+  console.log(props.serviceName);
   return (
     <Modal
       animationType="fade"
@@ -47,10 +54,17 @@ export default function SendMoneyModal(props: Props) {
           >
             <TouchableWithoutFeedback>
               <View>
-                <BottomSheetContent
+                {props.serviceName === ServiceNames.COMPANY_REGISTRATION && (
+                  <BusinessNameAndRegistration
+                    navigation={props.navigation}
+                    closeModal={props.closeModal}
+                    serviceCode={props.serviceCode}
+                  />
+                )}
+                {/* <BottomSheetContent
                   navigation={props.navigation}
                   closeModal={props.closeModal}
-                />
+                /> */}
               </View>
             </TouchableWithoutFeedback>
           </Animatable.View>
