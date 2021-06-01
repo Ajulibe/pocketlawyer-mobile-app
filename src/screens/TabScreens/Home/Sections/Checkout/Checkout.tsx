@@ -124,8 +124,8 @@ const Checkout = ({ navigation, route }: Props) => {
             showPayButton={false}
             paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
             amount={amount}
-            billingEmail="a.ajulibe@gmail.com"
-            billingMobile="0531714677"
+            billingEmail="a.ajulibe@gmail.com" //change this email to the inidividuals email
+            billingMobile="0531714677" //change
             billingName="Akachukwu Ajulibe"
             channels={JSON.stringify([
               "card",
