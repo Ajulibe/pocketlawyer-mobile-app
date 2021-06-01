@@ -34,8 +34,9 @@ const Checkout = ({ navigation, route }: Props) => {
   const [showModal, setshowModal] = useState(false);
   const [amount, setAmount] = useState("");
 
-  const lawyer = route.params.lawyer;
-  const service = route.params.service;
+  const lawyer = route.params?.lawyer;
+  const service = route.params?.service;
+
   //--> lawyer details
   const { name, address } = lawyer;
 

@@ -64,7 +64,7 @@ export const BusinessNameAndRegistration = ({
   lawyer,
 }: Props) => {
   const [state, dispatch] = React.useReducer(formReducer, initialState);
-  console.log(state, "state value");
+  console.log(lawyer, "state value");
 
   const [tempServiceHistoryID, setTempServiceHistoryID] =
     React.useState<string>("");
