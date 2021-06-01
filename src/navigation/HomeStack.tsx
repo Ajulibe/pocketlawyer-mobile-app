@@ -24,7 +24,7 @@ export type HomeStackParamList = {
     category: Category;
     service: Service;
   };
-  [ROUTES.CHECKOUT_SCREEN]: undefined;
+  [ROUTES.CHECKOUT_SCREEN]: { lawyer: LawyerModel; service: Service };
 };
 
 const HomeStack = createStackNavigator<HomeStackParamList>();

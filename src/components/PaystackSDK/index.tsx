@@ -27,7 +27,7 @@ import { WebView } from "react-native-webview";
 
 function Paystack(props: any, ref: any) {
   const [isLoading, setisLoading] = useState(true);
-  const [showModal, setshowModal] = useState(false);
+  // const [showModal, setshowModal] = useState(false);
 
   useEffect(() => {
     autoStartCheck();
@@ -35,16 +35,16 @@ function Paystack(props: any, ref: any) {
 
   const autoStartCheck = () => {
     if (props.autoStart) {
-      setshowModal(true);
+      props.setshowModal(true);
     }
   };
 
   useImperativeHandle(ref, () => ({
     StartTransaction() {
-      setshowModal(true);
+      props.setshowModal(true);
     },
     endTransaction() {
-      setshowModal(false);
+      props.setshowModal(false);
     },
   }));
 
@@ -106,12 +106,12 @@ function Paystack(props: any, ref: any) {
     }
     switch (webResponse.event) {
       case "cancelled":
-        setshowModal(false);
+        props.setshowModal(false);
         props.onCancel({ status: "cancelled" });
         break;
 
       case "successful":
-        setshowModal(false);
+        props.setshowModal(false);
         const reference = webResponse.transactionRef;
 
         props.onSuccess({
@@ -130,7 +130,7 @@ function Paystack(props: any, ref: any) {
   };
 
   const showPaymentModal = () => {
-    setshowModal(true);
+    props.setshowModal(true);
   };
 
   const button = props.renderButton ? (
@@ -148,7 +148,7 @@ function Paystack(props: any, ref: any) {
     <SafeAreaView style={[{ flex: 1 }, props.SafeAreaViewContainer]}>
       <Modal
         style={[{ flex: 1 }]}
-        visible={showModal}
+        visible={props.showModal}
         animationType="slide"
         transparent={false}
       >

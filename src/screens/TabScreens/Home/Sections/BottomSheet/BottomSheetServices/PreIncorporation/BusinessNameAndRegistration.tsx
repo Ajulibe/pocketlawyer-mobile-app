@@ -4,7 +4,6 @@ import globalStyles from "css/GlobalCss";
 import { ROUTES } from "navigation/Routes";
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import { hp, wp } from "utils/Dimensions";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import modalFormstyles from "../ModalFormStyles";
@@ -62,6 +61,7 @@ export const BusinessNameAndRegistration = ({
   navigation,
   closeModal,
   service,
+  lawyer,
 }: Props) => {
   const [state, dispatch] = React.useReducer(formReducer, initialState);
   console.log(state, "state value");
@@ -72,7 +72,6 @@ export const BusinessNameAndRegistration = ({
   const [isdisabled, setIsDisabled] = React.useState(true);
 
   const handleTextChange = (payload: { field: string; value: string }) => {
-    console.log("called onchange");
     dispatch({
       type: ActionKind.addState,
       payload,
@@ -289,7 +288,10 @@ export const BusinessNameAndRegistration = ({
         onClick={() => {
           submit;
           closeModal();
-          navigation.navigate(ROUTES.CHECKOUT_SCREEN);
+          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+            service: service,
+            lawyer: lawyer,
+          });
         }}
       />
     </View>
