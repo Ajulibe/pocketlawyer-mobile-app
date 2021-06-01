@@ -4,16 +4,17 @@ import globalStyles from "css/GlobalCss";
 import { ROUTES } from "navigation/Routes";
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import { hp, wp } from "utils/Dimensions";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import modalFormstyles from "../ModalFormStyles";
+import { Service } from "database/DBData";
+import { LawyerModel } from "models/Interfaces";
 
 interface Props {
   navigation: any;
   closeModal: () => void;
-  serviceCode: string;
-  lawyerData: any;
-  serviceName: string;
+  service: Service;
+  lawyer: LawyerModel;
 }
 
 interface IState {
@@ -59,12 +60,11 @@ function formReducer(state: IState, action: Action) {
 export const BusinessNameAndRegistration = ({
   navigation,
   closeModal,
-  serviceCode,
-  lawyerData,
-  serviceName,
+  service,
+  lawyer,
 }: Props) => {
   const [state, dispatch] = React.useReducer(formReducer, initialState);
-  console.log(state, "state value");
+  console.log(lawyer, "state value");
 
   const [tempServiceHistoryID, setTempServiceHistoryID] =
     React.useState<string>("");
@@ -86,7 +86,7 @@ export const BusinessNameAndRegistration = ({
     try {
       const userID = await AsyncStorage.getItem("userID");
       const payload = {
-        ServiceCode: serviceCode,
+        ServiceCode: service.serviceCode,
         userID: userID,
       };
       const { data } = await axiosClient.post(
@@ -163,11 +163,11 @@ export const BusinessNameAndRegistration = ({
   return (
     <View style={{ paddingBottom: 120 }}>
       <ScrollView>
-        <Text style={globalStyles.H1Style}>Business Name Registration</Text>
-        <Text style={styles.titleDesc}>
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details
         </Text>
-        <Text style={styles.inputLabel}>Proposed Business Name 1</Text>
+        <Text style={modalFormstyles.inputLabel}>Proposed Business Name 1</Text>
         <Input
           placeholder="Type business name 1"
           placeholderTextColor=""
@@ -186,7 +186,7 @@ export const BusinessNameAndRegistration = ({
           textContentType="none"
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Proposed Business Name 2</Text>
+        <Text style={modalFormstyles.inputLabel}>Proposed Business Name 2</Text>
         <Input
           placeholder="Type business name 2"
           placeholderTextColor=""
@@ -205,7 +205,7 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Nature of Business</Text>
+        <Text style={modalFormstyles.inputLabel}>Nature of Business</Text>
         <Input
           placeholder="Type the business nature"
           placeholderTextColor=""
@@ -224,7 +224,7 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Means of Identification</Text>
+        <Text style={modalFormstyles.inputLabel}>Means of Identification</Text>
         <Input
           placeholder="Select your means of identification"
           placeholderTextColor=""
@@ -243,7 +243,7 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>ID Number</Text>
+        <Text style={modalFormstyles.inputLabel}>ID Number</Text>
         <Input
           placeholder="Type identification number"
           placeholderTextColor=""
@@ -262,7 +262,7 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Signature</Text>
+        <Text style={modalFormstyles.inputLabel}>Signature</Text>
         <Input
           placeholder="Upload your signature"
           placeholderTextColor=""
@@ -289,31 +289,11 @@ export const BusinessNameAndRegistration = ({
           submit;
           closeModal();
           navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
-            serviceName: serviceName,
-            serviceCode: serviceCode,
-            lawyerData: lawyerData,
+            service: service,
+            lawyer: lawyer,
           });
         }}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  titleDesc: {
-    fontSize: wp(12),
-    lineHeight: hp(14),
-    fontWeight: "400",
-    fontFamily: "Roboto",
-    color: "rgba(0, 0, 0, 0.7)",
-    marginVertical: hp(24),
-  },
-  inputLabel: {
-    fontSize: wp(12),
-    lineHeight: hp(24),
-    fontWeight: "500",
-    fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
-    marginBottom: hp(2),
-  },
-});

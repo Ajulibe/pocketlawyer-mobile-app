@@ -7,7 +7,7 @@ export interface Category{
 export const allCategories:Category[] = [
     { 
         categoryName: "Pre-Incorporation", 
-        categoryCode: '01', 
+        categoryCode: '01',  
         image: IMAGES["cat-pre-incorporation"] 
     },
     { 
@@ -64,13 +64,13 @@ export const allServices:Service[] = [
     },
     { 
         serviceCode: '02', 
-        serviceName: "Company registration",  
+        serviceName: "Company Registration",  
         categoryCode: '01', 
         image: IMAGES["cat-company-reg"] 
     },
     { 
         serviceCode: '03', 
-        serviceName: "registration of Incorporated trustees",  
+        serviceName: "Registration of Incorporated Trustees",  
         categoryCode: '01', 
         image: IMAGES["cat-company-reg"] 
     },
@@ -100,7 +100,7 @@ export const allServices:Service[] = [
         image: IMAGES["cat-company-reg"] 
     },
     //-->Post-Incorporation
-    { 
+    {
         serviceCode: '08', 
         serviceName: "Change of Registered Address",  
         categoryCode: '03', 

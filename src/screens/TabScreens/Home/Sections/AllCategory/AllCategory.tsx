@@ -4,14 +4,7 @@ import { ROUTES } from "navigation/Routes";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, View } from "react-native";
 import { CategoryDb } from "database/CategoryDb";
 import CategoryCard from "../../Components/CategoryCard";
 
@@ -30,7 +23,11 @@ export default function AllCategory({ navigation }: Props) {
           renderItem={({ item }) => (
             <CategoryCard
               category={item}
-              onClick={() => navigation.navigate(ROUTES.PICK_LAWYER_SCREEN)}
+              onClick={() =>
+                navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                  category: item,
+                })
+              }
             />
           )}
           ItemSeparatorComponent={() => (

@@ -19,28 +19,26 @@ interface IAction {
 }
 
 interface Props {
-  id?: string;
-  keyboardType: any;
-  secureTextEntry: boolean;
-  required: boolean;
-  minLength: number;
+  keyboardType?: any;
+  secureTextEntry?: boolean;
+  required?: boolean;
+  minLength?: number;
   // autoCompleteType?: any;
-  autoCapitalize: any;
-  errorText: string;
-  initialValue: string;
-  initiallyValid: boolean;
+  autoCapitalize?: any;
+  errorText?: string;
+  initialValue?: string;
+  initiallyValid?: boolean;
   email?: string | null;
   min?: number | null;
   max?: number | null;
-  value?: string | null;
-  textContentType: any;
+  value?: string | undefined;
+  textContentType?: any;
   touched?: boolean;
-  returnKeyType: any;
+  returnKeyType?: any;
   placeholder?: string;
   placeholderTextColor?: any;
-  onInputChange?: (id?: string, x?: string, y?: boolean) => void;
   onSubmit?: () => void;
-  onChangeText: any;
+  onChangeText?: any;
 }
 
 const inputReducer = (state: InitialStateType, action: IAction) => {
@@ -72,28 +70,6 @@ const Input: React.FC<Props> = (props) => {
   const [isTouched, setIsTouched] = useState(false);
   const [errorText, setErrorText] = useState("");
 
-  //--> commented out cause i dont know what its doing here
-  const textChangeHandler = (text: string) => {
-    let isValid = true;
-    if (props.required && text.trim().length === 0) {
-      isValid = false;
-    }
-
-    if (props.min != null && +text < props.min) {
-      isValid = false;
-    }
-
-    if (props.max != null && +text > props.max) {
-      isValid = false;
-    }
-
-    if (props.minLength != null && text.length < props.minLength) {
-      isValid = false;
-    }
-
-    dispatch({ type: INPUT_CHANGE, value: text, isValid: isValid });
-  };
-
   return (
     <View style={[styles.formControl]}>
       <TextInput
@@ -109,8 +85,10 @@ const Input: React.FC<Props> = (props) => {
           styles.input,
         ]}
         placeholderTextColor={COLORS.light.inputText}
-        // onChangeText={textChangeHandler}
+        keyboardType="default"
         onChangeText={props.onChangeText}
+        autoCapitalize="sentences"
+        returnKeyType="next"
       />
       {props.errorText != "" && (inputState.touched || isTouched) && (
         <View style={styles.errorContainer}>

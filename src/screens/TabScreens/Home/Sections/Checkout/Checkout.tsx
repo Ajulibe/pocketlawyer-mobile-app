@@ -34,10 +34,11 @@ const Checkout = ({ navigation, route }: Props) => {
   const [showModal, setshowModal] = useState(false);
   const [amount, setAmount] = useState("");
 
-  const data: any = route.params;
-  console.log(data, "checkout page");
+  const lawyer = route.params?.lawyer;
+  const service = route.params?.service;
+
   //--> lawyer details
-  const { name, address } = data?.lawyerData;
+  const { name, address } = lawyer;
 
   const showPaymentModal = () => {
     setshowModal(true);
@@ -47,13 +48,13 @@ const Checkout = ({ navigation, route }: Props) => {
   console.log(moment(d).format("Do MMMM, YYYY"));
 
   React.useEffect(() => {
-    getPrice(data);
+    getPrice();
   }, []);
 
-  const getPrice = async (data: any) => {
+  const getPrice = async () => {
     try {
       const response = await axiosClient.get(
-        `Service/GetServiceAmount?ServiceCode=${data?.serviceCode}`
+        `Service/GetServiceAmount?ServiceCode=${service?.serviceCode}`
       );
       // console.log(response.data.data.amount);
       const { amount } = response.data.data;
@@ -84,9 +85,9 @@ const Checkout = ({ navigation, route }: Props) => {
             consultation fee would be fully refunded.
           </Text>
           <View style={{ height: hp(60) }} />
-          <UserDescListTile leading="Service" value={data?.serviceName} />
-          <UserDescListTile leading="Lawyer" value={name} />
-          <UserDescListTile leading="Location" value={address} />
+          <UserDescListTile leading="Service" value={service?.serviceName} />
+          <UserDescListTile leading="Lawyer" value={name!} />
+          <UserDescListTile leading="Location" value={address!} />
           <UserDescListTile leading="Price" value={`\u20A6 ${amount}`} />
           <UserDescListTile
             leading="Date"

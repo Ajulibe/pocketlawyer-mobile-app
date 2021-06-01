@@ -1,3 +1,4 @@
+import { LawyerModel } from "models/Interfaces";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import StarRating from "react-native-star-rating";
@@ -7,13 +8,7 @@ import { hp, wp } from "utils/Dimensions";
 
 interface Props {
   onClick?: () => void;
-  data: {
-    address: string;
-    avatar: any;
-    categoryName: string;
-    name: string;
-    serviceProviderID: number;
-  };
+  data: LawyerModel;
 }
 
 export default function LawyerTile({ data, onClick }: Props) {
