@@ -17,7 +17,7 @@ export type HomeStackParamList = {
   [ROUTES.ALL_CATEGORY_SCREEN]: undefined;
   [ROUTES.PICK_LAWYER_SCREEN]: undefined;
   [ROUTES.LAWYER_DETAIL_SCREEN]: any;
-  [ROUTES.CHECKOUT_SCREEN]: undefined;
+  [ROUTES.CHECKOUT_SCREEN]: any;
 };
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
