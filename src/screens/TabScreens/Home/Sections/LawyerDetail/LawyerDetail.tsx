@@ -58,6 +58,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
         modalVisible={modalVisibility}
         serviceName={data?.serviceName}
         serviceCode={data?.serviceCode}
+        lawyerData={data?.item}
       />
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar navigation={navigation} title="" />

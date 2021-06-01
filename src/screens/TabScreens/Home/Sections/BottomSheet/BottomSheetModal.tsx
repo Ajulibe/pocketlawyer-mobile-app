@@ -19,6 +19,7 @@ interface Props {
   closeModal: () => void;
   serviceName: string;
   serviceCode: string;
+  lawyerData: any;
 }
 
 const ServiceNames = {
@@ -26,7 +27,6 @@ const ServiceNames = {
 };
 
 export default function SendMoneyModal(props: Props) {
-  console.log(props.serviceName);
   return (
     <Modal
       animationType="fade"
@@ -59,6 +59,8 @@ export default function SendMoneyModal(props: Props) {
                     navigation={props.navigation}
                     closeModal={props.closeModal}
                     serviceCode={props.serviceCode}
+                    lawyerData={props.lawyerData}
+                    serviceName={props.serviceName}
                   />
                 )}
                 {/* <BottomSheetContent

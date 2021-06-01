@@ -12,6 +12,8 @@ interface Props {
   navigation: any;
   closeModal: () => void;
   serviceCode: string;
+  lawyerData: any;
+  serviceName: string;
 }
 
 interface IState {
@@ -58,6 +60,8 @@ export const BusinessNameAndRegistration = ({
   navigation,
   closeModal,
   serviceCode,
+  lawyerData,
+  serviceName,
 }: Props) => {
   const [state, dispatch] = React.useReducer(formReducer, initialState);
   console.log(state, "state value");
@@ -68,7 +72,6 @@ export const BusinessNameAndRegistration = ({
   const [isdisabled, setIsDisabled] = React.useState(true);
 
   const handleTextChange = (payload: { field: string; value: string }) => {
-    console.log("called onchange");
     dispatch({
       type: ActionKind.addState,
       payload,
@@ -285,7 +288,11 @@ export const BusinessNameAndRegistration = ({
         onClick={() => {
           submit;
           closeModal();
-          navigation.navigate(ROUTES.CHECKOUT_SCREEN);
+          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+            serviceName: serviceName,
+            serviceCode: serviceCode,
+            lawyerData: lawyerData,
+          });
         }}
       />
     </View>

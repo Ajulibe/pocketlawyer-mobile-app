@@ -24,10 +24,43 @@ import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 import UserDescListTile from "screens/TabScreens/Account/Components/UserDescListTile";
 import CustomButton from "components/CustomButton";
+import moment from "moment";
+import axiosClient from "utils/axiosClient";
+import { PLToast } from "components/PLToast";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.CHECKOUT_SCREEN>;
 
-const Checkout = ({ navigation }: Props) => {
+const Checkout = ({ navigation, route }: Props) => {
+  const [showModal, setshowModal] = useState(false);
+  const [amount, setAmount] = useState("");
+
+  const data: any = route.params;
+  console.log(data, "checkout page");
+  //--> lawyer details
+  const { name, address } = data?.lawyerData;
+
+  const showPaymentModal = () => {
+    setshowModal(true);
+  };
+
+  const d = new Date();
+  console.log(moment(d).format("Do MMMM, YYYY"));
+
+  React.useEffect(() => {
+    getPrice(data);
+  }, []);
+
+  const getPrice = async (data: any) => {
+    try {
+      const response = await axiosClient.get(
+        `Service/GetServiceAmount?ServiceCode=${data?.serviceCode}`
+      );
+      // console.log(response.data.data.amount);
+      const { amount } = response.data.data;
+      setAmount(amount);
+    } catch (error) {}
+  };
+
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -51,11 +84,14 @@ const Checkout = ({ navigation }: Props) => {
             consultation fee would be fully refunded.
           </Text>
           <View style={{ height: hp(60) }} />
-          <UserDescListTile leading="Service" value="Business Registration" />
-          <UserDescListTile leading="Lawyer" value="Omoye Afosa" />
-          <UserDescListTile leading="Location" value="Benin" />
-          <UserDescListTile leading="Price" value="12,080" />
-          <UserDescListTile leading="Date" value="03/05/1997" />
+          <UserDescListTile leading="Service" value={data?.serviceName} />
+          <UserDescListTile leading="Lawyer" value={name} />
+          <UserDescListTile leading="Location" value={address} />
+          <UserDescListTile leading="Price" value={`\u20A6 ${amount}`} />
+          <UserDescListTile
+            leading="Date"
+            value={moment(d).format("Do MMMM, YYYY").toString()}
+          />
           <View
             style={{
               marginTop: hp(56),
@@ -64,7 +100,11 @@ const Checkout = ({ navigation }: Props) => {
               borderTopWidth: 1,
             }}
           />
-          <UserDescListTile makeBold={true} leading="Total" value="123,323" />
+          <UserDescListTile
+            makeBold={true}
+            leading="Total"
+            value={`\u20A6 ${amount}`}
+          />
 
           <Text style={[{ ...styles.subTitle, textAlign: "center" }]}>
             You will receive notification on the progress of your request on
@@ -72,30 +112,43 @@ const Checkout = ({ navigation }: Props) => {
           </Text>
           <View style={{ flex: 1 }} />
 
-          <CustomButton btnText="Proceed to Pay" onClick={() => null} />
+          <CustomButton btnText="Proceed to Pay" onClick={showPaymentModal} />
         </ScrollView>
 
         <View style={{ flex: 1 }}>
           <PaystackWebView
+            setshowModal={setshowModal}
+            showModal={showModal}
             refNumber={"" + Math.floor(Math.random() * 1000000000 + 1)}
             buttonText="Pay Now"
-            showPayButton={true}
+            showPayButton={false}
             paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
-            amount={100}
-            currency="NGN"
+            amount={amount}
             billingEmail="a.ajulibe@gmail.com"
             billingMobile="0531714677"
             billingName="Akachukwu Ajulibe"
-            channels={JSON.stringify(["card", "bank"])}
+            channels={JSON.stringify([
+              "card",
+              "bank",
+              "ussd",
+              "qr",
+              "mobile_money",
+            ])}
             ActivityIndicatorColor="green"
-            SafeAreaViewContainer={{ marginTop: 5 }}
+            SafeAreaViewContainer={{
+              marginTop: 5,
+              backgoundColor: COLORS.light.primary,
+            }}
             SafeAreaViewContainerModal={{ marginTop: 5 }}
             handleWebViewMessage={(e: any) => {}}
             onCancel={(resp: any) => {
-              console.log(resp);
+              // console.log(resp);
+              // PLToast({ message: resp.data.message, type: "error" });
             }}
             onSuccess={(resp: any) => {
-              console.log(resp);
+              // navigation.navigate(ROUTES.SERVICE_SCREEN)
+              // console.log(resp.data.message);
+              // PLToast({ message: resp.data.message, type: "success" });
             }}
             autoStart={false}
           />
