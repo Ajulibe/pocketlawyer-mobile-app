@@ -10,13 +10,20 @@ import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawye
 import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
 import Checkout from "../screens/TabScreens/Home/Sections/Checkout/Checkout";
 import AllCategory from "../screens/TabScreens/Home/Sections/AllCategory/AllCategory";
-import { Lawyerdata } from "navigation/interfaces";
+import CatServiceScreen from "../screens/TabScreens/Home/Sections/CatServiceScreen/CatServiceScreen";
+import { Category, Service } from "database/DBData";
+import { LawyerModel } from "models/Interfaces";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN]: undefined;
   [ROUTES.ALL_CATEGORY_SCREEN]: undefined;
-  [ROUTES.PICK_LAWYER_SCREEN]: undefined;
-  [ROUTES.LAWYER_DETAIL_SCREEN]: any;
+  [ROUTES.CAT_SERVICE_SCREEN]: { category: Category };
+  [ROUTES.PICK_LAWYER_SCREEN]: { category: Category; service: Service };
+  [ROUTES.LAWYER_DETAIL_SCREEN]: {
+    lawyer: LawyerModel;
+    category: Category;
+    service: Service;
+  };
   [ROUTES.CHECKOUT_SCREEN]: undefined;
 };
 
@@ -50,6 +57,11 @@ export default function HomeNavigationStack() {
       <HomeStack.Screen
         name={ROUTES.ALL_CATEGORY_SCREEN}
         component={AllCategory}
+        options={headerOptions}
+      />
+      <HomeStack.Screen
+        name={ROUTES.CAT_SERVICE_SCREEN}
+        component={CatServiceScreen}
         options={headerOptions}
       />
       <HomeStack.Screen

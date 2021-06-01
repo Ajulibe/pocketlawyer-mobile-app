@@ -21,7 +21,9 @@ import BottomSheetModal from "../BottomSheet/BottomSheetModal";
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
 export default function LawyerDetail({ navigation, route }: Props) {
-  const data = route.params;
+  const category = route.params.category;
+  const lawyer = route.params.lawyer;
+  const service = route.params.service;
 
   const [modalVisibility, setModalVisibility] = React.useState(false);
   const DescTile = ({
@@ -29,8 +31,8 @@ export default function LawyerDetail({ navigation, route }: Props) {
     value,
     faintTrailing,
   }: {
-    leading: String;
-    value: String;
+    leading: String | string;
+    value: String | string;
     faintTrailing?: boolean;
   }) => (
     <View style={styles.tileWrapper}>
@@ -56,8 +58,8 @@ export default function LawyerDetail({ navigation, route }: Props) {
         closeModal={() => setModalVisibility(false)}
         navigation={navigation}
         modalVisible={modalVisibility}
-        serviceName={data?.serviceName}
-        serviceCode={data?.serviceCode}
+        service={service}
+        lawyer={lawyer}
       />
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar navigation={navigation} title="" />
@@ -72,10 +74,10 @@ export default function LawyerDetail({ navigation, route }: Props) {
             }}
             style={styles.userPhoto}
           />
-          <Text style={styles.name}>{data?.item?.name}</Text>
+          <Text style={styles.name}>{lawyer?.name}</Text>
           <View style={styles.userDetails}>
             <Text style={styles.descTitle}>Brief Description</Text>
-            <DescTile leading="Location:" value={data?.item?.address} />
+            <DescTile leading="Location:" value={lawyer?.address!} />
             <DescTile leading="Price:" value="N56, 000" />
             <DescTile leading="Years of Experience:" value="2yrs" />
             <Text style={styles.aboutUser}>

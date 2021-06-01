@@ -8,90 +8,67 @@ import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import LawyerTile from "./Components/LawyerTile";
 import axiosClient from "utils/axiosClient";
-
-import { allServices } from "database/DBData";
+import { LawyerModel } from "models/Interfaces";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.PICK_LAWYER_SCREEN>;
 
 export default function PickLawyer({ navigation, route }: Props) {
-  const param: any = route.params;
+  const category = route.params.category;
+  const service = route.params.service;
 
   //--> state for the section
-  const [lawyers, setLawyers] = React.useState<any>();
-  const [servicename, setServiceName] = React.useState<any>("");
+  const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
 
   React.useEffect(() => {
-    if (typeof param === "undefined") {
+    if (typeof route.params.category === "undefined") {
       return;
     }
-    //--> find the category name based on the params code
-    const category = allServices.find((item) => {
-      return item.serviceCode === param;
-    });
 
-    setServiceName(category?.serviceName);
-
-    getLawyersByCategory(param);
-  }, [param]);
+    getLawyersByCategory();
+  }, [category]);
 
   //--> api to fetch all lawyers in this category using param
-  const getLawyersByCategory = async (param: any) => {
+  const getLawyersByCategory = async () => {
     try {
       const { data } = await axiosClient.post("Category/GetSPUserCategories", [
         {
-          CategoryCode: param,
+          CategoryCode: category.categoryCode,
         },
       ]);
-      setLawyers(data.data);
+      const lawyers: LawyerModel[] = data?.data;
+      setLawyers(lawyers);
     } catch (error) {
       return error;
     }
   };
 
-  // const data = [
-  //   { id: "1" },
-  //   { id: "2" },
-  //   { id: "3" },
-  //   { id: "4" },
-  //   { id: "5" },
-  //   { id: "6" },
-  //   { id: "7" },
-  //   { id: "8" },
-  //   { id: "9" },
-  // ];
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar
           navigation={navigation}
-          title={servicename}
+          title={category.categoryName}
           showBorderBottom={true}
         />
-        <View
-          style={[styles.container, { flexGrow: 1 }]}
-          // keyboardShouldPersistTaps="handled"
-          // bounces={false}
-        >
+        <View style={[styles.container, { flexGrow: 1 }]}>
           <Text style={globalStyles.H2Style}>Pick a Lawyer</Text>
           <View style={{ height: hp(13) }} />
           <FlatList
             data={lawyers}
+            numColumns={3}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }: any) => (
               <LawyerTile
                 data={item}
-                //send the id of the lawyer as a param
                 onClick={() =>
                   navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN, {
-                    item: item,
-                    serviceName: servicename,
-                    serviceCode: param,
+                    lawyer: item,
+                    category: category,
+                    service: service,
                   })
                 }
               />
             )}
-            //Setting the number of column
-            numColumns={3}
-            keyExtractor={(item, index) => index.toString()}
           />
         </View>
       </SafeAreaView>

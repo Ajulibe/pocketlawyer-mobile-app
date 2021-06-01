@@ -39,6 +39,7 @@ export enum ROUTES {
   HOME_STACK = "HomeStack",
   HOME_SCREEN = "HomeScreen",
   ALL_CATEGORY_SCREEN = "AllCategory",
+  CAT_SERVICE_SCREEN = "CatServiceScreen",
   PICK_LAWYER_SCREEN = "PickLawyer",
   LAWYER_DETAIL_SCREEN = "LawyerDetail",
   CHECKOUT_SCREEN = "CheckoutScreen",

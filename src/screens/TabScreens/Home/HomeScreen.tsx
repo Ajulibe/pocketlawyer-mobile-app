@@ -22,14 +22,15 @@ import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
 import { CategoryDb } from "database/CategoryDb";
+import { LawyerModel } from "models/Interfaces";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({ navigation }: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
+  const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   React.useEffect(() => {
     getCategories();
-    // getLawyers();
   }, []);
 
   const getCategories = async () => {
@@ -40,29 +41,29 @@ const HomeScreen = ({ navigation }: Props) => {
     if (getCats != null) {
       const cats: Category[] = getCats?.data?.data;
       setCategory(cats);
+      getLawyers();
     } else {
       setCategory(CategoryDb.categories.slice(0, 4));
     }
   };
 
   const getLawyers = async () => {
-    const userID = await AsyncStorageUtil.getToken();
+    if (category == null) return;
+    const catCodes = category.map((item) => {
+      return { CategoryCode: item.categoryCode };
+    });
 
-    const getSP = axiosClient.get("Category/GetSPUserCategories");
-    getSP
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    const { data } = await axiosClient.post(
+      "Category/GetSPUserCategories",
+      catCodes
+    );
 
-    // if (getSP != null) {
-    //   const cats: Category[] = getSP?.data?.data;
-    //   setCategory(cats);
-    // } else {
-    //   setCategory(CategoryDb.categories.slice(0, 5));
-    // }
+    if (data != null) {
+      const lawyers: LawyerModel[] = data?.data;
+      console.log(lawyers);
+
+      setLawyers(lawyers);
+    }
   };
 
   return (
@@ -100,7 +101,11 @@ const HomeScreen = ({ navigation }: Props) => {
               renderItem={({ item }) => (
                 <CategoryCard
                   category={item}
-                  onClick={() => navigation.navigate(ROUTES.PICK_LAWYER_SCREEN)}
+                  onClick={() =>
+                    navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                      category: item,
+                    })
+                  }
                 />
               )}
             />
@@ -116,6 +121,7 @@ const HomeScreen = ({ navigation }: Props) => {
           <Text style={styles.topFindingSubtitle}>
             Based on selected categories
           </Text>
+
           <TopFindingsCard />
           <TopFindingsCard />
           <TopFindingsCard />

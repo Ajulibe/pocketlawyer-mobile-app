@@ -1,5 +1,4 @@
-import { AntDesign } from "@expo/vector-icons";
-import React, { Component } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -11,22 +10,19 @@ import {
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
-import { BusinessNameAndRegistration } from "./BottomSheetServices/BusinessNameAndRegistration";
+import { Service } from "database/DBData";
+import { LawyerModel } from "models/Interfaces";
+import renderView from "./renderView";
 
 interface Props {
   modalVisible: boolean;
   navigation: any;
   closeModal: () => void;
-  serviceName: string;
-  serviceCode: string;
+  service: Service;
+  lawyer: LawyerModel;
 }
 
-const ServiceNames = {
-  COMPANY_REGISTRATION: "Company name registration",
-};
-
-export default function SendMoneyModal(props: Props) {
-  console.log(props.serviceName);
+export default function BottomSheetModal(props: Props) {
   return (
     <Modal
       animationType="fade"
@@ -53,19 +49,7 @@ export default function SendMoneyModal(props: Props) {
             duration={500}
           >
             <TouchableWithoutFeedback>
-              <View>
-                {props.serviceName === ServiceNames.COMPANY_REGISTRATION && (
-                  <BusinessNameAndRegistration
-                    navigation={props.navigation}
-                    closeModal={props.closeModal}
-                    serviceCode={props.serviceCode}
-                  />
-                )}
-                {/* <BottomSheetContent
-                  navigation={props.navigation}
-                  closeModal={props.closeModal}
-                /> */}
-              </View>
+              <View>{renderView({ modalOptions: props })}</View>
             </TouchableWithoutFeedback>
           </Animatable.View>
         </View>
