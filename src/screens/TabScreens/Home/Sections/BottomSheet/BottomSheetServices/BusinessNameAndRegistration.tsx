@@ -7,6 +7,8 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PLButton from "components/PLButton/PLButton";
+import COLORS from "utils/Colors";
 
 interface Props {
   navigation: any;
@@ -17,8 +19,8 @@ interface Props {
 }
 
 interface IState {
-  BuisnessName1: string;
-  BusinessName2: string;
+  BuisnessNameOne: string;
+  BusinessNameTwo: string;
   NatureOfBusiness: string;
   MeansOfIdentification: string;
   IDNumber: string;
@@ -26,8 +28,8 @@ interface IState {
 }
 
 const initialState: IState = {
-  BuisnessName1: "",
-  BusinessName2: "",
+  BuisnessNameOne: "",
+  BusinessNameTwo: "",
   NatureOfBusiness: "",
   MeansOfIdentification: "",
   IDNumber: "",
@@ -70,6 +72,45 @@ export const BusinessNameAndRegistration = ({
     React.useState<string>("");
 
   const [isdisabled, setIsDisabled] = React.useState(true);
+  const {
+    BuisnessNameOne,
+    BusinessNameTwo,
+    NatureOfBusiness,
+    MeansOfIdentification,
+    IDNumber,
+    signatureUpload,
+  } = state;
+
+  React.useEffect(() => {
+    if (
+      BuisnessNameOne.length === 0 ||
+      BusinessNameTwo.length === 0 ||
+      NatureOfBusiness.length === 0 ||
+      MeansOfIdentification.length === 0 ||
+      IDNumber.length === 0 ||
+      signatureUpload
+    ) {
+      setIsDisabled(true);
+      return;
+    }
+    setIsDisabled(false);
+  }, [
+    BuisnessNameOne,
+    BusinessNameTwo,
+    NatureOfBusiness,
+    MeansOfIdentification,
+    IDNumber,
+    signatureUpload,
+  ]);
+
+  // console.log(
+  //   BuisnessName1,
+  //   BusinessName2
+  //   // NatureOfBusiness,
+  //   // MeansOfIdentification,
+  //   // IDNumber,
+  //   // signatureUpload
+  // );
 
   const handleTextChange = (payload: { field: string; value: string }) => {
     dispatch({
@@ -93,7 +134,7 @@ export const BusinessNameAndRegistration = ({
         "Service/InitiateServiceHistory",
         payload
       );
-      console.log(data);
+      // console.log(data);
 
       //--> set the service history received
       // setTempServiceHistoryID()
@@ -109,14 +150,14 @@ export const BusinessNameAndRegistration = ({
     const payload = [
       {
         key: "BuisnessName1",
-        value: state.BuisnessName1,
+        value: state.BuisnessNameOne,
         section: "BusinessNameAndRegistration",
         userID: 1,
         tempServiceHistoryID: 1,
       },
       {
         key: "BusinessName2",
-        value: state.BusinessName2,
+        value: state.BusinessNameTwo,
         section: "BusinessNameAndRegistration",
         userID: 1,
         tempServiceHistoryID: 1,
@@ -176,7 +217,7 @@ export const BusinessNameAndRegistration = ({
           autoCapitalize="sentences"
           returnKeyType="send"
           onChangeText={(text: string) => {
-            handleTextChange({ field: "BuisnessName1", value: text });
+            handleTextChange({ field: "BuisnessNameOne", value: text });
           }}
           initialValue=""
           initiallyValid={false}
@@ -201,7 +242,7 @@ export const BusinessNameAndRegistration = ({
           minLength={2}
           textContentType="none"
           onChangeText={(text: string) => {
-            handleTextChange({ field: "BuisnessName2", value: text });
+            handleTextChange({ field: "BusinessNameTwo", value: text });
           }}
         />
         <View style={{ height: 16 }} />
@@ -284,6 +325,7 @@ export const BusinessNameAndRegistration = ({
       <View style={{ height: 16 }} />
 
       <CustomButton
+        disabled={isdisabled}
         btnText="Submit"
         onClick={() => {
           submit;
