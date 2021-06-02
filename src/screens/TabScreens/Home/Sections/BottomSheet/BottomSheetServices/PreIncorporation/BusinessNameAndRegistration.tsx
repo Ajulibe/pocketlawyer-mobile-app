@@ -3,12 +3,24 @@ import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import { ROUTES } from "navigation/Routes";
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PLButton from "components/PLButton/PLButton";
+import COLORS from "utils/Colors";
 import modalFormstyles from "../ModalFormStyles";
 import { Service } from "database/DBData";
 import { LawyerModel } from "models/Interfaces";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { wp } from "utils/Dimensions";
+import { useDocUpload } from "hooks/useDocUpload";
 
 interface Props {
   navigation: any;
@@ -18,8 +30,8 @@ interface Props {
 }
 
 interface IState {
-  BuisnessName1: string;
-  BusinessName2: string;
+  BuisnessNameOne: string;
+  BusinessNameTwo: string;
   NatureOfBusiness: string;
   MeansOfIdentification: string;
   IDNumber: string;
@@ -27,8 +39,8 @@ interface IState {
 }
 
 const initialState: IState = {
-  BuisnessName1: "",
-  BusinessName2: "",
+  BuisnessNameOne: "",
+  BusinessNameTwo: "",
   NatureOfBusiness: "",
   MeansOfIdentification: "",
   IDNumber: "",
@@ -64,12 +76,56 @@ export const BusinessNameAndRegistration = ({
   lawyer,
 }: Props) => {
   const [state, dispatch] = React.useReducer(formReducer, initialState);
-  console.log(lawyer, "state value");
+  // console.log(lawyer, "state value");
+
+  const { pickDocument, isUploaded, disabled, docName } = useDocUpload(
+    "signature",
+    "Business Name registration"
+  );
 
   const [tempServiceHistoryID, setTempServiceHistoryID] =
     React.useState<string>("");
 
   const [isdisabled, setIsDisabled] = React.useState(true);
+  const {
+    BuisnessNameOne,
+    BusinessNameTwo,
+    NatureOfBusiness,
+    MeansOfIdentification,
+    IDNumber,
+    signatureUpload,
+  } = state;
+
+  React.useEffect(() => {
+    if (
+      BuisnessNameOne.length === 0 ||
+      BusinessNameTwo.length === 0 ||
+      NatureOfBusiness.length === 0 ||
+      MeansOfIdentification.length === 0 ||
+      IDNumber.length === 0 ||
+      signatureUpload
+    ) {
+      setIsDisabled(true);
+      return;
+    }
+    setIsDisabled(false);
+  }, [
+    BuisnessNameOne,
+    BusinessNameTwo,
+    NatureOfBusiness,
+    MeansOfIdentification,
+    IDNumber,
+    signatureUpload,
+  ]);
+
+  // console.log(
+  //   BuisnessName1,
+  //   BusinessName2
+  //   // NatureOfBusiness,
+  //   // MeansOfIdentification,
+  //   // IDNumber,
+  //   // signatureUpload
+  // );
 
   const handleTextChange = (payload: { field: string; value: string }) => {
     dispatch({
@@ -93,7 +149,7 @@ export const BusinessNameAndRegistration = ({
         "Service/InitiateServiceHistory",
         payload
       );
-      console.log(data);
+      // console.log(data);
 
       //--> set the service history received
       // setTempServiceHistoryID()
@@ -109,14 +165,14 @@ export const BusinessNameAndRegistration = ({
     const payload = [
       {
         key: "BuisnessName1",
-        value: state.BuisnessName1,
+        value: state.BuisnessNameOne,
         section: "BusinessNameAndRegistration",
         userID: 1,
         tempServiceHistoryID: 1,
       },
       {
         key: "BusinessName2",
-        value: state.BusinessName2,
+        value: state.BusinessNameTwo,
         section: "BusinessNameAndRegistration",
         userID: 1,
         tempServiceHistoryID: 1,
@@ -162,21 +218,24 @@ export const BusinessNameAndRegistration = ({
 
   return (
     <View style={{ paddingBottom: 120 }}>
-      <ScrollView>
+      <KeyboardAwareScrollView>
         <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
         <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details
         </Text>
-        <Text style={modalFormstyles.inputLabel}>Proposed Business Name 1</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Business Name 1{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type business name 1"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
           returnKeyType="send"
           onChangeText={(text: string) => {
-            handleTextChange({ field: "BuisnessName1", value: text });
+            handleTextChange({ field: "BuisnessNameOne", value: text });
           }}
           initialValue=""
           initiallyValid={false}
@@ -186,10 +245,13 @@ export const BusinessNameAndRegistration = ({
           textContentType="none"
         />
         <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Proposed Business Name 2</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Business Name 2{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type business name 2"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -201,14 +263,16 @@ export const BusinessNameAndRegistration = ({
           minLength={2}
           textContentType="none"
           onChangeText={(text: string) => {
-            handleTextChange({ field: "BuisnessName2", value: text });
+            handleTextChange({ field: "BusinessNameTwo", value: text });
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Nature of Business</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Nature of Business <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type the business nature"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -224,10 +288,13 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Means of Identification</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Means of Identification{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Select your means of identification"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -243,10 +310,12 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>ID Number</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          ID Number <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type identification number"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -262,28 +331,26 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Signature</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Signature{" "}
+          <Text style={[modalFormstyles.required, { fontSize: wp(11) }]}>
+            only PDF accepted&nbsp;*
+          </Text>
+        </Text>
+
         <Input
-          placeholder="Upload your signature"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
+          onPress={pickDocument}
+          dataValue={docName}
+          icon
           onChangeText={(text: string) => {
             handleTextChange({ field: "signatureUpload", value: text });
           }}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <View style={{ height: 16 }} />
 
       <CustomButton
+        disabled={isdisabled}
         btnText="Submit"
         onClick={() => {
           submit;

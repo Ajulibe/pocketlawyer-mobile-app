@@ -18,5 +18,8 @@ const modalFormstyles = StyleSheet.create({
     color: "rgba(0, 0, 0, 0.7)",
     marginBottom: hp(2),
   },
+  required: {
+    color: "red",
+  },
 });
 export default modalFormstyles;

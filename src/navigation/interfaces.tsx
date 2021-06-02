@@ -84,6 +84,8 @@ export interface DocUploadUserInfo {
   isfor: string;
   contentType: string;
   userID: number;
+  Section?: string;
+  HistoryID?: Number;
 }
 
 export interface confirmLawyerResume {

@@ -138,7 +138,7 @@ const Checkout = ({ navigation, route }: Props) => {
             ActivityIndicatorColor="green"
             SafeAreaViewContainer={{
               marginTop: 5,
-              backgoundColor: COLORS.light.primary,
+              backgroundColor: COLORS.light.primary,
             }}
             SafeAreaViewContainerModal={{ marginTop: 5 }}
             handleWebViewMessage={(e: any) => {}}
