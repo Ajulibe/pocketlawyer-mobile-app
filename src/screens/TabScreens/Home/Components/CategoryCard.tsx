@@ -20,7 +20,7 @@ export default function CategoryCard({ category, onClick }: Props) {
         source={CategoryDb.findByCode({ catCode: category.categoryCode }).image}
         style={styles.icon}
       />
-      <Text style={styles.title}>{category.categoryName}-</Text>
+      <Text style={styles.title}>{category.categoryName}</Text>
     </TouchableOpacity>
   );
 }
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
-    marginRight: wp(24),
+    marginHorizontal: wp(12),
     ...globalStyles.shadowLight,
   },
   icon: {

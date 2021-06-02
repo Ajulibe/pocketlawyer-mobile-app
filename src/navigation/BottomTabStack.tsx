@@ -79,7 +79,7 @@ export default function HomeBottomTabStack() {
       tabBarOptions={{
         style: {
           backgroundColor: COLORS.light.primary,
-          height: Platform.OS === "ios" ? hp(80) : hp(40),
+          height: Platform.OS === "ios" ? hp(80) : hp(60),
           shadowOffset: {
             width: 0,
             height: 1,
@@ -147,14 +147,14 @@ export default function HomeBottomTabStack() {
 const styles = StyleSheet.create({
   tabBarLabel: {
     fontFamily: "Roboto-Regular",
-    fontSize: hp(12),
-    lineHeight: hp(16),
-    marginBottom: wp(12),
+    fontSize: hp(14),
+    // lineHeight: hp(16),
+    marginBottom: hp(12),
   },
   tabBarImage: {
     resizeMode: "contain",
-    width: wp(12),
-    height: hp(12),
+    width: wp(13),
+    height: hp(13),
     marginBottom: hp(6),
     // marginTop: hp(6),
   },

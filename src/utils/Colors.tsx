@@ -13,6 +13,10 @@ const COLORS = {
     imageinputborder: "#D5D3D3",
     splashscreenbg: "#F7F6FE",
 
+    //inspected from expo
+    inputBackgnd: "#f7f9fc",
+    inputBdColor: "#e4e9f2",
+
     primaryDark: "#0e8852",
     secondary: "#EA5F33",
     muted: "#ccc",

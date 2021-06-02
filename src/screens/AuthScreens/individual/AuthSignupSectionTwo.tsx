@@ -4,8 +4,6 @@ import {
   StyleSheet,
   SafeAreaView,
   Text,
-  KeyboardAvoidingView,
-  Platform,
   TouchableOpacity,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -22,7 +20,6 @@ import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { PLDatePicker } from "components/PLDatePicker";
 import * as Animatable from "react-native-animatable";
 import { states } from "utils/nigerianStates";
-import { Picker, Form } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,6 +28,7 @@ import { RegisterInterface } from "navigation/interfaces";
 import { PLToast } from "components/PLToast";
 import { BottomSheet, ListItem } from "react-native-elements";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -177,208 +175,202 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-        keyboardVerticalOffset={wp(0)}
+      <NavBar
+        onPress={() => {
+          navigation.goBack();
+        }}
+        navText="Complete Account Setup"
+      />
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
       >
-        <NavBar
-          onPress={() => {
-            navigation.goBack();
-          }}
-          navText="Complete Account Setup"
-        />
-        <ScrollView>
-          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-            <Text style={styles.welcomeMessage}>
-              Complete your account setup to access top notch legal services.
+        <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+          <Text style={styles.welcomeMessage}>
+            Complete your account setup to access top notch legal services.
+          </Text>
+
+          <View>
+            <Text style={styles.inputText}>
+              Date of Birth<Text style={styles.required}> *</Text>
             </Text>
+            <PLDatePicker
+              onSelect={onSelect}
+              selectedDate={selectedDate}
+              initial={initial}
+            />
+          </View>
 
-            <View>
-              <Text style={styles.inputText}>
-                Date of Birth<Text style={styles.required}> *</Text>
-              </Text>
-              <PLDatePicker
-                onSelect={onSelect}
-                selectedDate={selectedDate}
-                initial={initial}
-              />
-            </View>
-
-            <View>
-              <Text style={styles.inputText}>
-                State <Text style={styles.required}>*</Text>
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  width: wp(334),
-                  height: wp(40),
-                  borderRadius: 4,
-                  borderColor: COLORS.light.textinputborder,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  alignItems: "center",
+          <View>
+            <Text style={styles.inputText}>
+              State <Text style={styles.required}>*</Text>
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                width: wp(334),
+                height: wp(40),
+                borderRadius: 4,
+                borderColor: COLORS.light.textinputborder,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setIsVisible(true);
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsVisible(true);
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <View style={{ width: wp(300) }}>
-                      <Text
-                        style={{
-                          marginLeft: wp(16),
-                          fontSize: 12,
-                          fontFamily: "Roboto-Regular",
-                          color:
-                            statePlaceholder === 0
-                              ? COLORS.light.darkgrey
-                              : COLORS.light.black,
-                        }}
-                      >
-                        {state}
-                      </Text>
-                    </View>
-                    <View
+                  <View style={{ width: wp(300) }}>
+                    <Text
                       style={{
-                        width: wp(30),
-                        alignItems: "flex-end",
+                        marginLeft: wp(16),
+                        fontSize: 12,
+                        fontFamily: "Roboto-Regular",
+                        color:
+                          statePlaceholder === 0
+                            ? COLORS.light.darkgrey
+                            : COLORS.light.black,
                       }}
                     >
-                      <Entypo
-                        name="chevron-small-down"
-                        size={20}
-                        color="grey"
-                      />
-                    </View>
+                      {state}
+                    </Text>
                   </View>
-                </TouchableOpacity>
-              </View>
-
-              <BottomSheet
-                modalProps={{
-                  visible: isVisible,
-                  statusBarTranslucent: true,
-                }}
-                isVisible={isVisible}
-                containerStyle={{ backgroundColor: COLORS.light.primary }}
-              >
-                {states.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    // containerStyle={l.containerStyle}
-                    onPress={() => {
-                      setState(l.state);
+                  <View
+                    style={{
+                      width: wp(30),
+                      alignItems: "flex-end",
                     }}
                   >
-                    <ListItem.Content>
-                      <ListItem.Title>
-                        <Text>{l.state}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-                {list.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    containerStyle={l.containerStyle}
-                    onPress={l.onPress}
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title style={l.titleStyle}>
-                        <Text>{l.title}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-              </BottomSheet>
+                    <Entypo name="chevron-small-down" size={20} color="grey" />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
 
-            <View>
-              <PLTextInput
-                labelText="City"
-                labelTextRequired={true}
-                onChangeText={setCity}
-                textContentType="addressCity"
-                style={styles.input}
-                placeholder="Type the city you are based"
+            <BottomSheet
+              modalProps={{
+                visible: isVisible,
+                statusBarTranslucent: true,
+              }}
+              isVisible={isVisible}
+              containerStyle={{ backgroundColor: COLORS.light.primary }}
+            >
+              {states.map((l, i) => (
+                <ListItem
+                  key={i}
+                  // containerStyle={l.containerStyle}
+                  onPress={() => {
+                    setState(l.state);
+                  }}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Text>{l.state}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {list.map((l, i) => (
+                <ListItem
+                  key={i}
+                  containerStyle={l.containerStyle}
+                  onPress={l.onPress}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title style={l.titleStyle}>
+                      <Text>{l.title}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+            </BottomSheet>
+          </View>
+
+          <View>
+            <PLTextInput
+              labelText="City"
+              labelTextRequired={true}
+              onChangeText={setCity}
+              textContentType="addressCity"
+              style={styles.input}
+              placeholder="Type the city you are based"
+            />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>
+              Password <Text style={styles.required}>*</Text>
+            </Text>
+            <View style={styles.phoneNumberWrapper}>
+              <PLPasswordInput
+                placeholder="Create your Password"
+                onChangeText={setPassword}
               />
             </View>
+          </View>
 
-            <View>
-              <Text style={styles.inputText}>
-                Password <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.phoneNumberWrapper}>
-                <PLPasswordInput
-                  placeholder="Create your Password"
-                  onChangeText={setPassword}
-                />
-              </View>
+          <View style={styles.carouselWrapper}>
+            <View style={styles.carouselIcon}>
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
             </View>
+          </View>
 
-            <View style={styles.carouselWrapper}>
-              <View style={styles.carouselIcon}>
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-              </View>
-            </View>
+          <PLButton
+            disabled={isDisabled}
+            isLoading={isLoading}
+            loadingText="Submitting..."
+            style={styles.plButton}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={() => {
+              //--> reading async storage value
+              const getData = async () => {
+                try {
+                  const jsonValue = await AsyncStorage.getItem(
+                    "@signup_payload"
+                  );
 
-            <PLButton
-              disabled={isDisabled}
-              isLoading={isLoading}
-              loadingText="Submitting..."
-              style={styles.plButton}
-              textColor={COLORS.light.white}
-              btnText={"Next"}
-              onClick={() => {
-                //--> reading async storage value
-                const getData = async () => {
-                  try {
-                    const jsonValue = await AsyncStorage.getItem(
-                      "@signup_payload"
-                    );
+                  jsonValue != null
+                    ? setInitialState(JSON.parse(jsonValue))
+                    : null;
 
-                    jsonValue != null
-                      ? setInitialState(JSON.parse(jsonValue))
-                      : null;
+                  setInitialLoad(initialload + 1);
+                } catch (e) {
+                  //--> error reading value
+                }
+              };
 
-                    setInitialLoad(initialload + 1);
-                  } catch (e) {
-                    //--> error reading value
-                  }
-                };
-
-                getData();
-              }}
-            />
-            <View style={styles.loginWrapper}>
-              <Text style={styles.signUpText}>
-                By signing up, you agree with the
-                <Text style={styles.login}> Terms of services </Text>and{" "}
-                <Text style={styles.login}>Privacy policy </Text>
-              </Text>
-            </View>
-          </Animatable.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+              getData();
+            }}
+          />
+          <View style={styles.loginWrapper}>
+            <Text style={styles.signUpText}>
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services </Text>and{" "}
+              <Text style={styles.login}>Privacy policy </Text>
+            </Text>
+          </View>
+        </Animatable.View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

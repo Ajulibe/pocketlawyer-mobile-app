@@ -5,8 +5,6 @@ import {
   SafeAreaView,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
@@ -17,13 +15,13 @@ import { wp, hp } from "utils/Dimensions";
 import NavBar from "components/NavBar";
 import PLButton from "components/PLButton/PLButton";
 import { Entypo } from "@expo/vector-icons";
-import { CountryCode, Country, CallingCode } from "../../../../types";
+import { CountryCode, Country, CallingCode } from "types";
 import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { states } from "utils/nigerianStates";
 import { BottomSheet, ListItem } from "react-native-elements";
 import { lawyerPayload } from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native-gesture-handler";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -131,207 +129,202 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
+      <NavBar
+        onPress={() => {
+          navigation.navigate(ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR);
+        }}
+        navText="Sign Up"
+      />
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
       >
-        <NavBar
-          onPress={() => {
-            navigation.navigate(ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR);
-          }}
-          navText="Sign Up"
-        />
-        <ScrollView>
-          <View style={styles.contentWraper}>
-            <Text style={styles.welcomeMessage}>
-              Welcome to Pocket Lawyer! To create an account, please enter your
-              <Text style={styles.CompanyDetails}> company details.</Text>
+        <View style={styles.contentWraper}>
+          <Text style={styles.welcomeMessage}>
+            Welcome to Pocket Lawyer! To create an account, please enter your
+            <Text style={styles.CompanyDetails}> company details.</Text>
+          </Text>
+
+          <View>
+            <PLTextInput
+              onChangeText={setcompanyName}
+              labelText="Name of Company"
+              labelTextRequired={true}
+              error={false}
+              name="companyName"
+              textContentType="name"
+              style={styles.input}
+              placeholder="Type the name of your company "
+            />
+          </View>
+
+          <View>
+            <PLTextInput
+              onChangeText={setEmail}
+              labelText="Email Address"
+              labelTextRequired={true}
+              error={false}
+              name="EmailAddress"
+              style={styles.input}
+              placeholder="Type your email address"
+              textContentType="emailAddress"
+            />
+          </View>
+
+          <View style={{ marginTop: wp(4) }}>
+            <Text style={styles.inputText}>
+              State <Text style={styles.required}>*</Text>
             </Text>
-
-            <View>
-              <PLTextInput
-                onChangeText={setcompanyName}
-                labelText="Name of Company"
-                labelTextRequired={true}
-                error={false}
-                name="companyName"
-                textContentType="name"
-                style={styles.input}
-                placeholder="Type the name of your company "
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                onChangeText={setEmail}
-                labelText="Email Address"
-                labelTextRequired={true}
-                error={false}
-                name="EmailAddress"
-                style={styles.input}
-                placeholder="Type your email address"
-                textContentType="emailAddress"
-              />
-            </View>
-
-            <View style={{ marginTop: wp(4) }}>
-              <Text style={styles.inputText}>
-                State <Text style={styles.required}>*</Text>
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  width: wp(334),
-                  height: wp(40),
-                  borderRadius: 4,
-                  borderColor: COLORS.light.textinputborder,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  alignItems: "center",
+            <View
+              style={{
+                borderWidth: 1,
+                width: wp(334),
+                height: wp(40),
+                borderRadius: 4,
+                borderColor: COLORS.light.textinputborder,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setIsVisible(true);
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsVisible(true);
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <View style={{ width: wp(300) }}>
-                      <Text
-                        style={{
-                          marginLeft: wp(16),
-                          fontSize: 12,
-                          fontFamily: "Roboto-Regular",
-                          color:
-                            statePlaceholder === 0
-                              ? COLORS.light.darkgrey
-                              : COLORS.light.black,
-                        }}
-                      >
-                        {state}
-                      </Text>
-                    </View>
-                    <View
+                  <View style={{ width: wp(300) }}>
+                    <Text
                       style={{
-                        width: wp(30),
-                        alignItems: "flex-end",
+                        marginLeft: wp(16),
+                        fontSize: 12,
+                        fontFamily: "Roboto-Regular",
+                        color:
+                          statePlaceholder === 0
+                            ? COLORS.light.darkgrey
+                            : COLORS.light.black,
                       }}
                     >
-                      <Entypo
-                        name="chevron-small-down"
-                        size={20}
-                        color="grey"
-                      />
-                    </View>
+                      {state}
+                    </Text>
                   </View>
-                </TouchableOpacity>
-              </View>
-
-              <BottomSheet
-                modalProps={{
-                  visible: isVisible,
-                  statusBarTranslucent: true,
-                }}
-                isVisible={isVisible}
-                containerStyle={{ backgroundColor: COLORS.light.primary }}
-              >
-                {states.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    onPress={() => {
-                      setState(l.state);
+                  <View
+                    style={{
+                      width: wp(30),
+                      alignItems: "flex-end",
                     }}
                   >
-                    <ListItem.Content>
-                      <ListItem.Title>
-                        <Text>{l.state}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-                {list.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    containerStyle={l.containerStyle}
-                    onPress={l.onPress}
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title style={l.titleStyle}>
-                        <Text>{l.title}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-              </BottomSheet>
+                    <Entypo name="chevron-small-down" size={20} color="grey" />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.stateWrapper}>
-              <View>
-                <PLTextInput
-                  onChangeText={setCity}
-                  labelText="City"
-                  labelTextRequired={true}
-                  error={false}
-                  name="City"
-                  style={[styles.input, styles.city]}
-                  placeholder="Enter City"
-                  textContentType="none"
-                />
-              </View>
-            </View>
+            <BottomSheet
+              modalProps={{
+                visible: isVisible,
+                statusBarTranslucent: true,
+              }}
+              isVisible={isVisible}
+              containerStyle={{ backgroundColor: COLORS.light.primary }}
+            >
+              {states.map((l, i) => (
+                <ListItem
+                  key={i}
+                  onPress={() => {
+                    setState(l.state);
+                  }}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Text>{l.state}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {list.map((l, i) => (
+                <ListItem
+                  key={i}
+                  containerStyle={l.containerStyle}
+                  onPress={l.onPress}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title style={l.titleStyle}>
+                      <Text>{l.title}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+            </BottomSheet>
+          </View>
 
+          <View style={styles.stateWrapper}>
             <View>
               <PLTextInput
-                onChangeText={setOfficeAddress}
-                labelText="Office Address"
+                onChangeText={setCity}
+                labelText="City"
                 labelTextRequired={true}
                 error={false}
-                name="officeaddress"
-                textContentType="fullStreetAddress"
-                style={styles.input}
-                placeholder="Type your office address"
+                name="City"
+                style={[styles.input, styles.city]}
+                placeholder="Enter City"
+                textContentType="none"
               />
             </View>
-
-            <PLButton
-              disabled={disabled}
-              style={styles.plButton}
-              textColor={COLORS.light.white}
-              btnText={"Next"}
-              onClick={() => {
-                const payload: lawyerPayload = {
-                  companyName: companyName,
-                  officeaddress: officeaddress,
-                  email: email,
-                  userType: 3, //ignore this value
-                  address: `${city},${state}`,
-                };
-                register(payload);
-              }}
-            />
-            <View style={styles.loginWrapper}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontFamily: "Roboto-Regular",
-                  fontSize: wp(11),
-                  color: COLORS.light.black,
-                }}
-              >
-                By signing up, you agree with the
-                <Text style={styles.login}> Terms of services </Text>and{" "}
-                <Text style={styles.login}>Privacy policy </Text>
-              </Text>
-            </View>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+          <View>
+            <PLTextInput
+              onChangeText={setOfficeAddress}
+              labelText="Office Address"
+              labelTextRequired={true}
+              error={false}
+              name="officeaddress"
+              textContentType="fullStreetAddress"
+              style={styles.input}
+              placeholder="Type your office address"
+            />
+          </View>
+
+          <PLButton
+            disabled={disabled}
+            style={styles.plButton}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={() => {
+              const payload: lawyerPayload = {
+                companyName: companyName,
+                officeaddress: officeaddress,
+                email: email,
+                userType: 3, //ignore this value
+                address: `${city},${state}`,
+              };
+              register(payload);
+            }}
+          />
+          <View style={styles.loginWrapper}>
+            <Text
+              style={{
+                textAlign: "center",
+                fontFamily: "Roboto-Regular",
+                fontSize: wp(11),
+                color: COLORS.light.black,
+              }}
+            >
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services </Text>and{" "}
+              <Text style={styles.login}>Privacy policy </Text>
+            </Text>
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "navigation/MainNavigator";
@@ -22,9 +15,9 @@ import CountryPicker from "react-native-country-picker-modal";
 import { CountryCode, Country, CallingCode } from "types";
 import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import * as Animatable from "react-native-animatable";
-import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IndividualSignUpInterface } from "navigation/interfaces";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -104,132 +97,127 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <NavBar
-          onPress={() => {
-            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-          }}
-          navText="Sign Up"
-        />
-        <ScrollView>
-          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-            <View style={styles.TextWrapper}>
-              <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
-                Welcome to Pocket Lawyer! Create an account to access top notch
-                legal services.
-              </Animatable.Text>
-            </View>
+      <NavBar
+        onPress={() => {
+          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+        }}
+        navText="Sign Up"
+      />
+      <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+        <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+          <View style={styles.TextWrapper}>
+            <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
+              Welcome to Pocket Lawyer! Create an account to access top notch
+              legal services.
+            </Animatable.Text>
+          </View>
 
-            <View>
-              <PLTextInput
-                labelText="First Name"
-                labelTextRequired={true}
-                error={false}
-                name="FirstName"
-                onChangeText={setFirstName}
-                value={firstName}
-                textContentType="name"
-                style={styles.input}
-                placeholder="Type your first name"
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Last Name"
-                labelTextRequired={true}
-                error={false}
-                name="LastName"
-                onChangeText={setLastName}
-                value={lastName}
-                textContentType="familyName"
-                style={styles.input}
-                placeholder="Type your last name"
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Email Address"
-                labelTextRequired={true}
-                error={false}
-                name="Email"
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                value={email}
-                style={styles.input}
-                placeholder="Type your email address"
-                textContentType="emailAddress"
-              />
-            </View>
-
-            <View>
-              <Text style={styles.inputText}>
-                Phone Number <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.phoneNumberWrapper}>
-                <View style={styles.countryPickerWrapper}>
-                  <CountryPicker
-                    {...{
-                      countryCode,
-                      withFilter,
-                      withFlag,
-                      withCountryNameButton,
-                      withAlphaFilter,
-                      withCallingCode,
-                      withEmoji,
-                      onSelect,
-                    }}
-                  />
-                  <Text style={styles.codeText}>+{callingCode}</Text>
-                </View>
-
-                <Input
-                  maxLength={11}
-                  style={styles.inputPhoneNumber}
-                  onChangeText={setPhonenumber}
-                  value={phonenumber}
-                  textStyle={styles.textStyle}
-                  placeholder="906 3782 2828"
-                  textContentType="telephoneNumber"
-                  keyboardType="numeric"
-                  returnKeyType="next"
-                  placeholderTextColor={COLORS.light.darkgrey}
-                />
-              </View>
-            </View>
-
-            <View style={styles.carouselWrapper}>
-              <View style={styles.carouselIcon}>
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-                <Entypo name="circle" size={10} color={COLORS.light.primary} />
-              </View>
-            </View>
-
-            <PLButton
-              style={styles.plButton}
-              disabled={disabled}
-              textColor={COLORS.light.white}
-              btnText={"Next"}
-              onClick={onClick}
+          <View>
+            <PLTextInput
+              labelText="First Name"
+              labelTextRequired={true}
+              error={false}
+              name="FirstName"
+              onChangeText={setFirstName}
+              value={firstName}
+              textContentType="name"
+              style={styles.input}
+              placeholder="Type your first name"
             />
-            <View style={styles.loginWrapper}>
-              <Text style={styles.signUpText}>
-                By signing up, you agree with the
-                <Text style={styles.login}> Terms of services </Text>and{" "}
-                <Text style={styles.login}>Privacy policy </Text>
-              </Text>
+          </View>
+
+          <View>
+            <PLTextInput
+              labelText="Last Name"
+              labelTextRequired={true}
+              error={false}
+              name="LastName"
+              onChangeText={setLastName}
+              value={lastName}
+              textContentType="familyName"
+              style={styles.input}
+              placeholder="Type your last name"
+            />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>
+              Phone Number <Text style={styles.required}>*</Text>
+            </Text>
+            <View style={styles.phoneNumberWrapper}>
+              <View style={styles.countryPickerWrapper}>
+                <CountryPicker
+                  {...{
+                    countryCode,
+                    withFilter,
+                    withFlag,
+                    withCountryNameButton,
+                    withAlphaFilter,
+                    withCallingCode,
+                    withEmoji,
+                    onSelect,
+                  }}
+                />
+                <Text style={styles.codeText}>+{callingCode}</Text>
+              </View>
+
+              <Input
+                maxLength={11}
+                style={styles.inputPhoneNumber}
+                onChangeText={setPhonenumber}
+                value={phonenumber}
+                textStyle={styles.textStyle}
+                placeholder="906 3782 2828"
+                textContentType="telephoneNumber"
+                keyboardType="numeric"
+                returnKeyType="next"
+                placeholderTextColor={COLORS.light.darkgrey}
+              />
             </View>
-          </Animatable.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          </View>
+
+          <View>
+            <PLTextInput
+              labelText="Email Address"
+              labelTextRequired={true}
+              error={false}
+              name="Email"
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              value={email}
+              style={styles.input}
+              placeholder="Type your email address"
+              textContentType="emailAddress"
+            />
+          </View>
+
+          <View style={styles.carouselWrapper}>
+            <View style={styles.carouselIcon}>
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+              <Entypo name="circle" size={10} color={COLORS.light.primary} />
+            </View>
+          </View>
+
+          <PLButton
+            style={styles.plButton}
+            disabled={disabled}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={onClick}
+          />
+          <View style={styles.loginWrapper}>
+            <Text style={styles.signUpText}>
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services </Text>and{" "}
+              <Text style={styles.login}>Privacy policy </Text>
+            </Text>
+          </View>
+        </Animatable.View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -322,11 +310,12 @@ const styles = StyleSheet.create({
   },
   phoneNumberWrapper: {
     width: wpercent("90%"),
+    // height: wp(40),
     flexDirection: "row",
-    borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
     borderColor: COLORS.light.textinputborder,
+    borderWidth: 1,
   },
   loginWrapper: {
     flexDirection: "row",

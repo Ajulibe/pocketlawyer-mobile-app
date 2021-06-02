@@ -1,7 +1,9 @@
 import React, { useReducer, useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Icon, Input as TextInput } from "@ui-kitten/components";
 import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
+import { AntDesign } from "@expo/vector-icons";
 
 const INPUT_CHANGE = "INPUT_CHANGE";
 const INPUT_BLUR = "INPUT_BLUR";
@@ -19,28 +21,29 @@ interface IAction {
 }
 
 interface Props {
-  id?: string;
-  keyboardType: any;
-  secureTextEntry: boolean;
-  required: boolean;
-  minLength: number;
+  keyboardType?: any;
+  secureTextEntry?: boolean;
+  required?: boolean;
+  minLength?: number;
   // autoCompleteType?: any;
-  autoCapitalize: any;
-  errorText: string;
-  initialValue: string;
-  initiallyValid: boolean;
+  autoCapitalize?: any;
+  errorText?: string;
+  initialValue?: string;
+  initiallyValid?: boolean;
   email?: string | null;
   min?: number | null;
   max?: number | null;
-  value?: string | null;
-  textContentType: any;
+  value?: string | undefined;
+  textContentType?: any;
   touched?: boolean;
-  returnKeyType: any;
+  returnKeyType?: any;
   placeholder?: string;
   placeholderTextColor?: any;
-  onInputChange?: (id?: string, x?: string, y?: boolean) => void;
   onSubmit?: () => void;
-  onChangeText: any;
+  onChangeText?: any;
+  icon?: any;
+  onPress?: () => void;
+  dataValue?: string;
 }
 
 const inputReducer = (state: InitialStateType, action: IAction) => {
@@ -72,46 +75,62 @@ const Input: React.FC<Props> = (props) => {
   const [isTouched, setIsTouched] = useState(false);
   const [errorText, setErrorText] = useState("");
 
-  //--> commented out cause i dont know what its doing here
-  const textChangeHandler = (text: string) => {
-    let isValid = true;
-    if (props.required && text.trim().length === 0) {
-      isValid = false;
-    }
+  const renderIcon = () => (
+    <AntDesign name="clouduploado" size={14} color={COLORS.light.primary} />
+  );
 
-    if (props.min != null && +text < props.min) {
-      isValid = false;
-    }
-
-    if (props.max != null && +text > props.max) {
-      isValid = false;
-    }
-
-    if (props.minLength != null && text.length < props.minLength) {
-      isValid = false;
-    }
-
-    dispatch({ type: INPUT_CHANGE, value: text, isValid: isValid });
-  };
-
-  return (
+  return props.icon ? (
+    <TouchableOpacity
+      onPress={props.onPress}
+      style={{
+        height: wp(40),
+        width: "100%",
+        flexDirection: "row",
+        borderColor: COLORS.light.inputBdColor,
+        borderWidth: 1,
+        justifyContent: "center",
+        backgroundColor: COLORS.light.inputBackgnd,
+        borderRadius: 4,
+        alignItems: "center",
+      }}
+    >
+      <View style={{ width: "70%", paddingLeft: wp(20) }}>
+        <Text
+          style={{
+            fontSize: wp(12),
+            fontFamily: "Roboto-Regular",
+            color: COLORS.light.black,
+          }}
+        >
+          {props.dataValue}
+        </Text>
+      </View>
+      <View
+        style={{ width: "30%", alignItems: "flex-end", paddingRight: wp(20) }}
+      >
+        <AntDesign name="clouduploado" size={14} color={COLORS.light.primary} />
+      </View>
+    </TouchableOpacity>
+  ) : (
     <View style={[styles.formControl]}>
       <TextInput
         {...props}
-        style={[
-          {
-            fontWeight: inputState.value != "" ? "700" : "400",
-            borderColor:
-              !inputState.isValid && (inputState.touched || isTouched)
-                ? COLORS.light.red
-                : COLORS.light.primaryLight,
-          },
-          styles.input,
-        ]}
-        placeholderTextColor={COLORS.light.inputText}
-        // onChangeText={textChangeHandler}
+        style={{
+          fontWeight: inputState.value != "" ? "700" : "400",
+          // borderColor:
+          //   !inputState.isValid && (inputState.touched || isTouched)
+          //     ? COLORS.light.red
+          //     : "",
+        }}
+        textStyle={styles.input}
+        placeholderTextColor={COLORS.light.darkgrey}
+        keyboardType="default"
         onChangeText={props.onChangeText}
+        autoCapitalize="sentences"
+        returnKeyType="next"
+        accessoryRight={props.icon && renderIcon}
       />
+
       {props.errorText != "" && (inputState.touched || isTouched) && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{props.errorText}</Text>
@@ -125,16 +144,16 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    borderRadius: 4,
-    backgroundColor: COLORS.light.white,
+    // borderRadius: 4,
+    // backgroundColor: COLORS.light.white,
     fontSize: wp(12),
     fontFamily: "Roboto-Regular",
-    paddingHorizontal: wp(16),
-    paddingVertical: hp(8),
-    minHeight: hp(40),
-    borderColor: "#F0F0F0",
-    borderWidth: 1,
-    color: "#A3A3A3",
+    // paddingHorizontal: wp(16),
+    // paddingVertical: hp(8),
+    // minHeight: hp(40),
+    borderColor: COLORS.light.primaryLight,
+    // borderWidth: 0.2,
+    color: COLORS.light.black,
   },
   errorContainer: {
     marginVertical: 0,

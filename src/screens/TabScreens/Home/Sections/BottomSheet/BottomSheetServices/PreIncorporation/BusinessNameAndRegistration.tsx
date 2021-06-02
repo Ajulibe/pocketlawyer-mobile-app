@@ -3,19 +3,30 @@ import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import { ROUTES } from "navigation/Routes";
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import { hp, wp } from "utils/Dimensions";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PLButton from "components/PLButton/PLButton";
 import COLORS from "utils/Colors";
+import modalFormstyles from "../ModalFormStyles";
+import { Service } from "database/DBData";
+import { LawyerModel } from "models/Interfaces";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { wp } from "utils/Dimensions";
+import { useDocUpload } from "hooks/useDocUpload";
 
 interface Props {
   navigation: any;
   closeModal: () => void;
-  serviceCode: string;
-  lawyerData: any;
-  serviceName: string;
+  service: Service;
+  lawyer: LawyerModel;
 }
 
 interface IState {
@@ -61,12 +72,16 @@ function formReducer(state: IState, action: Action) {
 export const BusinessNameAndRegistration = ({
   navigation,
   closeModal,
-  serviceCode,
-  lawyerData,
-  serviceName,
+  service,
+  lawyer,
 }: Props) => {
   const [state, dispatch] = React.useReducer(formReducer, initialState);
-  console.log(state, "state value");
+  // console.log(lawyer, "state value");
+
+  const { pickDocument, isUploaded, disabled, docName } = useDocUpload(
+    "signature",
+    "Business Name registration"
+  );
 
   const [tempServiceHistoryID, setTempServiceHistoryID] =
     React.useState<string>("");
@@ -127,7 +142,7 @@ export const BusinessNameAndRegistration = ({
     try {
       const userID = await AsyncStorage.getItem("userID");
       const payload = {
-        ServiceCode: serviceCode,
+        ServiceCode: service.serviceCode,
         userID: userID,
       };
       const { data } = await axiosClient.post(
@@ -203,15 +218,18 @@ export const BusinessNameAndRegistration = ({
 
   return (
     <View style={{ paddingBottom: 120 }}>
-      <ScrollView>
-        <Text style={globalStyles.H1Style}>Business Name Registration</Text>
-        <Text style={styles.titleDesc}>
+      <KeyboardAwareScrollView>
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details
         </Text>
-        <Text style={styles.inputLabel}>Proposed Business Name 1</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Business Name 1{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type business name 1"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -227,10 +245,13 @@ export const BusinessNameAndRegistration = ({
           textContentType="none"
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Proposed Business Name 2</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Business Name 2{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type business name 2"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -246,10 +267,12 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Nature of Business</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Nature of Business <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type the business nature"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -265,10 +288,13 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Means of Identification</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Means of Identification{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Select your means of identification"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -284,10 +310,12 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>ID Number</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          ID Number <Text style={modalFormstyles.required}>*</Text>
+        </Text>
         <Input
           placeholder="Type identification number"
-          placeholderTextColor=""
+          placeholderTextColor={COLORS.light.darkgrey}
           errorText={""}
           keyboardType="default"
           autoCapitalize="sentences"
@@ -303,25 +331,22 @@ export const BusinessNameAndRegistration = ({
           }}
         />
         <View style={{ height: 16 }} />
-        <Text style={styles.inputLabel}>Signature</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Signature{" "}
+          <Text style={[modalFormstyles.required, { fontSize: wp(11) }]}>
+            only PDF accepted&nbsp;*
+          </Text>
+        </Text>
+
         <Input
-          placeholder="Upload your signature"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
+          onPress={pickDocument}
+          dataValue={docName}
+          icon
           onChangeText={(text: string) => {
             handleTextChange({ field: "signatureUpload", value: text });
           }}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <View style={{ height: 16 }} />
 
       <CustomButton
@@ -331,31 +356,11 @@ export const BusinessNameAndRegistration = ({
           submit;
           closeModal();
           navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
-            serviceName: serviceName,
-            serviceCode: serviceCode,
-            lawyerData: lawyerData,
+            service: service,
+            lawyer: lawyer,
           });
         }}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  titleDesc: {
-    fontSize: wp(12),
-    lineHeight: hp(14),
-    fontWeight: "400",
-    fontFamily: "Roboto",
-    color: "rgba(0, 0, 0, 0.7)",
-    marginVertical: hp(24),
-  },
-  inputLabel: {
-    fontSize: wp(12),
-    lineHeight: hp(24),
-    fontWeight: "500",
-    fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
-    marginBottom: hp(2),
-  },
-});
