@@ -20,9 +20,9 @@ export default function LawyerTile({ data, onClick }: Props) {
         }}
         style={styles.user}
       />
-      <Text style={styles.name}>{data.name}</Text>
+      <Text style={styles.name}>{data?.name}</Text>
       {/* <Text style={styles.price}>N56,000</Text> */}
-      <Text style={styles.location}>{data.address}</Text>
+      <Text style={styles.location}>{data?.address}</Text>
       <StarRating
         maxStars={5}
         rating={3}

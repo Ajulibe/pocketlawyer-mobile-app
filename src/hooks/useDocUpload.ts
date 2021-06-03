@@ -1,17 +1,22 @@
+import { Platform } from "react-native";
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
+import * as Print from "expo-print";
 
 import axiosClient from "utils/axiosClient";
 
 import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
 import { PLToast } from "components/PLToast";
 
+import { Buffer } from "buffer"; // get this via: npm install buffer
+import * as FileSystem from "expo-file-system";
+
 interface uploadInterfaace {
   name: string;
   size?: number;
-  uri: string;
+  uri: Buffer;
   type: string;
 }
 
@@ -21,13 +26,21 @@ interface IProps {
 }
 
 export const useDocUpload = (documentUse: string, section: string) => {
-  console.log("hook called");
   //--> check for uploaded state
   const [isUploaded, setIsUploaded] = useState<string>("intial");
   //--> state values
   const [errors, setErrors] = useState<boolean>(false);
   const [userID, setUserID] = useState(0);
-  const [resume, setResume] = useState<uploadInterfaace[]>([
+  // const [resume, setResume] = useState<uploadInterfaace[]>([
+  //   {
+  //     name: "",
+  //     size: 0,
+  //     uri: [] ,
+  //     type: "",
+  //   },
+  // ]); //--> uncomment when you figure it out
+
+  const [resume, setResume] = useState<any>([
     {
       name: "",
       size: 0,
@@ -36,25 +49,60 @@ export const useDocUpload = (documentUse: string, section: string) => {
     },
   ]);
 
-  const [uri, setUri] = useState("");
+  const [uri, setUri] = useState<any>();
   const [docName, setDocName] = useState("Select from files");
+  const [pdfUri, setPdfUri] = useState("");
+
+  const handlePdfPrint_Download = async () => {
+    try {
+      Print.printAsync({
+        uri: pdfUri,
+        html: `<div>
+                  <p style="color: green; font-weight: bold; font-size: 28px">Welcome to the world</p>
+                  <p style="color: red">We want to print this</p>
+              </div>`,
+      });
+    } catch (error) {}
+  };
 
   //--> setting  data
   const pickDocument = async () => {
-    await DocumentPicker.getDocumentAsync({
-      type: "*/*",
-      copyToCacheDirectory: true,
-    }).then((response) => {
+    try {
+      const response = await DocumentPicker.getDocumentAsync({
+        type: "*/*",
+        copyToCacheDirectory: true,
+      });
+
+      //--> check if successful
       if (response.type == "success") {
         let { name, size, uri } = response;
         let nameParts = name.split(".");
         let fileType = nameParts[nameParts.length - 1];
-        setUri(uri);
+        // const uploadUri =
+        //   Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+
+        // console.log(uploadUri);
+
+        // console.log(JSON.stringify(imageBody));
+
+        //-->converting the file uri to blob
+        const bzse64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: "base64",
+        });
+
+        setPdfUri(`data:application/pdf;base64,${bzse64}`); // to use when we want to view
+
+        setUri(`data:application/pdf;base64,${bzse64}`); //--> was initially uri
+
+        const resp = await fetch(uri);
+        const imageBody = await resp.blob();
+
         var fileToUpload = [
           {
             name: name,
             size: size,
-            uri: uri,
+            // uri: `data:application/pdf;base64,${bzse64}`,
+            uri: JSON.stringify(imageBody),
             type: "application/" + fileType,
           },
         ];
@@ -78,7 +126,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
 
         // console.log(fileToUpload, "...............file");
       }
-    });
+    } catch (error) {}
   };
 
   React.useEffect(() => {
@@ -122,23 +170,33 @@ export const useDocUpload = (documentUse: string, section: string) => {
       await axiosClient.post("Upload/Generates3URL", payload).then((res) => {
         const { url, uploadID, fileName } = res.data.data;
 
-        console.log(url, "s3 url");
+        const fileToUpload = {
+          ...resume[0],
+          name: fileName,
+          uri: pdfUri,
+        };
 
         const formData = new FormData();
-        formData.append("resume", resume[0] as any);
-        formData.append("fileName", fileName);
+        formData.append("myData", fileToUpload as any);
+        // console.log(formData);
+        // formData.append("fileName", fileName);
 
         //--> post document to the received s3 url
         //--> change the paylod here to the formdata generated and it deosnt work
         //-> thats the error wit the api
+
+        // const buffer = Buffer.from(resume[0].uri, "base64");
+
+        console.log(resume[0].uri);
+
         axios
-          .put(url, payload, {
+          .put(url, resume[0].uri, {
             headers: {
               "Content-Type": "application/pdf",
             },
           })
           .then((res) => {
-            console.log(res, "putting to s3");
+            // console.log(res, "putting to s3");
             //--> confirm upload
             const confirmPayload = {
               fileName: fileName,
@@ -167,6 +225,8 @@ export const useDocUpload = (documentUse: string, section: string) => {
       );
 
       PLToast({ message: data.message, type: "success" });
+      // console.log(data, "resposne");
+
       setIsUploaded("success");
     } catch (error) {
       const { message } = error?.response.data;
@@ -198,5 +258,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
     userID, //--> userID gotten from local storage
     uri, //--> file uri
     docName, //--> document name ... ignore the resume term : |
+    pdfUri,
+    handlePdfPrint_Download,
   };
 };
