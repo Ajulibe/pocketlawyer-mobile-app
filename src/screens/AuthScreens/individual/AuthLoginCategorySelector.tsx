@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: hp(44),
+    height: wp(44),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {

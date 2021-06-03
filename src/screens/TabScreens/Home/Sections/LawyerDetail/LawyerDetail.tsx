@@ -11,12 +11,16 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
 } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import CONSTANTS from "utils/Constants";
 import COLORS from "utils/Colors";
 import CustomButton from "components/CustomButton";
 import BottomSheetModal from "../BottomSheet/BottomSheetModal";
+import RBSheet from "react-native-raw-bottom-sheet";
+import renderView from "../BottomSheet/renderView";
+import { BusinessNameAndRegistration } from "../../Sections/BottomSheet/BottomSheetServices/PreIncorporation/BusinessNameAndRegistration";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
@@ -24,6 +28,8 @@ export default function LawyerDetail({ navigation, route }: Props) {
   const category = route.params.category;
   const lawyer = route.params.lawyer;
   const service = route.params.service;
+
+  const refRBSheet = React.useRef<any>("");
 
   const [modalVisibility, setModalVisibility] = React.useState(false);
   const DescTile = ({
@@ -61,6 +67,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
         service={service}
         lawyer={lawyer}
       />
+
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar navigation={navigation} title="" />
         <ScrollView

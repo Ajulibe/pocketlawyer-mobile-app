@@ -1,18 +1,13 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Modal,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { StyleSheet, View, Modal, Text, TouchableOpacity } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
 import { Service } from "database/DBData";
 import { LawyerModel } from "models/Interfaces";
 import renderView from "./renderView";
+
+import { BlurView } from "expo-blur";
 
 interface Props {
   modalVisible: boolean;
@@ -30,30 +25,33 @@ export default function BottomSheetModal(props: Props) {
       visible={props.modalVisible}
       onRequestClose={() => props.closeModal()}
     >
-      <TouchableOpacity
-        style={{ flex: 1 }}
-        activeOpacity={1}
-        onPress={props.closeModal}
-      >
-        <View style={[styles.container]}>
-          <View style={{ height: 120 }} />
-          <View style={styles.quickActions}>
-            <Text style={styles.action}>Back</Text>
-            <Text style={styles.action}>Close</Text>
-          </View>
-          <Animatable.View
-            style={styles.wrapper}
-            key={0}
-            animation={"slideInUp"} //pulse
-            easing={"linear"}
-            duration={500}
+      <BlurView intensity={30} style={[styles.container]} tint="dark">
+        <View style={{ height: 120 }} />
+        <View style={styles.quickActions}>
+          <TouchableOpacity
+            onPress={() => {
+              props.closeModal();
+              props.navigation.goBack();
+            }}
           >
-            <TouchableWithoutFeedback>
-              <View>{renderView({ modalOptions: props })}</View>
-            </TouchableWithoutFeedback>
-          </Animatable.View>
+            <Text style={styles.action}>Back</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={props.closeModal}>
+            <Text style={styles.action}>Close</Text>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+
+        <Animatable.View
+          style={styles.wrapper}
+          key={0}
+          animation={"slideInUp"} //pulse
+          easing={"linear"}
+          duration={500}
+        >
+          <View style={{ flex: 1 }}>{renderView({ modalOptions: props })}</View>
+        </Animatable.View>
+      </BlurView>
     </Modal>
   );
 }
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     paddingHorizontal: wp(22),
-    paddingVertical: hp(4),
+    paddingVertical: hp(20),
     justifyContent: "space-between",
   },
   action: {

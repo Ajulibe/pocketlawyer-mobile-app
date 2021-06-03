@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   btn: {
     width: "100%",
     borderRadius: 7,
+    height: wp(45),
     paddingVertical: hp(13),
     flexDirection: "row",
     justifyContent: "center",

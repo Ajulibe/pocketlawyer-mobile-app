@@ -21,7 +21,7 @@ interface Props {
   textContentType: any;
   touched?: boolean;
   returnKeyType?: any;
-  style: any;
+  style?: any;
   placeholder?: string;
   placeholderTextColor?: any;
   onChangeText: any;

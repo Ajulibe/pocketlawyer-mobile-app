@@ -42,6 +42,17 @@ export default function PickLawyer({ navigation, route }: Props) {
     }
   };
 
+  //--> dummy data
+  const law = [
+    {
+      name: "olabobo olatunde",
+      avatar: null,
+      categoryName: "sadfsafsdsdgd",
+      address: "lekki,lagos",
+      serviceProviderID: 1,
+    },
+  ];
+
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -53,21 +64,24 @@ export default function PickLawyer({ navigation, route }: Props) {
         <View style={[styles.container, { flexGrow: 1 }]}>
           <Text style={globalStyles.H2Style}>Pick a Lawyer</Text>
           <View style={{ height: hp(13) }} />
+
           <FlatList
-            data={lawyers}
+            data={lawyers} //--> change back to lawyers
             numColumns={3}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }: any) => (
-              <LawyerTile
-                data={item}
-                onClick={() =>
-                  navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN, {
-                    lawyer: item,
-                    category: category,
-                    service: service,
-                  })
-                }
-              />
+              <>
+                <LawyerTile
+                  data={item}
+                  onClick={() =>
+                    navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN, {
+                      lawyer: item,
+                      category: category,
+                      service: service,
+                    })
+                  }
+                />
+              </>
             )}
           />
         </View>
