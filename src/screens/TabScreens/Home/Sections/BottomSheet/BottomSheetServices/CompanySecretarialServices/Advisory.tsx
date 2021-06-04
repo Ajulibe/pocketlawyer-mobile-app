@@ -49,7 +49,7 @@ export function Advisory(props: Props) {
   };
 
   const uploadFile = async (field: string) => {
-    const historyID = await getHistoryId(service.categoryCode);
+    const historyID = await getHistoryId(service.serviceCode);
     if (historyID == null) {
       console.log("Error initiating the history ID");
       return;

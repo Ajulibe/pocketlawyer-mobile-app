@@ -2,6 +2,9 @@ import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
 import AsyncStorageUtil from "../utils/AsyncStorageUtil";
 import axiosClient from "../utils/axiosClient";
+import * as FileSystem from 'expo-file-system';
+import { Buffer } from "buffer";
+
 
 export interface DocUploadInterface {
   fileName?: string;
@@ -14,7 +17,7 @@ export interface DocUploadInterface {
 }
 export interface DocUploadResponse {
   fileName: string;
-  filetType: number;
+  fileType: number;
   userID: number;
   uploadID: number;
 }
@@ -39,9 +42,9 @@ export const pickAndUploadFile = async (
     return null;
   } else {
     let { name, size, uri } = pickFile;
-    const imageBody = await getBlob(uri);
-    const fileType = imageBody["type"];
-    if (imageBody == null) {
+    const fileBody = await getBlob(uri);
+    const fileType = fileBody["type"];
+    if (fileBody == null) {
       //--> Toast error
       return null;
     } else {
@@ -59,10 +62,15 @@ export const pickAndUploadFile = async (
         const { url, uploadID, fileName } = signedUrl.data.data;
         console.log(url, uploadID, fileName, fileType, size);
 
+        const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+
+        const buffer = Buffer.from(base64, 'base64')
+
         const uploadFile = await axios({
           method: "PUT",
           url: url,
-          data: imageBody,
+          // data: `data:image/jpeg;base64,${base64uu}`,
+          data: buffer,
           headers: { "Content-Type": fileType ?? "image/jpeg" },
         });
         if (uploadFile.status === 200) {
@@ -72,7 +80,7 @@ export const pickAndUploadFile = async (
           const response: DocUploadResponse = {
             fileName: fileName,
             userID: payload.userID,
-            filetType: payload.fileType,
+            fileType: payload.fileType,
             uploadID: uploadID,
           };
           return response;
