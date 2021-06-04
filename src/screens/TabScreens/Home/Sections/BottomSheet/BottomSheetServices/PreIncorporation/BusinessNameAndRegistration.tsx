@@ -25,6 +25,13 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { wp } from "utils/Dimensions";
 import { useDocUpload } from "hooks/useDocUpload";
 import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import {
+  addMetadata,
+  confirmUpload,
+  getHistoryId,
+  transformMeta,
+} from "services/UploadDocsService";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
 
 interface Props {
   navigation: any;
@@ -33,54 +40,13 @@ interface Props {
   lawyer: LawyerModel;
 }
 
-interface IState {
-  BuisnessNameOne: string;
-  BusinessNameTwo: string;
-  NatureOfBusiness: string;
-  MeansOfIdentification: string;
-  IDNumber: string;
-  signatureUpload: string;
-}
-
-const initialState: IState = {
-  BuisnessNameOne: "",
-  BusinessNameTwo: "",
-  NatureOfBusiness: "",
-  MeansOfIdentification: "",
-  IDNumber: "",
-  signatureUpload: "",
-};
-
-//--> action typings
-enum ActionKind {
-  addState = "ADD_STATE",
-}
-
-type Action = {
-  type: ActionKind;
-  payload: { field: string; value: string };
-};
-
-//---------------------------
-
-function formReducer(state: IState, action: Action) {
-  switch (action.type) {
-    case ActionKind.addState:
-      const { field, value } = action.payload;
-      return { ...state, [field]: value };
-    default:
-      return state;
-  }
-}
-
 export const BusinessNameAndRegistration = ({
   navigation,
   closeModal,
   service,
   lawyer,
 }: Props) => {
-  const [state, dispatch] = React.useReducer(formReducer, initialState);
-  // console.log(state);
+  const [formData, setFormData] = React.useState<any>({});
 
   const {
     pickDocument,
@@ -93,18 +59,9 @@ export const BusinessNameAndRegistration = ({
   } = useDocUpload("signature", "Business Name registration");
 
   const [tempServiceHistoryID, setTempServiceHistoryID] =
-    React.useState<string>("");
+    React.useState<any>("");
   const [userID, setUserID] = React.useState<any>("");
-
   const [isdisabled, setIsDisabled] = React.useState(true);
-  const {
-    BuisnessNameOne,
-    BusinessNameTwo,
-    NatureOfBusiness,
-    MeansOfIdentification,
-    IDNumber,
-    signatureUpload,
-  } = state;
 
   React.useEffect(() => {
     if (pdfUri === "") {
@@ -114,130 +71,65 @@ export const BusinessNameAndRegistration = ({
     }
   }, [pdfUri]);
 
-  React.useEffect(() => {
-    if (
-      BuisnessNameOne.length === 0 ||
-      BusinessNameTwo.length === 0 ||
-      NatureOfBusiness.length === 0 ||
-      MeansOfIdentification.length === 0 ||
-      IDNumber.length === 0 ||
-      signatureUpload.length === 0
-    ) {
-      setIsDisabled(true);
-      return;
-    }
-    setIsDisabled(false);
-  }, [
-    BuisnessNameOne,
-    BusinessNameTwo,
-    NatureOfBusiness,
-    MeansOfIdentification,
-    IDNumber,
-    signatureUpload,
-  ]);
-
-  // console.log(
-  //   BuisnessName1,
-  //   BusinessName2
-  //   // NatureOfBusiness,
-  //   // MeansOfIdentification,
-  //   // IDNumber,
-  //   // signatureUpload
-  // );
+  // React.useEffect(() => {
+  //   if (
+  //     BuisnessNameOne.length === 0 ||
+  //     BusinessNameTwo.length === 0 ||
+  //     NatureOfBusiness.length === 0 ||
+  //     MeansOfIdentification.length === 0 ||
+  //     IDNumber.length === 0 ||
+  //     signatureUpload.length === 0
+  //   ) {
+  //     setIsDisabled(true);
+  //     return;
+  //   }
+  //   setIsDisabled(false);
+  // }, [
+  //   BuisnessNameOne,
+  //   BusinessNameTwo,
+  //   NatureOfBusiness,
+  //   MeansOfIdentification,
+  //   IDNumber,
+  //   signatureUpload,
+  // ]);
 
   const handleTextChange = (payload: { field: string; value: string }) => {
-    dispatch({
-      type: ActionKind.addState,
-      payload,
-    });
+    setFormData((values: any) => ({
+      ...values,
+      [payload.field]: { key: payload.field, value: payload.value },
+    }));
   };
 
   React.useEffect(() => {
     getTemporaryServiceHistoryID();
-  });
+  }, []);
 
   const getTemporaryServiceHistoryID = async () => {
-    try {
-      const ID = await AsyncStorage.getItem("userID");
-      setUserID(ID);
-      const payload = {
-        ServiceCode: service.serviceCode,
-        userID: Number(ID),
-      };
-
-      const { data } = await axiosClient.post(
-        "Service/InitiateServiceHistory",
-        payload
-      );
-      const { tempServiceHistoryID } = data.data;
-      // console.log(tempServiceHistoryID, "temporaryService");
-
-      //--> set the service history received
-      setTempServiceHistoryID(tempServiceHistoryID);
-    } catch (error) {}
+    const historyID = await getHistoryId(service.serviceCode);
+    const userId = await AsyncStorageUtil.getUserId();
+    setTempServiceHistoryID(historyID);
+    setUserID(userId);
   };
 
   const submit = async () => {
-    console.log("called top");
     if (tempServiceHistoryID === "" || userID === "") {
       setIsDisabled(true);
       return;
     }
 
-    const payload = [
-      {
-        key: "BuisnessName1",
-        value: state.BuisnessNameOne,
-        section: "BusinessNameAndRegistration",
-        userID: userID,
-        tempServiceHistoryID: tempServiceHistoryID,
-      },
-      {
-        key: "BusinessName2",
-        value: state.BusinessNameTwo,
-        section: "BusinessNameAndRegistration",
-        userID: userID,
-        tempServiceHistoryID: tempServiceHistoryID,
-      },
-      {
-        key: "NatureOfBusiness",
-        value: state.NatureOfBusiness,
-        section: "BusinessNameAndRegistration",
-        userID: userID,
-        tempServiceHistoryID: tempServiceHistoryID,
-      },
-      {
-        key: "MeansOfIdentification",
-        value: state.MeansOfIdentification,
-        section: "BusinessNameAndRegistration",
-        userID: userID,
-        tempServiceHistoryID: tempServiceHistoryID,
-      },
-      {
-        key: "IDNumber",
-        value: state.IDNumber,
-        section: "BusinessNameAndRegistration",
-        userID: userID,
-        tempServiceHistoryID: tempServiceHistoryID,
-      },
-      {
-        key: "signatureUpload",
-        value: state.signatureUpload,
-        section: "BusinessNameAndRegistration",
-        userID: userID,
-        tempServiceHistoryID: tempServiceHistoryID,
-      },
-    ];
-    try {
-      console.log("called");
-      const { data } = await axiosClient.post(
-        "Service/AddMetadataHistory",
-        payload
-      );
-      console.log(data);
-      // closeModal();
-      // navigation.navigate(ROUTES.CHECKOUT_SCREEN);
-    } catch (error) {}
+    const transformedArray = await transformMeta(
+      formData,
+      tempServiceHistoryID
+    );
+
+    console.log(transformedArray, "transfomed array");
+
+    const response = await addMetadata(transformedArray);
+    console.log(response);
+    if (response === 200) {
+      //   // closeModal();
+      //   // navigation.navigate(ROUTES.CHECKOUT_SCREEN);
+    }
   };
 
   return (
@@ -262,7 +154,10 @@ export const BusinessNameAndRegistration = ({
             autoCapitalize="sentences"
             returnKeyType="send"
             onChangeText={(text: string) => {
-              handleTextChange({ field: "BuisnessNameOne", value: text });
+              handleTextChange({
+                field: "BuisnessNameOne",
+                value: text,
+              });
             }}
             initialValue=""
             initiallyValid={false}
@@ -279,19 +174,11 @@ export const BusinessNameAndRegistration = ({
           </Text>
           <Input
             placeholder="Type business name 2"
-            placeholderTextColor={COLORS.light.darkgrey}
-            errorText={""}
-            keyboardType="default"
-            autoCapitalize="sentences"
-            returnKeyType="send"
-            initialValue=""
-            initiallyValid={false}
-            required
-            secureTextEntry={false}
-            minLength={2}
-            textContentType="none"
             onChangeText={(text: string) => {
-              handleTextChange({ field: "BusinessNameTwo", value: text });
+              handleTextChange({
+                field: "BusinessNameTwo",
+                value: text,
+              });
             }}
           />
           <View style={{ height: 16 }} />
@@ -300,19 +187,11 @@ export const BusinessNameAndRegistration = ({
           </Text>
           <Input
             placeholder="Type the business nature"
-            placeholderTextColor={COLORS.light.darkgrey}
-            errorText={""}
-            keyboardType="default"
-            autoCapitalize="sentences"
-            returnKeyType="send"
-            initialValue=""
-            initiallyValid={false}
-            required
-            secureTextEntry={false}
-            minLength={2}
-            textContentType="none"
             onChangeText={(text: string) => {
-              handleTextChange({ field: "NatureOfBusiness", value: text });
+              handleTextChange({
+                field: "NatureOfBusiness",
+                value: text,
+              });
             }}
           />
           <View style={{ height: 16 }} />
@@ -322,19 +201,11 @@ export const BusinessNameAndRegistration = ({
           </Text>
           <Input
             placeholder="Select your means of identification"
-            placeholderTextColor={COLORS.light.darkgrey}
-            errorText={""}
-            keyboardType="default"
-            autoCapitalize="sentences"
-            returnKeyType="send"
-            initialValue=""
-            initiallyValid={false}
-            required
-            secureTextEntry={false}
-            minLength={2}
-            textContentType="none"
             onChangeText={(text: string) => {
-              handleTextChange({ field: "MeansOfIdentification", value: text });
+              handleTextChange({
+                field: "MeansOfIdentification",
+                value: text,
+              });
             }}
           />
           <View style={{ height: 16 }} />
@@ -343,19 +214,11 @@ export const BusinessNameAndRegistration = ({
           </Text>
           <Input
             placeholder="Type identification number"
-            placeholderTextColor={COLORS.light.darkgrey}
-            errorText={""}
-            keyboardType="default"
-            autoCapitalize="sentences"
-            returnKeyType="send"
-            initialValue=""
-            initiallyValid={false}
-            required
-            secureTextEntry={false}
-            minLength={2}
-            textContentType="none"
             onChangeText={(text: string) => {
-              handleTextChange({ field: "IDNumber", value: text });
+              handleTextChange({
+                field: "IDNumber",
+                value: text,
+              });
             }}
           />
           <View style={{ height: 16 }} />
@@ -381,9 +244,6 @@ export const BusinessNameAndRegistration = ({
                 marginBottom: wp(20),
               }}
             >
-              {/* <Button title="Pick document" onPress={pickDocument} />
-            <Button title="Print document" onPress={handlePdfPrint_Download} /> */}
-
               <PDFReader
                 style={{ width: "100%", height: 200 }}
                 source={{ base64: pdfUri }}
@@ -396,7 +256,7 @@ export const BusinessNameAndRegistration = ({
       </ScrollView>
 
       <CustomButton
-        disabled={isdisabled}
+        // disabled={isdisabled}
         btnText="Submit"
         onClick={() => {
           console.log("clicked");
