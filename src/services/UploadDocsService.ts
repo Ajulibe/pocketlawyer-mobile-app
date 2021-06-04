@@ -1,6 +1,6 @@
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import { DocUploadResponse } from "utils/FileUploads";
+import { DocUploadResponse } from "services/S3FileUploadHelper";
 
 export const getHistoryId = async (
   serviceCode: string

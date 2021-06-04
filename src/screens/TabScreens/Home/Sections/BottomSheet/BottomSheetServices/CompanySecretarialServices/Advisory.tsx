@@ -7,7 +7,10 @@ import React from "react";
 import { Text, View, ScrollView } from "react-native";
 import { Value } from "react-native-reanimated";
 import modalFormstyles from "../ModalFormStyles";
-import { DocUploadInterface, pickAndUploadFile } from "utils/FileUploads";
+import {
+  DocUploadInterface,
+  pickAndUploadFile,
+} from "services/S3FileUploadHelper";
 import { Service } from "database/DBData";
 import { LawyerModel } from "models/Interfaces";
 import { confirmUpload, getHistoryId } from "services/UploadDocsService";

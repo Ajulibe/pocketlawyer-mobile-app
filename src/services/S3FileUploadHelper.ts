@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
-import AsyncStorageUtil from "./AsyncStorageUtil";
-import axiosClient from "./axiosClient";
+import AsyncStorageUtil from "../utils/AsyncStorageUtil";
+import axiosClient from "../utils/axiosClient";
 
 export interface DocUploadInterface {
   fileName?: string;
