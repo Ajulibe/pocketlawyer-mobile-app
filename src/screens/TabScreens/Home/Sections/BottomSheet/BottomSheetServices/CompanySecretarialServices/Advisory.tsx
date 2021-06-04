@@ -7,13 +7,21 @@ import React from "react";
 import { Text, View, ScrollView } from "react-native";
 import { Value } from "react-native-reanimated";
 import modalFormstyles from "../ModalFormStyles";
+import { DocUploadInterface, pickAndUploadFile } from "utils/FileUploads";
+import { Service } from "database/DBData";
+import { LawyerModel } from "models/Interfaces";
+import { confirmUpload, getHistoryId } from "services/UploadDocsService";
 
 interface Props {
   navigation: any;
   closeModal: () => void;
+  service: Service;
+  lawyer: LawyerModel;
 }
 
-export function Advisory({ navigation, closeModal }: Props) {
+export function Advisory(props: Props) {
+  const { navigation, closeModal, service, lawyer } = props;
+
   const [formData, setFormData] = React.useState({});
   const { pickDocument, isUploaded, disabled, docName } = useDocUpload(
     "signature",
@@ -34,6 +42,28 @@ export function Advisory({ navigation, closeModal }: Props) {
     } else {
       // closeModal();
       // navigation.navigate(ROUTES.CHECKOUT_SCREEN);
+    }
+  };
+
+  const uploadFile = async (field: string) => {
+    const historyID = await getHistoryId(service.categoryCode);
+    if (historyID == null) {
+      console.log("Error initiating the history ID");
+      return;
+    }
+    const payload: DocUploadInterface = {
+      fileType: 2,
+      isfor: field ?? "FieldValue",
+      Section: service.serviceCode,
+      HistoryID: historyID ?? 12,
+    };
+    const upload = await pickAndUploadFile(payload);
+    if (upload == null) {
+      console.log("Error");
+    } else {
+      console.log(upload);
+      const confirm = await confirmUpload(upload);
+      console.log(confirm);
     }
   };
 
@@ -82,7 +112,7 @@ export function Advisory({ navigation, closeModal }: Props) {
           <Text style={modalFormstyles.required}>*</Text>
         </Text>
         <Input
-          onPress={pickDocument}
+          onPress={() => uploadFile("CertificateOfRegistration")}
           dataValue={docName}
           icon
           onChangeText={(text: string) => {
