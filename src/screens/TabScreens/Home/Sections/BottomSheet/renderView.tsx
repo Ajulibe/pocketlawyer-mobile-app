@@ -7,29 +7,28 @@ import {
   RegOfIncTrustees,
 } from "./BottomSheetServices/PreIncorporation";
 import { Advisory } from "./BottomSheetServices/CompanySecretarialServices";
+import { ModalProps } from "./BottomSheetModal";
 
-interface Props {
-  modalOptions: {
-    navigation: any;
-    closeModal: () => void;
-    service: Service;
-    lawyer: LawyerModel;
-  };
-}
-export default function renderView({ modalOptions }: Props) {
-  switch (modalOptions.service.serviceCode) {
+export default function renderView(props: ModalProps) {
+  switch (props.service.serviceCode) {
     //-->Company name registration
     case "01":
-      return <BusinessNameAndRegistration {...modalOptions} />;
+      return <BusinessNameAndRegistration {...props} />;
     case "02":
-      return <CompanyRegistration {...modalOptions} />;
+      return <CompanyRegistration {...props} />;
     case "03":
-      return <RegOfIncTrustees {...modalOptions} />;
+      return <RegOfIncTrustees {...props} />;
     //-->Company Secretarial Services
     case "04":
-      return <Advisory {...modalOptions} />;
+      return <Advisory {...props} />;
+    case "05":
+      return <Advisory {...props} />;
+    case "06":
+      return <Advisory {...props} />;
+    case "07":
+      return <Advisory {...props} />;
 
     default:
-      return <BusinessNameAndRegistration {...modalOptions} />;
+      return <BusinessNameAndRegistration {...props} />;
   }
 }

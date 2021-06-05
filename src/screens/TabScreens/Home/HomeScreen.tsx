@@ -17,7 +17,7 @@ import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
 import CONSTANTS from "utils/Constants";
 import { hp } from "utils/Dimensions";
-import { Category } from "database/DBData";
+import { Category, Service } from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
@@ -29,16 +29,44 @@ type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 const HomeScreen = ({ navigation }: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
+
+  //--> Route redirects...
+  React.useLayoutEffect(() => {
+    (async () => {
+      const catRoute = await AsyncStorageUtil.getGotoPickLawyer();
+      const checkoutRoute = await AsyncStorageUtil.getGotoCheckout();
+
+      if (catRoute != null && catRoute != "") {
+        const service: Service = JSON.parse(catRoute);
+        AsyncStorageUtil.setGotoPickLawyer("");
+        navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+          category: CategoryDb.findByCode({
+            catCode: service.categoryCode,
+          }),
+          service: service,
+        });
+      } else if (checkoutRoute != null && checkoutRoute != "") {
+        const service: Service = JSON.parse(checkoutRoute);
+        AsyncStorageUtil.setGotoCheckout("");
+        navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+          category: CategoryDb.findByCode({
+            catCode: service.categoryCode,
+          }),
+          service: service,
+        });
+      }
+    })();
+  });
+  //-->Get User's Categories
   React.useEffect(() => {
     getCategories();
   }, []);
-
   const getCategories = async () => {
     const userID = await AsyncStorageUtil.getUserId();
     const getCats = await axiosClient.get(
       `Category/GetUserCategories/${userID}`
     );
-    if (getCats != null) {
+    if (getCats != null && getCats?.data?.data?.length != 0) {
       const cats: Category[] = getCats?.data?.data;
       setCategory(cats);
       getLawyers();
@@ -60,7 +88,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
     if (data != null) {
       const lawyers: LawyerModel[] = data?.data;
-      console.log(lawyers);
+      console.log(lawyers, "Lawyers");
 
       setLawyers(lawyers);
     }

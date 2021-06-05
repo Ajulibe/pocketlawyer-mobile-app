@@ -19,9 +19,9 @@ const AuthSplashScreen = ({ navigation }: Props) => {
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem("@MyApp_key");
-      await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("userType");
-      await AsyncStorage.removeItem("userID");
+      // await AsyncStorage.removeItem("token");// --> This is meant to persist
+      // await AsyncStorage.removeItem("userType");// --> This is meant to persist
+      // await AsyncStorage.removeItem("userID");// --> This is meant to persist
       await AsyncStorage.removeItem("@signup_payload");
       await AsyncStorage.removeItem("@email");
       await AsyncStorage.removeItem("lawfirmPayload");

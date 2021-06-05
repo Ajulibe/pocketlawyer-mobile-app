@@ -81,6 +81,12 @@ export type RootStackParamList = {
   [ROUTES.TABSCREEN_STACK]: undefined;
 };
 
+export type NestedNavigatorParams<ParamList> = {
+  [K in keyof ParamList]: undefined extends ParamList[K]
+    ? { screen: K; params?: ParamList[K] }
+    : { screen: K; params: ParamList[K] };
+}[keyof ParamList];
+
 const MainStack = createStackNavigator<RootStackParamList>();
 export default function MainNavigator() {
   return (
