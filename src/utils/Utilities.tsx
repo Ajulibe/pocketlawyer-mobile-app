@@ -1,5 +1,5 @@
+import moment from "moment";
 
-import * as LocalAuthentication from 'expo-local-authentication';
 class Utilities {
   static formateTime = (examTimeRemaining: number) => {
     var mins = Math.floor(examTimeRemaining / 60); //~/ or .floor()
@@ -18,17 +18,16 @@ class Utilities {
     return t_remaining;
   };
 
-//FINGER PRINT HARDWARE CHECK
-  static checkDeviceForHardware = async ():Promise<boolean> => {
-    let compatible = await LocalAuthentication.hasHardwareAsync();
-    console.log('compatible', compatible);
-    return compatible;
-  }
-  //CHECK IF USER HAS FINGER PRINT SETUP ON THE DEVICE
-  static checkForFingerprints = async () => {
-    let fingerprints = await LocalAuthentication.isEnrolledAsync();
-    console.log('fingerPrints', fingerprints)
-    return fingerprints;
+  static currentDate = (): string => {
+    const date = new Date();
+    return moment(date).format("Do MMMM, YYYY").toString();
+  };
+
+  static formateToMoney = (num: number) => {
+    num = num ?? 0;
+    return (Math.floor(Number(num) * 100) / 100)
+      .toFixed(2)
+      .replace(/\d(?=(\d{3})+\.)/g, "$&,");
   };
 }
 export default Utilities;

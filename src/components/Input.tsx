@@ -46,92 +46,80 @@ interface Props {
   dataValue?: string;
 }
 
-const inputReducer = (state: InitialStateType, action: IAction) => {
-  switch (action.type) {
-    case INPUT_CHANGE:
-      return {
-        ...state,
-        value: action.value,
-        isValid: action.isValid,
-      };
-    case INPUT_BLUR:
-      return {
-        ...state,
-        touched: true,
-      };
-    default:
-      return state;
-  }
-};
-
 const Input: React.FC<Props> = (props) => {
-  const initialState = {
-    value: props.initialValue ? props.initialValue : "",
-    isValid: props.initiallyValid,
-    touched: props.touched,
-  };
-
-  const [inputState, dispatch] = useReducer(inputReducer, initialState);
-  const [isTouched, setIsTouched] = useState(false);
-  const [errorText, setErrorText] = useState("");
-
   const renderIcon = () => (
     <AntDesign name="clouduploado" size={14} color={COLORS.light.primary} />
   );
 
+  const fileUploadName = () => {
+    const { dataValue } = props;
+    if (dataValue != null) {
+      const split = dataValue.split("/");
+      if (split.length > 1) {
+        return split[split.length - 1];
+      }
+      return dataValue;
+    }
+    return null;
+  };
+
   return props.icon ? (
-    <TouchableOpacity
-      onPress={props.onPress}
-      style={{
-        height: wp(40),
-        width: "100%",
-        flexDirection: "row",
-        borderColor: COLORS.light.inputBdColor,
-        borderWidth: 1,
-        justifyContent: "center",
-        backgroundColor: COLORS.light.inputBackgnd,
-        borderRadius: 4,
-        alignItems: "center",
-      }}
-    >
-      <View style={{ width: "70%", paddingLeft: wp(20) }}>
-        <Text
-          style={{
-            fontSize: wp(12),
-            fontFamily: "Roboto-Regular",
-            color: COLORS.light.black,
-          }}
-        >
-          {props.dataValue}
-        </Text>
-      </View>
-      <View
-        style={{ width: "30%", alignItems: "flex-end", paddingRight: wp(20) }}
+    <View>
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={{
+          height: wp(40),
+          width: "100%",
+          flexDirection: "row",
+          borderColor: COLORS.light.inputBdColor,
+          borderWidth: 1,
+          justifyContent: "center",
+          backgroundColor: COLORS.light.inputBackgnd,
+          borderRadius: 4,
+          alignItems: "center",
+        }}
       >
-        <AntDesign name="clouduploado" size={14} color={COLORS.light.primary} />
-      </View>
-    </TouchableOpacity>
+        <View style={{ width: "70%", paddingLeft: wp(20) }}>
+          <Text
+            style={{
+              fontSize: wp(12),
+              fontFamily: "Roboto-Regular",
+              color: COLORS.light.disabled,
+            }}
+          >
+            {fileUploadName()}
+          </Text>
+        </View>
+        <View
+          style={{ width: "30%", alignItems: "flex-end", paddingRight: wp(20) }}
+        >
+          {renderIcon()}
+        </View>
+      </TouchableOpacity>
+      {/* Displaying error  */}
+      {props.errorText === "" || props.errorText == null ? (
+        <View />
+      ) : (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{props.errorText}</Text>
+        </View>
+      )}
+    </View>
   ) : (
     <View style={[styles.formControl]}>
       <TextInput
         {...props}
-        style={{
-          fontWeight: inputState.value != "" ? "700" : "400",
-          // borderColor:
-          //   !inputState.isValid && (inputState.touched || isTouched)
-          //     ? COLORS.light.red
-          //     : "",
-        }}
         textStyle={styles.input}
         placeholderTextColor={COLORS.light.darkgrey}
         keyboardType="default"
         onChangeText={props.onChangeText}
         autoCapitalize="sentences"
-        returnKeyType="next"
-        accessoryRight={props.icon && renderIcon}
+        returnKeyType="done"
       />
-
-      {props.errorText != "" && (inputState.touched || isTouched) && (
+      {/* Displaying error  */}
+      {props.errorText === "" || props.errorText == null ? (
+        <View />
+      ) : (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{props.errorText}</Text>
         </View>

@@ -5,6 +5,8 @@ const TOKEN = "token";
 const USER_ID = "userID";
 const USER = "user";
 const PREVIOUSPATH = "previousPath";
+const GOTO_PICK_LAWYER = "gotoPickLawyer";
+const GOTO_CHECKOUT = "gotoCheckout";
 
 class AsyncStorageUtil {
   // Token
@@ -42,6 +44,22 @@ class AsyncStorageUtil {
 
   static getPreviousPath = async (): Promise<string | null> => {
     return await AsyncStorage.getItem(PREVIOUSPATH);
+  };
+  //Goto Cat Pick Layer
+  static setGotoPickLawyer = async (data: string) => {
+    return await AsyncStorage.setItem(GOTO_PICK_LAWYER, data);
+  };
+
+  static getGotoPickLawyer = async (): Promise<string | null> => {
+    return await AsyncStorage.getItem(GOTO_PICK_LAWYER);
+  };
+  //Goto Checkout
+  static setGotoCheckout = async (data: string) => {
+    return await AsyncStorage.setItem(GOTO_CHECKOUT, data);
+  };
+
+  static getGotoCheckout = async (): Promise<string | null> => {
+    return await AsyncStorage.getItem(GOTO_CHECKOUT);
   };
 }
 

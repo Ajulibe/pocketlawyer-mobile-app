@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { StyleSheet, View, Modal, Text, TouchableOpacity } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
@@ -9,15 +9,17 @@ import renderView from "./renderView";
 
 import { BlurView } from "expo-blur";
 
-interface Props {
+export interface ModalProps {
   modalVisible: boolean;
   navigation: any;
   closeModal: () => void;
   service: Service;
   lawyer: LawyerModel;
+  historyId: number;
+  amount: number;
 }
 
-export default function BottomSheetModal(props: Props) {
+export default function BottomSheetModal(props: ModalProps) {
   return (
     <Modal
       animationType="fade"
@@ -49,7 +51,7 @@ export default function BottomSheetModal(props: Props) {
           easing={"linear"}
           duration={500}
         >
-          <View style={{ flex: 1 }}>{renderView({ modalOptions: props })}</View>
+          <View style={{ flex: 1 }}>{renderView(props)}</View>
         </Animatable.View>
       </BlurView>
     </Modal>
