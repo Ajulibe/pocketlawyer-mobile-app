@@ -2,8 +2,10 @@ import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
+import { ROUTES } from "navigation/Routes";
 import React, { useState } from "react";
 import {
+  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -65,7 +67,12 @@ const HistoryScreen = ({ navigation }: Props) => {
       console.log(error);
     }
   };
-
+  const CategoryHeader = () => (
+    <>
+      <ServiceSearch />
+      <View style={{ height: hp(13) }} />
+    </>
+  );
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -79,22 +86,23 @@ const HistoryScreen = ({ navigation }: Props) => {
             title="Service History"
             showBorderBottom={false}
           />
-          <ScrollView
-            contentContainerStyle={[styles.container, { flexGrow: 1 }]}
-            keyboardShouldPersistTaps="handled"
-            bounces={false}
-          >
-            <ServiceSearch />
-            <View style={{ height: hp(13) }} />
-            <HistoryListTile />
-            <HistoryListTile />
-            <HistoryListTile />
-            <HistoryListTile />
-            <HistoryListTile />
-            <HistoryListTile />
-            <HistoryListTile />
-            <HistoryListTile />
-          </ScrollView>
+          <FlatList
+            data={history}
+            showsHorizontalScrollIndicator={false}
+            ListHeaderComponent={() => CategoryHeader()}
+            contentContainerStyle={[styles.container]}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <HistoryListTile
+                history={item}
+                onClick={() => {
+                  // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                  //   category: item,
+                  // });
+                }}
+              />
+            )}
+          />
         </KeyboardAvoidingView>
       </SafeAreaView>
     </>

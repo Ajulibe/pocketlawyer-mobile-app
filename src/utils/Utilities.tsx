@@ -18,9 +18,13 @@ class Utilities {
     return t_remaining;
   };
 
-  static currentDate = (): string => {
-    const date = new Date();
-    return moment(date).format("Do MMMM, YYYY").toString();
+  static currentDate = (date?: string): string => {
+    const d = date ?? new Date();
+    return moment(d).format("Do MMMM, YYYY").toString();
+  };
+  static dateTime = (date?: string): string => {
+    const d = date ?? new Date();
+    return moment(d).format("h:mma").toString();
   };
 
   static formateToMoney = (num: number) => {

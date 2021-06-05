@@ -3,295 +3,184 @@ import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import { ROUTES } from "navigation/Routes";
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import { hp, wp } from "utils/Dimensions";
-import axiosClient from "utils/axiosClient";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Text, View, ScrollView } from "react-native";
 import modalFormstyles from "../ModalFormStyles";
-import { Service } from "database/DBData";
-import { LawyerModel } from "models/Interfaces";
+import {
+  DocUploadInterface,
+  uploadFileToS3,
+  pickFile,
+} from "services/S3FileUploadHelper";
+import {
+  confirmUpload,
+  transformMeta,
+  addMetadata,
+} from "services/UploadDocsService";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { wp } from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner";
+import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {
+  validateInputs,
+  showError,
+  showSuccess,
+} from "../../BottomSheetUtils/FormHelpers";
+import {
+  loadingReducer,
+  loadingInitialState,
+  LoadingActionType,
+} from "../../BottomSheetUtils/LoadingReducer";
 
-interface Props {
-  navigation: any;
-  closeModal: () => void;
-  service: Service;
-  lawyer: LawyerModel;
-}
-
-interface IState {
-  BuisnessName1: string;
-  BusinessName2: string;
-  NatureOfBusiness: string;
-  MeansOfIdentification: string;
-  IDNumber: string;
-  signatureUpload: string;
-}
-
-const initialState: IState = {
-  BuisnessName1: "",
-  BusinessName2: "",
-  NatureOfBusiness: "",
-  MeansOfIdentification: "",
-  IDNumber: "",
-  signatureUpload: "",
+const FormKeys = {
+  name1: "BuisnessNameOne",
+  name2: "BusinessNameTwo",
+  desc: "BusinessDescription",
+  shareCapital: "ShareCapital",
 };
-
-//--> action typings
-enum ActionKind {
-  addState = "ADD_STATE",
-}
-
-type Action = {
-  type: ActionKind;
-  payload: { field: string; value: string };
-};
-
-//---------------------------
-
-function formReducer(state: IState, action: Action) {
-  switch (action.type) {
-    case ActionKind.addState:
-      const { field, value } = action.payload;
-      return { ...state, [field]: value };
-    default:
-      return state;
-  }
-}
-
-export const CompanyRegistration = ({
-  navigation,
-  closeModal,
-  service,
-}: Props) => {
-  const [state, dispatch] = React.useReducer(formReducer, initialState);
-  console.log(state, "state value");
-
-  const [tempServiceHistoryID, setTempServiceHistoryID] =
-    React.useState<string>("");
-
-  const [isdisabled, setIsDisabled] = React.useState(true);
+export function CompanyRegistration(props: BottomSheetProps) {
+  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const [loadingState, loadingDispatch] = React.useReducer(
+    loadingReducer,
+    loadingInitialState
+  );
+  const [formData, setFormData] = React.useState<any>({});
 
   const handleTextChange = (payload: { field: string; value: string }) => {
-    console.log("called onchange");
-    dispatch({
-      type: ActionKind.addState,
-      payload,
+    setFormData((values: any) => ({
+      ...values,
+      [payload.field]: { key: payload.field, value: payload.value },
+    }));
+  };
+
+  //--> Submit From
+  const submit = () => {
+    validateInputs(FormKeys, formData, async (newData, isError) => {
+      setFormData(newData);
+      if (isError) {
+        showError("Error(s) encountered!");
+      } else {
+        const formMeta = await transformMeta(
+          newData,
+          historyId,
+          service.serviceCode
+        );
+
+        loadingDispatch({
+          type: LoadingActionType.SHOW_WITH_CONTENT,
+          payload: { content: "Submiting, please wait..." },
+        });
+        const submit = await addMetadata(formMeta);
+        loadingDispatch({ type: LoadingActionType.HIDE });
+        if (submit === 200) {
+          //--> Redirect to checkout
+          closeModal();
+          showSuccess("Submitted Successfully");
+          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+            service: service,
+            lawyer: lawyer,
+            historyId: historyId,
+            amount: props.amount,
+          });
+        } else {
+          showError("Error in your network connection, try again");
+        }
+      }
     });
   };
 
-  React.useEffect(() => {
-    getTemporaryServiceHistoryID();
-  });
+  const uploadFile = async (field: string) => {
+    const payload: DocUploadInterface = {
+      fileType: 2,
+      isfor: field,
+      Section: service.serviceCode,
+      HistoryID: historyId,
+    };
 
-  const getTemporaryServiceHistoryID = async () => {
-    try {
-      const userID = await AsyncStorage.getItem("userID");
-      const payload = {
-        ServiceCode: service.serviceCode,
-        userID: userID,
-      };
-      const { data } = await axiosClient.post(
-        "Service/InitiateServiceHistory",
-        payload
-      );
-      console.log(data);
-
-      //--> set the service history received
-      // setTempServiceHistoryID()
-    } catch (error) {}
-  };
-
-  const submit = async () => {
-    if (tempServiceHistoryID === "") {
-      setIsDisabled(true);
-      return;
+    const pickedFile = await pickFile();
+    if (pickedFile != null) {
+      loadingDispatch({
+        type: LoadingActionType.SHOW_WITH_CONTENT,
+        payload: { content: "Uploading file..." },
+      });
+      const upload = await uploadFileToS3(payload, pickedFile);
+      if (upload == null) {
+        showError("Error occured while uploading, try again...");
+      } else {
+        const confirm = await confirmUpload(upload);
+        loadingDispatch({ type: LoadingActionType.HIDE });
+        if (confirm == null || confirm?.url == null) {
+          showError("Error occured while uploading, try again...");
+        } else {
+          handleTextChange({ field: field, value: confirm?.url });
+        }
+      }
     }
-
-    const payload = [
-      {
-        key: "BuisnessName1",
-        value: state.BuisnessName1,
-        section: "CompanyRegistration",
-        userID: 1,
-        tempServiceHistoryID: 1,
-      },
-      {
-        key: "BusinessName2",
-        value: state.BusinessName2,
-        section: "CompanyRegistration",
-        userID: 1,
-        tempServiceHistoryID: 1,
-      },
-      {
-        key: "NatureOfBusiness",
-        value: state.NatureOfBusiness,
-        section: "CompanyRegistration",
-        userID: 1,
-        tempServiceHistoryID: 1,
-      },
-      {
-        key: "MeansOfIdentification",
-        value: state.MeansOfIdentification,
-        section: "CompanyRegistration",
-        userID: 1,
-        tempServiceHistoryID: 1,
-      },
-      {
-        key: "IDNumber",
-        value: state.IDNumber,
-        section: "CompanyRegistration",
-        userID: 1,
-        tempServiceHistoryID: 1,
-      },
-      {
-        key: "signatureUpload",
-        value: state.signatureUpload,
-        section: "CompanyRegistration",
-        userID: 1,
-        tempServiceHistoryID: 1,
-      },
-    ];
-    try {
-      const { data } = await axiosClient.post(
-        "Service/AddMetadataHistory",
-        payload
-      );
-      closeModal();
-      navigation.navigate(ROUTES.CHECKOUT_SCREEN);
-    } catch (error) {}
   };
 
   return (
-    <View style={{ paddingBottom: 120 }}>
+    <View style={{ paddingBottom: 80 }}>
+      <LoadingSpinner
+        modalVisible={loadingState.isVisible ?? false}
+        content={loadingState.content}
+      />
       <ScrollView>
-        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
-        <Text style={modalFormstyles.titleDesc}>
-          Please fill the form with your proposed business details
-        </Text>
-        <Text style={modalFormstyles.inputLabel}>Proposed Business Name 1</Text>
-        <Input
-          placeholder="Type business name 1"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          onChangeText={(text: string) => {
-            handleTextChange({ field: "BuisnessName1", value: text });
-          }}
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
-        />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Proposed Business Name 2</Text>
-        <Input
-          placeholder="Type business name 2"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
-          onChangeText={(text: string) => {
-            handleTextChange({ field: "BuisnessName2", value: text });
-          }}
-        />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Nature of Business</Text>
-        <Input
-          placeholder="Type the business nature"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
-          onChangeText={(text: string) => {
-            handleTextChange({ field: "NatureOfBusiness", value: text });
-          }}
-        />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Means of Identification</Text>
-        <Input
-          placeholder="Select your means of identification"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
-          onChangeText={(text: string) => {
-            handleTextChange({ field: "MeansOfIdentification", value: text });
-          }}
-        />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>ID Number</Text>
-        <Input
-          placeholder="Type identification number"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
-          onChangeText={(text: string) => {
-            handleTextChange({ field: "IDNumber", value: text });
-          }}
-        />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>Signature</Text>
-        <Input
-          placeholder="Upload your signature"
-          placeholderTextColor=""
-          errorText={""}
-          keyboardType="default"
-          autoCapitalize="sentences"
-          returnKeyType="send"
-          initialValue=""
-          initiallyValid={false}
-          required
-          secureTextEntry={false}
-          minLength={2}
-          textContentType="none"
-          onChangeText={(text: string) => {
-            handleTextChange({ field: "signatureUpload", value: text });
-          }}
-        />
+        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+          <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+          <Text style={modalFormstyles.titleDesc}>
+            Please fill the form with your proposed business details
+          </Text>
+          <Text style={modalFormstyles.inputLabel}>
+            Proposed Business Name 1{" "}
+            <Text style={modalFormstyles.required}>*</Text>
+          </Text>
+          <Input
+            placeholder="Type business name 1"
+            errorText={formData?.[FormKeys.name1]?.error}
+            onChangeText={(text: string) => {
+              handleTextChange({ field: FormKeys.name1, value: text });
+            }}
+          />
+          <View style={{ height: 16 }} />
+          <Text style={modalFormstyles.inputLabel}>
+            Proposed Business Name 2{" "}
+            <Text style={modalFormstyles.required}>*</Text>
+          </Text>
+          <Input
+            placeholder="Type business name 2"
+            errorText={formData?.[FormKeys.name2]?.error}
+            onChangeText={(text: string) => {
+              handleTextChange({ field: FormKeys.name2, value: text });
+            }}
+          />
+          <View style={{ height: 16 }} />
+          <Text style={modalFormstyles.inputLabel}>
+            Brief Description of Business{" "}
+            <Text style={modalFormstyles.required}>*</Text>
+          </Text>
+          <Input
+            placeholder=""
+            errorText={formData?.[FormKeys.desc]?.error}
+            multiline={true}
+            numberOfLines={4}
+            onChangeText={(text: string) => {
+              handleTextChange({ field: FormKeys.desc, value: text });
+            }}
+          />
+          <View style={{ height: 16 }} />
+          <Text style={modalFormstyles.inputLabel}>
+            Proposed Share Capital
+            <Text style={modalFormstyles.required}>*</Text>
+          </Text>
+          <Input
+            placeholder="1,000,000 share capital"
+            errorText={formData?.[FormKeys.shareCapital]?.error}
+            onChangeText={(text: string) => {
+              handleTextChange({ field: FormKeys.shareCapital, value: text });
+            }}
+          />
+        </KeyboardAwareScrollView>
       </ScrollView>
       <View style={{ height: 16 }} />
-
-      <CustomButton
-        btnText="Submit"
-        onClick={() => {
-          submit;
-          closeModal();
-          navigation.navigate(ROUTES.CHECKOUT_SCREEN);
-        }}
-      />
+      <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );
-};
+}

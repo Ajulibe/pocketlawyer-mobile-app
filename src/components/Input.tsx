@@ -5,21 +5,6 @@ import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const INPUT_CHANGE = "INPUT_CHANGE";
-const INPUT_BLUR = "INPUT_BLUR";
-
-interface InitialStateType {
-  value?: string | null;
-  isValid?: boolean;
-  touched?: boolean;
-}
-
-interface IAction {
-  type: string;
-  value?: string;
-  isValid?: boolean;
-}
-
 interface Props {
   keyboardType?: any;
   secureTextEntry?: boolean;
@@ -44,6 +29,8 @@ interface Props {
   icon?: any;
   onPress?: () => void;
   dataValue?: string;
+  multiline?: boolean;
+  numberOfLines?: number;
 }
 
 const Input: React.FC<Props> = (props) => {
@@ -107,15 +94,19 @@ const Input: React.FC<Props> = (props) => {
     </View>
   ) : (
     <View style={[styles.formControl]}>
+      {/* <View> */}
       <TextInput
         {...props}
-        textStyle={styles.input}
+        textStyle={[
+          { ...styles.input, height: props.multiline ? 100 : hp(30) },
+        ]}
         placeholderTextColor={COLORS.light.darkgrey}
         keyboardType="default"
         onChangeText={props.onChangeText}
         autoCapitalize="sentences"
         returnKeyType="done"
       />
+      {/* </View> */}
       {/* Displaying error  */}
       {props.errorText === "" || props.errorText == null ? (
         <View />
@@ -138,7 +129,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     // paddingHorizontal: wp(16),
     // paddingVertical: hp(8),
-    // minHeight: hp(40),
+    minHeight: hp(30),
     borderColor: COLORS.light.primaryLight,
     // borderWidth: 0.2,
     color: COLORS.light.black,
