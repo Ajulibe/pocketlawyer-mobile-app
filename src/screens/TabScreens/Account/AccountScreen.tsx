@@ -20,6 +20,7 @@ import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 import UserDescListTile from "./Components/UserDescListTile";
+import { Avatar } from "react-native-elements";
 
 type Props = StackScreenProps<AccountStackParamList, ROUTES.ACCOUNT_SCREEN>;
 
@@ -29,7 +30,7 @@ const AccountScreen = ({ navigation }: Props) => {
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar
           navigation={navigation}
-          title="Service History"
+          title="My Account"
           showBorderBottom={false}
         />
         <ScrollView
@@ -37,12 +38,17 @@ const AccountScreen = ({ navigation }: Props) => {
           keyboardShouldPersistTaps="handled"
           bounces={false}
         >
-          <Image
-            source={{
-              uri: CONSTANTS.user,
-            }}
-            style={styles.userPhoto}
-          />
+          <TouchableOpacity>
+            <Avatar
+              rounded
+              size="large"
+              source={{
+                uri: CONSTANTS.user,
+              }}
+              containerStyle={styles.userPhoto}
+            />
+          </TouchableOpacity>
+
           <Text style={styles.changePhotoBtn}>Tap to change your photo</Text>
           <View style={{ height: hp(32) }} />
           <UserDescListTile leading="First Name" value="Bode" />
@@ -81,19 +87,16 @@ export default AccountScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: wp(20),
-    paddingVertical: hp(18),
+    paddingVertical: hp(12),
     alignItems: "center",
   },
   userPhoto: {
-    resizeMode: "contain",
-    width: wp(117),
-    height: wp(117),
-    borderRadius: 150,
+    marginBottom: wp(13),
   },
   changePhotoBtn: {
     fontWeight: "300",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
     marginTop: hp(6),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto",
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   },
   passBtnText: {
     fontSize: wp(14),
-    lineHeight: hp(16),
+    lineHeight: hp(20),
     fontWeight: "500",
     fontFamily: "Roboto-Medium",
     color: "rgba(0, 0, 0, 0.7)",

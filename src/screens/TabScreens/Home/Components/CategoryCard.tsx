@@ -1,7 +1,13 @@
 import globalStyles from "css/GlobalCss";
 import { View } from "native-base";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { Category } from "database/DBData";
@@ -28,7 +34,7 @@ export default function CategoryCard({ category, onClick }: Props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: wp(120),
-    height: hp(108),
+    height: Platform.OS === "ios" ? hp(108) : hp(135),
     display: "flex",
     paddingVertical: hp(13),
     paddingHorizontal: wp(16),
@@ -37,6 +43,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
     marginHorizontal: wp(12),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
     ...globalStyles.shadowLight,
   },
   icon: {
@@ -45,7 +53,7 @@ const styles = StyleSheet.create({
     height: wp(30),
   },
   title: {
-    lineHeight: hp(13),
+    lineHeight: hp(20),
     fontWeight: "400",
     fontSize: wp(11),
     color: COLORS.light.primary,

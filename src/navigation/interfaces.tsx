@@ -20,7 +20,7 @@ export interface RegisterInterface {
   lastName: string;
   email: string;
   userType: number;
-  dob: string;
+  dob: any;
   password: string;
   address: string;
   phone: string;

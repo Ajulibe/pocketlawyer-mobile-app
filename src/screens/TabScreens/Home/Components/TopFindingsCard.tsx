@@ -1,6 +1,6 @@
 import { View } from "native-base";
 import React from "react";
-import { Image, StyleSheet, Text } from "react-native";
+import { Image, Platform, StyleSheet, Text } from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
@@ -15,7 +15,7 @@ export default function TopFindingsCard() {
         <Text style={styles.subtitle}>Legal Documents Review</Text>
       </View>
       <View style={styles.trailingWrapper}>
-        <Text style={styles.trailingTitle}>N56,000</Text>
+        {/* <Text style={styles.trailingTitle}>N56,000</Text> */}
         <StarRating
           maxStars={5}
           rating={3}
@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
     marginBottom: wp(6),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   user: {
     resizeMode: "cover",
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     fontWeight: "500",
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: wp(10),
-    lineHeight: hp(12),
+    lineHeight: hp(15),
     fontWeight: "300",
     color: COLORS.light.primary,
     fontFamily: "Roboto",
@@ -69,10 +71,11 @@ const styles = StyleSheet.create({
   },
   trailingTitle: {
     fontSize: wp(10),
-    lineHeight: hp(12),
+    lineHeight: hp(16),
     fontWeight: "400",
     color: COLORS.light.primary,
     fontFamily: "Roboto",
     marginBottom: hp(7),
+    opacity: 0,
   },
 });

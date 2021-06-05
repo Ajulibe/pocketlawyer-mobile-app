@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   tileLeading: {
     fontWeight: "400",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto",
   },

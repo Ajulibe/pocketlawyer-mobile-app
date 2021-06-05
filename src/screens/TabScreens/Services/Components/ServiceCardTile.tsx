@@ -1,6 +1,12 @@
 import { View } from "native-base";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
@@ -48,18 +54,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
     marginBottom: wp(12),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   title: {
     flex: 1,
     fontSize: wp(14),
-    lineHeight: hp(17),
+    lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
     fontWeight: "500",
     color: COLORS.light.primary,
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Regular",
     marginLeft: wp(16),
   },
   icon: {
-    width: wp(30),
-    height: wp(30),
+    width: wp(18),
+    height: wp(18),
   },
 });

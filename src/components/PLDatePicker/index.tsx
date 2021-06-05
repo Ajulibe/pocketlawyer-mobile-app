@@ -8,48 +8,38 @@ import COLORS from "../../utils/Colors";
 const CalendarIcon = () => <AntDesign name="calendar" size={12} color="grey" />;
 
 interface PLDatePicker {
-  onSelect: (date: Date) => void;
-  initial: string;
-  selectedDate: string;
+  onSelect?: (date: Date) => void;
+  initial?: string;
+  selectedDate?: any;
+  placeholder: any;
+  useDatepickerState: any;
 }
 
 export const PLDatePicker: React.FC<PLDatePicker> = ({
   onSelect,
   initial,
   selectedDate,
+  placeholder,
+  useDatepickerState,
 }) => {
   const min = new Date(1960, 11, 24);
 
   return (
     <View style={styles.DatepickerWrapper}>
       <Datepicker
+        textStyle={{ color: COLORS.light.black, fontSize: wp(12) }}
         controlStyle={styles.controlStyle}
         min={min}
+        date={selectedDate}
         backdropStyle={styles.backdropStyle}
         style={styles.DatePicker}
-        placeholder="Select your Date of Birth"
+        placeholder={(TextProps) => {
+          return <Text style={styles.placeholder}>{placeholder}</Text>;
+        }}
         status="basic"
-        onSelect={onSelect}
         accessoryRight={CalendarIcon}
+        {...useDatepickerState}
       />
-
-      <View style={styles.cover}>
-        <Text
-          style={[
-            styles.selectedDate,
-            {
-              color:
-                initial === new Date().toString()
-                  ? COLORS.light.darkgrey
-                  : COLORS.light.black,
-            },
-          ]}
-        >
-          {initial === new Date().toString()
-            ? "Select your Date of Birth"
-            : selectedDate}
-        </Text>
-      </View>
     </View>
   );
 };
@@ -65,13 +55,21 @@ const styles = StyleSheet.create({
   DatePicker: {
     width: "100%",
     borderRadius: 4,
+    fontSize: wp(12),
     backgroundColor: COLORS.light.white,
   },
   controlStyle: {
     backgroundColor: COLORS.light.white,
     borderColor: COLORS.light.textinputborder,
     borderWidth: 1,
+    fontSize: wp(12),
     color: COLORS.light.black,
+    fontWeight: "300",
+  },
+  placeholder: {
+    color: COLORS.light.darkgrey,
+    fontSize: wp(12),
+    marginLeft: wp(8),
   },
   backdropStyle: {
     justifyContent: "center",
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: wp(200),
     height: wp(30),
-    backgroundColor: COLORS.light.white,
+    backgroundColor: COLORS.light.fadedSecondary,
     top: hp(5),
     left: wp(7),
     justifyContent: "center",

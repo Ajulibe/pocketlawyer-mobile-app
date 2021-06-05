@@ -27,6 +27,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { smeSignupSectionOne } from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BottomSheet, ListItem } from "react-native-elements";
+import globalStyles from "css/GlobalCss";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -96,7 +98,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
       onPress: () => setIsVisibleBusiness(false),
     },
   ];
-
+  //--> disabling button
+  const [disabled, setDisabled] = useState<boolean>(true);
   //--> check to ensure all values are filled and enable button
   React.useEffect(() => {
     //--> check if the payload has be completely filled
@@ -108,14 +111,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
       password === "" ||
       city === ""
     ) {
+      setDisabled(true);
       return;
+    } else {
+      setDisabled(false);
     }
-
-    setDisabled(false);
   }, [company, state, email, business, password, city]);
-
-  //--> disabling button
-  const [disabled, setDisabled] = useState<boolean>(true);
 
   //--> creating payload and saving to async
   const onClick = () => {
@@ -160,294 +161,288 @@ const AuthGetStarted = ({ navigation }: Props) => {
   }, [business]);
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-        keyboardVerticalOffset={wp(0)}
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
+      <NavBar
+        onPress={() => {
+          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+        }}
+        navText="Sign Up"
+      />
+
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(120)}
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <NavBar
-          onPress={() => {
-            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-          }}
-          navText="Sign Up"
-        />
-        <ScrollView>
-          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-            <View style={styles.TextWrapper}>
-              <Text style={styles.welcomeMessage}>
-                Welcome to Pocket Lawyer! To create an account, please enter
-                your
-                <Text style={styles.CompanyDetails}> company details.</Text>
-              </Text>
-            </View>
+        <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+          <View style={styles.TextWrapper}>
+            <Text style={styles.welcomeMessage}>
+              Welcome to Pocket Lawyer. To create an account, please enter your
+              <Text style={styles.CompanyDetails}> company details.</Text>
+            </Text>
+          </View>
 
-            <View>
-              <PLTextInput
-                labelText="Name of Company"
-                onChangeText={setCompany}
-                labelTextRequired={true}
-                textContentType="name"
-                style={styles.input}
-                placeholder="Type the name of your company"
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Email Address"
-                labelTextRequired={true}
-                onChangeText={setEmail}
-                style={styles.input}
-                placeholder="Type your company’s email address"
-                textContentType="emailAddress"
-              />
-            </View>
-
-            <View>
-              <Text style={styles.inputText}>
-                State <Text style={styles.required}>*</Text>
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  width: wp(334),
-                  height: wp(40),
-                  borderRadius: 4,
-                  borderColor: COLORS.light.textinputborder,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsVisible(true);
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <View style={{ width: wp(300) }}>
-                      <Text
-                        style={{
-                          marginLeft: wp(16),
-                          fontSize: 12,
-                          fontFamily: "Roboto-Regular",
-                          color:
-                            statePlaceholder === 0
-                              ? COLORS.light.darkgrey
-                              : COLORS.light.black,
-                        }}
-                      >
-                        {state}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: wp(30),
-                        alignItems: "flex-end",
-                      }}
-                    >
-                      <Entypo
-                        name="chevron-small-down"
-                        size={20}
-                        color="grey"
-                      />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <BottomSheet
-                modalProps={{
-                  visible: isVisible,
-                  statusBarTranslucent: true,
-                }}
-                isVisible={isVisible}
-                containerStyle={{ backgroundColor: COLORS.light.primary }}
-              >
-                {states.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    onPress={() => {
-                      setState(l.state);
-                    }}
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title>
-                        <Text>{l.state}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-                {Statelist.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    containerStyle={l.containerStyle}
-                    onPress={l.onPress}
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title style={l.titleStyle}>
-                        <Text>{l.title}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-              </BottomSheet>
-            </View>
-
-            <View style={styles.stateWrapper}>
-              <PLTextInput
-                labelText="City"
-                onChangeText={setCity}
-                labelTextRequired={true}
-                style={[styles.input, styles.city]}
-                placeholder="Enter City"
-                textContentType="none"
-              />
-            </View>
-
-            <View>
-              <Text style={styles.inputText}>
-                Nature of Business <Text style={styles.required}>*</Text>
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  width: wp(334),
-                  height: wp(40),
-                  borderRadius: 4,
-                  borderColor: COLORS.light.textinputborder,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsVisibleBusiness(true);
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <View style={{ width: wp(300) }}>
-                      <Text
-                        style={{
-                          marginLeft: wp(16),
-                          fontSize: 12,
-                          fontFamily: "Roboto-Regular",
-                          color:
-                            stateBusinessPlaceholder === 0
-                              ? COLORS.light.darkgrey
-                              : COLORS.light.black,
-                        }}
-                      >
-                        {state}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: wp(30),
-                        alignItems: "flex-end",
-                      }}
-                    >
-                      <Entypo
-                        name="chevron-small-down"
-                        size={20}
-                        color="grey"
-                      />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <BottomSheet
-                modalProps={{
-                  visible: isVisibleBusiness,
-                  statusBarTranslucent: true,
-                }}
-                isVisible={isVisibleBusiness}
-                containerStyle={{ backgroundColor: COLORS.light.primary }}
-              >
-                {states.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    onPress={() => {
-                      setBusiness(l.state);
-                    }}
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title>
-                        <Text>{l.state}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-                {Businesslist.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    containerStyle={l.containerStyle}
-                    onPress={l.onPress}
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title style={l.titleStyle}>
-                        <Text>{l.title}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-              </BottomSheet>
-            </View>
-
-            <View>
-              <Text style={styles.inputText}>
-                Password <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.phoneNumberWrapper}>
-                <PLPasswordInput
-                  placeholder="Create your Password"
-                  onChangeText={setPassword}
-                />
-              </View>
-            </View>
-
-            <View style={styles.carouselWrapper}>
-              <View style={styles.carouselIcon}>
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-                <Entypo name="circle" size={10} color={COLORS.light.primary} />
-              </View>
-            </View>
-
-            <PLButton
-              disabled={disabled}
-              style={styles.plButton}
-              textColor={COLORS.light.white}
-              btnText={"Next"}
-              onClick={onClick}
+          <View>
+            <PLTextInput
+              labelText="Name of Company"
+              onChangeText={setCompany}
+              labelTextRequired={true}
+              textContentType="name"
+              style={styles.input}
+              placeholder="Type the name of your company"
             />
-            <View style={styles.loginWrapper}>
-              <Text style={styles.signUpText}>
-                By signing up, you agree with the
-                <Text style={styles.login}> Terms of services </Text>and{" "}
-                <Text style={styles.login}>Privacy policy </Text>
-              </Text>
+          </View>
+
+          <View>
+            <PLTextInput
+              labelText="Email Address"
+              labelTextRequired={true}
+              onChangeText={setEmail}
+              style={styles.input}
+              placeholder="Type your company’s email address"
+              textContentType="emailAddress"
+            />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>
+              State <Text style={styles.required}>*</Text>
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                width: wp(334),
+                height: wp(40),
+                borderRadius: 4,
+                borderColor: COLORS.light.textinputborder,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setIsVisible(true);
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <View style={{ width: wp(300) }}>
+                    <Text
+                      style={{
+                        marginLeft: wp(16),
+                        fontSize: 12,
+                        fontFamily: "Roboto-Regular",
+                        color:
+                          statePlaceholder === 0
+                            ? COLORS.light.darkgrey
+                            : COLORS.light.black,
+                      }}
+                    >
+                      {state}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      width: wp(30),
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <Entypo name="chevron-small-down" size={20} color="grey" />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
-          </Animatable.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            <BottomSheet
+              modalProps={{
+                visible: isVisible,
+                statusBarTranslucent: true,
+              }}
+              isVisible={isVisible}
+              containerStyle={{ backgroundColor: COLORS.light.primary }}
+            >
+              {states.map((l, i) => (
+                <ListItem
+                  key={i}
+                  onPress={() => {
+                    setState(l.state);
+                  }}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Text>{l.state}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {Statelist.map((l, i) => (
+                <ListItem
+                  key={i}
+                  containerStyle={l.containerStyle}
+                  onPress={l.onPress}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title style={l.titleStyle}>
+                      <Text>{l.title}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+            </BottomSheet>
+          </View>
+
+          <View style={styles.stateWrapper}>
+            <PLTextInput
+              labelText="City"
+              onChangeText={setCity}
+              labelTextRequired={true}
+              style={[styles.input, styles.city]}
+              placeholder="Enter City"
+              textContentType="none"
+            />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>
+              Nature of Business <Text style={styles.required}>*</Text>
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                width: wp(334),
+                height: wp(40),
+                borderRadius: 4,
+                borderColor: COLORS.light.textinputborder,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setIsVisibleBusiness(true);
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <View style={{ width: wp(300) }}>
+                    <Text
+                      style={{
+                        marginLeft: wp(16),
+                        fontSize: 12,
+                        fontFamily: "Roboto-Regular",
+                        color:
+                          stateBusinessPlaceholder === 0
+                            ? COLORS.light.darkgrey
+                            : COLORS.light.black,
+                      }}
+                    >
+                      {state}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      width: wp(30),
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <Entypo name="chevron-small-down" size={20} color="grey" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <BottomSheet
+              modalProps={{
+                visible: isVisibleBusiness,
+                statusBarTranslucent: true,
+              }}
+              isVisible={isVisibleBusiness}
+              containerStyle={{ backgroundColor: COLORS.light.primary }}
+            >
+              {states.map((l, i) => (
+                <ListItem
+                  key={i}
+                  onPress={() => {
+                    setBusiness(l.state);
+                  }}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Text>{l.state}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {Businesslist.map((l, i) => (
+                <ListItem
+                  key={i}
+                  containerStyle={l.containerStyle}
+                  onPress={l.onPress}
+                >
+                  <ListItem.Content>
+                    <ListItem.Title style={l.titleStyle}>
+                      <Text>{l.title}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+            </BottomSheet>
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>
+              Password <Text style={styles.required}>*</Text>
+            </Text>
+            <View style={styles.phoneNumberWrapper}>
+              <PLPasswordInput
+                placeholder="Create your Password"
+                onChangeText={setPassword}
+              />
+            </View>
+          </View>
+
+          <View style={styles.carouselWrapper}>
+            <View style={styles.carouselIcon}>
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+              <Entypo name="circle" size={10} color={COLORS.light.primary} />
+            </View>
+          </View>
+
+          <PLButton
+            disabled={disabled}
+            style={styles.plButton}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={onClick}
+          />
+          <View style={styles.loginWrapper}>
+            <Text style={styles.signUpText}>
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services </Text>and{" "}
+              <Text style={styles.login}>Privacy policy </Text>
+            </Text>
+          </View>
+        </Animatable.View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -474,6 +469,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
+    justifyContent: "flex-start",
     marginTop: hp(15),
   },
   signUpText: {
@@ -590,7 +586,7 @@ const styles = StyleSheet.create({
   CompanyDetails: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    // lineHeight: hp(20),
     color: COLORS.light.primary,
   },
   required: {

@@ -9,6 +9,7 @@ import useCachedResources from "./src/hooks/useCachedResources";
 import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
 import { default as theme } from "./src/theme.json";
+import { default as mapping } from "./src/mapping.json";
 import Toast from "react-native-toast-message";
 
 export default function App() {

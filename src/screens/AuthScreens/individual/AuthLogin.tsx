@@ -12,6 +12,9 @@ import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordI
 import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { PLModal } from "../../../components/PLModal";
+import globalStyles from "css/GlobalCss";
+import axiosClient from "utils/axiosClient";
+import { PLToast } from "components/PLToast";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -21,8 +24,42 @@ type Props = StackScreenProps<
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
 
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (password.length === 0 || email.length === 0) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [password, email]);
+
+  const Login = async () => {
+    setIsLoading(true);
+    const payload = {
+      email: email,
+      password: password,
+    };
+
+    try {
+      const { data } = await axiosClient.post("User/Login", payload);
+      // navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
+      console.log(data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      const { message } = error?.response.data;
+      PLToast({ message: message, type: "error" });
+    }
+  };
+
+  const resetPassword = () => {};
+
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
           navigation.navigate(ROUTES.AUTH_GET_STARTED_SCREEN);
@@ -31,12 +68,14 @@ const AuthGetStarted = ({ navigation }: Props) => {
       />
       <View style={styles.contentWraper}>
         <Text style={styles.welcomeMessage}>
-          Welcome back! Log in to continue.
+          Welcome back. Log in to continue.
         </Text>
 
         <View>
-          <Text style={styles.inputText}>Email</Text>
           <PLTextInput
+            labelText="Email"
+            labelTextRequired={true}
+            onChangeText={setEmail}
             textContentType="emailAddress"
             style={styles.input}
             placeholder="Type your email address"
@@ -44,9 +83,14 @@ const AuthGetStarted = ({ navigation }: Props) => {
         </View>
 
         <View>
-          <Text style={styles.inputText}>Password</Text>
+          <Text style={styles.inputText}>
+            Password <Text style={styles.required}>*</Text>
+          </Text>
           <View style={styles.phoneNumberWrapper}>
-            <PLPasswordInput placeholder="Enter your Password" />
+            <PLPasswordInput
+              placeholder="Enter your Password"
+              onChangeText={setPassword}
+            />
           </View>
           <TouchableOpacity onPress={() => setVisible(true)}>
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
@@ -64,6 +108,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
             textContentType="emailAddress"
             style={styles.resetPasswordInput}
             placeholder="Type your email address"
+            labelText="Email"
+            labelTextRequired={true}
+            onChangeText={setEmail}
           />
           <PLButton
             textColor={COLORS.light.white}
@@ -77,25 +124,25 @@ const AuthGetStarted = ({ navigation }: Props) => {
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() =>
-            navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-          }
+          disabled={isDisabled}
+          onClick={Login}
+          isLoading={isLoading}
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
-            // onPress={() => navigation.navigate(ROUTES.AUTH_SIGN_UP)}
-            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
+            onPress={() => navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY)}
           >
             <Text
               style={{
                 textAlign: "center",
                 fontFamily: "Roboto-Regular",
                 fontSize: wp(14),
+                lineHeight: wp(20),
                 color: COLORS.light.black,
               }}
             >
               Do not have an account?
-              <Text style={styles.login}> Sign up </Text>
+              <Text style={styles.login}>&nbsp; Sign up </Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -134,7 +181,6 @@ const styles = StyleSheet.create({
   resetPasswordInput: {
     width: wp(300),
     height: wp(40),
-    marginTop: wp(20),
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
   },
@@ -160,7 +206,7 @@ const styles = StyleSheet.create({
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(12),
+    marginBottom: hp(4),
     marginTop: hp(12),
   },
   forgotPassword: {
@@ -207,7 +253,6 @@ const styles = StyleSheet.create({
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
-    lineHeight: hp(16),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
@@ -219,6 +264,9 @@ const styles = StyleSheet.create({
     borderRightColor: "#f0f0f0",
     paddingLeft: wpercent("2%"),
     width: wpercent("26%"),
+  },
+  required: {
+    color: "red",
   },
 });
 

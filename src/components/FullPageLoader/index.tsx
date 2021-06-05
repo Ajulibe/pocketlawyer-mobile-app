@@ -47,7 +47,7 @@ const index: React.FC<Props> = ({ message }) => {
           />
         </View>
 
-        <ActivityIndicator />
+        <ActivityIndicator color={COLORS.light.primary} />
 
         <Animatable.Text style={styles.loading}>{message}...</Animatable.Text>
       </View>

@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   wrapper: {
     width: wp(104),
     display: "flex",
-    paddingVertical: hp(6),
+    paddingVertical: hp(12),
     paddingHorizontal: wp(8),
     alignItems: "center",
     justifyContent: "center",
@@ -48,10 +48,9 @@ const styles = StyleSheet.create({
     marginBottom: hp(12),
   },
   user: {
-    resizeMode: "contain",
     width: wp(42),
     height: wp(42),
-    borderRadius: 50,
+    borderRadius: wp(42),
   },
   name: {
     lineHeight: hp(14),

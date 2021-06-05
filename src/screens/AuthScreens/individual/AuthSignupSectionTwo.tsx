@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   Text,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
@@ -21,7 +22,7 @@ import { PLDatePicker } from "components/PLDatePicker";
 import * as Animatable from "react-native-animatable";
 import { states } from "utils/nigerianStates";
 import { Entypo } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosClient from "utils/axiosClient";
 import { RegisterInterface } from "navigation/interfaces";
@@ -29,6 +30,7 @@ import { PLToast } from "components/PLToast";
 import { BottomSheet, ListItem } from "react-native-elements";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -81,34 +83,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
   //--> Next button disabled state
   const [isDisabled, setIsDisabled] = useState(true);
 
-  //--> Custom hook for date picker
-  const useDatepickerState = (initialDate = new Date()) => {
-    const [date, setDate] = React.useState(initialDate);
+  const [date, setDate] = React.useState<any>(null);
+
+  const useDatepickerState = (intial = null) => {
     return { date, onSelect: setDate };
   };
 
-  const { onSelect, date } = useDatepickerState();
-
-  //--> composing the date
-  const month = date.getMonth();
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const initial = date.toString();
-  const selectedDate = `${month}/${day}/${year}`;
+  const minMaxPickerState = useDatepickerState();
 
   //--> check the state of the input forms and enable the button when all fields are complete
   React.useEffect(() => {
-    //--> checking the date
-    const date = new Date();
-
-    //--> composing the date
-    const month = date.getMonth();
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const todaysDate = `${month}/${day}/${year}`;
-
     if (
-      selectedDate === todaysDate ||
+      date === null ||
       state.length === 0 ||
       city.length === 0 ||
       password.length === 0
@@ -118,7 +104,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     } else {
       setIsDisabled(false);
     }
-  }, [selectedDate, state, city, password]);
+  }, [date, state, city, password]);
 
   //--> make api call for registration
   React.useEffect(() => {
@@ -131,7 +117,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         lastName: initialState.lastName,
         email: initialState.email,
         userType: 1,
-        dob: selectedDate,
+        dob: date,
         password: password,
         address: `${city},${state}`,
         phone: initialState.phone,
@@ -173,8 +159,20 @@ const AuthGetStarted = ({ navigation }: Props) => {
     }
   };
 
+  const now = new Date();
+  const yesterday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() - 1
+  );
+  const tomorrow = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1
+  );
+
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
           navigation.goBack();
@@ -185,6 +183,10 @@ const AuthGetStarted = ({ navigation }: Props) => {
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
         enableOnAndroid={true}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
@@ -195,10 +197,10 @@ const AuthGetStarted = ({ navigation }: Props) => {
             <Text style={styles.inputText}>
               Date of Birth<Text style={styles.required}> *</Text>
             </Text>
+
             <PLDatePicker
-              onSelect={onSelect}
-              selectedDate={selectedDate}
-              initial={initial}
+              placeholder="Select your Date of Birth"
+              useDatepickerState={minMaxPickerState}
             />
           </View>
 
@@ -376,10 +378,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
   wrapper: {
     flex: 1,
     alignItems: "center",
@@ -408,11 +406,12 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: wp(11),
     color: COLORS.light.black,
-    lineHeight: hp(14),
+    lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
+    justifyContent: "flex-start",
     marginTop: hp(38),
   },
   input: {
@@ -473,7 +472,6 @@ const styles = StyleSheet.create({
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(11),
-    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },

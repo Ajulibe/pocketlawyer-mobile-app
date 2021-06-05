@@ -21,7 +21,7 @@ type Props = {
 };
 
 const LoadingIndicator = (props: any) => (
-  <ActivityIndicator style={[props.style, styles.indicator]} />
+  <ActivityIndicator style={[props.style, styles.indicator]} color="#fff" />
 );
 
 export default function PLButton({

@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  BackHandler,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
-import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
-import { FontAwesome } from "@expo/vector-icons";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
-import { PLDatePicker } from "../../../components/PLDatePicker";
-import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "../../../types";
-import { Input } from "@ui-kitten/components";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
+
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
+
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import globalStyles from "css/GlobalCss";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -30,7 +34,22 @@ const ValidateEmail = ({ navigation }: Props) => {
   //--> validate OTP
   const validateOTP = () => {
     // console.log(OTP);
+    navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
   };
+
+  //--> prevent back button from working
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   //-> listen to OTP Change and call validation
   useEffect(() => {
@@ -67,7 +86,7 @@ const ValidateEmail = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
           navigation.goBack();
@@ -106,7 +125,7 @@ const ValidateEmail = ({ navigation }: Props) => {
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Next"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_CONGRATS_SME)}
+          onClick={validateOTP}
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
@@ -116,7 +135,7 @@ const ValidateEmail = ({ navigation }: Props) => {
           >
             <Text style={styles.signUpText}>
               Wrong Email?
-              <Text style={styles.login}> Start Over </Text>
+              <Text style={styles.login}> &nbsp; Start Over </Text>
             </Text>
           </TouchableOpacity>
         </View>

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../../navigation/MainNavigator";
@@ -33,7 +33,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       />
       <View style={styles.textWrapper}>
         <Text style={styles.intro}>
-          Welcome to Pocket Lawyer! Proceed to select the categories that
+          Welcome to Pocket Lawyer. Proceed to select the categories that
           interest you
         </Text>
       </View>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
     width: "100%",
     fontStyle: "normal",
-    lineHeight: hp(24),
+    lineHeight: Platform.OS === "ios" ? hp(24) : hp(32),
     color: COLORS.light.black,
   },
   textWrapper: {

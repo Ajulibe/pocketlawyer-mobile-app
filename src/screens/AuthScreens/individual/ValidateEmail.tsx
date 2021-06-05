@@ -12,6 +12,7 @@ import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ActivityIndicatorPage from "components/ActivityIndicator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -72,7 +73,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
           navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);

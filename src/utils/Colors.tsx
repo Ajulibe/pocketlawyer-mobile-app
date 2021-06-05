@@ -7,6 +7,7 @@ const COLORS = {
     black: "rgba(0, 0, 0, 0.7)",
     checkpurple: "rgba(243, 242, 253, 0.7)",
     carouselBtn: "#6e58b3",
+    carouselBtn2: "#9589bc75",
     darkgrey: "#a3a3a3",
     textinputborder: "#E4E9F2",
     imageinputbg: "rgba(234, 234, 234, 0.3)",

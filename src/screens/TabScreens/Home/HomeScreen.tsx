@@ -16,7 +16,7 @@ import {
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
 import CONSTANTS from "utils/Constants";
-import { hp } from "utils/Dimensions";
+import { hp, wp } from "utils/Dimensions";
 import { Category } from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
@@ -92,7 +92,12 @@ const HomeScreen = ({ navigation }: Props) => {
               <Text style={styles.viewMore}>View all</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ display: "flex", flexDirection: "row" }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
             <FlatList
               horizontal={true}
               data={category}
