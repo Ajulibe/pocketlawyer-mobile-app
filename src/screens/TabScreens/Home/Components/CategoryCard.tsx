@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     resizeMode: "contain",
-    width: wp(30),
-    height: wp(30),
+    width: wp(20),
+    height: wp(20),
   },
   title: {
     lineHeight: hp(20),

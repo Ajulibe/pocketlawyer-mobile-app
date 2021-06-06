@@ -12,6 +12,7 @@ import {
   Text,
   View,
   Button,
+  Platform,
 } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import CONSTANTS from "utils/Constants";
@@ -152,6 +153,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(24),
     paddingVertical: hp(17),
     paddingHorizontal: wp(28),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   descTitle: {
     lineHeight: hp(24),

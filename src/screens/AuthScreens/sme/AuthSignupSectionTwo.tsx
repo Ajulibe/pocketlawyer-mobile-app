@@ -146,10 +146,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
       // if (error.message === "Request failed with status code 400") {
       //   PLToast({ message: "Email already taken", type: "error" });
       // } else {
-
+      setIsDisabled(true);
+      setIsLoading(false);
       PLToast({ message: message, type: "error" });
     }
-    setIsLoading(false);
+
     return;
   };
 

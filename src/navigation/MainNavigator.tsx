@@ -55,7 +55,7 @@ export type RootStackParamList = {
   [ROUTES.AUTH_SIGN_UP]: undefined;
   [ROUTES.AUTH_SIGN_UP_SECTION_TWO]: undefined;
   [ROUTES.AUTH_LOGIN]: undefined;
-  [ROUTES.AUTH_VALIDATE_EMAIL]: undefined;
+  [ROUTES.AUTH_VALIDATE_EMAIL]: any;
 
   //SME
   [ROUTES.AUTH_SIGN_UP_SME]: undefined;
@@ -67,7 +67,7 @@ export type RootStackParamList = {
   //SERVICE PROVIDER
   [ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR]: undefined;
   [ROUTES.AUTH_SIGN_UP_LAWYER]: undefined;
-  [ROUTES.AUTH_SIGN_UP_SECTION_TWO_LAWYER]: undefined;
+  [ROUTES.AUTH_SIGN_UP_SECTION_TWO_LAWYER]: any;
   [ROUTES.AUTH_PASSWORD_LAWYER]: undefined;
   [ROUTES.AUTH_EDUCATION_LAWYER]: undefined;
   [ROUTES.AUTH_PROFILE_IMAGE_LAWYER]: undefined;
@@ -76,7 +76,7 @@ export type RootStackParamList = {
   [ROUTES.AUTH_SIGN_UP_LAWFIRM_SECTION_TWO]: undefined;
   [ROUTES.AUTH_LAW_CATEGORY_LAWYER]: undefined;
   [ROUTES.AUTH_CAC_LAWFIRM]: undefined;
-  [ROUTES.AUTH_VALIDATE_EMAIL_LAWFIRM]: undefined;
+  [ROUTES.AUTH_VALIDATE_EMAIL_LAWFIRM]: any;
   //TABS SCREENS STACK
   [ROUTES.TABSCREEN_STACK]: undefined;
 };

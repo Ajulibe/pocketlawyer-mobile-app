@@ -8,6 +8,7 @@ import { wp, hp } from "utils/Dimensions";
 import PLButton from "components/PLButton/PLButton";
 import { Radio, RadioGroup } from "@ui-kitten/components";
 import NavBar from "components/NavBar";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -25,7 +26,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
           navigation.goBack();
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     textAlign: "left",
-    marginTop: hp(23),
+    marginTop: hp(30),
     width: wp(320),
   },
   navBarText: {
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.checkpurple,
   },
   plButton: {
-    marginTop: hp(202),
+    marginTop: hp(150),
   },
 });
 

@@ -153,6 +153,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       }, 1000);
     } catch (error) {
       const { message } = error?.response.data;
+      setIsDisabled(true);
       PLToast({ message: message, type: "error" });
       setIsLoading(false);
       return;

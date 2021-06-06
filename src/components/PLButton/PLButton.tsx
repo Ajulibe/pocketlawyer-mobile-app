@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   View,
   ViewStyle,
+  Platform,
 } from "react-native";
 import { wp, hp } from "../../utils/Dimensions";
 import COLORS from "../../utils/Colors";
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
     width: wp(312),
     height: wp(45),
     backgroundColor: COLORS.light.primary,
-    borderWidth: 0,
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
@@ -75,6 +75,8 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 0.2,
     borderRadius: wp(7),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.lightpurple,
   },
   indicator: {
     justifyContent: "center",

@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
     lineHeight: hp(16),
     letterSpacing: 0,
-    color: COLORS.light.lightpurple,
+    color: COLORS.light.primary,
   },
 });
 

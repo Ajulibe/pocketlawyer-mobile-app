@@ -17,7 +17,7 @@ import globalStyles from "css/GlobalCss";
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const ValidateEmail = ({ navigation, route }: Props) => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<any>("");
   //--> Otp state
   const [OTP, setOTP] = useState<string>("");
   const [validating, setSetValidating] = useState<boolean>(false);
@@ -66,7 +66,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
     try {
       const jsonValue = await AsyncStorage.getItem("@email");
 
-      jsonValue != null ? setEmail(JSON.parse(jsonValue)) : null;
+      setEmail(jsonValue);
     } catch (e) {
       //--> error reading value
     }
@@ -76,7 +76,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
+          navigation.goBack();
         }}
         navText="Validate email address"
       />

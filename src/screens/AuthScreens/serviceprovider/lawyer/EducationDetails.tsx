@@ -29,6 +29,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
 import axios from "axios";
 import { PLToast } from "components/PLToast";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -278,7 +279,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -538,7 +539,7 @@ const styles = StyleSheet.create({
   educationDetails: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    // lineHeight: hp(20),
     color: COLORS.light.primary,
   },
   input: {
