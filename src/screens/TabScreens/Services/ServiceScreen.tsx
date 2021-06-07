@@ -1,3 +1,4 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/routers";
 import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
@@ -7,8 +8,9 @@ import { CategoryDb } from "database/CategoryDb";
 import { ServiceDb } from "database/ServiceDb";
 import { ROUTES } from "navigation/Routes";
 import { ServiceStackParamList } from "navigation/ServiceStack";
-import React from "react";
+import React, { useEffect } from "react";
 import {
+  BackHandler,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -44,6 +46,7 @@ const ServiceScreen = ({ navigation }: Props) => {
             navigation={navigation}
             title="Services"
             showBorderBottom={false}
+            hideBackButton={true}
           />
           <FlatList
             data={ServiceDb.services}
@@ -56,17 +59,12 @@ const ServiceScreen = ({ navigation }: Props) => {
               <ServiceCardTile
                 service={item}
                 onClick={() => {
-                  AsyncStorageUtil.setGotoPickLawyer(JSON.stringify(item));
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: ROUTES.HOME_STACK,
-                        },
-                      ],
-                    })
-                  );
+                  navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+                    category: CategoryDb.findByCode({
+                      catCode: item.categoryCode,
+                    }),
+                    service: item,
+                  });
                 }}
               />
             )}

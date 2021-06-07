@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import COLORS from "utils/Colors";
 import { hp, wp } from "utils/Dimensions";
 
 const modalFormstyles = StyleSheet.create({
@@ -10,6 +11,14 @@ const modalFormstyles = StyleSheet.create({
     color: "rgba(0, 0, 0, 0.7)",
     marginVertical: hp(24),
   },
+  subHeader: {
+    fontSize: wp(13),
+    lineHeight: hp(24),
+    fontWeight: "500",
+    fontFamily: "Roboto-Medium",
+    color: COLORS.light.primary,
+    marginBottom: hp(4),
+  },
   inputLabel: {
     fontSize: wp(12),
     lineHeight: hp(24),
@@ -20,6 +29,26 @@ const modalFormstyles = StyleSheet.create({
   },
   required: {
     color: "red",
+  },
+  addMoreWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: hp(12),
+    marginBottom: hp(12),
+  },
+  addMoreBtn: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  addText: {
+    fontSize: wp(12),
+    lineHeight: hp(24),
+    fontWeight: "300",
+    fontFamily: "Roboto",
+    color: COLORS.light.primary,
   },
 });
 export default modalFormstyles;

@@ -12,6 +12,7 @@ interface Props {
   trailing?: JSX.Element; //the trailing/end icon(s)
   navigation?: any; //list click listener
   showBorderBottom?: boolean;
+  hideBackButton?: any;
 }
 const CustomAppbar = (props: Props) => {
   const onBackPress = () => {
@@ -34,7 +35,16 @@ const CustomAppbar = (props: Props) => {
         },
       ]}
     >
-      <TouchableOpacity onPress={onBackPress} style={styles.leading}>
+      <TouchableOpacity
+        onPress={onBackPress}
+        style={[
+          styles.leading,
+          {
+            height: props.hideBackButton && 0,
+            opacity: props.hideBackButton && 0,
+          },
+        ]}
+      >
         <MaterialIcons
           name="keyboard-arrow-left"
           size={28}

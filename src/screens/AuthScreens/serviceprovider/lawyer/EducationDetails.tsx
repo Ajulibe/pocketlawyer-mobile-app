@@ -271,7 +271,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       const { message } = error?.response.data;
       PLToast({ message: message, type: "error" });

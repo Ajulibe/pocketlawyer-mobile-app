@@ -113,6 +113,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         extraScrollHeight={wp(100)}
         enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",

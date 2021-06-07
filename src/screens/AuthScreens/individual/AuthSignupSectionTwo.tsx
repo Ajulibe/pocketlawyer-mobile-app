@@ -140,6 +140,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       const { token } = data.data;
       const { userType } = data.data;
       const { userID } = data.data;
+      const { firstName } = data.data;
 
       //--> setting the received token in local storage
 
@@ -147,6 +148,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorageUtil.setUser(JSON.stringify(data));
+      await AsyncStorage.setItem("firstName", firstName);
 
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
@@ -183,6 +185,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
         enableOnAndroid={true}
         contentContainerStyle={{
           alignItems: "center",

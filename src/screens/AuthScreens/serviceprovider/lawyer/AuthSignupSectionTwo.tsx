@@ -239,12 +239,14 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
       const { token } = data.data;
       const { userType } = data.data;
       const { userID } = data.data;
+      const { firstName } = data.data;
 
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("@email", Payload.email);
+      await AsyncStorage.setItem("firstName", firstName);
 
       //--> setting lawyer as the prvios path
       await AsyncStorage.setItem("previousPath", "barrister");
@@ -271,6 +273,7 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
       />
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
+        keyboardShouldPersistTaps={"handled"}
         showsVerticalScrollIndicator={false}
         enableOnAndroid={true}
         contentContainerStyle={{

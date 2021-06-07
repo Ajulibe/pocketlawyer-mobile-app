@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Icon, Input as TextInput } from "@ui-kitten/components";
+import { Input as TextInput } from "@ui-kitten/components";
 import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
 import { AntDesign } from "@expo/vector-icons";

@@ -5,6 +5,7 @@ import { PLToast } from "components/PLToast";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { CommonActions } from "@react-navigation/native";
 
 export const useLogin = (navigation: any) => {
   const [visible, setVisible] = React.useState(false);
@@ -61,7 +62,12 @@ export const useLogin = (navigation: any) => {
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("firstName", firstName);
       await AsyncStorageUtil.setUser(JSON.stringify(data));
-      navigation.navigate(ROUTES.TABSCREEN_STACK);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: ROUTES.TABSCREEN_STACK }],
+        })
+      );
     } catch (error: any) {
       setIsLoading(false);
       const { message } = error?.response.data;

@@ -32,6 +32,7 @@ const AccountScreen = ({ navigation }: Props) => {
           navigation={navigation}
           title="My Account"
           showBorderBottom={false}
+          hideBackButton={true}
         />
         <ScrollView
           contentContainerStyle={[styles.container, { flexGrow: 1 }]}

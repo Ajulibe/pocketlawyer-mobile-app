@@ -146,6 +146,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
         enableOnAndroid={true}
         contentContainerStyle={{
           alignItems: "center",

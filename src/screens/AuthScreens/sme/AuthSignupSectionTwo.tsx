@@ -27,6 +27,7 @@ import { smeSignupSectionTwo } from "navigation/interfaces";
 import axiosClient from "utils/axiosClient";
 import globalStyles from "css/GlobalCss";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -136,12 +137,14 @@ const AuthGetStarted = ({ navigation }: Props) => {
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
+      await AsyncStorageUtil.setUser(JSON.stringify(data));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
+      await AsyncStorage.setItem("firstName", firstName);
 
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL_SME);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       const { message } = error?.response.data;
       // if (error.message === "Request failed with status code 400") {
       //   PLToast({ message: "Email already taken", type: "error" });
@@ -166,6 +169,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
         enableOnAndroid={true}
         contentContainerStyle={{
           alignItems: "center",
