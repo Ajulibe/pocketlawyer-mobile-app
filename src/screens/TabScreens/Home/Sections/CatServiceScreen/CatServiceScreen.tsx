@@ -1,3 +1,4 @@
+import { CommonActions } from "@react-navigation/routers";
 import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
@@ -5,10 +6,15 @@ import { ServiceDb } from "database/ServiceDb";
 import { HomeStackParamList } from "navigation/HomeStack";
 import { ROUTES } from "navigation/Routes";
 import React from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import ServiceCardTile from "../../../Services/Components/ServiceCardTile";
-
 type Props = StackScreenProps<HomeStackParamList, ROUTES.CAT_SERVICE_SCREEN>;
 
 const CatServiceScreen = ({ navigation, route }: Props) => {

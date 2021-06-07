@@ -1,24 +1,48 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
-import StarRating from "react-native-star-rating";
+import Utilities from "utils/Utilities";
+import { ServiceHistoryInterface } from "../HistoryScreen";
 
-export default function HistoryListTile() {
+interface Props {
+  history: ServiceHistoryInterface;
+  onClick: () => void;
+}
+export default function HistoryListTile({ history, onClick }: Props) {
+  const status = () => {
+    if (history.status === 1) {
+      return "pending";
+    } else {
+      return "completed";
+    }
+  };
+
   return (
-    <View style={styles.wrapper}>
+    <TouchableOpacity style={styles.wrapper} onPress={() => onClick()}>
       <Image style={styles.user} source={{ uri: CONSTANTS.user }} />
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Omoye Afosa</Text>
-        <Text style={styles.subtitle}>Legal Documents Review</Text>
-        <Text style={styles.date}>12/03/21</Text>
+        <Text style={styles.title}>{history.serviceProvider}</Text>
+        <Text style={styles.subtitle}>{history.serviceName}</Text>
+        <Text style={styles.date}>
+          {Utilities.currentDate(history.createdAt.toString())}
+        </Text>
       </View>
       <View style={styles.trailingWrapper}>
-        <Text style={styles.trailingTitle}>11:40am</Text>
-        <Text style={styles.status}>Cancelled</Text>
+        <Text style={styles.trailingTitle}>
+          {Utilities.dateTime(history.createdAt.toString())}
+        </Text>
+        <Text style={styles.status}>{status()}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -32,6 +56,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
     marginBottom: wp(6),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   user: {
     resizeMode: "cover",
@@ -41,6 +67,7 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     marginLeft: wp(19),
+    flex: 1,
   },
   title: {
     fontSize: wp(12),

@@ -151,7 +151,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       const { message } = error?.response.data;
       setIsDisabled(true);
       PLToast({ message: message, type: "error" });

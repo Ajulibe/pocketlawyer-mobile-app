@@ -49,13 +49,14 @@ export const PLTextInput: React.FC<Props> = (props) => {
       <Input
         value={props.value}
         {...props}
-        disabled={props.disabled}
+        autoCorrect={false}
+        disabled={props.disabled ? props.disabled : false}
         style={[
           styles.Input,
           props.error ? { borderColor: "red" } : null,
           props.style,
         ]}
-        maxLength={props.maxLength}
+        maxLength={props.maxLength ? props.maxLength : 555}
         onChangeText={props.onChangeText}
         textStyle={styles.textStyle}
         placeholderTextColor={COLORS.light.darkgrey}

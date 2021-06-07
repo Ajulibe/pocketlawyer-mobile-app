@@ -1,4 +1,3 @@
-import React from "react";
 import {
   StyleSheet,
   View,
@@ -7,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
+import React, { Dispatch } from "react";
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
@@ -16,15 +16,17 @@ import renderView from "./renderView";
 
 import { BlurView } from "expo-blur";
 
-interface Props {
+export interface ModalProps {
   modalVisible: boolean;
   navigation: any;
   closeModal: () => void;
   service: Service;
   lawyer: LawyerModel;
+  historyId: number;
+  amount: number;
 }
 
-export default function BottomSheetModal(props: Props) {
+export default function BottomSheetModal(props: ModalProps) {
   return (
     <Modal
       animationType="fade"
@@ -32,7 +34,7 @@ export default function BottomSheetModal(props: Props) {
       visible={props.modalVisible}
       onRequestClose={() => props.closeModal()}
     >
-      <BlurView intensity={30} style={[styles.container]} tint="dark">
+      <View style={[styles.container]}>
         <View style={{ height: 120 }} />
         <View style={styles.quickActions}>
           <TouchableOpacity
@@ -56,9 +58,9 @@ export default function BottomSheetModal(props: Props) {
           easing={"linear"}
           duration={500}
         >
-          <View style={{ flex: 1 }}>{renderView({ modalOptions: props })}</View>
+          <View style={{ flex: 1 }}>{renderView(props)}</View>
         </Animatable.View>
-      </BlurView>
+      </View>
     </Modal>
   );
 }
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
-    paddingVertical: hp(24),
+    // paddingVertical: hp(24),
     paddingTop: wp(40),
     paddingHorizontal: wp(21),
     width: "100%",
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
   },
   action: {
     fontSize: wp(16),
-    lineHeight: hp(18),
+    lineHeight: hp(23),
     fontWeight: "500",
     fontFamily: "Roboto-Medium",
     color: COLORS.light.white,

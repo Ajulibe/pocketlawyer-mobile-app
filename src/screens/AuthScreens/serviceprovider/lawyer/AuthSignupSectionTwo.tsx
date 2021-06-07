@@ -252,7 +252,7 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       const { message } = error?.response.data;
       PLToast({ message: message, type: "error" });
       setIsLoading(false);

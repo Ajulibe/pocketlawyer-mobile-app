@@ -5,21 +5,6 @@ import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const INPUT_CHANGE = "INPUT_CHANGE";
-const INPUT_BLUR = "INPUT_BLUR";
-
-interface InitialStateType {
-  value?: string | null;
-  isValid?: boolean;
-  touched?: boolean;
-}
-
-interface IAction {
-  type: string;
-  value?: string;
-  isValid?: boolean;
-}
-
 interface Props {
   keyboardType?: any;
   secureTextEntry?: boolean;
@@ -44,94 +29,88 @@ interface Props {
   icon?: any;
   onPress?: () => void;
   dataValue?: string;
+  multiline?: boolean;
+  numberOfLines?: number;
 }
 
-const inputReducer = (state: InitialStateType, action: IAction) => {
-  switch (action.type) {
-    case INPUT_CHANGE:
-      return {
-        ...state,
-        value: action.value,
-        isValid: action.isValid,
-      };
-    case INPUT_BLUR:
-      return {
-        ...state,
-        touched: true,
-      };
-    default:
-      return state;
-  }
-};
-
 const Input: React.FC<Props> = (props) => {
-  const initialState = {
-    value: props.initialValue ? props.initialValue : "",
-    isValid: props.initiallyValid,
-    touched: props.touched,
-  };
-
-  const [inputState, dispatch] = useReducer(inputReducer, initialState);
-  const [isTouched, setIsTouched] = useState(false);
-  const [errorText, setErrorText] = useState("");
-
   const renderIcon = () => (
     <AntDesign name="clouduploado" size={14} color={COLORS.light.primary} />
   );
 
+  const fileUploadName = () => {
+    const { dataValue } = props;
+    if (dataValue != null) {
+      const split = dataValue.split("/");
+      if (split.length > 1) {
+        return split[split.length - 1];
+      }
+      return dataValue;
+    }
+    return null;
+  };
+
   return props.icon ? (
-    <TouchableOpacity
-      onPress={props.onPress}
-      style={{
-        height: wp(40),
-        width: "100%",
-        flexDirection: "row",
-        borderColor: COLORS.light.inputBdColor,
-        borderWidth: 1,
-        justifyContent: "center",
-        backgroundColor: COLORS.light.inputBackgnd,
-        borderRadius: 4,
-        alignItems: "center",
-      }}
-    >
-      <View style={{ width: "70%", paddingLeft: wp(20) }}>
-        <Text
-          style={{
-            fontSize: wp(12),
-            fontFamily: "Roboto-Regular",
-            color: COLORS.light.black,
-          }}
-        >
-          {props.dataValue}
-        </Text>
-      </View>
-      <View
-        style={{ width: "30%", alignItems: "flex-end", paddingRight: wp(20) }}
+    <View>
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={{
+          height: wp(40),
+          width: "100%",
+          flexDirection: "row",
+          borderColor: COLORS.light.inputBdColor,
+          borderWidth: 1,
+          justifyContent: "center",
+          backgroundColor: COLORS.light.inputBackgnd,
+          borderRadius: 4,
+          alignItems: "center",
+        }}
       >
-        <AntDesign name="clouduploado" size={14} color={COLORS.light.primary} />
-      </View>
-    </TouchableOpacity>
+        <View style={{ width: "70%", paddingLeft: wp(20) }}>
+          <Text
+            style={{
+              fontSize: wp(12),
+              fontFamily: "Roboto-Regular",
+              color: COLORS.light.disabled,
+            }}
+          >
+            {fileUploadName()}
+          </Text>
+        </View>
+        <View
+          style={{ width: "30%", alignItems: "flex-end", paddingRight: wp(20) }}
+        >
+          {renderIcon()}
+        </View>
+      </TouchableOpacity>
+      {/* Displaying error  */}
+      {props.errorText === "" || props.errorText == null ? (
+        <View />
+      ) : (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{props.errorText}</Text>
+        </View>
+      )}
+    </View>
   ) : (
     <View style={[styles.formControl]}>
+      {/* <View> */}
       <TextInput
         {...props}
-        style={{
-          fontWeight: inputState.value != "" ? "700" : "400",
-          // borderColor:
-          //   !inputState.isValid && (inputState.touched || isTouched)
-          //     ? COLORS.light.red
-          //     : "",
-        }}
-        textStyle={styles.input}
+        textStyle={[
+          { ...styles.input, height: props.multiline ? 100 : hp(20) },
+        ]}
         placeholderTextColor={COLORS.light.darkgrey}
         keyboardType="default"
         onChangeText={props.onChangeText}
         autoCapitalize="sentences"
-        returnKeyType="next"
-        accessoryRight={props.icon && renderIcon}
+        returnKeyType="done"
       />
-
-      {props.errorText != "" && (inputState.touched || isTouched) && (
+      {/* </View> */}
+      {/* Displaying error  */}
+      {props.errorText === "" || props.errorText == null ? (
+        <View />
+      ) : (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{props.errorText}</Text>
         </View>
@@ -144,15 +123,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    // borderRadius: 4,
-    // backgroundColor: COLORS.light.white,
     fontSize: wp(12),
     fontFamily: "Roboto-Regular",
-    // paddingHorizontal: wp(16),
-    // paddingVertical: hp(8),
-    // minHeight: hp(40),
+    // minHeight: hp(30),
     borderColor: COLORS.light.primaryLight,
-    // borderWidth: 0.2,
     color: COLORS.light.black,
   },
   errorContainer: {

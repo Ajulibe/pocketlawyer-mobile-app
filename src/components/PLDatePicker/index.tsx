@@ -23,6 +23,8 @@ export const PLDatePicker: React.FC<PLDatePicker> = ({
   useDatepickerState,
 }) => {
   const min = new Date(1960, 11, 24);
+  const now = new Date();
+  const max = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6570); //--> at least 18years
 
   return (
     <View style={styles.DatepickerWrapper}>
@@ -30,6 +32,7 @@ export const PLDatePicker: React.FC<PLDatePicker> = ({
         textStyle={{ color: COLORS.light.black, fontSize: wp(12) }}
         controlStyle={styles.controlStyle}
         min={min}
+        max={max}
         date={selectedDate}
         backdropStyle={styles.backdropStyle}
         style={styles.DatePicker}

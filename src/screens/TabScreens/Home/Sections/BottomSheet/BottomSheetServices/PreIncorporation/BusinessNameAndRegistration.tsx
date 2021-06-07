@@ -2,96 +2,49 @@ import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import { ROUTES } from "navigation/Routes";
-import PDFReader from "rn-pdf-reader-js";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  Button,
-} from "react-native";
-import axiosClient from "utils/axiosClient";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import PLButton from "components/PLButton/PLButton";
-import COLORS from "utils/Colors";
+import { Text, View, ScrollView } from "react-native";
 import modalFormstyles from "../ModalFormStyles";
-import { Service } from "database/DBData";
-import { LawyerModel } from "models/Interfaces";
+import {
+  DocUploadInterface,
+  uploadFileToS3,
+  pickFile,
+} from "services/S3FileUploadHelper";
+import {
+  confirmUpload,
+  transformMeta,
+  addMetadata,
+} from "services/UploadDocsService";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { wp } from "utils/Dimensions";
-import { useDocUpload } from "hooks/useDocUpload";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import LoadingSpinner from "components/LoadingSpinner";
+import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
 import {
-  addMetadata,
-  confirmUpload,
-  getHistoryId,
-  transformMeta,
-} from "services/UploadDocsService";
-import AsyncStorageUtil from "utils/AsyncStorageUtil";
+  validateInputs,
+  showError,
+  showSuccess,
+} from "../../BottomSheetUtils/FormHelpers";
+import {
+  loadingReducer,
+  loadingInitialState,
+  LoadingActionType,
+} from "../../BottomSheetUtils/LoadingReducer";
 
-interface Props {
-  navigation: any;
-  closeModal: () => void;
-  service: Service;
-  lawyer: LawyerModel;
-}
-
-export const BusinessNameAndRegistration = ({
-  navigation,
-  closeModal,
-  service,
-  lawyer,
-}: Props) => {
+const FormKeys = {
+  name1: "BuisnessNameOne",
+  name2: "BusinessNameTwo",
+  nature: "NatureOfBusiness",
+  meansOfId: "MeansOfIdentification",
+  idNo: "IDNumber",
+  signature: "Signature",
+};
+export function BusinessNameAndRegistration(props: BottomSheetProps) {
+  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const [loadingState, loadingDispatch] = React.useReducer(
+    loadingReducer,
+    loadingInitialState
+  );
   const [formData, setFormData] = React.useState<any>({});
-
-  const {
-    pickDocument,
-    isUploaded,
-    disabled,
-    docName,
-    uri,
-    pdfUri,
-    handlePdfPrint_Download,
-  } = useDocUpload("signature", "Business Name registration");
-
-  const [tempServiceHistoryID, setTempServiceHistoryID] =
-    React.useState<any>("");
-  const [userID, setUserID] = React.useState<any>("");
-  const [isdisabled, setIsDisabled] = React.useState(true);
-
-  React.useEffect(() => {
-    if (pdfUri === "") {
-      return;
-    } else {
-      handleTextChange({ field: "signatureUpload", value: pdfUri });
-    }
-  }, [pdfUri]);
-
-  // React.useEffect(() => {
-  //   if (
-  //     BuisnessNameOne.length === 0 ||
-  //     BusinessNameTwo.length === 0 ||
-  //     NatureOfBusiness.length === 0 ||
-  //     MeansOfIdentification.length === 0 ||
-  //     IDNumber.length === 0 ||
-  //     signatureUpload.length === 0
-  //   ) {
-  //     setIsDisabled(true);
-  //     return;
-  //   }
-  //   setIsDisabled(false);
-  // }, [
-  //   BuisnessNameOne,
-  //   BusinessNameTwo,
-  //   NatureOfBusiness,
-  //   MeansOfIdentification,
-  //   IDNumber,
-  //   signatureUpload,
-  // ]);
 
   const handleTextChange = (payload: { field: string; value: string }) => {
     setFormData((values: any) => ({
@@ -100,73 +53,94 @@ export const BusinessNameAndRegistration = ({
     }));
   };
 
-  React.useEffect(() => {
-    getTemporaryServiceHistoryID();
-  }, []);
+  //--> Submit From
+  const submit = () => {
+    validateInputs(FormKeys, formData, async (newData, isError) => {
+      setFormData(newData);
+      if (isError) {
+        showError("Error(s) encountered!");
+      } else {
+        const formMeta = await transformMeta(
+          newData,
+          historyId,
+          service.serviceCode
+        );
 
-  const getTemporaryServiceHistoryID = async () => {
-    const historyID = await getHistoryId(service.serviceCode);
-    const userId = await AsyncStorageUtil.getUserId();
-    setTempServiceHistoryID(historyID);
-    setUserID(userId);
+        loadingDispatch({
+          type: LoadingActionType.SHOW_WITH_CONTENT,
+          payload: { content: "Submiting, please wait..." },
+        });
+        const submit = await addMetadata(formMeta);
+        loadingDispatch({ type: LoadingActionType.HIDE });
+        if (submit === 200) {
+          //--> Redirect to checkout
+          closeModal();
+          showSuccess("Submitted Successfully");
+          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+            service: service,
+            lawyer: lawyer,
+            historyId: historyId,
+            amount: props.amount,
+          });
+        } else {
+          showError("Error in your network connection, try again");
+        }
+      }
+    });
   };
 
-  const submit = async () => {
-    if (tempServiceHistoryID === "" || userID === "") {
-      setIsDisabled(true);
-      return;
-    }
+  const uploadFile = async (field: string) => {
+    const payload: DocUploadInterface = {
+      fileType: 2,
+      isfor: field,
+      Section: service.serviceCode,
+      HistoryID: historyId,
+    };
 
-    const transformedArray = await transformMeta(
-      formData,
-      tempServiceHistoryID
-    );
-
-    console.log(transformedArray, "transfomed array");
-
-    const response = await addMetadata(transformedArray);
-    console.log(response);
-    if (response === 200) {
-      //   // closeModal();
-      //   // navigation.navigate(ROUTES.CHECKOUT_SCREEN);
+    const pickedFile = await pickFile();
+    if (pickedFile != null) {
+      loadingDispatch({
+        type: LoadingActionType.SHOW_WITH_CONTENT,
+        payload: { content: "Uploading file..." },
+      });
+      const upload = await uploadFileToS3(payload, pickedFile);
+      if (upload == null) {
+        showError("Error occured while uploading, try again...");
+      } else {
+        const confirm = await confirmUpload(upload);
+        loadingDispatch({ type: LoadingActionType.HIDE });
+        if (confirm == null || confirm?.url == null) {
+          showError("Error occured while uploading, try again...");
+        } else {
+          handleTextChange({ field: field, value: confirm?.url });
+        }
+      }
     }
   };
 
   return (
-    <View style={{ paddingBottom: 40 }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+    <View style={{ paddingBottom: 80 }}>
+      <LoadingSpinner
+        modalVisible={loadingState.isVisible ?? false}
+        content={loadingState.content}
+      />
+      <ScrollView>
+        <KeyboardAwareScrollView enableOnAndroid={true}>
           <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details
           </Text>
-
           <Text style={modalFormstyles.inputLabel}>
             Proposed Business Name 1{" "}
             <Text style={modalFormstyles.required}>*</Text>
           </Text>
-
           <Input
             placeholder="Type business name 1"
-            placeholderTextColor={COLORS.light.darkgrey}
-            errorText={""}
-            keyboardType="default"
-            autoCapitalize="sentences"
-            returnKeyType="send"
+            errorText={formData?.[FormKeys.name1]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({
-                field: "BuisnessNameOne",
-                value: text,
-              });
+              handleTextChange({ field: FormKeys.name1, value: text });
             }}
-            initialValue=""
-            initiallyValid={false}
-            required
-            secureTextEntry={false}
-            minLength={2}
-            textContentType="none"
           />
-
           <View style={{ height: 16 }} />
           <Text style={modalFormstyles.inputLabel}>
             Proposed Business Name 2{" "}
@@ -174,11 +148,9 @@ export const BusinessNameAndRegistration = ({
           </Text>
           <Input
             placeholder="Type business name 2"
+            errorText={formData?.[FormKeys.name2]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({
-                field: "BusinessNameTwo",
-                value: text,
-              });
+              handleTextChange({ field: FormKeys.name2, value: text });
             }}
           />
           <View style={{ height: 16 }} />
@@ -187,87 +159,50 @@ export const BusinessNameAndRegistration = ({
           </Text>
           <Input
             placeholder="Type the business nature"
+            errorText={formData?.[FormKeys.nature]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({
-                field: "NatureOfBusiness",
-                value: text,
-              });
+              handleTextChange({ field: FormKeys.nature, value: text });
             }}
           />
           <View style={{ height: 16 }} />
           <Text style={modalFormstyles.inputLabel}>
-            Means of Identification{" "}
+            Means of Identification
             <Text style={modalFormstyles.required}>*</Text>
           </Text>
           <Input
             placeholder="Select your means of identification"
+            errorText={formData?.[FormKeys.meansOfId]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({
-                field: "MeansOfIdentification",
-                value: text,
-              });
+              handleTextChange({ field: FormKeys.meansOfId, value: text });
             }}
           />
           <View style={{ height: 16 }} />
           <Text style={modalFormstyles.inputLabel}>
-            ID Number <Text style={modalFormstyles.required}>*</Text>
+            ID Number
+            <Text style={modalFormstyles.required}>*</Text>
           </Text>
           <Input
             placeholder="Type identification number"
+            errorText={formData?.[FormKeys.idNo]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({
-                field: "IDNumber",
-                value: text,
-              });
+              handleTextChange({ field: FormKeys.idNo, value: text });
             }}
           />
           <View style={{ height: 16 }} />
           <Text style={modalFormstyles.inputLabel}>
-            Signature{" "}
-            <Text style={[modalFormstyles.required, { fontSize: wp(11) }]}>
-              only PDF accepted&nbsp;*
-            </Text>
+            Signature
+            <Text style={modalFormstyles.required}> *</Text>
           </Text>
-
-          <Input onPress={pickDocument} dataValue={docName} icon />
-
-          <View style={{ height: 30 }} />
-
-          {pdfUri ? (
-            <View
-              style={{
-                flex: 1,
-                height: 100,
-                marginTop: wp(20),
-                borderWidth: 1,
-                borderRadius: 4,
-                marginBottom: wp(20),
-              }}
-            >
-              <PDFReader
-                style={{ width: "100%", height: 200 }}
-                source={{ base64: pdfUri }}
-              />
-            </View>
-          ) : null}
+          <Input
+            onPress={() => uploadFile(FormKeys.signature)}
+            errorText={formData?.[FormKeys.signature]?.error}
+            dataValue={formData?.[FormKeys.signature]?.value ?? "Select file"}
+            icon
+          />
         </KeyboardAwareScrollView>
-
-        <View style={{ height: 16 }} />
       </ScrollView>
-
-      <CustomButton
-        // disabled={isdisabled}
-        btnText="Submit"
-        onClick={() => {
-          console.log("clicked");
-          submit();
-          // closeModal();
-          // navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
-          //   service: service,
-          //   lawyer: lawyer,
-          // });
-        }}
-      />
+      <View style={{ height: 16 }} />
+      <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );
-};
+}

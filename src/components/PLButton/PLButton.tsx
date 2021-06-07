@@ -14,11 +14,11 @@ import { Button, Spinner } from "@ui-kitten/components";
 type Props = {
   textColor: string;
   btnText?: string;
-  onClick?: (event: GestureResponderEvent) => void;
+  onClick: (event: any) => void;
   isLoading?: boolean;
   style?: any;
   disabled?: boolean;
-  loadingText?: string;
+  loadingText?: any;
 };
 
 const LoadingIndicator = (props: any) => (
@@ -39,7 +39,7 @@ export default function PLButton({
     <Button
       style={[styles.btn, style]}
       accessoryLeft={LoadingIndicator}
-      disabled
+      disabled={true}
     >
       {loadingText}
     </Button>
@@ -48,7 +48,7 @@ export default function PLButton({
       onPress={onClick}
       style={[styles.btn, style]}
       {...rest}
-      disabled={disabled}
+      disabled={disabled ? disabled : false}
     >
       {btnText}
     </Button>

@@ -27,15 +27,33 @@ import CustomButton from "components/CustomButton";
 import moment from "moment";
 import axiosClient from "utils/axiosClient";
 import { PLToast } from "components/PLToast";
+import Utilities from "utils/Utilities";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import {
+  showError,
+  showSuccess,
+} from "../BottomSheet/BottomSheetUtils/FormHelpers";
+import {
+  LoadingActionType,
+  loadingInitialState,
+  loadingReducer,
+} from "../BottomSheet/BottomSheetUtils/LoadingReducer";
+import LoadingSpinner from "components/LoadingSpinner";
+import { CommonActions } from "@react-navigation/routers";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.CHECKOUT_SCREEN>;
 
 const Checkout = ({ navigation, route }: Props) => {
   const [showModal, setshowModal] = useState(false);
-  const [amount, setAmount] = useState("");
+  const [loadingState, loadingDispatch] = React.useReducer(
+    loadingReducer,
+    loadingInitialState
+  );
 
   const lawyer = route.params?.lawyer;
   const service = route.params?.service;
+  const amount = route.params?.amount;
+  const historyId = route.params?.historyId;
 
   //--> lawyer details
   const { name, address } = lawyer;
@@ -44,30 +62,62 @@ const Checkout = ({ navigation, route }: Props) => {
     setshowModal(true);
   };
 
-  const d = new Date();
-  console.log(moment(d).format("Do MMMM, YYYY"));
+  const submitPayment = async (transactionRef: string | number) => {
+    const userId = await AsyncStorageUtil.getUserId();
+    const userType = await AsyncStorageUtil.getUserType();
+    const payload = {
+      userID: Number(userId),
+      serviceProvider: lawyer.name,
+      tempServiceHistoryID: historyId,
+      serviceProviderID: lawyer.serviceProviderID,
+      serviceName: service.serviceName,
+      serviceCode: service.serviceCode,
+      categoryCode: service.categoryCode,
+      amount: amount,
+      userType: Number(userType),
+      transactionRef: transactionRef,
+      status: 2,
+    };
+    setTimeout(function () {
+      loadingDispatch({
+        type: LoadingActionType.SHOW_WITH_CONTENT,
+        payload: { content: "Verifying payment..." },
+      });
+    }, 500);
 
-  React.useEffect(() => {
-    getPrice();
-  }, []);
-
-  const getPrice = async () => {
     try {
-      const response = await axiosClient.get(
-        `Service/GetServiceAmount?ServiceCode=${service?.serviceCode}`
+      const response = await axiosClient.post(
+        "Service/SubmitServiceHistory",
+        payload
       );
-      // console.log(response.data.data.amount);
-      const { amount } = response.data.data;
-      setAmount(amount);
-    } catch (error) {}
+      if (response?.data?.status === 200) {
+        showSuccess("Payment successful");
+
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: ROUTES.TABSCREEN_STACK }],
+          })
+        );
+      } else {
+        showError("An error occured");
+      }
+    } catch (error) {
+      showError(`Error occured: ${error}`);
+    }
+    loadingDispatch({ type: LoadingActionType.HIDE });
   };
 
   return (
     <>
+      <LoadingSpinner
+        modalVisible={loadingState.isVisible ?? false}
+        content={loadingState.content}
+      />
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar
           navigation={navigation}
-          title="Service History"
+          title="Checkout"
           showBorderBottom={false}
         />
         <ScrollView
@@ -88,11 +138,11 @@ const Checkout = ({ navigation, route }: Props) => {
           <UserDescListTile leading="Service" value={service?.serviceName} />
           <UserDescListTile leading="Lawyer" value={name!} />
           <UserDescListTile leading="Location" value={address!} />
-          <UserDescListTile leading="Price" value={`\u20A6 ${amount}`} />
           <UserDescListTile
-            leading="Date"
-            value={moment(d).format("Do MMMM, YYYY").toString()}
+            leading="Price"
+            value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
           />
+          <UserDescListTile leading="Date" value={Utilities.currentDate()} />
           <View
             style={{
               marginTop: hp(56),
@@ -104,7 +154,7 @@ const Checkout = ({ navigation, route }: Props) => {
           <UserDescListTile
             makeBold={true}
             leading="Total"
-            value={`\u20A6 ${amount}`}
+            value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
           />
 
           <Text style={[{ ...styles.subTitle, textAlign: "center" }]}>
@@ -125,7 +175,7 @@ const Checkout = ({ navigation, route }: Props) => {
             showPayButton={false}
             paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
             amount={amount}
-            billingEmail="a.ajulibe@gmail.com" //change this email to the inidividuals email
+            billingEmail="chinedum412@gmail.com" //change this email to the inidividuals email
             billingMobile="0531714677" //change
             billingName="Akachukwu Ajulibe"
             channels={JSON.stringify([
@@ -138,18 +188,22 @@ const Checkout = ({ navigation, route }: Props) => {
             ActivityIndicatorColor="green"
             SafeAreaViewContainer={{
               marginTop: 5,
-              backgroundColor: COLORS.light.primary,
             }}
             SafeAreaViewContainerModal={{ marginTop: 5 }}
             handleWebViewMessage={(e: any) => {}}
             onCancel={(resp: any) => {
-              // console.log(resp);
-              // PLToast({ message: resp.data.message, type: "error" });
+              console.log(resp);
+              if (resp?.status === "cancelled") {
+                showError("Transaction cancelled");
+              } else {
+                showError(resp?.status ?? JSON.stringify(resp));
+              }
             }}
             onSuccess={(resp: any) => {
-              // navigation.navigate(ROUTES.SERVICE_SCREEN)
-              // console.log(resp.data.message);
-              // PLToast({ message: resp.data.message, type: "success" });
+              if (resp.status === "success") {
+                const trxref = resp?.data?.transactionRef?.reference;
+                submitPayment(trxref);
+              }
             }}
             autoStart={false}
           />
@@ -175,7 +229,7 @@ const styles = StyleSheet.create({
   subTitle: {
     fontWeight: "300",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     marginTop: hp(6),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto",

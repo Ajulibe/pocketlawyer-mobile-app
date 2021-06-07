@@ -18,7 +18,6 @@ import {
   Text,
   View,
 } from "react-native";
-import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import { hp, wp } from "utils/Dimensions";
 import ServiceCardTile from "./Components/ServiceCardTile";
 
@@ -32,6 +31,22 @@ const ServiceScreen = ({ navigation }: Props) => {
     </>
   );
 
+  const press = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: ROUTES.PICK_LAWYER_SCREEN,
+            params: {},
+            // {
+            //   params:{screen:ROUTES.PICK_LAWYER_SCREEN}
+            // }
+          },
+        ],
+      })
+    );
+  };
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -45,6 +60,10 @@ const ServiceScreen = ({ navigation }: Props) => {
             title="Services"
             showBorderBottom={false}
           />
+
+          <Pressable onPress={press}>
+            <Text>Hello</Text>
+          </Pressable>
           <FlatList
             data={ServiceDb.services}
             showsHorizontalScrollIndicator={false}
@@ -56,17 +75,41 @@ const ServiceScreen = ({ navigation }: Props) => {
               <ServiceCardTile
                 service={item}
                 onClick={() => {
-                  AsyncStorageUtil.setGotoPickLawyer(JSON.stringify(item));
                   navigation.dispatch(
                     CommonActions.reset({
                       index: 0,
                       routes: [
                         {
                           name: ROUTES.HOME_STACK,
+                          params: {
+                            screen: ROUTES.PICK_LAWYER_SCREEN,
+                            params: {
+                              category: CategoryDb.findByCode({
+                                catCode: item.categoryCode,
+                              }),
+                              service: item,
+                            },
+                          },
                         },
                       ],
                     })
                   );
+                  // navigation.push(ROUTES.SERVICE_SCREEN, {
+                  //   screen: ROUTES.TABSCREEN_STACK,
+                  //   params: {
+                  //     screen: ROUTES.HOME_STACK,
+                  //     // category: CategoryDb.findByCode({
+                  //     //   catCode: item.categoryCode,
+                  //     // }),
+                  //     // service: item,
+                  //   },
+                  // });
+                  // navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+                  //   category: CategoryDb.findByCode({
+                  //     catCode: item.categoryCode,
+                  //   }),
+                  //   service: item,
+                  // });
                 }}
               />
             )}

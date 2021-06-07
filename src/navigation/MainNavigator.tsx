@@ -9,7 +9,7 @@ import AuthSelectCategory from "../screens/AuthScreens/individual/AuthSelectCate
 //INDIVIDUAL
 import AuthSignUp from "../screens/AuthScreens/individual/AuthSignup";
 import AuthSignupSectionTwo from "../screens/AuthScreens/individual/AuthSignupSectionTwo";
-import AuthLogin from "../screens/AuthScreens/individual/AuthLogin";
+import AuthLogin from "../screens/AuthScreens/individual/Login/AuthLogin";
 import AuthValidateEmail from "../screens/AuthScreens/individual/ValidateEmail";
 
 //------------------INTERFACE----------------->
@@ -80,6 +80,12 @@ export type RootStackParamList = {
   //TABS SCREENS STACK
   [ROUTES.TABSCREEN_STACK]: undefined;
 };
+
+export type NestedNavigatorParams<ParamList> = {
+  [K in keyof ParamList]: undefined extends ParamList[K]
+    ? { screen: K; params?: ParamList[K] }
+    : { screen: K; params: ParamList[K] };
+}[keyof ParamList];
 
 const MainStack = createStackNavigator<RootStackParamList>();
 export default function MainNavigator() {

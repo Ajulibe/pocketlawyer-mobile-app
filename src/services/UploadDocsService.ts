@@ -1,6 +1,6 @@
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import { DocUploadResponse } from "utils/FileUploads";
+import { DocUploadResponse } from "services/S3FileUploadHelper";
 
 export const getHistoryId = async (
   serviceCode: string
@@ -28,6 +28,8 @@ export const confirmUpload = async (
   if (response == null) {
     return null;
   }
+  console.log(response?.data?.data);
+  
   return response?.data?.data ?? null;
 };
 
@@ -47,7 +49,8 @@ export const addMetadata = async (payload: any) => {
 //--> transform metaPayload
 export const transformMeta = async (
   formData: any,
-  tempServiceHistoryID: any
+  historyID: any,
+  serviceCode:string
 ) => {
   const userId = await AsyncStorageUtil.getUserId();
   const arraypayload = [];
@@ -56,8 +59,8 @@ export const transformMeta = async (
     const data = formData[property];
 
     data.userID = Number(userId);
-    data.tempServiceHistoryID = tempServiceHistoryID;
-    data.section = "BusinessNameAndRegistration";
+    data.tempServiceHistoryID = historyID;
+    data.section = serviceCode;
 
     arraypayload.push(data);
   }

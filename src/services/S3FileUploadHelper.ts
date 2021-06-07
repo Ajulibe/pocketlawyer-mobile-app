@@ -1,7 +1,9 @@
 import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
-import AsyncStorageUtil from "./AsyncStorageUtil";
-import axiosClient from "./axiosClient";
+import AsyncStorageUtil from "../utils/AsyncStorageUtil";
+import axiosClient from "../utils/axiosClient";
+import * as FileSystem from "expo-file-system";
+import { Buffer } from "buffer";
 
 export interface DocUploadInterface {
   fileName?: string;
@@ -14,9 +16,18 @@ export interface DocUploadInterface {
 }
 export interface DocUploadResponse {
   fileName: string;
-  filetType: number;
+  fileType: number;
   userID: number;
   uploadID: number;
+}
+export interface FileInterface {
+  type: "success";
+  name: string;
+  size: number;
+  uri: string;
+  lastModified?: number | undefined;
+  file?: File | undefined;
+  output?: FileList | null | undefined;
 }
 
 const getBlob = async (fileUri: any) => {
@@ -25,9 +36,7 @@ const getBlob = async (fileUri: any) => {
   return imageBody;
 };
 
-export const pickAndUploadFile = async (
-  payload: DocUploadInterface
-): Promise<DocUploadResponse | null> => {
+export const pickFile = async (): Promise<FileInterface | null> => {
   //--> Pick file(PDF/IMG/OTHER)
   const pickFile = await DocumentPicker.getDocumentAsync({
     type: "*/*",
@@ -38,10 +47,22 @@ export const pickAndUploadFile = async (
     //--> Toast error
     return null;
   } else {
+    return pickFile;
+  }
+};
+
+export const uploadFileToS3 = async (
+  payload: DocUploadInterface, pickFile:FileInterface
+): Promise<DocUploadResponse | null> => {
+  //--> Pick file(PDF/IMG/OTHER)
+  if (pickFile.type !== "success") {
+    //--> Toast error
+    return null;
+  } else {
     let { name, size, uri } = pickFile;
-    const imageBody = await getBlob(uri);
-    const fileType = imageBody["type"];
-    if (imageBody == null) {
+    const fileBody = await getBlob(uri);
+    const fileType = fileBody["type"];
+    if (fileBody == null) {
       //--> Toast error
       return null;
     } else {
@@ -59,20 +80,26 @@ export const pickAndUploadFile = async (
         const { url, uploadID, fileName } = signedUrl.data.data;
         console.log(url, uploadID, fileName, fileType, size);
 
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        const buffer = Buffer.from(base64, "base64");
+
         const uploadFile = await axios({
           method: "PUT",
           url: url,
-          data: imageBody,
+          // data: `data:image/jpeg;base64,${base64uu}`,
+          data: buffer,
           headers: { "Content-Type": fileType ?? "image/jpeg" },
         });
         if (uploadFile.status === 200) {
-          console.log(uploadFile);
+          // console.log(uploadFile);
 
           //--> Uploaded file details
           const response: DocUploadResponse = {
             fileName: fileName,
             userID: payload.userID,
-            filetType: payload.fileType,
+            fileType: payload.fileType,
             uploadID: uploadID,
           };
           return response;

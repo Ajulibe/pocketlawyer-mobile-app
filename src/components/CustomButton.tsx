@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
     fontWeight: "500",
-    lineHeight: hp(16),
+    lineHeight: hp(20),
   },
   indicator: {
     justifyContent: "center",

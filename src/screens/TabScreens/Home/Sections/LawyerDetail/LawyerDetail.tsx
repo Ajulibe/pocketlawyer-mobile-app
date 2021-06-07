@@ -19,9 +19,14 @@ import CONSTANTS from "utils/Constants";
 import COLORS from "utils/Colors";
 import CustomButton from "components/CustomButton";
 import BottomSheetModal from "../BottomSheet/BottomSheetModal";
-import RBSheet from "react-native-raw-bottom-sheet";
-import renderView from "../BottomSheet/renderView";
-import { BusinessNameAndRegistration } from "../../Sections/BottomSheet/BottomSheetServices/PreIncorporation/BusinessNameAndRegistration";
+import { getHistoryId } from "services/UploadDocsService";
+import { PLToast } from "components/PLToast";
+import LoadingSpinner from "components/LoadingSpinner";
+import axiosClient from "utils/axiosClient";
+import { showError } from "../BottomSheet/BottomSheetUtils/FormHelpers";
+import Utilities from "utils/Utilities";
+import { Category } from "database/DBData";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
@@ -32,7 +37,68 @@ export default function LawyerDetail({ navigation, route }: Props) {
 
   const refRBSheet = React.useRef<any>("");
 
+  const [lawyerCats, setLawyerCats] = React.useState<Category[]>([]);
   const [modalVisibility, setModalVisibility] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [historyId, setHistoryId] = React.useState(0);
+  const [amount, setAmount] = React.useState(0);
+  const [spinnerText, setSpinnerText] = React.useState("Please wait...");
+
+  React.useEffect(() => {
+    getLawyerInfo();
+    getPrice();
+  }, []);
+
+  const getLawyerInfo = async () => {
+    setIsLoading(true);
+    setSpinnerText("Fetching Info...");
+    try {
+      const response = await axiosClient.get(
+        `Category/GetUserCategories/${lawyer.serviceProviderID}`
+      );
+      const law = response?.data;
+      const cats: Category[] = response?.data?.data;
+      setLawyerCats(cats);
+    } catch (error) {
+      showError("Network error!");
+      navigation.goBack();
+    }
+    setIsLoading(false);
+  };
+  const getPrice = async () => {
+    try {
+      const response = await axiosClient.get(
+        `Service/GetServiceAmount?ServiceCode=${service?.serviceCode}`
+      );
+      const { amount } = response.data?.data;
+      setAmount(amount);
+    } catch (error) {
+      showError("Network error!");
+      navigation.goBack();
+    }
+  };
+
+  //--> Get history ID before you proceed
+  async function getHistory() {
+    if (historyId != 0) {
+      setModalVisibility(true);
+    } else {
+      setSpinnerText("Initializing form...");
+      setIsLoading(true);
+      const hID = await getHistoryId(service.serviceCode);
+      setIsLoading(false);
+
+      if (hID == null) {
+        PLToast({ message: "An Error occured, try again", type: "error" });
+      } else {
+        setHistoryId(hID);
+        setTimeout(function () {
+          setModalVisibility(true);
+        }, 500);
+      }
+    }
+  }
+
   const DescTile = ({
     leading,
     value,
@@ -58,15 +124,18 @@ export default function LawyerDetail({ navigation, route }: Props) {
       </Text>
     </View>
   );
-
   return (
     <>
+      <LoadingSpinner modalVisible={isLoading} content={spinnerText} />
+
       <BottomSheetModal
         closeModal={() => setModalVisibility(false)}
         navigation={navigation}
         modalVisible={modalVisibility}
         service={service}
         lawyer={lawyer}
+        historyId={historyId}
+        amount={amount}
       />
 
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -86,7 +155,10 @@ export default function LawyerDetail({ navigation, route }: Props) {
           <View style={styles.userDetails}>
             <Text style={styles.descTitle}>Brief Description</Text>
             <DescTile leading="Location:" value={lawyer?.address!} />
-            <DescTile leading="Price:" value="N56, 000" />
+            <DescTile
+              leading="Price:"
+              value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
+            />
             <DescTile leading="Years of Experience:" value="2yrs" />
             <Text style={styles.aboutUser}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
@@ -95,26 +167,27 @@ export default function LawyerDetail({ navigation, route }: Props) {
               blandit nisl, eget nec. Tincidunt elementum senectus mauris
               sapien.
             </Text>
-            <DescTile
-              leading="Business Name Registration"
-              value="12/03/21"
-              faintTrailing={true}
-            />
-            <DescTile
-              leading="Business Name Registration"
-              value="12/03/21"
-              faintTrailing={true}
-            />
-            <DescTile
-              leading="Business Name Registration"
-              value="12/03/21"
-              faintTrailing={true}
-            />
+            {lawyerCats.map((cat, index) => (
+              // <DescTile
+              //   leading={cat.categoryName}
+              //   value="12/03/21"
+              //   faintTrailing={true}
+              //   key={`${index}.${cat.categoryName}`}
+              // />
+              <View
+                style={styles.catWrapper}
+                key={`${index}.${cat.categoryName}`}
+              >
+                <FontAwesome5
+                  name="check-circle"
+                  size={18}
+                  color="rgba(0, 0, 0, 0.7)"
+                />
+                <Text style={styles.categoryHeading}>{cat.categoryName}</Text>
+              </View>
+            ))}
             <View style={{ flex: 1 }} />
-            <CustomButton
-              btnText="Confirm"
-              onClick={() => setModalVisibility(true)}
-            />
+            <CustomButton btnText="Confirm" onClick={getHistory} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -135,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 150,
   },
   name: {
-    lineHeight: hp(16),
+    lineHeight: hp(20),
     fontWeight: "500",
     fontSize: wp(14),
     color: COLORS.light.primary,
@@ -173,25 +246,39 @@ const styles = StyleSheet.create({
   tileLeading: {
     fontWeight: "400",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto",
   },
   tileTrailing: {
     fontWeight: "700",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
   },
   aboutUser: {
     fontWeight: "400",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: "rgba(0, 0, 0, 0.7)",
     textAlign: "justify",
     fontFamily: "Roboto",
     marginTop: hp(6),
     marginBottom: hp(32),
+  },
+  catWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 0,
+    marginBottom: hp(12),
+  },
+  categoryHeading: {
+    fontSize: wp(16),
+    textTransform: "capitalize",
+    fontFamily: "Roboto-Medium",
+    marginLeft: 8,
+    color: "rgba(0, 0, 0, 0.7)",
   },
 });
