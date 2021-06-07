@@ -27,7 +27,7 @@ export default function BottomSheetModal(props: ModalProps) {
       visible={props.modalVisible}
       onRequestClose={() => props.closeModal()}
     >
-      <BlurView intensity={30} style={[styles.container]} tint="dark">
+      <BlurView intensity={40} style={[styles.container]} tint="dark">
         <View style={{ height: 120 }} />
         <View style={styles.quickActions}>
           <TouchableOpacity
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.7)",
     paddingHorizontal: wp(21),
   },
   wrapper: {
