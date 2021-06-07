@@ -119,86 +119,84 @@ export function Advisory(props: BottomSheetProps) {
   };
 
   return (
-    <View style={{ paddingBottom: 80 }}>
+    <View style={modalFormstyles.formContainer}>
       <LoadingSpinner
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
-          <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
-          <Text style={modalFormstyles.titleDesc}>
-            Please fill the form with your proposed business details
-          </Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Business Name <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type business name"
-            errorText={formData?.[FormKeys.name]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Business Sector <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Enter business sector"
-            errorText={formData?.[FormKeys.sector]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.sector, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Contract Duration <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Select contract duration"
-            errorText={formData?.[FormKeys.duration]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.duration, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Certificate of Registration (SMEs)
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.certOfReg)}
-            errorText={formData?.[FormKeys.certOfReg]?.error}
-            dataValue={formData?.[FormKeys.certOfReg]?.value ?? "Select file"}
-            icon
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Certificate of Incorporation (Companies)
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.certOfInc)}
-            errorText={formData?.[FormKeys.certOfInc]?.error}
-            dataValue={formData?.[FormKeys.certOfInc]?.value ?? "Select file"}
-            icon
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Memorandum and Articles of Association
-            <Text style={modalFormstyles.required}> *</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.memAndArtOfAssoc)}
-            errorText={formData?.[FormKeys.memAndArtOfAssoc]?.error}
-            dataValue={
-              formData?.[FormKeys.memAndArtOfAssoc]?.value ?? "Select file"
-            }
-            icon
-          />
-        </KeyboardAwareScrollView>
-      </ScrollView>
+      <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
+          Please fill the form with your proposed business details
+        </Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Business Name <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type business name"
+          errorText={formData?.[FormKeys.name]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.name, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Business Sector <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Enter business sector"
+          errorText={formData?.[FormKeys.sector]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.sector, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Contract Duration <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Select contract duration"
+          errorText={formData?.[FormKeys.duration]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.duration, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Certificate of Registration (SMEs)
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.certOfReg)}
+          errorText={formData?.[FormKeys.certOfReg]?.error}
+          dataValue={formData?.[FormKeys.certOfReg]?.value ?? "Select file"}
+          icon
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Certificate of Incorporation (Companies)
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.certOfInc)}
+          errorText={formData?.[FormKeys.certOfInc]?.error}
+          dataValue={formData?.[FormKeys.certOfInc]?.value ?? "Select file"}
+          icon
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Memorandum and Articles of Association
+          <Text style={modalFormstyles.required}> *</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.memAndArtOfAssoc)}
+          errorText={formData?.[FormKeys.memAndArtOfAssoc]?.error}
+          dataValue={
+            formData?.[FormKeys.memAndArtOfAssoc]?.value ?? "Select file"
+          }
+          icon
+        />
+      </KeyboardAwareScrollView>
       <View style={{ height: 16 }} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>

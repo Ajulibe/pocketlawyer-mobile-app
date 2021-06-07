@@ -119,7 +119,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
   };
 
   return (
-    <View style={{ paddingBottom: 80 }}>
+    <View style={modalFormstyles.formContainer}>
       <LoadingSpinner
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}

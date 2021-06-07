@@ -1,13 +1,8 @@
 import { ROUTES } from "navigation/Routes";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
-import { transformMeta, addMetadata } from "services/UploadDocsService";
+import { addMetadata } from "services/UploadDocsService";
 import { BottomSheetProps } from "../../../BottomSheetUtils/BottomSheetProps";
-import {
-  validateInputs,
-  showError,
-  showSuccess,
-} from "../../../BottomSheetUtils/FormHelpers";
+import { showError, showSuccess } from "../../../BottomSheetUtils/FormHelpers";
 import {
   loadingReducer,
   loadingInitialState,
@@ -62,6 +57,7 @@ export function CompanyRegistration(props: BottomSheetProps) {
       style={{ flex: 1 }}
       initialPage={0}
       showPageIndicator={true}
+      pageMargin={0}
       scrollEnabled={true}
       orientation="horizontal"
     >

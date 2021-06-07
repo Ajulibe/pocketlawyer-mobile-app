@@ -65,66 +65,64 @@ export function CompReg(props: Props) {
   };
 
   return (
-    <View style={{ paddingBottom: 90 }}>
+    <View style={modalFormstyles.formContainer} collapsable={false}>
       <LoadingSpinner
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
-          <Text style={globalStyles.H1Style}>{formTitle}</Text>
-          <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Proposed Business Name 1
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type business name 1"
-            errorText={formData?.[FormKeys.name1]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name1, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Proposed Business Name 2
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type business name 2"
-            errorText={formData?.[FormKeys.name2]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name2, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Brief Description of Business
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder=""
-            errorText={formData?.[FormKeys.desc]?.error}
-            multiline={true}
-            numberOfLines={4}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.desc, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Proposed Share Capital
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="1,000,000 share capital"
-            errorText={formData?.[FormKeys.shareCapital]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.shareCapital, value: text });
-            }}
-          />
-        </KeyboardAwareScrollView>
-      </ScrollView>
+      <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+        <Text style={globalStyles.H1Style}>{formTitle}</Text>
+        <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Business Name 1
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type business name 1"
+          errorText={formData?.[FormKeys.name1]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.name1, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Business Name 2
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type business name 2"
+          errorText={formData?.[FormKeys.name2]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.name2, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Brief Description of Business
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder=""
+          errorText={formData?.[FormKeys.desc]?.error}
+          multiline={true}
+          numberOfLines={4}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.desc, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Proposed Share Capital
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="1,000,000 share capital"
+          errorText={formData?.[FormKeys.shareCapital]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.shareCapital, value: text });
+          }}
+        />
+      </KeyboardAwareScrollView>
       <View style={{ height: 16 }} />
       <CustomButton btnText="Next" onClick={submit} />
     </View>
