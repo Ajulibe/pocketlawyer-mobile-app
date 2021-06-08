@@ -29,23 +29,20 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
-import PickerInput from "components/PickerInput";
-import { meansOfIdentification } from "../../BottomSheetUtils/FormStaticData";
 
 const FormKeys = {
-  name1: "BuisnessNameOne",
-  name2: "BusinessNameTwo",
-  nature: "NatureOfBusiness",
+  companyName: "CompanyName",
+  companyRegNo: "CompanyRegistrationNumber",
   meansOfId: "MeansOfIdentification",
-  idNo: "IDNumber",
-  signature: "Signature",
+  noOfShares: "NumberOfSharesToBeAdded",
 };
-export function BusinessNameAndRegistration(props: BottomSheetProps) {
+export function IncreaseOfShareCapital(props: BottomSheetProps) {
   const { navigation, closeModal, service, lawyer, historyId } = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState
   );
+
   const [formData, setFormData] = React.useState<any>({});
 
   const handleTextChange = (payload: { field: string; value: string }) => {
@@ -133,37 +130,25 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             Please fill the form with your proposed business details
           </Text>
           <Text style={modalFormstyles.inputLabel}>
-            Proposed Business Name 1{" "}
-            <Text style={modalFormstyles.required}>*</Text>
+            Company Name <Text style={modalFormstyles.required}>*</Text>
           </Text>
           <Input
-            placeholder="Type business name 1"
-            errorText={formData?.[FormKeys.name1]?.error}
+            placeholder="Type company name"
+            errorText={formData?.[FormKeys.companyName]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name1, value: text });
+              handleTextChange({ field: FormKeys.companyName, value: text });
             }}
           />
           <View style={{ height: 16 }} />
           <Text style={modalFormstyles.inputLabel}>
-            Proposed Business Name 2{" "}
+            Company Registration Number{" "}
             <Text style={modalFormstyles.required}>*</Text>
           </Text>
           <Input
-            placeholder="Type business name 2"
-            errorText={formData?.[FormKeys.name2]?.error}
+            placeholder="Type company registration number "
+            errorText={formData?.[FormKeys.companyRegNo]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name2, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Nature of Business <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type the business nature"
-            errorText={formData?.[FormKeys.nature]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.nature, value: text });
+              handleTextChange({ field: FormKeys.companyRegNo, value: text });
             }}
           />
           <View style={{ height: 16 }} />
@@ -171,40 +156,26 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             Means of Identification
             <Text style={modalFormstyles.required}>*</Text>
           </Text>
-          <PickerInput
-            data={meansOfIdentification}
+          <Input
+            onPress={() => uploadFile(FormKeys.meansOfId)}
             errorText={formData?.[FormKeys.meansOfId]?.error}
             dataValue={
               formData?.[FormKeys.meansOfId]?.value ??
-              "Select your means of identification"
+              "Upload means of identification"
             }
-            onSelectChange={(text: string) => {
-              handleTextChange({ field: FormKeys.meansOfId, value: text });
-            }}
+            icon
           />
-
           <View style={{ height: 16 }} />
           <Text style={modalFormstyles.inputLabel}>
-            ID Number
+            Number of New Shares to be Added
             <Text style={modalFormstyles.required}>*</Text>
           </Text>
           <Input
-            placeholder="Type identification number"
-            errorText={formData?.[FormKeys.idNo]?.error}
+            placeholder="Type number of shares to be added"
+            errorText={formData?.[FormKeys.noOfShares]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.idNo, value: text });
+              handleTextChange({ field: FormKeys.noOfShares, value: text });
             }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Signature
-            <Text style={modalFormstyles.required}> *</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.signature)}
-            errorText={formData?.[FormKeys.signature]?.error}
-            dataValue={formData?.[FormKeys.signature]?.value ?? "Select file"}
-            icon
           />
         </KeyboardAwareScrollView>
       </ScrollView>

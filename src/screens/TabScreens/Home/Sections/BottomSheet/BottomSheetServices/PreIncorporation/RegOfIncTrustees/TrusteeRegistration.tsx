@@ -4,7 +4,7 @@ import globalStyles from "css/GlobalCss";
 import React from "react";
 import { Text, View, ScrollView } from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
-import { transformMeta } from "services/UploadDocsService";
+import { confirmUpload, transformMeta } from "services/UploadDocsService";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { wp } from "utils/Dimensions";
 import LoadingSpinner from "components/LoadingSpinner";
@@ -18,14 +18,18 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../../BottomSheetUtils/LoadingReducer";
-import PickerInput from "components/PickerInput";
-import { shareCapital } from "../../../BottomSheetUtils/FormStaticData";
+import {
+  DocUploadInterface,
+  pickFile,
+  uploadFileToS3,
+} from "services/S3FileUploadHelper";
 
 const FormKeys = {
-  name1: "BuisnessNameOne",
-  name2: "BusinessNameTwo",
-  desc: "BusinessDescription",
-  shareCapital: "ShareCapital",
+  name1: "ProposedName1",
+  name2: "ProposedName2",
+  firstPub: "FirstPublication",
+  secondPub: "SecondPublication",
+  comapanySeal: "CompanySeal",
 };
 interface Props extends BottomSheetProps {
   formTitle: string;
@@ -33,7 +37,7 @@ interface Props extends BottomSheetProps {
   onSubmit: (meta: Array<any>) => void;
 }
 
-export function CompReg(props: Props) {
+export function TrusteeRegistration(props: Props) {
   const { formTitle, service, subTitle, historyId } = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
@@ -66,6 +70,34 @@ export function CompReg(props: Props) {
     });
   };
 
+  const uploadFile = async (field: string) => {
+    const payload: DocUploadInterface = {
+      fileType: 2,
+      isfor: field,
+      Section: service.serviceCode,
+      HistoryID: historyId,
+    };
+
+    const pickedFile = await pickFile();
+    if (pickedFile != null) {
+      loadingDispatch({
+        type: LoadingActionType.SHOW_WITH_CONTENT,
+        payload: { content: "Uploading file..." },
+      });
+      const upload = await uploadFileToS3(payload, pickedFile);
+      if (upload == null) {
+        showError("Error occured while uploading, try again...");
+      } else {
+        const confirm = await confirmUpload(upload);
+        loadingDispatch({ type: LoadingActionType.HIDE });
+        if (confirm == null || confirm?.url == null) {
+          showError("Error occured while uploading, try again...");
+        } else {
+          handleTextChange({ field: field, value: confirm?.url });
+        }
+      }
+    }
+  };
   return (
     <View style={modalFormstyles.formContainer} collapsable={false}>
       <LoadingSpinner
@@ -76,8 +108,7 @@ export function CompReg(props: Props) {
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
         <Text style={modalFormstyles.inputLabel}>
-          Proposed Business Name 1
-          <Text style={modalFormstyles.required}>*</Text>
+          Proposed Name 1<Text style={modalFormstyles.required}>*</Text>
         </Text>
         <Input
           placeholder="Type business name 1"
@@ -88,8 +119,7 @@ export function CompReg(props: Props) {
         />
         <View style={{ height: 16 }} />
         <Text style={modalFormstyles.inputLabel}>
-          Proposed Business Name 2
-          <Text style={modalFormstyles.required}>*</Text>
+          Proposed Name 2<Text style={modalFormstyles.required}>*</Text>
         </Text>
         <Input
           placeholder="Type business name 2"
@@ -100,33 +130,30 @@ export function CompReg(props: Props) {
         />
         <View style={{ height: 16 }} />
         <Text style={modalFormstyles.inputLabel}>
-          Brief Description of Business
+          First Publication
           <Text style={modalFormstyles.required}>*</Text>
         </Text>
         <Input
           placeholder=""
-          errorText={formData?.[FormKeys.desc]?.error}
+          errorText={formData?.[FormKeys.firstPub]?.error}
           multiline={true}
           numberOfLines={4}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.desc, value: text });
+            handleTextChange({ field: FormKeys.firstPub, value: text });
           }}
         />
         <View style={{ height: 16 }} />
         <Text style={modalFormstyles.inputLabel}>
-          Proposed Share Capital
-          <Text style={modalFormstyles.required}>*</Text>
+          Company Seal
+          <Text style={modalFormstyles.required}> *</Text>
         </Text>
-        <PickerInput
-          data={shareCapital}
-          errorText={formData?.[FormKeys.shareCapital]?.error}
+        <Input
+          onPress={() => uploadFile(FormKeys.comapanySeal)}
+          errorText={formData?.[FormKeys.comapanySeal]?.error}
           dataValue={
-            formData?.[FormKeys.shareCapital]?.value ??
-            "Select your shared capital"
+            formData?.[FormKeys.comapanySeal]?.value ?? "Upload company seal"
           }
-          onSelectChange={(text: string) => {
-            handleTextChange({ field: FormKeys.shareCapital, value: text });
-          }}
+          icon
         />
       </KeyboardAwareScrollView>
       <View style={{ height: 16 }} />

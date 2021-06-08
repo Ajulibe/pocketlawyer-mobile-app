@@ -29,6 +29,8 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
+import PickerInput from "components/PickerInput";
+import { contractDuration } from "../../BottomSheetUtils/FormStaticData";
 
 const FormKeys = {
   name: "BusinessName",
@@ -154,10 +156,14 @@ export function Advisory(props: BottomSheetProps) {
         <Text style={modalFormstyles.inputLabel}>
           Contract Duration <Text style={modalFormstyles.required}>*</Text>
         </Text>
-        <Input
-          placeholder="Select contract duration"
+
+        <PickerInput
+          data={contractDuration}
           errorText={formData?.[FormKeys.duration]?.error}
-          onChangeText={(text: string) => {
+          dataValue={
+            formData?.[FormKeys.duration]?.value ?? "Select contract duration"
+          }
+          onSelectChange={(text: string) => {
             handleTextChange({ field: FormKeys.duration, value: text });
           }}
         />

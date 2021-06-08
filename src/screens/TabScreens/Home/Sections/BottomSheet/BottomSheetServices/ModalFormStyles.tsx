@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import COLORS from "utils/Colors";
 import { hp, wp } from "utils/Dimensions";
 
 const modalFormstyles = StyleSheet.create({
   formContainer: {
-    paddingBottom: 60,
+    paddingBottom: Platform.OS === "android" ? 60 : 80,
   },
   extraScrollHeight: {
     paddingBottom: 60,

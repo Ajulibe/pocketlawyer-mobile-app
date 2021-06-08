@@ -1,38 +1,54 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
 import { Picker } from "@react-native-picker/picker";
+import ModalSelector from "react-native-modal-selector";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface Props {
   data: Array<any>;
-  onSelectChange: (value: string, index?: number) => void;
+  onSelectChange: (value: string, key?: any) => void;
   errorText?: string;
+  dataValue?: string;
 }
 
 const PickerInput: React.FC<Props> = (props) => {
-  const { data, onSelectChange, errorText } = props;
+  const { data, onSelectChange, errorText, dataValue } = props;
 
+  const ifValueSet = data.find((i) => i.label === dataValue);
   return (
     <>
       <View style={styles.pickerWrapper}>
-        <Picker
-          style={styles.picker}
-          itemStyle={{ fontSize: wp(8) }}
-          onValueChange={(itemValue: string, itemIndex) =>
-            onSelectChange(itemValue, itemIndex)
-          }
+        <ModalSelector
+          data={data}
+          initValue="Select something yummy!"
+          scrollViewAccessibilityLabel={"Scrollable options"}
+          cancelButtonAccessibilityLabel={"Cancel Button"}
+          onChange={(item) => {
+            onSelectChange(item.label, item.key);
+          }}
         >
-          {data.map((item, index) => (
-            <Picker.Item
-              // style={styles.pickerItem}
-              color={"red"}
-              key={`${index}`}
-              label={item.label}
-              value={item.value}
+          <View style={styles.picker}>
+            <TextInput
+              style={styles.input}
+              editable={false}
+              placeholder={dataValue ?? ""}
+              value={ifValueSet ? dataValue : ""}
             />
-          ))}
-        </Picker>
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={24}
+              color={COLORS.light.black}
+            />
+          </View>
+        </ModalSelector>
       </View>
       {errorText === "" || errorText == null ? (
         <View />
@@ -48,17 +64,27 @@ const styles = StyleSheet.create({
   pickerWrapper: {
     // height: wp(40),
     // width: "100%",
+    // borderColor: COLORS.light.inputBdColor,
+    // borderWidth: 1,
+    // backgroundColor: COLORS.light.inputBackgnd,
+    // borderRadius: 4,
+  },
+  picker: {
+    height: hp(44),
     borderColor: COLORS.light.inputBdColor,
     borderWidth: 1,
     backgroundColor: COLORS.light.inputBackgnd,
     borderRadius: 4,
+    paddingLeft: wp(20),
+    paddingRight: wp(8),
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
-  picker: {
-    height: hp(40),
-  },
-  pickerItem: {
-    color: COLORS.light.disabled,
-    backgroundColor: "red",
+  input: {
+    color: COLORS.light.black,
+    flex: 1,
+    fontSize: wp(12),
   },
   errorContainer: {
     marginVertical: 0,
