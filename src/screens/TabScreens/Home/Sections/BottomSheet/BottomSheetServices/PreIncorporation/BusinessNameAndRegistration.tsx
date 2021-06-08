@@ -14,6 +14,7 @@ import {
   confirmUpload,
   transformMeta,
   addMetadata,
+  submitHistory,
 } from "services/UploadDocsService";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { wp } from "utils/Dimensions";
@@ -75,15 +76,26 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
         const submit = await addMetadata(formMeta);
         loadingDispatch({ type: LoadingActionType.HIDE });
         if (submit === 200) {
-          //--> Redirect to checkout
-          closeModal();
-          showSuccess("Submitted Successfully");
-          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
-            service: service,
-            lawyer: lawyer,
-            historyId: historyId,
-            amount: props.amount,
-          });
+          //--> Submit Service
+          try {
+            const response = await submitHistory(props);
+            if (response?.status === 200) {
+              //--> Redirect to checkout
+              closeModal();
+              showSuccess("Submitted Successfully");
+              const newProps = {
+                ...props,
+                serviceHistoryID: response?.data?.serviceHistoryID,
+              };
+              navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+                ...newProps,
+              });
+            } else {
+              showError("An error occured");
+            }
+          } catch (error) {
+            showError(`Error occured: ${error}`);
+          }
         } else {
           showError("Error in your network connection, try again");
         }

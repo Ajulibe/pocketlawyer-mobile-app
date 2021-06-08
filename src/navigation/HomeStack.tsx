@@ -27,7 +27,7 @@ export type HomeStackParamList = {
   [ROUTES.CHECKOUT_SCREEN]: {
     lawyer: LawyerModel;
     service: Service;
-    historyId: number;
+    serviceHistoryID: number | string;
     amount: number;
   };
 };
