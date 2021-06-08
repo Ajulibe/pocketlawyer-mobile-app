@@ -138,10 +138,10 @@ const styles = StyleSheet.create({
     marginVertical: 0,
   },
   errorText: {
-    marginTop: hp(2),
+    marginTop: hp(6),
     fontFamily: "Roboto-Regular",
     color: COLORS.light.red,
-    fontSize: 13,
+    fontSize: wp(12),
   },
 });
 

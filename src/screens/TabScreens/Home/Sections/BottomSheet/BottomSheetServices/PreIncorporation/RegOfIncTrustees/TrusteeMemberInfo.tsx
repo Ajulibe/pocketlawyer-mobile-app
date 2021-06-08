@@ -2,7 +2,7 @@ import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import { Text, View, TouchableOpacity, TextInput } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
 import {
   DocUploadInterface,
@@ -32,15 +32,14 @@ const allFomKeys = [...Array(10).keys()].map((item, index) => {
   const idx = index + 1;
   return {
     ...{
-      [`firstName${idx}`]: `DirectorFirstName${idx}`,
-      [`lastName${idx}`]: `DirectorLastName${idx}`,
-      [`meansOfId${idx}`]: `DirectorMeansOfIdentification${idx}`,
-      [`idNo${idx}`]: `DirectorIdentityNumber${idx}`,
-      [`signature${idx}`]: `DirectorSignature${idx}`,
+      [`firstName${idx}`]: `TrusteeFirstName${idx}`,
+      [`lastName${idx}`]: `TrusteeLastName${idx}`,
+      [`meansOfId${idx}`]: `TrusteeMeansOfIdentification${idx}`,
+      [`idNo${idx}`]: `TrusteeIdentityNumber${idx}`,
+      [`passport${idx}`]: `TrusteePassport${idx}`,
     },
   };
 });
-// const allFomKeys = [FormKeys1, FormKeys2, FormKeys3, FormKeys4];
 
 interface Props extends BottomSheetProps {
   formTitle: string;
@@ -48,14 +47,14 @@ interface Props extends BottomSheetProps {
   onSubmit: (meta: Array<any>) => void;
 }
 
-export function DirectorsInfo(props: Props) {
+export function TrusteeMemberInfo(props: Props) {
   const { formTitle, service, subTitle, historyId } = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState
   );
   const [formData, setFormData] = React.useState<any>({});
-  const [noOfDirectors, setNoOfDirectors] = React.useState<number>(2);
+  const [noOfTrustee, setNoOfTrustee] = React.useState<number>(2);
 
   const handleTextChange = (payload: { field: string; value: string }) => {
     setFormData((values: any) => ({
@@ -67,7 +66,7 @@ export function DirectorsInfo(props: Props) {
   //--> Submit From
   //:--> https://stackoverflow.com/questions/27538349/merge-multiple-objects-inside-the-same-array-into-one-object
   const submit = () => {
-    const getNoOfDirKeys = [...Array(noOfDirectors).keys()].map((v, index) => ({
+    const getNoOfDirKeys = [...Array(noOfTrustee).keys()].map((v, index) => ({
       ...allFomKeys[index],
     }));
     const fKeys = getNoOfDirKeys.reduce((r, c) => Object.assign(r, c), {});
@@ -116,14 +115,14 @@ export function DirectorsInfo(props: Props) {
       }
     }
   };
-  const addNewDir = () => {
-    if (noOfDirectors < allFomKeys.length) {
-      setNoOfDirectors((prev) => prev + 1);
+  const addNew = () => {
+    if (noOfTrustee < allFomKeys.length) {
+      setNoOfTrustee((prev) => prev + 1);
     }
   };
-  const removeDir = () => {
-    if (noOfDirectors > 2) {
-      setNoOfDirectors((prev) => prev - 1);
+  const remove = () => {
+    if (noOfTrustee > 2) {
+      setNoOfTrustee((prev) => prev - 1);
     }
   };
 
@@ -140,14 +139,14 @@ export function DirectorsInfo(props: Props) {
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
 
-        {[...Array(noOfDirectors).keys()].map((item, index) => {
+        {[...Array(noOfTrustee).keys()].map((item, index) => {
           const idx = index + 1;
           const FormKeys = allFomKeys[index];
 
           return (
             <View key={`${index}`}>
               <Text style={modalFormstyles.subHeader}>
-                Director's Information {idx}
+                Trustee's Information {idx}
               </Text>
 
               <Text style={modalFormstyles.inputLabel}>
@@ -215,15 +214,15 @@ export function DirectorsInfo(props: Props) {
               />
               <View style={{ height: 16 }} />
               <Text style={modalFormstyles.inputLabel}>
-                Signature
+                Passport
                 <Text style={modalFormstyles.required}> *</Text>
               </Text>
               <Input
-                onPress={() => uploadFile(FormKeys?.[`signature${idx}`])}
-                errorText={formData?.[FormKeys?.[`signature${idx}`]]?.error}
+                onPress={() => uploadFile(FormKeys?.[`passport${idx}`])}
+                errorText={formData?.[FormKeys?.[`passport${idx}`]]?.error}
                 dataValue={
-                  formData?.[FormKeys?.[`signature${idx}`]]?.value ??
-                  "Upload signature"
+                  formData?.[FormKeys?.[`passport${idx}`]]?.value ??
+                  "Upload passport"
                 }
                 icon
               />
@@ -232,22 +231,22 @@ export function DirectorsInfo(props: Props) {
           );
         })}
         <View style={modalFormstyles.addMoreWrapper}>
-          {noOfDirectors < allFomKeys.length ? (
+          {noOfTrustee < allFomKeys.length ? (
             <TouchableOpacity
               style={modalFormstyles.addMoreBtn}
-              onPress={() => addNewDir()}
+              onPress={() => addNew()}
             >
               <Ionicons name="ios-add" size={18} color={COLORS.light.primary} />
-              <Text style={modalFormstyles.addText}>Add New Director</Text>
+              <Text style={modalFormstyles.addText}>Add New</Text>
             </TouchableOpacity>
           ) : (
             <View />
           )}
 
-          {noOfDirectors > 2 && (
+          {noOfTrustee > 2 && (
             <TouchableOpacity
               style={modalFormstyles.addMoreBtn}
-              onPress={() => removeDir()}
+              onPress={() => remove()}
             >
               <MaterialCommunityIcons
                 name="minus"

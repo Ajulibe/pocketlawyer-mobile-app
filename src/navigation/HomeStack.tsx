@@ -37,7 +37,7 @@ const HomeStack = createStackNavigator<HomeStackParamList>();
 export default function HomeNavigationStack() {
   const headerOptions = {
     headerShown: false,
-    // cardStyle: { backgroundColor: COLORS.light.white },
+    cardStyle: { backgroundColor: COLORS.light.white },
   };
   return (
     <HomeStack.Navigator

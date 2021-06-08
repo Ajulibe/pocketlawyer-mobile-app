@@ -57,7 +57,7 @@ export const allServices: Service[] = [
   //-->Pre-Incorporation
   {
     serviceCode: "01",
-    serviceName: "Company name registration",
+    serviceName: "Business Name Registration",
     categoryCode: "01",
     image: IMAGES["cat-company-reg"],
   },
@@ -119,7 +119,7 @@ export const allServices: Service[] = [
   },
   {
     serviceCode: "11",
-    serviceName: "Change of trustees",
+    serviceName: "Change of Trustees",
     categoryCode: "03",
     image: IMAGES["cat-company-reg"],
   },
