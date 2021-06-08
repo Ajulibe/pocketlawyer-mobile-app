@@ -18,6 +18,7 @@ import FullPageLoader from "components/FullPageLoader";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CategoryDb } from "database/CategoryDb";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -34,6 +35,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   //--> loading state
   const [loading, setLoading] = React.useState(false);
+
+  const [showBtn, setShowBtn] = React.useState(false);
 
   //--> disabling button
   const [disabled, setDisabled] = React.useState<boolean>(true);
@@ -128,6 +131,19 @@ const AuthGetStarted = ({ navigation }: Props) => {
     }
   };
 
+  // React.useEffect(() => {
+  //   getPreviousPath();
+  // }, []);
+
+  const getPreviousPath = async () => {
+    const path = await AsyncStorage.getItem("previousPath");
+    if (path === "lawfirm") {
+      setShowBtn(true);
+    } else {
+      setShowBtn(false);
+    }
+  };
+
   useEffect(() => {
     if (
       preincorporation ||
@@ -153,7 +169,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   return loading ? (
     <FullPageLoader message="SUBMITTING CATEGORIES" />
   ) : (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <View style={styles.contentWraper}>
         <Text style={styles.heading}>Select your category of law</Text>
         <RNECheckBox
@@ -397,13 +413,15 @@ const AuthGetStarted = ({ navigation }: Props) => {
           onPress={() => setLegaldrafting(!legaldrafting)}
         />
 
-        <View style={styles.btnWrapper}>
-          <TouchableOpacity
-            style={styles.skipButton}
-            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
-          >
-            <Text style={styles.skip}>Skip</Text>
-          </TouchableOpacity>
+        <View style={[styles.btnWrapper]}>
+          {/* {showBtn ? (
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
+            >
+              <Text style={styles.skip}>Skip</Text>
+            </TouchableOpacity>
+          ) : null} */}
 
           <PLButton
             style={styles.nextButton}
@@ -462,7 +480,8 @@ const styles = StyleSheet.create({
   },
   btnWrapper: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: wp(80),
     width: wpercent("90%"),
   },
@@ -489,7 +508,8 @@ const styles = StyleSheet.create({
     color: COLORS.light.primary,
   },
   nextButton: {
-    width: wp(156),
+    // width: wp(156),
+    width: "90%",
     borderRadius: wp(7),
   },
 });

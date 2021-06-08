@@ -146,7 +146,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       >
         <View style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
-            Welcome to Pocket Lawyer! To create an account, please enter your
+            Welcome to Pocket Lawyer. To create an account, please enter your
             <Text style={styles.CompanyDetails}> company details.</Text>
           </Text>
 
@@ -319,6 +319,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 textAlign: "center",
                 fontFamily: "Roboto-Regular",
                 fontSize: wp(11),
+                lineHeight: wp(20),
                 color: COLORS.light.black,
               }}
             >
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(80),
+    marginTop: hp(60),
   },
 
   phoneNumberWrapper: {
@@ -435,7 +436,6 @@ const styles = StyleSheet.create({
   CompanyDetails: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
-    lineHeight: hp(20),
     color: COLORS.light.primary,
   },
   required: {

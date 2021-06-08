@@ -73,9 +73,7 @@ export const PLTextInput: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  InputWrapper: {
-    // height: wp(40),
-  },
+  InputWrapper: {},
   Input: {
     width: "100%",
     borderRadius: 4,

@@ -8,6 +8,7 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
+import COLORS from "utils/Colors";
 import { hp } from "utils/Dimensions";
 
 interface Props {
@@ -22,7 +23,7 @@ const LoadingSpinner = (props: Props) => {
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <View style={styles.centeredView}>
-        <ActivityIndicator />
+        <ActivityIndicator color={COLORS.light.white} />
         <View style={{ height: hp(12) }} />
         <Text style={styles.textStyle}>{content}</Text>
       </View>

@@ -49,13 +49,11 @@ export const PLPasswordInput: React.FC<Props> = ({
 const styles = StyleSheet.create({
   InputWrapper: {
     width: "100%",
-    height: wp(40),
     borderWidth: 0,
   },
   Input: {
     borderRadius: 4,
     backgroundColor: "white",
-    borderColor: COLORS.light.textinputborder,
     borderWidth: 0,
   },
   textStyle: {

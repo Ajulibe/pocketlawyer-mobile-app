@@ -10,23 +10,43 @@ import {
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../../navigation/MainNavigator";
-import { ROUTES } from "../../../../navigation/Routes";
-import COLORS from "../../../../utils/Colors";
-import { wp, hp } from "../../../../utils/Dimensions";
-import NavBar from "../../../../components/NavBar";
-import PLButton from "../../../../components/PLButton/PLButton";
-import { PLPasswordInput } from "../../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "../../../../components/PLModal";
-import { states } from "../../../../utils/nigerianStates";
+import { PLModal } from "components/PLModal";
+import { states } from "utils/nigerianStates";
 import { Picker, Form, Icon } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import globalStyles from "css/GlobalCss";
+import {
+  DocUploadInterface,
+  uploadFileToS3,
+  pickFile,
+} from "services/S3FileUploadHelper";
+import {
+  loadingReducer,
+  loadingInitialState,
+  LoadingActionType,
+} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/LoadingReducer";
+import { showError } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import LoadingSpinner from "components/LoadingSpinner";
+import { confirmUpload } from "services/UploadDocsService";
+import * as FileSystem from "expo-file-system";
+import PDFReader from "rn-pdf-reader-js";
+import * as Animatable from "react-native-animatable";
+import axiosClient from "utils/axiosClient";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import Colors from "constants/Colors";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -35,16 +55,76 @@ type Props = StackScreenProps<
 
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
+  const [loadingState, loadingDispatch] = React.useReducer(
+    loadingReducer,
+    loadingInitialState
+  );
 
-  const pickCAC = async () => {
-    let result = await DocumentPicker.getDocumentAsync({});
+  const [CAC, setCAC] = useState("");
+  const [disabled, setDisabled] = useState(true);
+
+  React.useEffect(() => {
+    if (CAC === "") {
+      setDisabled(true);
+      return;
+    } else {
+      setDisabled(false);
+    }
+  }, [CAC]);
+
+  const uploadFile = async (field: string) => {
+    const payload: DocUploadInterface = {
+      fileName: "bb.jpg",
+      fileType: 1,
+      isfor: field,
+    };
+
+    try {
+      const pickedFile = await pickFile();
+      if (pickedFile != null) {
+        //--> extra formatting on the picked file
+        let { name, size, uri } = pickedFile;
+
+        let nameParts = name.split(".");
+        let fileType = nameParts[nameParts.length - 1];
+        const bzse64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: "base64",
+        });
+
+        loadingDispatch({
+          type: LoadingActionType.SHOW_WITH_CONTENT,
+          payload: { content: "Uploading file..." },
+        });
+        const upload = await uploadFileToS3(payload, pickedFile);
+
+        if (upload == null) {
+          showError("Error occured while uploading, try again...");
+        } else {
+          const confirm = await confirmUpload(upload);
+
+          loadingDispatch({ type: LoadingActionType.HIDE });
+          if (confirm == null || confirm?.url == null) {
+            showError("Error occured while uploading, try again...");
+          } else {
+            setCAC(name);
+            handleTextChange({ field: field, value: confirm?.url });
+          }
+        }
+      }
+    } catch (error) {
+      return error;
+    }
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
+      <LoadingSpinner
+        modalVisible={loadingState.isVisible ?? false}
+        content={loadingState.content}
+      />
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
+          navigation.goBack();
         }}
         navText="CAC Document"
       />
@@ -54,10 +134,49 @@ const AuthGetStarted = ({ navigation }: Props) => {
         </Text>
 
         <View style={styles.fileSelectBox}>
-          <TouchableOpacity onPress={pickCAC} style={styles.inputButton}>
-            <Ionicons name="camera" size={24} color={COLORS.light.primary} />
-            <Text style={styles.selectText}>Select from files</Text>
+          <TouchableOpacity
+            onPress={() => {
+              uploadFile("CompanyAgreement");
+            }}
+            style={styles.inputButton}
+          >
+            <AntDesign
+              name="filetext1"
+              size={24}
+              color={COLORS.light.primary}
+            />
+            <Text style={styles.selectText}>
+              {CAC !== "" ? "Change Document" : "Select from files"}
+            </Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.fileSelectBox_2}>
+          {CAC !== "" ? (
+            <Animatable.View
+              animation="fadeIn"
+              style={{
+                borderWidth: 1,
+                borderRadius: 4,
+                width: "100%",
+                borderColor: COLORS.light.imageinputborder,
+                backgroundColor: COLORS.light.splashscreenbg,
+                padding: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: COLORS.light.primary,
+                  fontSize: wp(15),
+                  fontFamily: "Roboto-Medium",
+                  marginBottom: hp(10),
+                }}
+              >
+                Selected File
+              </Text>
+              <Text>{CAC}</Text>
+            </Animatable.View>
+          ) : null}
         </View>
 
         <View style={styles.carouselWrapper}>
@@ -69,10 +188,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
         </View>
 
         <PLButton
+          disabled={disabled}
           style={styles.plButton}
           textColor={COLORS.light.white}
           btnText={"Sign Up"}
-          onClick={() => navigation.navigate(ROUTES.AUTH_CAC_LAWFIRM)}
+          onClick={() => navigation.navigate(ROUTES.AUTH_LAW_CATEGORY_LAWYER)}
         />
       </View>
     </SafeAreaView>
@@ -132,6 +252,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: hp(71),
+  },
+  fileSelectBox_2: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp(70),
+    height: hp(50),
   },
   selectText: {
     color: COLORS.light.primary,
@@ -224,7 +351,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(287),
+    marginTop: hp(137),
     width: wpercent("90%"),
   },
   identification: {
@@ -274,3 +401,6 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
+function handleTextChange(arg0: { field: string; value: any }) {
+  throw new Error("Function not implemented.");
+}

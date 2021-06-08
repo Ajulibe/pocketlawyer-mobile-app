@@ -48,6 +48,7 @@ import BottomTabStack from "./BottomTabStack";
 import { ROUTES } from "./Routes";
 import Colors from "utils/Colors";
 import { Category, Service } from "database/DBData";
+import COLORS from "utils/Colors";
 
 export type RootStackParamList = {
   [ROUTES.AUTH_BLANK_SCREEN]: undefined;
@@ -109,9 +110,9 @@ export default function MainNavigator() {
       // initialRouteName={ROUTES.TABSCREEN_STACK}
       headerMode={"none"}
       screenOptions={{
-        headerStyle: {
-          // backgroundColor: "#fff",
-        },
+        // headerStyle: {
+        //   // backgroundColor: "#fff",
+        // },
         cardStyle: { backgroundColor: Colors.light.white },
       }}
     >
@@ -240,7 +241,9 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_CAC_LAWFIRM}
         component={AuthCACLawFirm}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       {/* DASHBOARD STACK...  */}
       <MainStack.Screen

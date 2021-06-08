@@ -50,7 +50,7 @@
     "react-native-elements": "^3.3.2",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
-    "react-native-pager-view": "^5.1.10",
+    "react-native-pager-view": "5.0.12",
     "react-native-paystack": "^3.4.0",
     "react-native-paystack-popup": "^1.0.0",
     "react-native-paystack-webview": "^3.2.1",

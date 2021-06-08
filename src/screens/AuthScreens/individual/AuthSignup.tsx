@@ -87,7 +87,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     const storeData = async (Payload: IndividualSignUpInterface) => {
       try {
         await AsyncStorage.setItem("@signup_payload", JSON.stringify(Payload));
-        await AsyncStorage.setItem("@email", JSON.stringify(email));
+        await AsyncStorage.setItem("@email", email);
         navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
       } catch (e) {
         //-->  saving error

@@ -249,7 +249,7 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
       await AsyncStorage.setItem("firstName", firstName);
 
       //--> setting lawyer as the prvios path
-      await AsyncStorage.setItem("previousPath", "barrister");
+      // await AsyncStorage.setItem("previousPath", "barrister");
 
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);

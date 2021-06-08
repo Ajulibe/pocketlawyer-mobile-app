@@ -79,7 +79,7 @@ const ValidateEmail = ({ navigation }: Props) => {
     try {
       const jsonValue = await AsyncStorage.getItem("@email");
 
-      jsonValue != null ? setEmail(JSON.parse(jsonValue)) : null;
+      jsonValue != null ? setEmail(jsonValue) : null;
     } catch (e) {
       //--> error reading value
     }
@@ -97,7 +97,7 @@ const ValidateEmail = ({ navigation }: Props) => {
         <View style={styles.TextWrapper}>
           <Text style={styles.welcomeMessage}>
             A validation code has been sent to &nbsp;
-            <Text style={styles.ContactPerson}>email</Text>
+            <Text style={styles.ContactPerson}>{email}</Text>
           </Text>
         </View>
 

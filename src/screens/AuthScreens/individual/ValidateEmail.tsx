@@ -29,9 +29,12 @@ const ValidateEmail = ({ navigation, route }: Props) => {
 
     const path = await AsyncStorage.getItem("previousPath");
     //--> check the previous Path
-    if (path === "barrister" || path === "solicitor" || path === "lawfirm") {
+    console.log(path);
+    if (path === "lawyer" || path === "solicitor") {
       navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
-    } else if (path === null) {
+    } else if (path === "lawfirm") {
+      navigation.navigate(ROUTES.AUTH_CAC_LAWFIRM);
+    } else {
       navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
     }
   };
@@ -66,12 +69,14 @@ const ValidateEmail = ({ navigation, route }: Props) => {
     try {
       const jsonValue = await AsyncStorage.getItem("@email");
       const email = jsonValue ? jsonValue : "";
+      console.log(email, "calling email");
 
-      setEmail(JSON.parse(email));
+      setEmail(email);
     } catch (e) {
       //--> error reading value
     }
   };
+  console.log(email);
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
