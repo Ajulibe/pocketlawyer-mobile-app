@@ -1,6 +1,8 @@
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
 import { DocUploadResponse } from "services/S3FileUploadHelper";
+import { ModalProps } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetModal";
+import { BottomSheetProps } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/BottomSheetProps";
 
 export const getHistoryId = async (
   serviceCode: string
@@ -31,6 +33,35 @@ export const confirmUpload = async (
   console.log(response?.data?.data);
   
   return response?.data?.data ?? null;
+};
+
+//--> uploading metadata
+export const submitHistory = async (props:BottomSheetProps) => {
+  const { service, lawyer, historyId, amount } = props;
+  const userId = await AsyncStorageUtil.getUserId();
+  const userType = await AsyncStorageUtil.getUserType();
+  const payload = {
+    userID: Number(userId),
+    serviceProvider: lawyer.name,
+    tempServiceHistoryID: historyId,
+    serviceProviderID: lawyer.serviceProviderID,
+    serviceName: service.serviceName,
+    serviceCode: service.serviceCode,
+    categoryCode: service.categoryCode,
+    amount: amount,
+    userType: Number(userType),
+    status: 1,
+  };
+  try {
+    const { data } = await axiosClient.post(
+      "Service/SubmitServiceHistory",
+      payload
+    );
+    
+    return data;
+  } catch (error) {
+    return error;
+  }
 };
 
 //--> uploading metadata

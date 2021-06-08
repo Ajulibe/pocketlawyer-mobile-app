@@ -14,6 +14,7 @@ import {
   confirmUpload,
   transformMeta,
   addMetadata,
+  submitHistory,
 } from "services/UploadDocsService";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { wp } from "utils/Dimensions";
@@ -31,6 +32,8 @@ import {
 } from "../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
 import { contractDuration } from "../../BottomSheetUtils/FormStaticData";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import axiosClient from "utils/axiosClient";
 
 const FormKeys = {
   name: "BusinessName",
@@ -41,7 +44,7 @@ const FormKeys = {
   memAndArtOfAssoc: "MemorandumAndArticlesOfAssociation",
 };
 export function Advisory(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const { navigation, closeModal, service, lawyer, historyId, amount } = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState
@@ -75,15 +78,26 @@ export function Advisory(props: BottomSheetProps) {
         const submit = await addMetadata(formMeta);
         loadingDispatch({ type: LoadingActionType.HIDE });
         if (submit === 200) {
-          //--> Redirect to checkout
-          closeModal();
-          showSuccess("Submitted Successfully");
-          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
-            service: service,
-            lawyer: lawyer,
-            historyId: historyId,
-            amount: props.amount,
-          });
+          //--> Submit Service
+          try {
+            const response = await submitHistory(props);
+            if (response?.status === 200) {
+              //--> Redirect to checkout
+              closeModal();
+              showSuccess("Submitted Successfully");
+              const newProps = {
+                ...props,
+                serviceHistoryID: response?.data?.serviceHistoryID,
+              };
+              navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+                ...newProps,
+              });
+            } else {
+              showError("An error occured");
+            }
+          } catch (error) {
+            showError(`Error occured: ${error}`);
+          }
         } else {
           showError("Error in your network connection, try again");
         }
@@ -126,7 +140,7 @@ export function Advisory(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
         <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details

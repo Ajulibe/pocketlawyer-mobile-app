@@ -6,6 +6,7 @@ export interface BottomSheetProps {
   closeModal: () => void;
   service: Service;
   lawyer: LawyerModel;
-  historyId: number;
+  historyId: number;//Temp History ID
+  serviceHistoryID: any;//Servive History ID
   amount: number;
 }
