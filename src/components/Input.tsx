@@ -70,7 +70,7 @@ const Input: React.FC<Props> = (props) => {
           <Text
             style={{
               fontSize: wp(12),
-              fontFamily: "Roboto-Regular",
+              fontFamily: "Roboto-Medium",
               color: COLORS.light.disabled,
             }}
           >
@@ -133,10 +133,10 @@ const styles = StyleSheet.create({
     marginVertical: 0,
   },
   errorText: {
-    marginTop: hp(2),
+    marginTop: hp(6),
     fontFamily: "Roboto-Regular",
     color: COLORS.light.red,
-    fontSize: 13,
+    fontSize: wp(12),
   },
 });
 

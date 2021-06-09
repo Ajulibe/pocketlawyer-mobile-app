@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React, { Dispatch } from "react";
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
@@ -34,8 +34,8 @@ export default function BottomSheetModal(props: ModalProps) {
       visible={props.modalVisible}
       onRequestClose={() => props.closeModal()}
     >
-      <View style={[styles.container]}>
-        <View style={{ height: 120 }} />
+      <BlurView intensity={40} style={[styles.container]} tint="dark">
+        <View style={{ height: 60 }} />
         <View style={styles.quickActions}>
           <TouchableOpacity
             onPress={() => {
@@ -60,7 +60,7 @@ export default function BottomSheetModal(props: ModalProps) {
         >
           <View style={{ flex: 1 }}>{renderView(props)}</View>
         </Animatable.View>
-      </View>
+      </BlurView>
     </Modal>
   );
 }
@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
-    // paddingVertical: hp(24),
-    paddingTop: wp(40),
+    paddingVertical: hp(24),
+    // paddingTop: wp(40),
     paddingHorizontal: wp(21),
     width: "100%",
     backgroundColor: "#F9F8FE",

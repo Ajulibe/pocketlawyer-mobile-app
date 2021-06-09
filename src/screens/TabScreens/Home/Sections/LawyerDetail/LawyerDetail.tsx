@@ -27,6 +27,7 @@ import { showError } from "../BottomSheet/BottomSheetUtils/FormHelpers";
 import Utilities from "utils/Utilities";
 import { Category } from "database/DBData";
 import { FontAwesome5 } from "@expo/vector-icons";
+import FullPageLoader from "components/FullPageLoader";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
@@ -56,7 +57,6 @@ export default function LawyerDetail({ navigation, route }: Props) {
       const response = await axiosClient.get(
         `Category/GetUserCategories/${lawyer.serviceProviderID}`
       );
-      const law = response?.data;
       const cats: Category[] = response?.data?.data;
       setLawyerCats(cats);
     } catch (error) {
@@ -126,7 +126,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
   );
   return (
     <>
-      <LoadingSpinner modalVisible={isLoading} content={spinnerText} />
+      {/* <LoadingSpinner modalVisible={isLoading} content={spinnerText} /> */}
 
       <BottomSheetModal
         closeModal={() => setModalVisibility(false)}
@@ -138,59 +138,63 @@ export default function LawyerDetail({ navigation, route }: Props) {
         amount={amount}
       />
 
-      <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <CustomAppbar navigation={navigation} title="" />
-        <ScrollView
-          contentContainerStyle={[styles.container, { flexGrow: 1 }]}
-          keyboardShouldPersistTaps="handled"
-          bounces={false}
-        >
-          <Image
-            source={{
-              uri: CONSTANTS.user,
-            }}
-            style={styles.userPhoto}
-          />
-          <Text style={styles.name}>{lawyer?.name}</Text>
-          <View style={styles.userDetails}>
-            <Text style={styles.descTitle}>Brief Description</Text>
-            <DescTile leading="Location:" value={lawyer?.address!} />
-            <DescTile
-              leading="Price:"
-              value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
+      {isLoading ? (
+        <FullPageLoader message="FETCHING LAWYERS INFO..." />
+      ) : (
+        <SafeAreaView style={globalStyles.AndroidSafeArea}>
+          <CustomAppbar navigation={navigation} title="" />
+          <ScrollView
+            contentContainerStyle={[styles.container, { flexGrow: 1 }]}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+          >
+            <Image
+              source={{
+                uri: CONSTANTS.user,
+              }}
+              style={styles.userPhoto}
             />
-            <DescTile leading="Years of Experience:" value="2yrs" />
-            <Text style={styles.aboutUser}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              dolor nam vestibulum parturient augue etiam bibendum egestas nibh.
-              Proin nulla interdum amet est ridiculus in leo. Nunc, ultricies
-              blandit nisl, eget nec. Tincidunt elementum senectus mauris
-              sapien.
-            </Text>
-            {lawyerCats.map((cat, index) => (
-              // <DescTile
-              //   leading={cat.categoryName}
-              //   value="12/03/21"
-              //   faintTrailing={true}
-              //   key={`${index}.${cat.categoryName}`}
-              // />
-              <View
-                style={styles.catWrapper}
-                key={`${index}.${cat.categoryName}`}
-              >
-                <FontAwesome5
-                  name="check-circle"
-                  size={18}
-                  color="rgba(0, 0, 0, 0.7)"
-                />
-                <Text style={styles.categoryHeading}>{cat.categoryName}</Text>
-              </View>
-            ))}
-            <View style={{ flex: 1 }} />
-            <CustomButton btnText="Confirm" onClick={getHistory} />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+            <Text style={styles.name}>{lawyer?.name}</Text>
+            <View style={styles.userDetails}>
+              <Text style={styles.descTitle}>Brief Description</Text>
+              <DescTile leading="Location:" value={lawyer?.address!} />
+              <DescTile
+                leading="Price:"
+                value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
+              />
+              <DescTile leading="Years of Experience:" value="2yrs" />
+              <Text style={styles.aboutUser}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+                dolor nam vestibulum parturient augue etiam bibendum egestas
+                nibh. Proin nulla interdum amet est ridiculus in leo. Nunc,
+                ultricies blandit nisl, eget nec. Tincidunt elementum senectus
+                mauris sapien.
+              </Text>
+              {lawyerCats.map((cat, index) => (
+                // <DescTile
+                //   leading={cat.categoryName}
+                //   value="12/03/21"
+                //   faintTrailing={true}
+                //   key={`${index}.${cat.categoryName}`}
+                // />
+                <View
+                  style={styles.catWrapper}
+                  key={`${index}.${cat.categoryName}`}
+                >
+                  <FontAwesome5
+                    name="check-circle"
+                    size={18}
+                    color="rgba(0, 0, 0, 0.7)"
+                  />
+                  <Text style={styles.categoryHeading}>{cat.categoryName}</Text>
+                </View>
+              ))}
+              <View style={{ flex: 1 }} />
+              <CustomButton btnText="Confirm" onClick={getHistory} />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </>
   );
 }

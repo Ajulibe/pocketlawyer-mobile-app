@@ -14,6 +14,7 @@ import {
   confirmUpload,
   transformMeta,
   addMetadata,
+  submitHistory,
 } from "services/UploadDocsService";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { wp } from "utils/Dimensions";
@@ -29,6 +30,10 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
+import PickerInput from "components/PickerInput";
+import { contractDuration } from "../../BottomSheetUtils/FormStaticData";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import axiosClient from "utils/axiosClient";
 
 const FormKeys = {
   name: "BusinessName",
@@ -39,7 +44,7 @@ const FormKeys = {
   memAndArtOfAssoc: "MemorandumAndArticlesOfAssociation",
 };
 export function Advisory(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const { navigation, closeModal, service, lawyer, historyId, amount } = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState
@@ -73,15 +78,26 @@ export function Advisory(props: BottomSheetProps) {
         const submit = await addMetadata(formMeta);
         loadingDispatch({ type: LoadingActionType.HIDE });
         if (submit === 200) {
-          //--> Redirect to checkout
-          closeModal();
-          showSuccess("Submitted Successfully");
-          navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
-            service: service,
-            lawyer: lawyer,
-            historyId: historyId,
-            amount: props.amount,
-          });
+          //--> Submit Service
+          try {
+            const response = await submitHistory(props);
+            if (response?.status === 200) {
+              //--> Redirect to checkout
+              closeModal();
+              showSuccess("Submitted Successfully");
+              const newProps = {
+                ...props,
+                serviceHistoryID: response?.data?.serviceHistoryID,
+              };
+              navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+                ...newProps,
+              });
+            } else {
+              showError("An error occured");
+            }
+          } catch (error) {
+            showError(`Error occured: ${error}`);
+          }
         } else {
           showError("Error in your network connection, try again");
         }
@@ -119,89 +135,88 @@ export function Advisory(props: BottomSheetProps) {
   };
 
   return (
-    <View style={{ paddingBottom: 80 }}>
+    <View style={modalFormstyles.formContainer}>
       <LoadingSpinner
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
-        <KeyboardAwareScrollView
-          extraScrollHeight={wp(100)}
-          keyboardShouldPersistTaps={"handled"}
-        >
-          <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
-          <Text style={modalFormstyles.titleDesc}>
-            Please fill the form with your proposed business details
-          </Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Business Name <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type business name"
-            errorText={formData?.[FormKeys.name]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Business Sector <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Enter business sector"
-            errorText={formData?.[FormKeys.sector]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.sector, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Contract Duration <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Select contract duration"
-            errorText={formData?.[FormKeys.duration]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.duration, value: text });
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Certificate of Registration (SMEs)
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.certOfReg)}
-            errorText={formData?.[FormKeys.certOfReg]?.error}
-            dataValue={formData?.[FormKeys.certOfReg]?.value ?? "Select file"}
-            icon
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Certificate of Incorporation (Companies)
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.certOfInc)}
-            errorText={formData?.[FormKeys.certOfInc]?.error}
-            dataValue={formData?.[FormKeys.certOfInc]?.value ?? "Select file"}
-            icon
-          />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Memorandum and Articles of Association
-            <Text style={modalFormstyles.required}> *</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.memAndArtOfAssoc)}
-            errorText={formData?.[FormKeys.memAndArtOfAssoc]?.error}
-            dataValue={
-              formData?.[FormKeys.memAndArtOfAssoc]?.value ?? "Select file"
-            }
-            icon
-          />
-        </KeyboardAwareScrollView>
-      </ScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
+          Please fill the form with your proposed business details
+        </Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Business Name <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type business name"
+          errorText={formData?.[FormKeys.name]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.name, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Business Sector <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Enter business sector"
+          errorText={formData?.[FormKeys.sector]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({ field: FormKeys.sector, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Contract Duration <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+
+        <PickerInput
+          data={contractDuration}
+          errorText={formData?.[FormKeys.duration]?.error}
+          dataValue={
+            formData?.[FormKeys.duration]?.value ?? "Select contract duration"
+          }
+          onSelectChange={(text: string) => {
+            handleTextChange({ field: FormKeys.duration, value: text });
+          }}
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Certificate of Registration (SMEs)
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.certOfReg)}
+          errorText={formData?.[FormKeys.certOfReg]?.error}
+          dataValue={formData?.[FormKeys.certOfReg]?.value ?? "Select file"}
+          icon
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Certificate of Incorporation (Companies)
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.certOfInc)}
+          errorText={formData?.[FormKeys.certOfInc]?.error}
+          dataValue={formData?.[FormKeys.certOfInc]?.value ?? "Select file"}
+          icon
+        />
+        <View style={{ height: 16 }} />
+        <Text style={modalFormstyles.inputLabel}>
+          Memorandum and Articles of Association
+          <Text style={modalFormstyles.required}> *</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.memAndArtOfAssoc)}
+          errorText={formData?.[FormKeys.memAndArtOfAssoc]?.error}
+          dataValue={
+            formData?.[FormKeys.memAndArtOfAssoc]?.value ?? "Select file"
+          }
+          icon
+        />
+      </KeyboardAwareScrollView>
       <View style={{ height: 16 }} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>

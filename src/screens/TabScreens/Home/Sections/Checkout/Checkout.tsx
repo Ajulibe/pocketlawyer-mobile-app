@@ -53,7 +53,7 @@ const Checkout = ({ navigation, route }: Props) => {
   const lawyer = route.params?.lawyer;
   const service = route.params?.service;
   const amount = route.params?.amount;
-  const historyId = route.params?.historyId;
+  const serviceHistoryID = route.params?.serviceHistoryID;
 
   //--> lawyer details
   const { name, address } = lawyer;
@@ -64,19 +64,10 @@ const Checkout = ({ navigation, route }: Props) => {
 
   const submitPayment = async (transactionRef: string | number) => {
     const userId = await AsyncStorageUtil.getUserId();
-    const userType = await AsyncStorageUtil.getUserType();
     const payload = {
       userID: Number(userId),
-      serviceProvider: lawyer.name,
-      tempServiceHistoryID: historyId,
-      serviceProviderID: lawyer.serviceProviderID,
-      serviceName: service.serviceName,
-      serviceCode: service.serviceCode,
-      categoryCode: service.categoryCode,
-      amount: amount,
-      userType: Number(userType),
+      HistoryID: serviceHistoryID,
       transactionRef: transactionRef,
-      status: 2,
     };
     setTimeout(function () {
       loadingDispatch({
@@ -86,10 +77,7 @@ const Checkout = ({ navigation, route }: Props) => {
     }, 500);
 
     try {
-      const response = await axiosClient.post(
-        "Service/SubmitServiceHistory",
-        payload
-      );
+      const response = await axiosClient.post("Service/UpdatePayment", payload);
       if (response?.data?.status === 200) {
         showSuccess("Payment successful");
 
@@ -192,7 +180,6 @@ const Checkout = ({ navigation, route }: Props) => {
             SafeAreaViewContainerModal={{ marginTop: 5 }}
             handleWebViewMessage={(e: any) => {}}
             onCancel={(resp: any) => {
-              console.log(resp);
               if (resp?.status === "cancelled") {
                 showError("Transaction cancelled");
               } else {

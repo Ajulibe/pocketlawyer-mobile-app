@@ -28,7 +28,7 @@ export type HomeStackParamList = {
   [ROUTES.CHECKOUT_SCREEN]: {
     lawyer: LawyerModel;
     service: Service;
-    historyId: number;
+    serviceHistoryID: number | string;
     amount: number;
   };
 };
@@ -38,7 +38,7 @@ const HomeStack = createStackNavigator<HomeStackParamList>();
 export default function HomeNavigationStack() {
   const headerOptions = {
     headerShown: false,
-    // cardStyle: { backgroundColor: COLORS.light.white },
+    cardStyle: { backgroundColor: COLORS.light.white },
   };
   return (
     <HomeStack.Navigator

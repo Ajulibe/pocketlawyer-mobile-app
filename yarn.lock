@@ -2017,6 +2017,11 @@
   resolved "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.10.tgz"
   integrity sha512-rk4sWFsmtOw8oyx8SD3KSvawwaK7gRBSEIy2TAwURyGt+3TizssXP1r8nx3zY+R7v2vYYHXZ+k2/GULAT/bcaQ==
 
+"@react-native-picker/picker@^1.16.1":
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.16.1.tgz#cc5d05b0d651445afa519c67824d8af3e43fa10c"
+  integrity sha512-sk07ARwL0cMXwkXsqcxyprL/KiEVD0xRFXFqznTnZs1YXqwxEqz6GiGtq2vQlK64CzXDpHX8gw1QQz47abBY1Q==
+
 "@react-native-picker/picker@^1.9.7":
   version "1.15.0"
   resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-1.15.0.tgz"
@@ -7470,10 +7475,17 @@ react-native-localize@^2.0.1:
   resolved "https://registry.npmjs.org/react-native-localize/-/react-native-localize-2.0.2.tgz"
   integrity sha512-4Ii7lqiD9iL0LxTWifAiEsDcDPpvos/29fEVkHxgEDD7J5f+NROMkFSFomKgz1Cab1TmN5mau3o8yFmYrPFcnw==
 
-react-native-pager-view@5.0.12:
-  version "5.0.12"
-  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.0.12.tgz#5106735d944e7f876b006377ab6a18859bf7730c"
-  integrity sha512-QmHUnQeP2qcxDofEOnKRmoUue0RaT55lhNJDfcQ1/SNuxif4Q2UyvDfqeItm1+toaE5tVnXqoreZh82FqUqnvw==
+react-native-modal-selector@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-modal-selector/-/react-native-modal-selector-2.0.3.tgz#7872b61cde0680541b7ff6e3787dd1b3bfc79179"
+  integrity sha512-d1ejtVi40p34p3eDC55r93Qb1UWUq2oSuIU+GRBhbrcwNcxWbstRAU8Him2BYbns5g/jzyeOQOJzyEnKCMniBw==
+  dependencies:
+    prop-types "^15.5.10"
+
+react-native-pager-view@^5.1.10:
+  version "5.1.10"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.1.10.tgz#6ec52b16f4bca9ba3cdbfa442d53620c976db4c2"
+  integrity sha512-sVWEPaxSyp2TOQ9yt+v+ecEdZ2lGnZ9TtoNU+WA1c6SjYdQlIvS2ZMb2hvdmgTMCnZpzKF02WH9BimGOzQRDIg==
 
 react-native-paystack-popup@^1.0.0:
   version "1.0.0"

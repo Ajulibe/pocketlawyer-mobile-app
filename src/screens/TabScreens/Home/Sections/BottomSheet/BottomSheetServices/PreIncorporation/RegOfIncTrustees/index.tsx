@@ -9,18 +9,16 @@ import {
   LoadingActionType,
 } from "../../../BottomSheetUtils/LoadingReducer";
 import PagerView from "react-native-pager-view";
-import { CompReg } from "./CompReg";
-import { DirectorsInfo } from "./DirectorsInfo";
-import { ShareholdersInfo } from "./ShareholdersInfo";
+import { TrusteeRegistration } from "./TrusteeRegistration";
+import { TrusteeMemberInfo } from "./TrusteeMemberInfo";
 
-export function CompanyRegistration(props: BottomSheetProps) {
+export function RegOfIncTrustees(props: BottomSheetProps) {
   const { navigation, closeModal, service, lawyer, historyId } = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState
   );
   const [formData1, setFormData1] = React.useState<any>([]);
-  const [formData2, setFormData2] = React.useState<any>([]);
   const ref = React.useRef<PagerView>(null);
 
   const change = (to: number) => {
@@ -28,8 +26,8 @@ export function CompanyRegistration(props: BottomSheetProps) {
   };
 
   //--> Submit From
-  const submit = async (meta3: Array<any>) => {
-    const formMeta = [...formData1, ...formData2, ...meta3];
+  const submit = async (meta2: Array<any>) => {
+    const formMeta = [...formData1, ...meta2];
     loadingDispatch({
       type: LoadingActionType.SHOW_WITH_CONTENT,
       payload: { content: "Submiting, please wait..." },
@@ -72,31 +70,21 @@ export function CompanyRegistration(props: BottomSheetProps) {
       scrollEnabled={true}
       orientation="horizontal"
     >
-      <CompReg
+      <TrusteeRegistration
         key="1"
         {...props}
-        formTitle={"Company Registration"}
+        formTitle={"Incorporated Trustees Registration"}
         subTitle={"Please fill the form with your proposed business details"}
         onSubmit={(meta) => {
           setFormData1(meta);
           change(1);
         }}
       />
-      <DirectorsInfo
+      <TrusteeMemberInfo
         key="2"
         {...props}
-        formTitle={"Director’s Information"}
+        formTitle={"Trustee Member Information"}
         subTitle={"Add a minimum of two people and a maximum of ten"}
-        onSubmit={(meta) => {
-          setFormData2(meta);
-          change(2);
-        }}
-      />
-      <ShareholdersInfo
-        key="3"
-        {...props}
-        formTitle={"Shareholder’s Information"}
-        subTitle={"Add a minimum of two people and a maximum of thirty"}
         onSubmit={(meta) => {
           //--> Pass meta to submit because use state would take time to take effect
           submit(meta);

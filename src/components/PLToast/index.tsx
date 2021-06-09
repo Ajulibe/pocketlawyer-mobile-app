@@ -14,7 +14,7 @@ interface PLToastProps {
 
 export const PLToast = ({
   message,
-  duration = 5000000,
+  duration = 4000,
   type,
   position = "top",
 }: PLToastProps) => {
