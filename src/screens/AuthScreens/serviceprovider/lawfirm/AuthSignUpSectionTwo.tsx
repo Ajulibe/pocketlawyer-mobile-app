@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: wp(12),
     color: COLORS.light.darkgrey,
   },

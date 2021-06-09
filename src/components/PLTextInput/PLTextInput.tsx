@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     // borderColor: COLORS.light.textinputborder,
   },
   textStyle: {
-    fontSize: 12,
-    fontFamily: "Roboto-Regular",
+    fontSize: wp(12),
+    fontFamily: "Roboto-Medium",
     color: COLORS.light.black,
   },
   error: {

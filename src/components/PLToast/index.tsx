@@ -1,5 +1,6 @@
 import React from "react";
 import Toast, { BaseToast } from "react-native-toast-message";
+import COLORS from "utils/Colors";
 import { wp } from "utils/Dimensions";
 
 type ToastTypes = "success | error | info";
@@ -13,7 +14,7 @@ interface PLToastProps {
 
 export const PLToast = ({
   message,
-  duration = 5000,
+  duration = 5000000,
   type,
   position = "top",
 }: PLToastProps) => {
@@ -62,7 +63,31 @@ export const toastConfig = {
     />
   ),
 
-  error: () => {},
+  error: ({ type, message, ...rest }: ToastProps) => (
+    <BaseToast
+      {...rest}
+      style={{ borderLeftColor: "red" }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: COLORS.light.splashscreenbg,
+        borderColor: COLORS.light.carouselBtn2,
+        borderWidth: 1,
+      }}
+      text1Style={{
+        fontSize: wp(15),
+      }}
+      text2Style={{
+        fontSize: wp(13),
+      }}
+      text1={
+        type === "success" ? "Success" : type === "error" ? "Error" : "Info"
+      }
+      text2={message}
+      text1NumberOfLines={1}
+      text2NumberOfLines={1}
+    />
+  ),
+
   info: () => {},
   any_custom_type: () => {},
 };

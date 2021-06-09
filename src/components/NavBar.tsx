@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     width: wpercent("93%"),
+    marginTop: hp(15),
   },
   navText: {
     fontFamily: "Roboto-Bold",

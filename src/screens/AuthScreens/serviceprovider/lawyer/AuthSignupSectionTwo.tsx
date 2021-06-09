@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   textStyle: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: wp(12),
     color: COLORS.light.black,
   },

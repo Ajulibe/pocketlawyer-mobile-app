@@ -29,7 +29,11 @@ export const PLDatePicker: React.FC<PLDatePicker> = ({
   return (
     <View style={styles.DatepickerWrapper}>
       <Datepicker
-        textStyle={{ color: COLORS.light.black, fontSize: wp(12) }}
+        textStyle={{
+          color: COLORS.light.black,
+          fontSize: wp(12),
+          fontFamily: "Roboto-Medium",
+        }}
         controlStyle={styles.controlStyle}
         min={min}
         max={max}
@@ -73,6 +77,7 @@ const styles = StyleSheet.create({
     color: COLORS.light.darkgrey,
     fontSize: wp(12),
     marginLeft: wp(8),
+    fontFamily: "Roboto-Medium",
   },
   backdropStyle: {
     justifyContent: "center",

@@ -277,8 +277,8 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontFamily: "Roboto-Medium",
+    fontSize: wp(12),
     color: COLORS.light.black,
   },
   signUpText: {

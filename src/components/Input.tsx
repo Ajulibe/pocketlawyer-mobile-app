@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: wp(12),
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     // minHeight: hp(30),
     borderColor: COLORS.light.primaryLight,
     color: COLORS.light.black,
