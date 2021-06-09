@@ -43,11 +43,11 @@ const globalStyles = StyleSheet.create({
     color: COLORS.light.primary,
   },
   shadowLight: {
-    shadowColor: COLORS.light.primary,
-    shadowOffset: { width: 0, height: 1 },
+    shadowColor: COLORS.light.blackLight,
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 5,
+    shadowRadius: 0,
+    elevation: Platform.OS === "ios" ? 8 : 0,
   },
   divider: {},
 });

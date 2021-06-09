@@ -29,6 +29,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
 import axios from "axios";
 import { PLToast } from "components/PLToast";
+import globalStyles from "css/GlobalCss";
+import {
+  DocUploadInterface,
+  uploadFileToS3,
+  pickFile,
+} from "services/S3FileUploadHelper";
+import {
+  loadingReducer,
+  loadingInitialState,
+  LoadingActionType,
+} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/LoadingReducer";
+import { showError } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import LoadingSpinner from "components/LoadingSpinner";
+import { confirmUpload } from "services/UploadDocsService";
+import { AntDesign } from "@expo/vector-icons";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -45,6 +60,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [isUploaded, setIsUploaded] = useState<boolean | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [loadingState, loadingDispatch] = React.useReducer(
+    loadingReducer,
+    loadingInitialState
+  );
 
   //-->  data for bottom sheet
   const list = [
@@ -86,48 +106,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [uri, setUri] = useState("");
   const [resumeName, setResumeName] = useState("Select from files");
 
-  //--> setting resume data
-  const pickDocument = async () => {
-    await DocumentPicker.getDocumentAsync({
-      type: "*/*",
-      copyToCacheDirectory: true,
-    }).then((response) => {
-      if (response.type == "success") {
-        let { name, size, uri } = response;
-        let nameParts = name.split(".");
-        let fileType = nameParts[nameParts.length - 1];
-        setUri(uri);
-        var fileToUpload = [
-          {
-            name: name,
-            size: size,
-            uri: uri,
-            type: "application/" + fileType,
-          },
-        ];
-        if (fileToUpload[0].type !== "application/pdf") {
-          setResumeName("Invalid file type");
-          setErrors(false);
-          PLToast({ message: "Only PDF is allowed", type: "error" });
-          return;
-        }
-
-        if (fileToUpload[0].size >= 1 * 1024 * 1024) {
-          setResumeName("File is too large");
-          setErrors(true);
-          PLToast({ message: "File must be less than 1MB", type: "error" });
-          return;
-        } else {
-          setErrors(false);
-          setResumeName(name);
-          setResume(fileToUpload);
-        }
-
-        // console.log(fileToUpload, "...............file");
-      }
-    });
-  };
-
   React.useEffect(() => {
     const { name, uri, type } = resume[0];
     if (name === "" || uri === "" || type === "") {
@@ -144,62 +122,49 @@ const AuthGetStarted = ({ navigation }: Props) => {
         userID: Number(res),
       };
 
-      postDocument(payload);
+      // postDocument(payload);
     });
   }, [resume]);
 
-  //--> posting resume data
-  const postDocument = async (payload: DocUploadUserInfo) => {
-    setIsUploaded(false);
+  const uploadFile = async (field: string) => {
+    const payload: DocUploadInterface = {
+      fileType: 1,
+      isfor: field,
+    };
+
     try {
-      await axiosClient.post("Upload/Generates3URL", payload).then((res) => {
-        const { url, uploadID, fileName } = res.data.data;
+      const pickedFile = await pickFile();
+      if (pickedFile != null) {
+        //--> extra formatting on the picked file
+        let { name, size, uri } = pickedFile;
 
-        const formData = new FormData();
-        formData.append("resume", resume[0] as any);
-        formData.append("fileName", fileName);
+        let nameParts = name.split(".");
+        let fileType = nameParts[nameParts.length - 1];
+        setUri(uri);
 
-        //--> post document to the received s3 url
-        axios
-          .put(url, payload, {
-            headers: {
-              "Content-Type": "application/pdf",
-            },
-          })
-          .then((res) => {
-            //--> confirm upload
-            const confirmPayload = {
-              fileName: fileName,
-              fileType: 1,
-              userID: payload.userID,
-              uploadID: uploadID,
-            };
+        loadingDispatch({
+          type: LoadingActionType.SHOW_WITH_CONTENT,
+          payload: { content: "Uploading file..." },
+        });
+        const upload = await uploadFileToS3(payload, pickedFile);
 
-            confirmUpload<confirmLawyerResume>(confirmPayload);
-          })
+        if (upload == null) {
+          showError("Error occured while uploading, try again...");
+        } else {
+          const confirm = await confirmUpload(upload);
 
-          .catch(function (error) {
-            const { message } = error?.response.data;
-            PLToast({ message: message, type: "error" });
-          });
-      });
-    } catch (error) {}
-  };
-
-  const confirmUpload = async <T,>(confirmPayload: T) => {
-    try {
-      //--> confirm the upload
-      const { data } = await axiosClient.post(
-        "Upload/ConfirmUpload",
-        confirmPayload
-      );
-
-      PLToast({ message: data.message, type: "success" });
-      setIsUploaded(true);
+          loadingDispatch({ type: LoadingActionType.HIDE });
+          if (confirm == null || confirm?.url == null) {
+            showError("Error occured while uploading, try again...");
+          } else {
+            setIsUploaded(true);
+            setResumeName(name);
+            handleTextChange({ field: field, value: confirm?.url });
+          }
+        }
+      }
     } catch (error) {
-      const { message } = error?.response.data;
-      PLToast({ message: message, type: "success" });
-      setIsUploaded(null);
+      return error;
     }
   };
 
@@ -223,7 +188,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
       CGPA === "" ||
       Identification === "" ||
       idNumber === "" ||
-      resume[0].name === "" ||
       !isUploaded
     ) {
       setDisabled(true);
@@ -231,13 +195,10 @@ const AuthGetStarted = ({ navigation }: Props) => {
     }
 
     setDisabled(false);
-  }, [CGPA, Identification, school, idNumber, resume, isUploaded]);
+  }, [CGPA, Identification, school, idNumber, isUploaded]);
 
   //--> submit all lawyers metadata
   const submitMetadata = async () => {
-    if (userID === 0) {
-      return;
-    }
     setIsLoading(true);
 
     try {
@@ -270,7 +231,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       const { message } = error?.response.data;
       PLToast({ message: message, type: "error" });
@@ -278,14 +239,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
+      <LoadingSpinner
+        modalVisible={loadingState.isVisible ?? false}
+        content={loadingState.content}
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
         <NavBar
           onPress={() => {
-            navigation.navigate(ROUTES.AUTH_PASSWORD_LAWYER);
+            navigation.goBack();
           }}
           navText="Education Details"
         />
@@ -355,8 +320,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
                       <Text
                         style={{
                           marginLeft: wp(16),
-                          fontSize: 12,
-                          fontFamily: "Roboto-Regular",
+                          fontSize: wp(12),
+                          fontFamily: "Roboto-Medium",
                           color:
                             identificationPlaceholder === 0
                               ? COLORS.light.darkgrey
@@ -440,14 +405,16 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 </Text>
               </Text>
               <TouchableOpacity
-                onPress={pickDocument}
+                onPress={() => {
+                  uploadFile("resume");
+                }}
                 style={styles.inputButton}
               >
                 <Text style={styles.selectText}>{resumeName}</Text>
-                <FontAwesome
-                  name="file-pdf-o"
+                <AntDesign
+                  name="clouduploado"
                   size={14}
-                  color={COLORS.light.black}
+                  color={COLORS.light.primary}
                 />
               </TouchableOpacity>
               {errors ? (
@@ -529,6 +496,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     color: COLORS.light.black,
     marginBottom: hp(4),
+    marginTop: hp(20),
+    width: "100%",
   },
   contentWraper: {
     width: wpercent("90%"),
@@ -538,7 +507,7 @@ const styles = StyleSheet.create({
   educationDetails: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    // lineHeight: hp(20),
     color: COLORS.light.primary,
   },
   input: {
@@ -660,7 +629,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(22),
+    marginTop: hp(18),
     width: wpercent("90%"),
   },
   identification: {
@@ -724,3 +693,10 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
+function loadingDispatch(arg0: { type: any; payload: { content: string } }) {
+  throw new Error("Function not implemented.");
+}
+
+function handleTextChange(arg0: { field: string; value: any }) {
+  throw new Error("Function not implemented.");
+}

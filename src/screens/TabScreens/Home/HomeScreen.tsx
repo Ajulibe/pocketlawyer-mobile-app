@@ -23,13 +23,15 @@ import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
 import { CategoryDb } from "database/CategoryDb";
 import { LawyerModel } from "models/Interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({ navigation }: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
-
+  const [user, setUser] = React.useState("");
+  const [time, setTime] = React.useState("");
   //--> Route redirects...
   React.useLayoutEffect(() => {
     (async () => {
@@ -57,12 +59,38 @@ const HomeScreen = ({ navigation }: Props) => {
       }
     })();
   });
+
+  //--> get the time of the day
+  const getTimePeriod = () => {
+    const today = new Date();
+    const curHr = today.getHours();
+
+    if (curHr < 12) {
+      setTime("Good morning");
+    } else if (curHr < 18) {
+      setTime("Good afternoon");
+    } else if (curHr < 20) {
+      setTime("Good evening");
+    } else {
+      setTime("Sleep well");
+    }
+  };
+
+  //--> capitalize the first letter of the name
+  const capitalizeFirstLetter = (name: string) => {
+    const lower = name?.toLowerCase();
+    return name?.charAt(0).toUpperCase() + lower?.slice(1);
+  };
   //-->Get User's Categories
   React.useEffect(() => {
+    getTimePeriod();
     getCategories();
   }, []);
   const getCategories = async () => {
     const userID = await AsyncStorageUtil.getUserId();
+    const name = await AsyncStorage.getItem("firstName");
+    const firstname = capitalizeFirstLetter(name ? name : "");
+    setUser(firstname ? firstname : "");
     const getCats = await axiosClient.get(
       `Category/GetUserCategories/${userID}`
     );
@@ -104,9 +132,9 @@ const HomeScreen = ({ navigation }: Props) => {
         >
           <View style={styles.header}>
             <View style={styles.headerTitleWrapper}>
-              <Text style={globalStyles.H1Style}>Hi Tola 👋🏼</Text>
+              <Text style={globalStyles.H1Style}>Hi {user} 👋🏼</Text>
               <Text style={styles.greeting}>
-                Good morning, here are your available services
+                {time}, here are your available services
               </Text>
             </View>
             <Image source={{ uri: CONSTANTS.user }} style={styles.user} />
@@ -120,7 +148,12 @@ const HomeScreen = ({ navigation }: Props) => {
               <Text style={styles.viewMore}>View all</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ display: "flex", flexDirection: "row" }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
             <FlatList
               horizontal={true}
               data={category}

@@ -10,6 +10,7 @@ import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
 import { default as theme } from "./src/theme.json";
 import Toast from "react-native-toast-message";
+import { toastConfig } from "components/PLToast";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

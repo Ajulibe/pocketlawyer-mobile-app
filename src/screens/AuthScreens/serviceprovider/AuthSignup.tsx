@@ -28,9 +28,8 @@ const useInputState = (initialValue = "") => {
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: wp(12),
     color: COLORS.light.darkgrey,
   },

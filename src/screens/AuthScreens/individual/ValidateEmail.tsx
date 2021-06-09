@@ -12,11 +12,12 @@ import { PLTextInput } from "components/PLTextInput/PLTextInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ActivityIndicatorPage from "components/ActivityIndicator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
 const ValidateEmail = ({ navigation, route }: Props) => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<any>("");
   //--> Otp state
   const [OTP, setOTP] = useState<string>("");
   const [validating, setSetValidating] = useState<boolean>(false);
@@ -28,9 +29,12 @@ const ValidateEmail = ({ navigation, route }: Props) => {
 
     const path = await AsyncStorage.getItem("previousPath");
     //--> check the previous Path
-    if (path === "barrister" || path === "solicitor" || path === "lawfirm") {
+    console.log(path);
+    if (path === "lawyer" || path === "solicitor") {
       navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
-    } else if (path === null) {
+    } else if (path === "lawfirm") {
+      navigation.navigate(ROUTES.AUTH_CAC_LAWFIRM);
+    } else {
       navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
     }
   };
@@ -64,18 +68,21 @@ const ValidateEmail = ({ navigation, route }: Props) => {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@email");
+      const email = jsonValue ? jsonValue : "";
+      console.log(email, "calling email");
 
-      jsonValue != null ? setEmail(JSON.parse(jsonValue)) : null;
+      setEmail(email);
     } catch (e) {
       //--> error reading value
     }
   };
+  console.log(email);
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
+          navigation.goBack();
         }}
         navText="Validate email address"
       />

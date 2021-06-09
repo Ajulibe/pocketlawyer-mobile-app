@@ -1,5 +1,12 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
@@ -49,6 +56,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
     marginBottom: wp(6),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   user: {
     resizeMode: "cover",

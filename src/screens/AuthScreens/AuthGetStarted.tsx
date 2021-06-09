@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "../../navigation/MainNavigator";
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
     width: wp(260),
     fontStyle: "normal",
-    lineHeight: hp(24),
+    lineHeight: Platform.OS === "ios" ? hp(24) : hp(32),
     color: COLORS.light.black,
   },
   textWrapper: {
@@ -82,8 +82,6 @@ const styles = StyleSheet.create({
     marginTop: hp(20),
   },
   textHeader: {
-    width: wp(264),
-    height: wp(24),
     fontFamily: "Roboto-Bold",
     fontSize: wp(20),
     color: COLORS.light.primary,
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
     lineHeight: hp(16),
     letterSpacing: 0,
-    color: COLORS.light.lightpurple,
+    color: COLORS.light.primary,
   },
 });
 

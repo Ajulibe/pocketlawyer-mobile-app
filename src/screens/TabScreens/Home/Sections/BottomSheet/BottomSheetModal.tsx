@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, View, Modal, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Modal,
+  Text,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
@@ -75,6 +82,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F8FE",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   quickActions: {
     display: "flex",
@@ -86,7 +95,7 @@ const styles = StyleSheet.create({
   },
   action: {
     fontSize: wp(16),
-    lineHeight: hp(18),
+    lineHeight: hp(23),
     fontWeight: "500",
     fontFamily: "Roboto-Medium",
     color: COLORS.light.white,

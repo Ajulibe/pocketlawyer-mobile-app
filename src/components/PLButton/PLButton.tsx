@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   View,
   ViewStyle,
+  Platform,
 } from "react-native";
 import { wp, hp } from "../../utils/Dimensions";
 import COLORS from "../../utils/Colors";
@@ -13,15 +14,15 @@ import { Button, Spinner } from "@ui-kitten/components";
 type Props = {
   textColor: string;
   btnText?: string;
-  onClick?: (event: GestureResponderEvent) => void;
+  onClick: (event: any) => void;
   isLoading?: boolean;
   style?: any;
   disabled?: boolean;
-  loadingText?: string;
+  loadingText?: any;
 };
 
 const LoadingIndicator = (props: any) => (
-  <ActivityIndicator style={[props.style, styles.indicator]} />
+  <ActivityIndicator style={[props.style, styles.indicator]} color="#fff" />
 );
 
 export default function PLButton({
@@ -38,7 +39,7 @@ export default function PLButton({
     <Button
       style={[styles.btn, style]}
       accessoryLeft={LoadingIndicator}
-      disabled
+      disabled={true}
     >
       {loadingText}
     </Button>
@@ -47,7 +48,7 @@ export default function PLButton({
       onPress={onClick}
       style={[styles.btn, style]}
       {...rest}
-      disabled={disabled}
+      disabled={disabled ? disabled : false}
     >
       {btnText}
     </Button>
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
     width: wp(312),
     height: wp(45),
     backgroundColor: COLORS.light.primary,
-    borderWidth: 0,
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
@@ -75,6 +75,8 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 0.2,
     borderRadius: wp(7),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.lightpurple,
   },
   indicator: {
     justifyContent: "center",

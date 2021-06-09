@@ -15,7 +15,7 @@ import { wp } from "utils/Dimensions";
 const index = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <ActivityIndicator />
+      <ActivityIndicator color={COLORS.light.primary} />
       <Text style={styles.loading}> Loading...</Text>
     </SafeAreaView>
   );

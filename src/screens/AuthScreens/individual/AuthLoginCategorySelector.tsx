@@ -18,6 +18,7 @@ import FullPageLoader from "components/FullPageLoader";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CategoryDb } from "database/CategoryDb";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -126,7 +127,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   return loading ? (
     <FullPageLoader message="SUBMITTING CATEGORIES" />
   ) : (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <View style={styles.contentWraper}>
         <Text style={styles.heading}>Select your preferred category</Text>
         <RNECheckBox

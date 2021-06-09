@@ -92,17 +92,26 @@ export const useDocUpload = (documentUse: string, section: string) => {
 
         setPdfUri(`data:application/pdf;base64,${bzse64}`); // to use when we want to view
 
-        setUri(`data:application/pdf;base64,${bzse64}`); //--> was initially uri
+        setUri(bzse64); //--> was initially uri
 
-        const resp = await fetch(uri);
-        const imageBody = await resp.blob();
+        // const resp = await fetch(`data:application/pdf;base64,${bzse64}`);
+        // const imageBody = await resp.blob();
+
+        let blob = new Blob([uri]);
+        console.log(blob);
+
+        // console.log(JSON.stringify(imageBody));
+
+        const blobURL = URL.createObjectURL(blob);
+
+        console.log(blobURL);
 
         var fileToUpload = [
           {
             name: name,
             size: size,
             // uri: `data:application/pdf;base64,${bzse64}`,
-            uri: JSON.stringify(imageBody),
+            uri: bzse64,
             type: "application/" + fileType,
           },
         ];
@@ -113,16 +122,16 @@ export const useDocUpload = (documentUse: string, section: string) => {
           return;
         }
 
-        if (fileToUpload[0].size >= 1 * 1024 * 1024) {
-          setDocName("File is too large");
-          setErrors(true);
-          PLToast({ message: "File must be less than 1MB", type: "error" });
-          return;
-        } else {
-          setErrors(false);
-          setDocName(name);
-          setResume(fileToUpload);
-        }
+        // if (fileToUpload[0].size >= 1 * 1024 * 1024) {
+        //   setDocName("File is too large");
+        //   setErrors(true);
+        //   PLToast({ message: "File must be less than 1MB", type: "error" });
+        //   return;
+        // } else {
+        setErrors(false);
+        setDocName(name);
+        setResume(fileToUpload);
+        // }
 
         // console.log(fileToUpload, "...............file");
       }
@@ -170,14 +179,14 @@ export const useDocUpload = (documentUse: string, section: string) => {
       await axiosClient.post("Upload/Generates3URL", payload).then((res) => {
         const { url, uploadID, fileName } = res.data.data;
 
-        const fileToUpload = {
-          ...resume[0],
-          name: fileName,
-          uri: pdfUri,
-        };
+        // const fileToUpload = {
+        //   ...resume[0],
+        //   name: fileName,
+        //   uri: pdfUri,
+        // };
 
-        const formData = new FormData();
-        formData.append("myData", fileToUpload as any);
+        // const formData = new FormData();
+        // formData.append("myData", fileToUpload as any);
         // console.log(formData);
         // formData.append("fileName", fileName);
 
@@ -185,12 +194,10 @@ export const useDocUpload = (documentUse: string, section: string) => {
         //--> change the paylod here to the formdata generated and it deosnt work
         //-> thats the error wit the api
 
-        // const buffer = Buffer.from(resume[0].uri, "base64");
-
-        console.log(resume[0].uri);
+        const buffer = Buffer.from(uri, "base64");
 
         axios
-          .put(url, resume[0].uri, {
+          .put(url, buffer, {
             headers: {
               "Content-Type": "application/pdf",
             },
@@ -225,7 +232,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
       );
 
       PLToast({ message: data.message, type: "success" });
-      // console.log(data, "resposne");
+      console.log(data, "resposne");
 
       setIsUploaded("success");
     } catch (error) {

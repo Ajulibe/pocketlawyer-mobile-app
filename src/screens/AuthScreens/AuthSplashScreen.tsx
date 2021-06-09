@@ -29,6 +29,7 @@ const AuthSplashScreen = ({ navigation }: Props) => {
       await AsyncStorage.removeItem("signup_payload");
       await AsyncStorage.removeItem("signup_payload");
       await AsyncStorage.removeItem("signup_payload");
+      await AsyncStorage.removeItem("firstName");
     } catch (e) {
       // remove error
     }

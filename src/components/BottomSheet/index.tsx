@@ -91,8 +91,8 @@ export const PLBottomSheet: React.FC<Props> = ({
               <Text
                 style={{
                   marginLeft: wp(16),
-                  fontSize: 12,
-                  fontFamily: "Roboto-Regular",
+                  fontSize: wp(12),
+                  fontFamily: "Roboto-Medium",
                   color:
                     statePlaceholder === 0
                       ? COLORS.light.darkgrey

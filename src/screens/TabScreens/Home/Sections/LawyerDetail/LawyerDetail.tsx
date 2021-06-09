@@ -11,6 +11,8 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
+  Platform,
 } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import CONSTANTS from "utils/Constants";
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 150,
   },
   name: {
-    lineHeight: hp(16),
+    lineHeight: hp(20),
     fontWeight: "500",
     fontSize: wp(14),
     color: COLORS.light.primary,
@@ -228,6 +230,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(24),
     paddingVertical: hp(17),
     paddingHorizontal: wp(28),
+    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
   },
   descTitle: {
     lineHeight: hp(24),
@@ -246,21 +250,21 @@ const styles = StyleSheet.create({
   tileLeading: {
     fontWeight: "400",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto",
   },
   tileTrailing: {
     fontWeight: "700",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
   },
   aboutUser: {
     fontWeight: "400",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     color: "rgba(0, 0, 0, 0.7)",
     textAlign: "justify",
     fontFamily: "Roboto",

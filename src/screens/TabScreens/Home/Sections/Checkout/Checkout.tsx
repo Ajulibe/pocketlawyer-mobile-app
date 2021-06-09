@@ -176,7 +176,6 @@ const Checkout = ({ navigation, route }: Props) => {
             ActivityIndicatorColor="green"
             SafeAreaViewContainer={{
               marginTop: 5,
-              backgroundColor: COLORS.light.primary,
             }}
             SafeAreaViewContainerModal={{ marginTop: 5 }}
             handleWebViewMessage={(e: any) => {}}
@@ -217,7 +216,7 @@ const styles = StyleSheet.create({
   subTitle: {
     fontWeight: "300",
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     marginTop: hp(6),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto",

@@ -108,7 +108,10 @@ export function DirectorsInfo2(props: Props) {
         content={loadingState.content}
       />
       <ScrollView>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={wp(100)}
+          keyboardShouldPersistTaps={"handled"}
+        >
           <Text style={globalStyles.H1Style}>{formTitle}</Text>
           <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
           <View>

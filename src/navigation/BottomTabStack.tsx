@@ -147,14 +147,13 @@ export default function HomeBottomTabStack() {
 const styles = StyleSheet.create({
   tabBarLabel: {
     fontFamily: "Roboto-Regular",
-    fontSize: hp(14),
-    // lineHeight: hp(16),
+    fontSize: hp(12),
     marginBottom: hp(12),
   },
   tabBarImage: {
     resizeMode: "contain",
-    width: wp(13),
-    height: hp(13),
+    width: Platform.OS === "android" ? wp(11) : wp(11),
+    height: Platform.OS === "android" ? wp(11) : wp(11),
     marginBottom: hp(6),
     // marginTop: hp(6),
   },

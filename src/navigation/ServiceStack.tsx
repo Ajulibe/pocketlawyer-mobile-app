@@ -24,9 +24,9 @@ export default function ServiceNavigationStack() {
       headerMode={"none"}
       screenOptions={{
         cardStyle: { backgroundColor: COLORS.light.white },
-        gestureEnabled: true,
+        gestureEnabled: false,
         headerShown: false,
-        gestureDirection: "horizontal",
+        // gestureDirection: "horizontal",
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         headerStyle: {
           backgroundColor: "#fff",

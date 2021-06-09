@@ -25,7 +25,7 @@ export const PLPasswordInput: React.FC<Props> = ({
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
       <Feather
         name={secureTextEntry ? "eye-off" : "eye"}
-        size={12}
+        size={16}
         color="grey"
       />
     </TouchableWithoutFeedback>
@@ -49,18 +49,16 @@ export const PLPasswordInput: React.FC<Props> = ({
 const styles = StyleSheet.create({
   InputWrapper: {
     width: "100%",
-    height: wp(40),
     borderWidth: 0,
   },
   Input: {
     borderRadius: 4,
     backgroundColor: "white",
-    borderColor: COLORS.light.textinputborder,
     borderWidth: 0,
   },
   textStyle: {
-    fontSize: 12,
-    fontFamily: "Roboto-Regular",
+    fontSize: wp(12),
+    fontFamily: "Roboto-Medium",
     color: COLORS.light.black,
   },
 });

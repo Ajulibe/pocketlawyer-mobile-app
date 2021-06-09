@@ -32,6 +32,20 @@ import axiosClient from "utils/axiosClient";
 import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import {
+  DocUploadInterface,
+  uploadFileToS3,
+  pickFile,
+} from "services/S3FileUploadHelper";
+import {
+  loadingReducer,
+  loadingInitialState,
+  LoadingActionType,
+} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/LoadingReducer";
+import { showError } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import LoadingSpinner from "components/LoadingSpinner";
+import { confirmUpload } from "services/UploadDocsService";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -41,8 +55,13 @@ type Props = StackScreenProps<
 const AuthGetStarted = ({ navigation }: Props) => {
   const [visible, setVisible] = React.useState(false);
   const [image, setImage] = useState<string>("");
+  const [disabled, setDisabled] = useState(true);
   const [userID, setUserID] = useState(0);
   const imageSelected = React.useRef<any>({});
+  const [loadingState, loadingDispatch] = React.useReducer(
+    loadingReducer,
+    loadingInitialState
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -55,6 +74,15 @@ const AuthGetStarted = ({ navigation }: Props) => {
       }
     })();
   }, []);
+
+  React.useEffect(() => {
+    if (image.length === 0) {
+      setDisabled(true);
+      return;
+    } else {
+      setDisabled(false);
+    }
+  }, [image]);
 
   const pickImage = async () => {
     try {
@@ -138,8 +166,53 @@ const AuthGetStarted = ({ navigation }: Props) => {
     }
   };
 
+  const uploadFile = async (field: string) => {
+    const payload: DocUploadInterface = {
+      fileName: "bb.jpg",
+      fileType: 1,
+      isfor: field,
+    };
+
+    try {
+      const pickedFile = await pickFile();
+      if (pickedFile != null) {
+        //--> extra formatting on the picked file
+        let { name, size, uri } = pickedFile;
+
+        let nameParts = name.split(".");
+        let fileType = nameParts[nameParts.length - 1];
+
+        loadingDispatch({
+          type: LoadingActionType.SHOW_WITH_CONTENT,
+          payload: { content: "Uploading file..." },
+        });
+        const upload = await uploadFileToS3(payload, pickedFile);
+
+        if (upload == null) {
+          showError("Error occured while uploading, try again...");
+        } else {
+          const confirm = await confirmUpload(upload);
+
+          loadingDispatch({ type: LoadingActionType.HIDE });
+          if (confirm == null || confirm?.url == null) {
+            showError("Error occured while uploading, try again...");
+          } else {
+            setImage(uri);
+            handleTextChange({ field: field, value: confirm?.url });
+          }
+        }
+      }
+    } catch (error) {
+      return error;
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
+      <LoadingSpinner
+        modalVisible={loadingState.isVisible ?? false}
+        content={loadingState.content}
+      />
       <NavBar
         onPress={() => {
           navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
@@ -152,7 +225,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
         </Text>
 
         <View style={styles.fileSelectBox}>
-          <TouchableOpacity onPress={pickImage} style={styles.inputButton}>
+          <TouchableOpacity
+            onPress={() => {
+              uploadFile("Avatar");
+            }}
+            style={styles.inputButton}
+          >
             <Ionicons name="camera" size={24} color={COLORS.light.primary} />
             <Text style={styles.selectText}>
               {image ? "Change Photo" : "Select a Photo"}
@@ -193,6 +271,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             style={styles.nextButton}
             textColor={COLORS.light.white}
             btnText={"Next"}
+            disabled={disabled}
             onClick={() => navigation.navigate(ROUTES.AUTH_LAW_CATEGORY_LAWYER)}
           />
         </View>
@@ -403,3 +482,10 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
+function loadingDispatch(arg0: { type: LoadingActionType }) {
+  throw new Error("Function not implemented.");
+}
+
+function handleTextChange(arg0: { field: string; value: any }) {
+  throw new Error("Function not implemented.");
+}

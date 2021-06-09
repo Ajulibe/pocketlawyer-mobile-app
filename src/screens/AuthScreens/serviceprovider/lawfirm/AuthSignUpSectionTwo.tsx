@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../../navigation/MainNavigator";
-import { ROUTES } from "../../../../navigation/Routes";
-import COLORS from "../../../../utils/Colors";
-import { wp, hp } from "../../../../utils/Dimensions";
+import { RootStackParamList } from "navigation/MainNavigator";
+import { ROUTES } from "navigation/Routes";
+import COLORS from "utils/Colors";
+import { wp, hp } from "utils/Dimensions";
 import { Input } from "@ui-kitten/components";
-import NavBar from "../../../../components/NavBar";
-import PLButton from "../../../../components/PLButton/PLButton";
+import NavBar from "components/NavBar";
+import PLButton from "components/PLButton/PLButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "../../../../types";
-import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
-import { states } from "../../../../utils/nigerianStates";
+import { CountryCode, Country, CallingCode } from "types";
+import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import { states } from "utils/nigerianStates";
 import { Picker, Form, Icon } from "native-base";
-import { PLPasswordInput } from "../../../../components/PLPasswordInput/PLPasswordInput";
+import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -31,9 +31,8 @@ const useInputState = (initialValue = "") => {
 const AuthGetStarted = ({ navigation }: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-    false
-  );
+  const [withCountryNameButton, setWithCountryNameButton] =
+    useState<boolean>(false);
   const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
 
   const [withFlag, setWithFlag] = useState<boolean>(true);
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: wp(12),
     color: COLORS.light.darkgrey,
   },

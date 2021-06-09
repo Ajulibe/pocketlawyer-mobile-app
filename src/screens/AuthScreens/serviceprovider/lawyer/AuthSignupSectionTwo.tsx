@@ -27,10 +27,12 @@ import { CountryCode, Country, CallingCode } from "types";
 import CountryPicker from "react-native-country-picker-modal";
 import { Input } from "@ui-kitten/components";
 import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({ navigation, route }: Props) => {
   //--> state values for the section
   const [phonenumber, setPhonenumber] = useState("");
   const [password, setPassword] = useState("");
@@ -237,177 +239,182 @@ const AuthGetStarted = ({ navigation }: Props) => {
       const { token } = data.data;
       const { userType } = data.data;
       const { userID } = data.data;
+      const { firstName } = data.data;
 
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
+      await AsyncStorage.setItem("@email", Payload.email);
+      await AsyncStorage.setItem("firstName", firstName);
 
       //--> setting lawyer as the prvios path
-      await AsyncStorage.setItem("previousPath", "barrister");
+      // await AsyncStorage.setItem("previousPath", "barrister");
 
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       const { message } = error?.response.data;
       PLToast({ message: message, type: "error" });
       setIsLoading(false);
+      setIsDisabled(true);
       return;
     }
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-        keyboardVerticalOffset={wp(0)}
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
+      <NavBar
+        onPress={() => {
+          navigation.goBack();
+        }}
+        navText="Complete Account Setup"
+      />
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        keyboardShouldPersistTaps={"handled"}
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <NavBar
-          onPress={() => {
-            navigation.goBack();
-          }}
-          navText="Complete Account Setup"
-        />
-        <ScrollView>
-          <Animatable.View animation="fadeIn" style={styles.contentWraper}>
-            <Text style={styles.welcomeMessage}>
-              Complete your account setup.
+        <Animatable.View animation="fadeIn" style={styles.contentWraper}>
+          <Text style={styles.welcomeMessage}>
+            Complete your account setup.
+          </Text>
+
+          <View style={styles.inputBMargins}>
+            <Text style={styles.inputText}>
+              Phone Number <Text style={styles.required}>*</Text>
             </Text>
+            <View style={styles.phoneNumberWrapper}>
+              <View style={styles.countryPickerWrapper}>
+                <CountryPicker
+                  {...{
+                    countryCode,
+                    withFilter,
+                    withFlag,
+                    withCountryNameButton,
+                    withAlphaFilter,
+                    withCallingCode,
+                    withEmoji,
+                    onSelect,
+                  }}
+                />
+                <Text style={styles.codeText}>+{callingCode}</Text>
+              </View>
 
+              <Input
+                maxLength={11}
+                style={styles.inputPhoneNumber}
+                onChangeText={setPhonenumber}
+                value={phonenumber}
+                textStyle={styles.textStyle}
+                placeholder="906 3782 2828"
+                textContentType="telephoneNumber"
+                keyboardType="numeric"
+                returnKeyType="next"
+                placeholderTextColor={COLORS.light.darkgrey}
+              />
+            </View>
+          </View>
+
+          {previous === "lawfirm" && (
             <View style={styles.inputBMargins}>
-              <Text style={styles.inputText}>
-                Phone Number <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.phoneNumberWrapper}>
-                <View style={styles.countryPickerWrapper}>
-                  <CountryPicker
-                    {...{
-                      countryCode,
-                      withFilter,
-                      withFlag,
-                      withCountryNameButton,
-                      withAlphaFilter,
-                      withCallingCode,
-                      withEmoji,
-                      onSelect,
-                    }}
-                  />
-                  <Text style={styles.codeText}>+{callingCode}</Text>
-                </View>
-
-                <Input
-                  maxLength={11}
-                  style={styles.inputPhoneNumber}
-                  onChangeText={setPhonenumber}
-                  value={phonenumber}
-                  textStyle={styles.textStyle}
-                  placeholder="906 3782 2828"
-                  textContentType="telephoneNumber"
-                  keyboardType="numeric"
-                  returnKeyType="next"
-                  placeholderTextColor={COLORS.light.darkgrey}
-                />
-              </View>
+              <PLTextInput
+                onChangeText={setDestination}
+                labelText="Designation of Contact Person"
+                labelTextRequired={true}
+                error={false}
+                name="Designation"
+                textContentType="name"
+                style={styles.input}
+                placeholder="Type the job designation"
+              />
             </View>
+          )}
 
-            {previous === "lawfirm" && (
-              <View style={styles.inputBMargins}>
-                <PLTextInput
-                  onChangeText={setDestination}
-                  labelText="Designation of Contact Person"
-                  labelTextRequired={true}
-                  error={false}
-                  name="Designation"
-                  textContentType="name"
-                  style={styles.input}
-                  placeholder="Type the job designation"
-                />
-              </View>
-            )}
-
-            <View style={styles.inputBMargins}>
-              <Text style={styles.inputText}>
-                Password <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.phoneNumberWrapper}>
-                <PLPasswordInput
-                  placeholder="Create your Password"
-                  onChangeText={setPassword}
-                />
-              </View>
+          <View style={styles.inputBMargins}>
+            <Text style={styles.inputText}>
+              Password <Text style={styles.required}>*</Text>
+            </Text>
+            <View style={styles.phoneNumberWrapper}>
+              <PLPasswordInput
+                placeholder="Create your Password"
+                onChangeText={setPassword}
+              />
             </View>
+          </View>
 
-            <View style={styles.carouselWrapper}>
-              <View style={styles.carouselIcon}>
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-              </View>
+          <View style={styles.carouselWrapper}>
+            <View style={styles.carouselIcon}>
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
             </View>
+          </View>
 
-            <PLButton
-              disabled={isDisabled}
-              isLoading={isLoading}
-              loadingText="Submitting..."
-              style={styles.plButton}
-              textColor={COLORS.light.white}
-              btnText={"Next"}
-              onClick={() => {
-                //--> reading async storage value
-                const getData = async () => {
-                  try {
-                    const jsonValue = await AsyncStorage.getItem(
-                      "lawyerPayload"
-                    );
-                    const lawfirmPayload = await AsyncStorage.getItem(
-                      "lawfirmPayload"
-                    );
+          <PLButton
+            disabled={isDisabled}
+            isLoading={isLoading}
+            loadingText="Submitting..."
+            style={styles.plButton}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={() => {
+              //--> reading async storage value
+              const getData = async () => {
+                try {
+                  const jsonValue = await AsyncStorage.getItem("lawyerPayload");
+                  const lawfirmPayload = await AsyncStorage.getItem(
+                    "lawfirmPayload"
+                  );
 
-                    const previousPath = await AsyncStorage.getItem(
-                      "previousPath"
-                    );
+                  const previousPath = await AsyncStorage.getItem(
+                    "previousPath"
+                  );
 
-                    if (previousPath === "lawfirm") {
-                      jsonValue && lawfirmPayload != null
-                        ? setLawFirmState({
-                            firstpayload: JSON.parse(jsonValue),
-                            secondpayload: JSON.parse(lawfirmPayload),
-                          })
-                        : null;
-                    }
-
-                    jsonValue != null
-                      ? setInitialState(JSON.parse(jsonValue))
+                  if (previousPath === "lawfirm") {
+                    jsonValue && lawfirmPayload != null
+                      ? setLawFirmState({
+                          firstpayload: JSON.parse(jsonValue),
+                          secondpayload: JSON.parse(lawfirmPayload),
+                        })
                       : null;
-
-                    setInitialLoad(initialload + 1);
-                  } catch (e) {
-                    //--> error reading value
                   }
-                };
 
-                getData();
-              }}
-            />
-            <View style={styles.loginWrapper}>
-              <Text style={styles.signUpText}>
-                By signing up, you agree with the
-                <Text style={styles.login}> Terms of services </Text>and{" "}
-                <Text style={styles.login}>Privacy policy </Text>
-              </Text>
-            </View>
-          </Animatable.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+                  jsonValue != null
+                    ? setInitialState(JSON.parse(jsonValue))
+                    : null;
+
+                  setInitialLoad(initialload + 1);
+                } catch (e) {
+                  //--> error reading value
+                }
+              };
+
+              getData();
+            }}
+          />
+          <View style={styles.loginWrapper}>
+            <Text style={styles.signUpText}>
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services </Text>and{" "}
+              <Text style={styles.login}>Privacy policy </Text>
+            </Text>
+          </View>
+        </Animatable.View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -445,12 +452,12 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: wp(11),
     color: COLORS.light.black,
-    lineHeight: hp(14),
+    lineHeight: hp(20),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(18),
   },
   input: {
     width: wp(334),
@@ -459,7 +466,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   textStyle: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: wp(12),
     color: COLORS.light.black,
   },
@@ -510,7 +517,6 @@ const styles = StyleSheet.create({
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(11),
-    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },

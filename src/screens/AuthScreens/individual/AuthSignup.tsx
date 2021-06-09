@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import { View, StyleSheet, SafeAreaView, Text, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
 import { RootStackParamList } from "navigation/MainNavigator";
@@ -18,6 +18,7 @@ import * as Animatable from "react-native-animatable";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IndividualSignUpInterface } from "navigation/interfaces";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -63,10 +64,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
       lastName === "" ||
       phonenumber === ""
     ) {
+      setDisabled(true);
       return;
+    } else {
+      setDisabled(false);
     }
-
-    setDisabled(false);
   }, [firstName, lastName, email, phonenumber]);
 
   //--> disabling button
@@ -85,7 +87,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     const storeData = async (Payload: IndividualSignUpInterface) => {
       try {
         await AsyncStorage.setItem("@signup_payload", JSON.stringify(Payload));
-        await AsyncStorage.setItem("@email", JSON.stringify(email));
+        await AsyncStorage.setItem("@email", email);
         navigation.navigate(ROUTES.AUTH_SIGN_UP_SECTION_TWO);
       } catch (e) {
         //-->  saving error
@@ -96,18 +98,31 @@ const AuthGetStarted = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
       <NavBar
         onPress={() => {
           navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
         }}
         navText="Sign Up"
+        style={{
+          marginBottom: hp(30),
+        }}
       />
-      <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <View style={styles.TextWrapper}>
             <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
-              Welcome to Pocket Lawyer! Create an account to access top notch
+              Welcome to Pocket Lawyer. Create an account to access top notch
               legal services.
             </Animatable.Text>
           </View>
@@ -223,10 +238,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
   wrapper: {
     flex: 1,
     alignItems: "center",
@@ -236,17 +247,16 @@ const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(27),
+    lineHeight: Platform.OS === "ios" ? hp(27) : hp(34),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginBottom: hp(29),
     width: wpercent("90%"),
   },
   contentWraper: {
-    flex: 1,
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    justifyContent: "flex-start",
   },
   input: {
     width: wp(334),
@@ -259,7 +269,6 @@ const styles = StyleSheet.create({
   },
   inputPhoneNumber: {
     width: wp(230),
-    height: wp(40),
     borderRadius: 0,
     backgroundColor: COLORS.light.white,
     borderLeftWidth: 0,
@@ -268,8 +277,8 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontFamily: "Roboto-Medium",
+    fontSize: wp(12),
     color: COLORS.light.black,
   },
   signUpText: {
@@ -277,7 +286,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: wp(11),
     color: COLORS.light.black,
-    lineHeight: hp(14),
+    lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
   },
   inputText: {
     fontFamily: "Roboto-Medium",
@@ -294,12 +303,13 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(31),
+    marginTop: hp(20),
+    marginBottom: hp(12),
   },
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(64),
+    marginTop: hp(40),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -309,25 +319,22 @@ const styles = StyleSheet.create({
     width: wpercent("7%"),
   },
   phoneNumberWrapper: {
+    borderWidth: 1,
     width: wpercent("90%"),
-    // height: wp(40),
+    height: wp(42),
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 4,
     borderColor: COLORS.light.textinputborder,
-    borderWidth: 1,
   },
   loginWrapper: {
     flexDirection: "row",
     width: wpercent("80%"),
     justifyContent: "space-around",
-    marginTop: hp(12),
   },
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(11),
-    lineHeight: hp(14),
-    letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
   countryPickerWrapper: {

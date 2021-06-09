@@ -139,7 +139,10 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
         content={loadingState.content}
       />
       <ScrollView>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          keyboardShouldPersistTaps={"handled"}
+        >
           <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details

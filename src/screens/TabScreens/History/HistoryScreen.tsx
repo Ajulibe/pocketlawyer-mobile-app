@@ -85,6 +85,7 @@ const HistoryScreen = ({ navigation }: Props) => {
             navigation={navigation}
             title="Service History"
             showBorderBottom={false}
+            hideBackButton={true}
           />
           <FlatList
             data={history}

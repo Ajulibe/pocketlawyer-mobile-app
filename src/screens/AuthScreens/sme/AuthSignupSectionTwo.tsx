@@ -25,6 +25,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PLToast } from "components/PLToast";
 import { smeSignupSectionTwo } from "navigation/interfaces";
 import axiosClient from "utils/axiosClient";
+import globalStyles from "css/GlobalCss";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -134,170 +137,177 @@ const AuthGetStarted = ({ navigation }: Props) => {
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
+      await AsyncStorageUtil.setUser(JSON.stringify(data));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
+      await AsyncStorage.setItem("firstName", firstName);
 
       setTimeout(() => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL_SME);
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       const { message } = error?.response.data;
       // if (error.message === "Request failed with status code 400") {
       //   PLToast({ message: "Email already taken", type: "error" });
       // } else {
-
+      setIsDisabled(true);
+      setIsLoading(false);
       PLToast({ message: message, type: "error" });
     }
-    setIsLoading(false);
+
     return;
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-        keyboardVerticalOffset={wp(0)}
+    <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
+      <NavBar
+        onPress={() => {
+          navigation.goBack();
+        }}
+        navText="Sign Up"
+      />
+
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        enableOnAndroid={true}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <NavBar
-          onPress={() => {
-            navigation.goBack();
-          }}
-          navText="Sign Up"
-        />
-        <ScrollView>
-          <View style={styles.contentWraper}>
-            <View style={styles.TextWrapper}>
-              <Text style={styles.welcomeMessage}>
-                Please add details of a
-                <Text style={styles.ContactPerson}> contact person</Text> for
-                your company.
-              </Text>
-            </View>
+        <View style={styles.contentWraper}>
+          <View style={styles.TextWrapper}>
+            <Text style={styles.welcomeMessage}>
+              Please add details of a
+              <Text style={styles.ContactPerson}> contact person</Text> for your
+              company.
+            </Text>
+          </View>
 
-            <View>
-              <PLTextInput
-                labelText="First Name"
-                labelTextRequired={true}
-                onChangeText={setFirstName}
-                error={false}
-                textContentType="name"
-                style={styles.input}
-                placeholder="Type your first name"
-              />
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Last Name"
-                labelTextRequired={true}
-                error={false}
-                onChangeText={setLastName}
-                textContentType="familyName"
-                style={styles.input}
-                placeholder="Type your last name"
-              />
-            </View>
-
-            <View>
-              <Text style={styles.inputText}>
-                Phone Number <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.phoneNumberWrapper}>
-                <View style={styles.countryPickerWrapper}>
-                  <CountryPicker
-                    {...{
-                      countryCode,
-                      withFilter,
-                      withFlag,
-                      withCountryNameButton,
-                      withAlphaFilter,
-                      withCallingCode,
-                      withEmoji,
-                      onSelect,
-                    }}
-                  />
-                  <Text style={styles.codeText}>+{callingCode}</Text>
-                </View>
-
-                <Input
-                  style={styles.inputPhoneNumber}
-                  onChangeText={setPhonenumber}
-                  value={phonenumber}
-                  keyboardType="numeric"
-                  textStyle={styles.textStyle}
-                  placeholder="906 3782 2828"
-                  textContentType="telephoneNumber"
-                  placeholderTextColor={COLORS.light.darkgrey}
-                />
-              </View>
-            </View>
-
-            <View>
-              <PLTextInput
-                labelText="Designation"
-                labelTextRequired={true}
-                error={false}
-                name="Email"
-                onChangeText={setDesignation}
-                style={styles.input}
-                placeholder="Type the job designation"
-                textContentType="none"
-              />
-            </View>
-
-            <View style={styles.carouselWrapper}>
-              <View style={styles.carouselIcon}>
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-              </View>
-            </View>
-
-            <PLButton
-              disabled={isDisabled}
-              isLoading={isLoading}
-              loadingText="Submitting..."
-              style={styles.plButton}
-              textColor={COLORS.light.white}
-              btnText={"Next"}
-              onClick={() => {
-                //--> reading async storage value
-                const getData = async () => {
-                  try {
-                    const jsonValue = await AsyncStorage.getItem(
-                      "@signup_payload"
-                    );
-
-                    jsonValue != null
-                      ? setInitialState(JSON.parse(jsonValue))
-                      : null;
-
-                    setInitialLoad(initialload + 1);
-                  } catch (e) {
-                    //--> error reading value
-                  }
-                };
-
-                getData();
-              }}
+          <View>
+            <PLTextInput
+              labelText="First Name"
+              labelTextRequired={true}
+              onChangeText={setFirstName}
+              error={false}
+              textContentType="name"
+              style={styles.input}
+              placeholder="Type your first name"
             />
-            <View style={styles.loginWrapper}>
-              <Text style={styles.signUpText}>
-                By signing up, you agree with the
-                <Text style={styles.login}> Terms of services </Text>and{" "}
-                <Text style={styles.login}>Privacy policy </Text>
-              </Text>
+          </View>
+
+          <View>
+            <PLTextInput
+              labelText="Last Name"
+              labelTextRequired={true}
+              error={false}
+              onChangeText={setLastName}
+              textContentType="familyName"
+              style={styles.input}
+              placeholder="Type your last name"
+            />
+          </View>
+
+          <View>
+            <Text style={styles.inputText}>
+              Phone Number <Text style={styles.required}>*</Text>
+            </Text>
+            <View style={styles.phoneNumberWrapper}>
+              <View style={styles.countryPickerWrapper}>
+                <CountryPicker
+                  {...{
+                    countryCode,
+                    withFilter,
+                    withFlag,
+                    withCountryNameButton,
+                    withAlphaFilter,
+                    withCallingCode,
+                    withEmoji,
+                    onSelect,
+                  }}
+                />
+                <Text style={styles.codeText}>+{callingCode}</Text>
+              </View>
+
+              <Input
+                style={styles.inputPhoneNumber}
+                onChangeText={setPhonenumber}
+                value={phonenumber}
+                keyboardType="numeric"
+                textStyle={styles.textStyle}
+                placeholder="906 3782 2828"
+                textContentType="telephoneNumber"
+                placeholderTextColor={COLORS.light.darkgrey}
+              />
             </View>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+          <View>
+            <PLTextInput
+              labelText="Designation"
+              labelTextRequired={true}
+              error={false}
+              name="Email"
+              onChangeText={setDesignation}
+              style={styles.input}
+              placeholder="Type the job designation"
+              textContentType="none"
+            />
+          </View>
+
+          <View style={styles.carouselWrapper}>
+            <View style={styles.carouselIcon}>
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+            </View>
+          </View>
+
+          <PLButton
+            disabled={isDisabled}
+            isLoading={isLoading}
+            loadingText="Submitting..."
+            style={styles.plButton}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={() => {
+              //--> reading async storage value
+              const getData = async () => {
+                try {
+                  const jsonValue = await AsyncStorage.getItem(
+                    "@signup_payload"
+                  );
+
+                  jsonValue != null
+                    ? setInitialState(JSON.parse(jsonValue))
+                    : null;
+
+                  setInitialLoad(initialload + 1);
+                } catch (e) {
+                  //--> error reading value
+                }
+              };
+
+              getData();
+            }}
+          />
+          <View style={styles.loginWrapper}>
+            <Text style={styles.signUpText}>
+              By signing up, you agree with the
+              <Text style={styles.login}> Terms of services </Text>and{" "}
+              <Text style={styles.login}>Privacy policy </Text>
+            </Text>
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -318,7 +328,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: wp(11),
     color: COLORS.light.black,
-    lineHeight: hp(14),
+    lineHeight: hp(20),
   },
   TextWrapper: {
     width: wpercent("90%"),
@@ -344,7 +354,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   textStyle: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
     fontSize: wp(12),
     color: COLORS.light.black,
   },
@@ -369,7 +379,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(133),
+    marginTop: hp(110),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -395,7 +405,6 @@ const styles = StyleSheet.create({
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(11),
-    lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
@@ -411,7 +420,6 @@ const styles = StyleSheet.create({
   ContactPerson: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
-    lineHeight: hp(20),
     color: COLORS.light.primary,
   },
   inputPhoneNumber: {

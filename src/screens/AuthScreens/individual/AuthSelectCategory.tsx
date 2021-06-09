@@ -31,7 +31,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           Hello 👋
         </Animatable.Text>
         <Text style={styles.selectText}>
-          Please select the category that best describes you.{" "}
+          Please select the category that best describes you.
         </Text>
       </View>
 
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     backgroundColor: COLORS.light.white,
   },
   Hello: {

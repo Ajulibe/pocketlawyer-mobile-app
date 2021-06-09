@@ -1,6 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Button, Card, Modal, Text } from "@ui-kitten/components";
+import { hp, wp } from "utils/Dimensions";
+import COLORS from "utils/Colors";
 
 interface Props {
   onBackdropPress: () => void;
@@ -21,8 +23,19 @@ export const PLModal: React.FC<Props> = ({
         visible={visible}
         backdropStyle={styles.backdrop}
         onBackdropPress={onBackdropPress}
+        style={{ position: "absolute", top: hp(120) }}
       >
-        <Card disabled={true}>{children}</Card>
+        <Card
+          disabled={true}
+          style={{
+            backgroundColor: COLORS.light.splashscreenbg,
+            // marginBottom: wp(300),
+            borderWidth: Platform.OS === "ios" ? 1 : 1,
+            borderColor: COLORS.light.primary,
+          }}
+        >
+          {children}
+        </Card>
       </Modal>
     </View>
   );

@@ -70,7 +70,7 @@ const Input: React.FC<Props> = (props) => {
           <Text
             style={{
               fontSize: wp(12),
-              fontFamily: "Roboto-Regular",
+              fontFamily: "Roboto-Medium",
               color: COLORS.light.disabled,
             }}
           >
@@ -98,7 +98,7 @@ const Input: React.FC<Props> = (props) => {
       <TextInput
         {...props}
         textStyle={[
-          { ...styles.input, height: props.multiline ? 100 : hp(30) },
+          { ...styles.input, height: props.multiline ? 100 : hp(20) },
         ]}
         placeholderTextColor={COLORS.light.darkgrey}
         keyboardType="default"
@@ -123,15 +123,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    // borderRadius: 4,
-    // backgroundColor: COLORS.light.white,
     fontSize: wp(12),
-    fontFamily: "Roboto-Regular",
-    // paddingHorizontal: wp(16),
-    // paddingVertical: hp(8),
-    minHeight: hp(30),
+    fontFamily: "Roboto-Medium",
+    // minHeight: hp(30),
     borderColor: COLORS.light.primaryLight,
-    // borderWidth: 0.2,
     color: COLORS.light.black,
   },
   errorContainer: {
