@@ -304,7 +304,7 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
                     onSelect,
                   }}
                 />
-                <Text style={styles.codeText}>+{callingCode}</Text>
+                {/* <Text style={styles.codeText}>+{callingCode}</Text> */}
               </View>
 
               <Input
@@ -502,11 +502,10 @@ const styles = StyleSheet.create({
   },
   phoneNumberWrapper: {
     width: wpercent("90%"),
+    height: wp(42),
     flexDirection: "row",
-    borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: COLORS.light.textinputborder,
   },
   loginWrapper: {
     flexDirection: "row",
@@ -521,25 +520,26 @@ const styles = StyleSheet.create({
     color: COLORS.light.lightpurple,
   },
   countryPickerWrapper: {
+    maxHeight: 40,
     flexDirection: "row",
     alignItems: "center",
-    padding: 2,
-    borderRightWidth: 1,
-    borderRightColor: "#f0f0f0",
-    paddingLeft: wpercent("2%"),
-    width: wpercent("26%"),
+    justifyContent: "center",
+    borderColor: COLORS.light.textinputborder,
+    paddingLeft: wpercent("1%"),
+    width: "16%",
+    borderWidth: 1,
+    borderRadius: 4,
   },
   required: {
     color: "red",
   },
   inputPhoneNumber: {
-    width: wp(230),
-    height: wp(40),
-    borderRadius: 0,
+    width: "82%",
+    borderRadius: 4,
     backgroundColor: COLORS.light.white,
-    borderLeftWidth: 0,
-    borderColor: "#fff",
     color: COLORS.light.black,
+    borderWidth: 1,
+    height: wp(30),
   },
   inputBMargins: {
     marginBottom: wp(10),

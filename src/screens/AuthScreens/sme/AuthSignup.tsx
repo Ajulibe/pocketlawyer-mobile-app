@@ -557,10 +557,8 @@ const styles = StyleSheet.create({
   phoneNumberWrapper: {
     width: wpercent("90%"),
     flexDirection: "row",
-    borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: COLORS.light.textinputborder,
   },
   loginWrapper: {
     flexDirection: "row",

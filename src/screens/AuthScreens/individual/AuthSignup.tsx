@@ -19,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IndividualSignUpInterface } from "navigation/interfaces";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
+import PLPhoneNumber from "components/PLPhoneNumber";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -159,6 +160,8 @@ const AuthGetStarted = ({ navigation }: Props) => {
             <Text style={styles.inputText}>
               Phone Number <Text style={styles.required}>*</Text>
             </Text>
+            {/* <PLPhoneNumber /> */}
+
             <View style={styles.phoneNumberWrapper}>
               <View style={styles.countryPickerWrapper}>
                 <CountryPicker
@@ -173,7 +176,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                     onSelect,
                   }}
                 />
-                <Text style={styles.codeText}>+{callingCode}</Text>
+                {/* <Text style={styles.codeText}>+{callingCode}</Text> */}
               </View>
 
               <Input
@@ -250,6 +253,7 @@ const styles = StyleSheet.create({
     lineHeight: Platform.OS === "ios" ? hp(27) : hp(34),
     textAlign: "left",
     color: COLORS.light.black,
+    marginTop: hp(10),
     marginBottom: hp(29),
     width: wpercent("90%"),
   },
@@ -268,12 +272,12 @@ const styles = StyleSheet.create({
     width: wpercent("90%"),
   },
   inputPhoneNumber: {
-    width: wp(230),
-    borderRadius: 0,
+    width: "82%",
+    borderRadius: 4,
     backgroundColor: COLORS.light.white,
-    borderLeftWidth: 0,
-    borderColor: "#fff",
     color: COLORS.light.black,
+    borderWidth: 1,
+    height: wp(30),
   },
 
   textStyle: {
@@ -319,13 +323,11 @@ const styles = StyleSheet.create({
     width: wpercent("7%"),
   },
   phoneNumberWrapper: {
-    borderWidth: 1,
     width: wpercent("90%"),
     height: wp(42),
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: COLORS.light.textinputborder,
   },
   loginWrapper: {
     flexDirection: "row",
@@ -338,13 +340,15 @@ const styles = StyleSheet.create({
     color: COLORS.light.lightpurple,
   },
   countryPickerWrapper: {
+    maxHeight: 40,
     flexDirection: "row",
     alignItems: "center",
-    padding: 2,
-    borderRightWidth: 1,
-    borderRightColor: COLORS.light.textinputborder,
-    paddingLeft: wpercent("2%"),
-    width: wpercent("26%"),
+    justifyContent: "center",
+    borderColor: COLORS.light.textinputborder,
+    paddingLeft: wpercent("1%"),
+    width: "16%",
+    borderWidth: 1,
+    borderRadius: 4,
   },
   required: {
     color: "red",

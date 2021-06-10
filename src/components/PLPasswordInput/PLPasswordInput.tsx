@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   Input: {
     borderRadius: 4,
     backgroundColor: "white",
-    borderWidth: 0,
+    // borderWidth: 0,
   },
   textStyle: {
     fontSize: wp(12),
