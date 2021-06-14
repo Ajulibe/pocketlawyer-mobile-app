@@ -1,6 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-
+import React, { FC, useState, Suspense } from "react";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
 import * as Font from "expo-font";
@@ -10,9 +8,12 @@ import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
 import { default as theme } from "./src/theme.json";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "components/PLToast";
+import FullPageLoader from "components/FullPageLoader";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "redux/store";
+import { Provider } from "react-redux";
 
-export default function App() {
+const App: FC = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
@@ -54,11 +55,21 @@ export default function App() {
     return null;
   } else {
     return (
-      <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-        <Toast ref={(ref) => Toast.setRef(ref)} />
-      </ApplicationProvider>
+      <Suspense fallback={<FullPageLoader message="LOADING" />}>
+        <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+          <Provider store={store}>
+            <PersistGate
+              loading={<FullPageLoader message="LOADING" />}
+              persistor={persistor}
+            >
+              <Navigation colorScheme={colorScheme} />
+              <Toast ref={(ref) => Toast.setRef(ref)} />
+            </PersistGate>
+          </Provider>
+        </ApplicationProvider>
+      </Suspense>
     );
   }
-}
+};
+
+export default App;

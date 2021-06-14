@@ -10,6 +10,11 @@ import AccountStack from "./AccountStack";
 import IMAGES from "../utils/Images";
 import { hp, wp } from "../utils/Dimensions";
 
+import { Entypo } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 export type HomeTabStackParamList = {
   [ROUTES.HOME_STACK]: undefined;
   [ROUTES.SERVICE_STACK]: undefined;
@@ -45,19 +50,19 @@ export default function HomeBottomTabStack() {
     switch (index) {
       case 0:
         title = "Home";
-        color = focused ? COLORS.light.white : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.blackLight;
         break;
       case 1:
         title = "Services";
-        color = focused ? COLORS.light.white : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.blackLight;
         break;
       case 2:
         title = "History";
-        color = focused ? COLORS.light.white : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.blackLight;
         break;
       default:
         title = "Account";
-        color = focused ? COLORS.light.white : COLORS.light.disabled;
+        color = focused ? COLORS.light.white : COLORS.light.blackLight;
         break;
     }
     return (
@@ -79,17 +84,16 @@ export default function HomeBottomTabStack() {
       tabBarOptions={{
         style: {
           backgroundColor: COLORS.light.primary,
-          height: Platform.OS === "ios" ? hp(80) : hp(60),
           shadowOffset: {
             width: 0,
-            height: 1,
+            height: -5,
           },
           shadowColor: COLORS.light.textinputborder,
-          shadowOpacity: 0.5,
-          paddingTop: wp(10),
+          shadowOpacity: 0.2,
+          paddingTop: wp(7),
         },
-        activeTintColor: COLORS.light.secondary,
-        inactiveTintColor: COLORS.light.tint,
+        activeTintColor: COLORS.light.white,
+        inactiveTintColor: COLORS.light.blackLight,
       }}
     >
       <Tab.Screen
@@ -99,8 +103,8 @@ export default function HomeBottomTabStack() {
           tabBarLabel: ({ focused }: any) => (
             <Title index={0} focused={focused} />
           ),
-          tabBarIcon: ({ focused }: any) => (
-            <Image source={tabBarIcon(0, focused)} style={styles.tabBarImage} />
+          tabBarIcon: ({ color, focused }: any) => (
+            <Entypo name="home" size={18} color={color} />
           ),
         })}
       />
@@ -111,8 +115,8 @@ export default function HomeBottomTabStack() {
           tabBarLabel: ({ focused }: any) => (
             <Title index={1} focused={focused} />
           ),
-          tabBarIcon: ({ focused }: any) => (
-            <Image source={tabBarIcon(1, focused)} style={styles.tabBarImage} />
+          tabBarIcon: ({ color }: any) => (
+            <FontAwesome5 name="business-time" size={15} color={color} />
           ),
         })}
       />
@@ -123,8 +127,8 @@ export default function HomeBottomTabStack() {
           tabBarLabel: ({ focused }: any) => (
             <Title index={2} focused={focused} />
           ),
-          tabBarIcon: ({ focused }: any) => (
-            <Image source={tabBarIcon(2, focused)} style={styles.tabBarImage} />
+          tabBarIcon: ({ color }: any) => (
+            <FontAwesome name="history" size={16} color={color} />
           ),
         }}
       />
@@ -135,8 +139,8 @@ export default function HomeBottomTabStack() {
           tabBarLabel: ({ focused }: any) => (
             <Title index={3} focused={focused} />
           ),
-          tabBarIcon: ({ focused }: any) => (
-            <Image source={tabBarIcon(3, focused)} style={styles.tabBarImage} />
+          tabBarIcon: ({ color }: any) => (
+            <MaterialCommunityIcons name="account" size={23} color={color} />
           ),
         }}
       />
@@ -146,15 +150,16 @@ export default function HomeBottomTabStack() {
 
 const styles = StyleSheet.create({
   tabBarLabel: {
-    fontFamily: "Roboto-Regular",
-    fontSize: hp(12),
-    marginBottom: hp(12),
+    fontFamily: "Roboto-Medium",
+    fontSize: hp(13),
+    paddingBottom: hp(6),
   },
   tabBarImage: {
     resizeMode: "contain",
-    width: Platform.OS === "android" ? wp(11) : wp(11),
-    height: Platform.OS === "android" ? wp(11) : wp(11),
+    width: wp(13),
+    height: wp(13),
+    paddingTop: hp(10),
     marginBottom: hp(6),
-    // marginTop: hp(6),
+    marginTop: hp(6),
   },
 });

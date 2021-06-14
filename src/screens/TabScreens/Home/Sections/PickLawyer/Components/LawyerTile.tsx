@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
     borderRadius: wp(42),
   },
   name: {
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     fontWeight: "500",
-    fontSize: wp(12),
+    fontSize: wp(13),
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
     marginTop: hp(10),
@@ -71,11 +71,12 @@ const styles = StyleSheet.create({
     marginBottom: hp(3),
   },
   location: {
-    fontSize: wp(8),
-    lineHeight: hp(10),
-    fontWeight: "400",
+    fontSize: wp(9),
+    lineHeight: hp(14),
+    fontWeight: "300",
     color: COLORS.light.primary,
     marginBottom: hp(9),
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
+    marginTop: hp(5),
   },
 });

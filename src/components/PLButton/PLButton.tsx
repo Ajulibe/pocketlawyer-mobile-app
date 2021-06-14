@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: wp(312),
-    height: wp(45),
+    height: wp(50),
     backgroundColor: COLORS.light.primary,
     justifyContent: "center",
     alignItems: "center",
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 0.2,
     borderRadius: wp(7),
-    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.lightpurple,
   },
   indicator: {

@@ -39,13 +39,16 @@ const AuthGetStarted = ({ navigation }: Props) => {
         onClick={() => navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY)}
       />
       <View style={styles.loginWrapper}>
-        <Text style={styles.already}>Already have an account?</Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate(ROUTES.AUTH_LOGIN);
           }}
+          style={{ justifyContent: "center" }}
         >
-          <Text style={styles.login}>Log in</Text>
+          <Text style={styles.already}>
+            Already have an account? &nbsp;
+            <Text style={styles.login}>Log in</Text>
+          </Text>
         </TouchableOpacity>
       </View>
     </Animatable.View>
@@ -70,10 +73,10 @@ const styles = StyleSheet.create({
   intro: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(15),
     width: wp(260),
     fontStyle: "normal",
-    lineHeight: Platform.OS === "ios" ? hp(24) : hp(32),
+    lineHeight: Platform.OS === "ios" ? hp(28) : hp(32),
     color: COLORS.light.black,
   },
   textWrapper: {
@@ -83,13 +86,13 @@ const styles = StyleSheet.create({
   },
   textHeader: {
     fontFamily: "Roboto-Bold",
-    fontSize: wp(20),
+    fontSize: wp(22),
     color: COLORS.light.primary,
     marginTop: hp(78),
   },
   already: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(15),
     lineHeight: hp(20),
     color: COLORS.light.black,
   },
@@ -102,10 +105,11 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Bold",
-    fontSize: wp(14),
+    fontSize: wp(15),
     lineHeight: hp(16),
     letterSpacing: 0,
     color: COLORS.light.primary,
+    justifyContent: "center",
   },
 });
 

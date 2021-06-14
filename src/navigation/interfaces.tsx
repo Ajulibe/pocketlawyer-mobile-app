@@ -102,3 +102,5 @@ export interface Lawyerdata {
   name: string;
   serviceProviderID: number;
 }
+
+export interface UserInterface {}

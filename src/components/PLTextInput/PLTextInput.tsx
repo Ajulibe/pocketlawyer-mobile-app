@@ -53,6 +53,7 @@ export const PLTextInput: React.FC<Props> = (props) => {
         disabled={props.disabled ? props.disabled : false}
         style={[
           styles.Input,
+
           props.error ? { borderColor: "red" } : null,
           props.style,
         ]}
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     // borderColor: COLORS.light.textinputborder,
   },
   textStyle: {
-    fontSize: wp(12),
+    fontSize: wp(13),
     fontFamily: "Roboto-Medium",
     color: COLORS.light.black,
   },
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontSize: wp(13),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

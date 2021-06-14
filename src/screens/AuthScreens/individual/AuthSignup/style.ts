@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
 import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
+import { wp, hp } from "utils/Dimensions";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -13,16 +13,17 @@ export const styles = StyleSheet.create({
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
     fontSize: wp(14),
-    lineHeight: hp(20),
+    lineHeight: Platform.OS === "ios" ? hp(27) : hp(34),
     textAlign: "left",
-    alignSelf: "flex-start",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginTop: hp(10),
+    marginBottom: hp(29),
+    width: wpercent("90%"),
   },
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    justifyContent: "flex-start",
   },
   input: {
     width: wp(334),
@@ -30,28 +31,30 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
   },
-  resetPasswordInput: {
-    width: wp(300),
-    height: wp(40),
+  TextWrapper: {
+    width: wpercent("90%"),
+  },
+  inputPhoneNumber: {
+    width: "82%",
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
-  },
-  resetPasswordText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
     color: COLORS.light.black,
-    textAlign: "center",
-  },
-  resetPasswordBtn: {
-    marginTop: wp(40),
-    width: wp(300),
-  },
-  textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(12),
-    color: COLORS.light.darkgrey,
+    borderWidth: 1,
+    height: wp(30),
   },
 
+  textStyle: {
+    fontFamily: "Roboto-Medium",
+    fontSize: wp(13),
+    color: COLORS.light.black,
+  },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    color: COLORS.light.black,
+    lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
+  },
   inputText: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(13),
@@ -61,25 +64,19 @@ export const styles = StyleSheet.create({
     marginBottom: hp(4),
     marginTop: hp(12),
   },
-  forgotPassword: {
-    fontFamily: "Roboto-Medium",
-    color: COLORS.light.lightpurple,
-    textAlign: "right",
-    fontSize: wp(12),
-    marginTop: wp(8),
-  },
   codeText: {
     fontFamily: "Roboto-Medium",
-    color: COLORS.light.darkgrey,
+    color: COLORS.light.black,
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(306),
+    marginTop: hp(20),
+    marginBottom: hp(12),
   },
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(84),
+    marginTop: hp(40),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -90,31 +87,31 @@ export const styles = StyleSheet.create({
   },
   phoneNumberWrapper: {
     width: wpercent("90%"),
+    height: wp(42),
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: "#f0f0f0",
   },
   loginWrapper: {
     flexDirection: "row",
     width: wpercent("80%"),
     justifyContent: "space-around",
-    marginTop: hp(12),
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    letterSpacing: 0,
+    fontSize: wp(11),
     color: COLORS.light.lightpurple,
   },
   countryPickerWrapper: {
+    maxHeight: 40,
     flexDirection: "row",
     alignItems: "center",
-    padding: 2,
-    borderRightWidth: 1,
-    borderRightColor: "#f0f0f0",
-    paddingLeft: wpercent("2%"),
-    width: wpercent("26%"),
+    justifyContent: "center",
+    borderColor: COLORS.light.textinputborder,
+    paddingLeft: wpercent("1%"),
+    width: "16%",
+    borderWidth: 1,
+    borderRadius: 4,
   },
   required: {
     color: "red",

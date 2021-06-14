@@ -15,14 +15,14 @@ import { PLToast } from "components/PLToast";
 import axiosClient from "utils/axiosClient";
 import { submitCategories } from "navigation/interfaces";
 import FullPageLoader from "components/FullPageLoader";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, StackActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CategoryDb } from "database/CategoryDb";
 import globalStyles from "css/GlobalCss";
 
-type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
+type Props = StackScreenProps<RootStackParamList>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted: React.FC<Props> = ({ navigation }) => {
   const [preincorporation, setPreIncorporation] =
     React.useState<boolean>(false);
   const [companysecretarial, setCompanysecretarial] =
@@ -98,7 +98,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const submitCategories = async (Payload: submitCategories) => {
     setLoading(true);
 
-    console.log(Payload);
     try {
       const response = await axiosClient.post(
         "Category/AddUSerCategory",
@@ -107,15 +106,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
       PLToast({ message: "Categories Saved", type: "success" });
 
-      setTimeout(() => {
-        //--> reset navigation state after registration
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: ROUTES.TABSCREEN_STACK }],
-          })
-        );
-      }, 1000);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: ROUTES.TABSCREEN_STACK }],
+        })
+      );
     } catch (error) {
       setLoading(false);
       PLToast({ message: "Error Saving Categories", type: "error" });
@@ -468,3 +464,13 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
+function actions(
+  index: any,
+  arg1: number,
+  key: any,
+  arg3: null,
+  actions: any,
+  arg5: any[]
+) {
+  throw new Error("Function not implemented.");
+}

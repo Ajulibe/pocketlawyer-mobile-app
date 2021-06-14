@@ -8,7 +8,7 @@ import AuthSelectCategory from "../screens/AuthScreens/individual/AuthSelectCate
 import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
 
 //INDIVIDUAL
-import AuthSignUp from "../screens/AuthScreens/individual/AuthSignup";
+import AuthSignUp from "../screens/AuthScreens/individual/AuthSignup/AuthSignup";
 import AuthSignupSectionTwo from "../screens/AuthScreens/individual/AuthSignupSectionTwo";
 import AuthLogin from "../screens/AuthScreens/individual/Login/AuthLogin";
 import AuthValidateEmail from "../screens/AuthScreens/individual/ValidateEmail";

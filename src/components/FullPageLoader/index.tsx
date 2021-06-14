@@ -24,13 +24,12 @@ const index: React.FC<Props> = ({ message }) => {
     <SafeAreaView
       style={{
         ...globalStyles.AndroidSafeArea,
-        backgroundColor: COLORS.light.splashscreenbg,
+        backgroundColor: COLORS.light.white,
         height: "100%",
         width: "100%",
       }}
     >
       <View style={styles.container}>
-        {/* <View style={styles.wrapper}> */}
         <StatusBar
           backgroundColor={COLORS.light.white}
           barStyle={"light-content"}
@@ -43,7 +42,6 @@ const index: React.FC<Props> = ({ message }) => {
           source={IMAGES.logo}
           style={styles.logo}
         />
-        {/* </View> */}
 
         <ActivityIndicator color={COLORS.light.primary} />
 
@@ -57,8 +55,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.light.splashscreenbg,
-    // marginTop: wpercent("60%"),
+    backgroundColor: COLORS.light.white,
     height: "100%",
     width: "100%",
   },

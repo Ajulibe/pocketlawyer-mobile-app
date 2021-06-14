@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(24),
     paddingVertical: hp(17),
     paddingHorizontal: wp(28),
-    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.carouselBtn2,
   },
   descTitle: {

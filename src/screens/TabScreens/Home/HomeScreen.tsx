@@ -25,6 +25,12 @@ import { CategoryDb } from "database/CategoryDb";
 import { LawyerModel } from "models/Interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+//--> REDUX
+import { useAppSelector, useAppDispatch } from "redux/hooks";
+import PLButton from "components/PLButton/PLButton";
+import COLORS from "utils/Colors";
+import { getUser } from "redux/actions";
+
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({ navigation }: Props) => {
@@ -32,6 +38,12 @@ const HomeScreen = ({ navigation }: Props) => {
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   const [user, setUser] = React.useState("");
   const [time, setTime] = React.useState("");
+
+  const data = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+
+  console.log(data);
+
   //--> Route redirects...
   React.useLayoutEffect(() => {
     (async () => {
@@ -69,10 +81,8 @@ const HomeScreen = ({ navigation }: Props) => {
       setTime("Good morning");
     } else if (curHr < 18) {
       setTime("Good afternoon");
-    } else if (curHr < 20) {
-      setTime("Good evening");
     } else {
-      setTime("Sleep well");
+      setTime("Good evening");
     }
   };
 
@@ -116,7 +126,6 @@ const HomeScreen = ({ navigation }: Props) => {
 
     if (data != null) {
       const lawyers: LawyerModel[] = data?.data;
-      console.log(lawyers, "Lawyers");
 
       setLawyers(lawyers);
     }
@@ -179,6 +188,16 @@ const HomeScreen = ({ navigation }: Props) => {
           >
             Top Findings
           </Text>
+
+          {/* <PLButton
+            style={{ width: "100%" }}
+            textColor={COLORS.light.white}
+            btnText={"Next"}
+            onClick={() => {
+              dispatch(getUser({ userID: 12 }));
+            }}
+          /> */}
+
           <Text style={styles.topFindingSubtitle}>
             Based on selected categories
           </Text>

@@ -355,13 +355,13 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontSize: wp(13),
     color: COLORS.light.black,
   },
 
   inputText: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontSize: wp(13),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

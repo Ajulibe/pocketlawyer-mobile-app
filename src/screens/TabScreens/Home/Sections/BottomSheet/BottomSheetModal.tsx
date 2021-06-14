@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F8FE",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.carouselBtn2,
   },
   quickActions: {

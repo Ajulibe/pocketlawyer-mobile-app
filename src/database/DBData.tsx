@@ -1,49 +1,96 @@
+import React from "react";
 import IMAGES from "../utils/Images";
+
+import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Foundation } from "@expo/vector-icons";
+
+import COLORS from "utils/Colors";
+
 export interface Category {
   categoryName: string;
   categoryCode: string;
   image: any;
+  newImage?: any;
 }
 export const allCategories: Category[] = [
   {
     categoryName: "Pre-Incorporation",
     categoryCode: "01",
     image: IMAGES["cat-pre-incorporation"],
+    newImage: (
+      <MaterialCommunityIcons
+        name="office-building"
+        size={18}
+        color={COLORS.light.primary}
+      />
+    ),
   },
   {
     categoryName: "Company Secretarial Services",
     categoryCode: "02",
     image: IMAGES["cat-company-reg"],
+    newImage: (
+      <AntDesign
+        name="customerservice"
+        size={18}
+        color={COLORS.light.primary}
+      />
+    ),
   },
   {
     categoryName: "Post-Incorporation",
     categoryCode: "03",
     image: IMAGES["cat-company-reg"],
+    newImage: (
+      <FontAwesome5
+        name="acquisitions-incorporated"
+        size={18}
+        color={COLORS.light.primary}
+      />
+    ),
   },
   {
     categoryName: "Review of Legal Documents",
     categoryCode: "04",
     image: IMAGES["cat-company-reg"],
+    newImage: <AntDesign name="file1" size={17} color={COLORS.light.primary} />,
   },
   {
     categoryName: "Legal Advice and Consultancy",
     categoryCode: "05",
     image: IMAGES["cat-pre-incorporation"],
+    newImage: <Octicons name="law" size={18} color={COLORS.light.primary} />,
   },
   {
     categoryName: "Legal Drafting",
     categoryCode: "06",
     image: IMAGES["cat-company-reg"],
+    newImage: (
+      <FontAwesome5
+        name="drafting-compass"
+        size={17}
+        color={COLORS.light.primary}
+      />
+    ),
   },
   {
     categoryName: "Registration",
     categoryCode: "07",
     image: IMAGES["cat-company-reg"],
+    newImage: (
+      <FontAwesome5 name="registered" size={18} color={COLORS.light.primary} />
+    ),
   },
   {
     categoryName: "Land Documents",
     categoryCode: "08",
     image: IMAGES["cat-company-reg"],
+    newImage: (
+      <Foundation name="mountains" size={18} color={COLORS.light.primary} />
+    ),
   },
 ];
 

@@ -1,5 +1,11 @@
 import React, { useReducer, useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  GestureResponderEvent,
+} from "react-native";
 import { Input as TextInput } from "@ui-kitten/components";
 import { hp, wp } from "utils/Dimensions";
 import COLORS from "../utils/Colors";
@@ -18,7 +24,7 @@ interface Props {
   email?: string | null;
   min?: number | null;
   max?: number | null;
-  value?: string | undefined;
+  value?: string;
   textContentType?: any;
   touched?: boolean;
   returnKeyType?: any;
@@ -27,7 +33,7 @@ interface Props {
   onSubmit?: () => void;
   onChangeText?: any;
   icon?: any;
-  onPress?: () => void;
+  onPress: (event: GestureResponderEvent) => void;
   dataValue?: string;
   multiline?: boolean;
   numberOfLines?: number;
@@ -69,7 +75,7 @@ const Input: React.FC<Props> = (props) => {
         <View style={{ width: "70%", paddingLeft: wp(20) }}>
           <Text
             style={{
-              fontSize: wp(12),
+              fontSize: wp(13),
               fontFamily: "Roboto-Medium",
               color: COLORS.light.disabled,
             }}
@@ -123,7 +129,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    fontSize: wp(12),
+    fontSize: wp(13),
     fontFamily: "Roboto-Medium",
     // minHeight: hp(30),
     borderColor: COLORS.light.primaryLight,

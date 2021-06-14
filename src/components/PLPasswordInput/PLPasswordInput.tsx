@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     // borderWidth: 0,
   },
   textStyle: {
-    fontSize: wp(12),
+    fontSize: wp(13),
     fontFamily: "Roboto-Medium",
     color: COLORS.light.black,
   },

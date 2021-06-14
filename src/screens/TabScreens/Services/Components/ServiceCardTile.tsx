@@ -26,13 +26,15 @@ export default function ServiceCardTile({ service, onClick }: Props) {
       style={[styles.wrapper, globalStyles.shadowLight]}
       onPress={onClick}
     >
-      <Image
-        source={
-          ServiceDb.findByServiceCode({ serviceCode: service.serviceCode })
-            .image
-        }
-        style={styles.icon}
-      />
+      <View style={globalStyles.iconWrapper}>
+        <Image
+          source={
+            ServiceDb.findByServiceCode({ serviceCode: service.serviceCode })
+              .image
+          }
+          style={styles.icon}
+        />
+      </View>
 
       <Text style={styles.title}>{service.serviceName}</Text>
       <MaterialIcons
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
     marginBottom: wp(12),
-    borderWidth: Platform.OS === "ios" ? 0.2 : 0.4,
+    borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.carouselBtn2,
   },
   title: {
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     marginLeft: wp(16),
   },
   icon: {
-    width: wp(18),
-    height: wp(18),
+    width: wp(14),
+    height: wp(14),
   },
 });

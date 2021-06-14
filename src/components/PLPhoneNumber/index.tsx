@@ -34,7 +34,7 @@ const App: React.FC = () => {
         // withShadow
         autoFocus
         containerStyle={styles.container}
-        codeTextStyle={{ fontSize: wp(12), fontFamily: "Roboto-Medium" }}
+        codeTextStyle={{ fontSize: wp(13), fontFamily: "Roboto-Medium" }}
       />
     </>
   );
