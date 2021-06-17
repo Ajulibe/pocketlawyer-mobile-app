@@ -12,6 +12,7 @@ import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 import Utilities from "utils/Utilities";
 import { ServiceHistoryInterface } from "../HistoryScreen";
+import { Avatar, Badge, Icon, withBadge } from "react-native-elements";
 
 interface Props {
   history: ServiceHistoryInterface;
@@ -29,6 +30,7 @@ export default function HistoryListTile({ history, onClick }: Props) {
   return (
     <TouchableOpacity style={styles.wrapper} onPress={() => onClick()}>
       <Image style={styles.user} source={{ uri: CONSTANTS.user }} />
+
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>{history.serviceProvider}</Text>
         <Text style={styles.subtitle}>{history.serviceName}</Text>
@@ -38,6 +40,7 @@ export default function HistoryListTile({ history, onClick }: Props) {
           </Text>
         </View>
       </View>
+
       <View style={styles.trailingWrapper}>
         <Text style={styles.trailingTitle}>
           {Utilities.dateTime(history.createdAt.toString())}

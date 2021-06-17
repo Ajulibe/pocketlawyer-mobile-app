@@ -20,9 +20,11 @@ import {
   Text,
   View,
 } from "react-native";
+import { widthPercentageToDP } from "react-native-responsive-screen";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import { hp, wp } from "utils/Dimensions";
 import ServiceCardTile from "./Components/ServiceCardTile";
+import { useScrollToTop } from "@react-navigation/native";
 
 type Props = StackScreenProps<ServiceStackParamList, ROUTES.SERVICE_SCREEN>;
 
@@ -34,9 +36,15 @@ const ServiceScreen = ({ navigation }: Props) => {
     </>
   );
 
+  const ref = React.useRef<FlatList | null>(null);
+
+  useScrollToTop(ref);
+
   return (
     <>
-      <SafeAreaView style={globalStyles.AndroidSafeArea}>
+      <SafeAreaView
+        style={[globalStyles.AndroidSafeArea, styles.safeAreaContainer]}
+      >
         <KeyboardAvoidingView
           behavior={"padding"}
           style={{ flex: 1 }}
@@ -48,13 +56,16 @@ const ServiceScreen = ({ navigation }: Props) => {
             showBorderBottom={false}
             hideBackButton={true}
           />
+
+          <ServiceSearch style={styles.searchBar} />
+
           <FlatList
+            ref={ref}
             data={ServiceDb.services}
             showsHorizontalScrollIndicator={false}
             bounces={false}
             contentContainerStyle={[styles.container]}
             keyExtractor={(item, index) => index.toString()}
-            ListHeaderComponent={() => ServiceHeader()}
             renderItem={({ item }) => (
               <ServiceCardTile
                 service={item}
@@ -78,8 +89,13 @@ const ServiceScreen = ({ navigation }: Props) => {
 export default ServiceScreen;
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {},
   container: {
     paddingHorizontal: wp(20),
     paddingVertical: hp(18),
+  },
+  searchBar: {
+    width: widthPercentageToDP("95%"),
+    alignSelf: "center",
   },
 });

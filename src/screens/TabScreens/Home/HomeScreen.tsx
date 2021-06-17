@@ -3,7 +3,7 @@ import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
 import { HomeStackParamList } from "navigation/HomeStack";
 import { ROUTES } from "navigation/Routes";
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -16,13 +16,14 @@ import {
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
 import CONSTANTS from "utils/Constants";
-import { hp } from "utils/Dimensions";
+import { hp, wp } from "utils/Dimensions";
 import { Category, Service } from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
 import { CategoryDb } from "database/CategoryDb";
 import { LawyerModel } from "models/Interfaces";
+import { useScrollToTop } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //--> REDUX
@@ -30,6 +31,10 @@ import { useAppSelector, useAppDispatch } from "redux/hooks";
 import PLButton from "components/PLButton/PLButton";
 import COLORS from "utils/Colors";
 import { getUser } from "redux/actions";
+import {
+  CircularSkeleton,
+  RectangularSkeleton,
+} from "components/PLSkeleton/PLSkeleton";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
@@ -39,8 +44,18 @@ const HomeScreen = ({ navigation }: Props) => {
   const [user, setUser] = React.useState("");
   const [time, setTime] = React.useState("");
 
+  const [search, setSearch] = useState<string>("");
+  const [focus, setFocus] = useState<boolean>(false);
+
+  const [isCategoryLoading, setIsCategoryLoading] = React.useState(true);
+  const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
+
   const data = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
+
+  const ref = React.useRef<ScrollView | null>(null);
+
+  useScrollToTop(ref);
 
   console.log(data);
 
@@ -97,19 +112,28 @@ const HomeScreen = ({ navigation }: Props) => {
     getCategories();
   }, []);
   const getCategories = async () => {
-    const userID = await AsyncStorageUtil.getUserId();
-    const name = await AsyncStorage.getItem("firstName");
-    const firstname = capitalizeFirstLetter(name ? name : "");
-    setUser(firstname ? firstname : "");
-    const getCats = await axiosClient.get(
-      `Category/GetUserCategories/${userID}`
-    );
-    if (getCats != null && getCats?.data?.data?.length != 0) {
-      const cats: Category[] = getCats?.data?.data;
-      setCategory(cats);
-      getLawyers();
-    } else {
-      setCategory(CategoryDb.categories.slice(0, 4));
+    setIsCategoryLoading(true);
+
+    try {
+      const userID = await AsyncStorageUtil.getUserId();
+      const name = await AsyncStorage.getItem("firstName");
+      const firstname = capitalizeFirstLetter(name ? name : "");
+      setUser(firstname ? firstname : "");
+      const getCats = await axiosClient.get(
+        `Category/GetUserCategories/${userID}`
+      );
+      if (getCats != null && getCats?.data?.data?.length != 0) {
+        const cats: Category[] = getCats?.data?.data;
+
+        setCategory(cats);
+        getLawyers();
+        setIsCategoryLoading(false);
+      } else {
+        setCategory(CategoryDb.categories.slice(0, 4));
+        setIsCategoryLoading(false);
+      }
+    } catch (error) {
+      return error;
     }
   };
 
@@ -119,26 +143,27 @@ const HomeScreen = ({ navigation }: Props) => {
       return { CategoryCode: item.categoryCode };
     });
 
-    const { data } = await axiosClient.post(
-      "Category/GetSPUserCategories",
-      catCodes
-    );
+    try {
+      const { data } = await axiosClient.post(
+        "Category/GetSPUserCategories",
+        catCodes
+      );
 
-    if (data != null) {
-      const lawyers: LawyerModel[] = data?.data;
+      if (data != null) {
+        const lawyers: LawyerModel[] = data?.data;
 
-      setLawyers(lawyers);
-    }
+        setLawyers(lawyers);
+        setTimeout(() => {
+          setIsTopFindingsLoading(false);
+        }, 2000);
+      }
+    } catch (error) {}
   };
 
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <ScrollView
-          contentContainerStyle={[styles.container, { flexGrow: 1 }]}
-          keyboardShouldPersistTaps="handled"
-          bounces={false}
-        >
+        <View style={[styles.container, { flexGrow: 1 }]}>
           <View style={styles.header}>
             <View style={styles.headerTitleWrapper}>
               <Text style={globalStyles.H1Style}>Hi {user} 👋🏼</Text>
@@ -148,48 +173,62 @@ const HomeScreen = ({ navigation }: Props) => {
             </View>
             <Image source={{ uri: CONSTANTS.user }} style={styles.user} />
           </View>
+
           <ServiceSearch />
-          <View style={styles.titleWithViewMore}>
-            <Text style={globalStyles.H2Style}>Your Categories</Text>
-            <TouchableOpacity
-              onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}
-            >
-              <Text style={styles.viewMore}>View all</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
+
+          <ScrollView
+            style={{ flex: 1 }}
+            ref={ref}
+            contentContainerStyle={{}}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+            showsVerticalScrollIndicator={false}
           >
-            <FlatList
-              horizontal={true}
-              data={category}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <CategoryCard
-                  category={item}
-                  onClick={() =>
-                    navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
-                      category: item,
-                    })
-                  }
+            <View style={styles.titleWithViewMore}>
+              <Text style={globalStyles.H2Style}>Your Categories</Text>
+              <TouchableOpacity
+                onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}
+              >
+                <Text style={styles.viewMore}>View all</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <RectangularSkeleton isLoading={isCategoryLoading} />
+
+              {!isCategoryLoading && (
+                <FlatList
+                  horizontal={true}
+                  data={category}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <CategoryCard
+                      category={item}
+                      onClick={() =>
+                        navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                          category: item,
+                        })
+                      }
+                    />
+                  )}
                 />
               )}
-            />
-          </View>
-          <Text
-            style={[
-              globalStyles.H2Style,
-              { marginTop: hp(22), marginBottom: hp(6) },
-            ]}
-          >
-            Top Findings
-          </Text>
+            </View>
+            <Text
+              style={[
+                globalStyles.H2Style,
+                { marginTop: hp(22), marginBottom: hp(6) },
+              ]}
+            >
+              Top Findings
+            </Text>
 
-          {/* <PLButton
+            {/* <PLButton
             style={{ width: "100%" }}
             textColor={COLORS.light.white}
             btnText={"Next"}
@@ -198,19 +237,30 @@ const HomeScreen = ({ navigation }: Props) => {
             }}
           /> */}
 
-          <Text style={styles.topFindingSubtitle}>
-            Based on selected categories
-          </Text>
+            <Text style={styles.topFindingSubtitle}>
+              Based on selected categories
+            </Text>
 
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-        </ScrollView>
+            {isTopFindingsLoading ? (
+              <>
+                <RectangularSkeleton isLoading={isTopFindingsLoading} />
+                <RectangularSkeleton isLoading={isTopFindingsLoading} />
+                <RectangularSkeleton isLoading={isTopFindingsLoading} />
+              </>
+            ) : (
+              <>
+                <TopFindingsCard />
+                <TopFindingsCard />
+                <TopFindingsCard />
+                <TopFindingsCard />
+                <TopFindingsCard />
+                <TopFindingsCard />
+                <TopFindingsCard />
+                <TopFindingsCard />
+              </>
+            )}
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </>
   );

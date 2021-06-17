@@ -13,7 +13,7 @@ import { Button, Spinner } from "@ui-kitten/components";
 
 type Props = {
   textColor: string;
-  btnText?: string;
+  btnText: string;
   onClick: (event: any) => void;
   isLoading?: boolean;
   style?: any;

@@ -34,7 +34,7 @@ export default function BottomSheetModal(props: ModalProps) {
       visible={props.modalVisible}
       onRequestClose={() => props.closeModal()}
     >
-      <BlurView intensity={40} style={[styles.container]} tint="dark">
+      <View style={[styles.container]}>
         <View style={{ height: 60 }} />
         <View style={styles.quickActions}>
           <TouchableOpacity
@@ -60,7 +60,7 @@ export default function BottomSheetModal(props: ModalProps) {
         >
           <View style={{ flex: 1 }}>{renderView(props)}</View>
         </Animatable.View>
-      </BlurView>
+      </View>
     </Modal>
   );
 }
