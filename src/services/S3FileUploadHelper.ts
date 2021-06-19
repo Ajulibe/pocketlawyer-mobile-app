@@ -52,7 +52,8 @@ export const pickFile = async (): Promise<FileInterface | null> => {
 };
 
 export const uploadFileToS3 = async (
-  payload: DocUploadInterface, pickFile:FileInterface
+  payload: DocUploadInterface,
+  pickFile: FileInterface
 ): Promise<DocUploadResponse | null> => {
   //--> Pick file(PDF/IMG/OTHER)
   if (pickFile.type !== "success") {
@@ -78,7 +79,6 @@ export const uploadFileToS3 = async (
         return null;
       } else {
         const { url, uploadID, fileName } = signedUrl.data.data;
-        console.log(url, uploadID, fileName, fileType, size);
 
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,

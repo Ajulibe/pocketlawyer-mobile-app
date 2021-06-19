@@ -166,7 +166,11 @@ const UpdateImage = ({ navigation }: Props) => {
             textColor={COLORS.light.white}
             btnText={"Save"}
             disabled={disabled}
-            onClick={() => navigation.goBack()}
+            onClick={() =>
+              setTimeout(() => {
+                navigation.goBack();
+              }, 1000)
+            }
           />
         </View>
       </View>
