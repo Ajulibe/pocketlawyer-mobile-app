@@ -24,68 +24,67 @@ import styles from "./homeStyles";
 import { CategoryDb } from "database/CategoryDb";
 import { LawyerModel } from "models/Interfaces";
 import { useScrollToTop } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //--> REDUX
 import { useAppSelector, useAppDispatch } from "redux/hooks";
 import PLButton from "components/PLButton/PLButton";
 import COLORS from "utils/Colors";
 import { getUser } from "redux/actions";
+import { RectangularSkeleton } from "components/PLSkeleton/PLSkeleton";
+import { Avatar } from "react-native-elements";
 import {
-  CircularSkeleton,
-  RectangularSkeleton,
-} from "components/PLSkeleton/PLSkeleton";
+  capitalizeFirstLetter,
+  getFirstLetterFromName,
+} from "../Account/UpdateProfile/utilsFn";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({ navigation }: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
-  const [user, setUser] = React.useState("");
-  const [time, setTime] = React.useState("");
-
-  const [search, setSearch] = useState<string>("");
-  const [focus, setFocus] = useState<boolean>(false);
+  const time = React.useRef("");
+  const [profileImage, setProfileImage] = useState("abc.jpg");
 
   const [isCategoryLoading, setIsCategoryLoading] = React.useState(true);
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
 
-  const data = useAppSelector((state) => state);
+  const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
+  const { user_, metaData } = userData;
+  // console.log(metaData, "called from homescreen");
+
   const dispatch = useAppDispatch();
 
   const ref = React.useRef<ScrollView | null>(null);
 
   useScrollToTop(ref);
 
-  console.log(data);
-
   //--> Route redirects...
-  React.useLayoutEffect(() => {
-    (async () => {
-      const catRoute = await AsyncStorageUtil.getGotoPickLawyer();
-      const checkoutRoute = await AsyncStorageUtil.getGotoCheckout();
+  // React.useLayoutEffect(() => {
+  //   (async () => {
+  //     const catRoute = await AsyncStorageUtil.getGotoPickLawyer();
+  //     const checkoutRoute = await AsyncStorageUtil.getGotoCheckout();
 
-      if (catRoute != null && catRoute != "") {
-        const service: Service = JSON.parse(catRoute);
-        AsyncStorageUtil.setGotoPickLawyer("");
-        navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-          category: CategoryDb.findByCode({
-            catCode: service.categoryCode,
-          }),
-          service: service,
-        });
-      } else if (checkoutRoute != null && checkoutRoute != "") {
-        const service: Service = JSON.parse(checkoutRoute);
-        AsyncStorageUtil.setGotoCheckout("");
-        navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-          category: CategoryDb.findByCode({
-            catCode: service.categoryCode,
-          }),
-          service: service,
-        });
-      }
-    })();
-  });
+  //     if (catRoute != null && catRoute != "") {
+  //       const service: Service = JSON.parse(catRoute);
+  //       AsyncStorageUtil.setGotoPickLawyer("");
+  //       navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+  //         // category: CategoryDb.findByCode({
+  //         //   catCode: service.categoryCode,
+  //         // }),
+  //         service: service,
+  //       });
+  //     } else if (checkoutRoute != null && checkoutRoute != "") {
+  //       const service: Service = JSON.parse(checkoutRoute);
+  //       AsyncStorageUtil.setGotoCheckout("");
+  //       navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+  //         // category: CategoryDb.findByCode({
+  //         //   catCode: service.categoryCode,
+  //         // }),
+  //         service: service,
+  //       });
+  //     }
+  //   })();
+  // });
 
   //--> get the time of the day
   const getTimePeriod = () => {
@@ -93,32 +92,41 @@ const HomeScreen = ({ navigation }: Props) => {
     const curHr = today.getHours();
 
     if (curHr < 12) {
-      setTime("Good morning");
+      time.current = "Good morning";
     } else if (curHr < 18) {
-      setTime("Good afternoon");
+      time.current = "Good afternoon";
     } else {
-      setTime("Good evening");
+      time.current = "Good evening";
     }
   };
 
-  //--> capitalize the first letter of the name
-  const capitalizeFirstLetter = (name: string) => {
-    const lower = name?.toLowerCase();
-    return name?.charAt(0).toUpperCase() + lower?.slice(1);
-  };
   //-->Get User's Categories
   React.useEffect(() => {
     getTimePeriod();
     getCategories();
   }, []);
+
+  React.useEffect(() => {
+    if (typeof metaData === "undefined") {
+      return;
+    }
+    setAvatar();
+  }, [metaData]);
+
+  const setAvatar = () => {
+    if (metaData?.length !== 0) {
+      setProfileImage(metaData[metaData?.length - 1]?.value);
+    } else {
+      setProfileImage("abc.jpg");
+    }
+  };
+
   const getCategories = async () => {
     setIsCategoryLoading(true);
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
-      const name = await AsyncStorage.getItem("firstName");
-      const firstname = capitalizeFirstLetter(name ? name : "");
-      setUser(firstname ? firstname : "");
+      dispatch(getUser({ userID: Number(userID) }));
       const getCats = await axiosClient.get(
         `Category/GetUserCategories/${userID}`
       );
@@ -166,12 +174,32 @@ const HomeScreen = ({ navigation }: Props) => {
         <View style={[styles.container, { flexGrow: 1 }]}>
           <View style={styles.header}>
             <View style={styles.headerTitleWrapper}>
-              <Text style={globalStyles.H1Style}>Hi {user} 👋🏼</Text>
+              <Text style={globalStyles.H1Style}>
+                Hi {capitalizeFirstLetter(user_ ? user_?.firstName : "")}
+                👋🏼
+              </Text>
               <Text style={styles.greeting}>
-                {time}, here are your available services
+                Here are your available services
               </Text>
             </View>
-            <Image source={{ uri: CONSTANTS.user }} style={styles.user} />
+            <Avatar
+              titleStyle={{
+                fontFamily: "Roboto-Medium",
+                fontSize: wp(14),
+                color: COLORS.light.white,
+              }}
+              containerStyle={styles.user}
+              size="medium"
+              placeholderStyle={{ backgroundColor: COLORS.light.primary }}
+              rounded
+              title={`${getFirstLetterFromName(
+                user_ ? user_?.firstName : ""
+              )} ${getFirstLetterFromName(user_ ? user_?.lastName : "")}`}
+              source={{
+                uri: `https://${profileImage}`,
+              }}
+              activeOpacity={0}
+            />
           </View>
 
           <ServiceSearch />
@@ -189,7 +217,9 @@ const HomeScreen = ({ navigation }: Props) => {
               <TouchableOpacity
                 onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}
               >
-                <Text style={styles.viewMore}>View all</Text>
+                {!isCategoryLoading && (
+                  <Text style={styles.viewMore}>View all</Text>
+                )}
               </TouchableOpacity>
             </View>
             <View
@@ -228,21 +258,13 @@ const HomeScreen = ({ navigation }: Props) => {
               Top Findings
             </Text>
 
-            {/* <PLButton
-            style={{ width: "100%" }}
-            textColor={COLORS.light.white}
-            btnText={"Next"}
-            onClick={() => {
-              dispatch(getUser({ userID: 12 }));
-            }}
-          /> */}
-
             <Text style={styles.topFindingSubtitle}>
               Based on selected categories
             </Text>
 
             {isTopFindingsLoading ? (
               <>
+                <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />

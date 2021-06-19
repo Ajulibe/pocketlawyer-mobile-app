@@ -31,6 +31,7 @@ import { BottomSheet, ListItem } from "react-native-elements";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
+import dayjs from "dayjs";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -117,7 +118,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         lastName: initialState.lastName,
         email: initialState.email,
         userType: 1,
-        dob: date,
+        dob: dayjs(date).format("DD/MM/YYYY"),
         password: password,
         address: `${city},${state}`,
         phone: initialState.phone,

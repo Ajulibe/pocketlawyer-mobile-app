@@ -8,11 +8,13 @@ import COLORS from "../../utils/Colors";
 interface Props {
   placeholder: string;
   onChangeText: any;
+  onBlur?: any;
 }
 
 export const PLPasswordInput: React.FC<Props> = ({
   placeholder,
   onChangeText,
+  onBlur,
 }) => {
   const [value, setValue] = React.useState("");
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
@@ -34,6 +36,7 @@ export const PLPasswordInput: React.FC<Props> = ({
   return (
     <View style={[styles.InputWrapper]}>
       <Input
+        onBlur={onBlur}
         onChangeText={onChangeText}
         placeholder={placeholder}
         accessoryRight={renderIcon}

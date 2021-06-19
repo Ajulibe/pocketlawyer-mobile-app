@@ -8,10 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "utils/Colors";
-import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
-import StarRating from "react-native-star-rating";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import globalStyles from "css/GlobalCss";
 import { Service } from "database/DBData";
 import { ServiceDb } from "database/ServiceDb";

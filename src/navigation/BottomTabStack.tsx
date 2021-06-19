@@ -16,10 +16,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export type HomeTabStackParamList = {
-  [ROUTES.HOME_STACK]: undefined;
-  [ROUTES.SERVICE_STACK]: undefined;
-  [ROUTES.HISTORY_STACK]: undefined;
-  [ROUTES.ACCOUNT_STACK]: undefined;
+  [ROUTES.HOME_STACK]: any;
+  [ROUTES.SERVICE_STACK]: any;
+  [ROUTES.HISTORY_STACK]: any;
+  [ROUTES.ACCOUNT_STACK]: any;
 };
 
 const Tab = createBottomTabNavigator<HomeTabStackParamList>();
@@ -100,10 +100,10 @@ export default function HomeBottomTabStack() {
         name={ROUTES.HOME_STACK}
         component={HomeStack}
         options={() => ({
-          tabBarLabel: ({ focused }: any) =>
-            !focused && <Title index={0} focused={focused} />,
+          tabBarLabel: ({ focused }: any) => <Text></Text>,
+          // !focused && <Title index={0} focused={focused} />,
           tabBarIcon: ({ color, focused }: any) => (
-            <Entypo name="home" size={18} color={color} />
+            <Entypo name="home" size={focused ? 22 : 18} color={color} />
           ),
         })}
       />
@@ -111,10 +111,14 @@ export default function HomeBottomTabStack() {
         name={ROUTES.SERVICE_STACK}
         component={ServiceStack}
         options={() => ({
-          tabBarLabel: ({ focused }: any) =>
-            !focused && <Title index={1} focused={focused} />,
-          tabBarIcon: ({ color }: any) => (
-            <FontAwesome5 name="business-time" size={15} color={color} />
+          tabBarLabel: ({ focused }: any) => <Text></Text>,
+          // !focused && <Title index={1} focused={focused} />,
+          tabBarIcon: ({ color, focused }: any) => (
+            <FontAwesome5
+              name="business-time"
+              size={focused ? 19 : 15}
+              color={color}
+            />
           ),
         })}
       />
@@ -122,10 +126,14 @@ export default function HomeBottomTabStack() {
         name={ROUTES.HISTORY_STACK}
         component={HistoryStack}
         options={{
-          tabBarLabel: ({ focused }: any) =>
-            !focused && <Title index={2} focused={focused} />,
-          tabBarIcon: ({ color }: any) => (
-            <FontAwesome name="history" size={16} color={color} />
+          tabBarLabel: ({ focused }: any) => <Text></Text>,
+          // !focused && <Title index={2} focused={focused} />,
+          tabBarIcon: ({ color, focused }: any) => (
+            <FontAwesome
+              name="history"
+              size={focused ? 20 : 16}
+              color={color}
+            />
           ),
         }}
       />
@@ -133,10 +141,14 @@ export default function HomeBottomTabStack() {
         name={ROUTES.ACCOUNT_STACK}
         component={AccountStack}
         options={{
-          tabBarLabel: ({ focused }: any) =>
-            !focused && <Title index={3} focused={focused} />,
-          tabBarIcon: ({ color }: any) => (
-            <MaterialCommunityIcons name="account" size={23} color={color} />
+          tabBarLabel: ({ focused }: any) => <Text></Text>,
+          // !focused && <Title index={3} focused={focused} />,
+          tabBarIcon: ({ color, focused }: any) => (
+            <MaterialCommunityIcons
+              name="account"
+              size={focused ? 27 : 23}
+              color={color}
+            />
           ),
         }}
       />

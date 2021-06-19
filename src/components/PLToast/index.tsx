@@ -1,7 +1,8 @@
 import React from "react";
 import Toast, { BaseToast } from "react-native-toast-message";
 import COLORS from "utils/Colors";
-import { wp } from "utils/Dimensions";
+import { hp, wp } from "utils/Dimensions";
+import { icons, colors } from "./assets";
 
 type ToastTypes = "success | error | info";
 
@@ -43,46 +44,69 @@ export interface ToastProps {
 
 //--> to be properly configured later
 export const toastConfig = {
-  success: ({ type, message, ...rest }: ToastProps) => (
+  success: ({ type, ...rest }: ToastProps) => (
     <BaseToast
       {...rest}
-      style={{ borderLeftColor: "green" }}
-      contentContainerStyle={{ paddingHorizontal: 15 }}
+      style={{
+        borderLeftColor: colors.mantis,
+        borderLeftWidth: 1,
+        borderWidth: 1,
+        borderColor: colors.mantis,
+        borderRadius: 6,
+        backgroundColor: "#DDEADE",
+      }}
+      leadingIcon={icons.success}
+      leadingIconStyle={{ backgroundColor: "white", borderRadius: wp(50) }}
       text1Style={{
-        fontSize: 15,
+        fontSize: wp(15),
+        fontFamily: "Roboto-Bold",
+        color: colors.mantis,
+      }}
+      onTrailingIconPress={() => {
+        Toast.hide();
       }}
       text2Style={{
-        fontSize: 15,
+        fontSize: wp(13),
+        fontFamily: "Roboto-Regular",
+        color: "grey",
       }}
       text1={
         type === "success" ? "Success" : type === "error" ? "Error" : "Info"
       }
-      text2={message}
       text1NumberOfLines={1}
       text2NumberOfLines={1}
     />
   ),
 
-  error: ({ type, message, ...rest }: ToastProps) => (
+  error: ({ type, ...rest }: ToastProps) => (
     <BaseToast
       {...rest}
-      style={{ borderLeftColor: "red" }}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: COLORS.light.splashscreenbg,
-        borderColor: COLORS.light.carouselBtn2,
+      style={{
+        borderLeftColor: colors.red,
+        borderLeftWidth: 1,
         borderWidth: 1,
+        borderColor: colors.red,
+        borderRadius: 6,
+        backgroundColor: colors.lightRed,
       }}
+      leadingIcon={icons.error}
+      leadingIconStyle={{ backgroundColor: "white", borderRadius: wp(50) }}
       text1Style={{
         fontSize: wp(15),
+        fontFamily: "Roboto-Bold",
+        color: colors.red,
+      }}
+      onTrailingIconPress={() => {
+        Toast.hide();
       }}
       text2Style={{
         fontSize: wp(13),
+        fontFamily: "Roboto-Regular",
+        color: "grey",
       }}
       text1={
         type === "success" ? "Success" : type === "error" ? "Error" : "Info"
       }
-      text2={message}
       text1NumberOfLines={1}
       text2NumberOfLines={1}
     />

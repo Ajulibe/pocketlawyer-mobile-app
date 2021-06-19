@@ -1,4 +1,4 @@
-import { setSuccessUser, setErrorUser } from "../actions/index";
+import { setSuccessUser, setErrorUser, setResetUser } from "../actions/index";
 import { createReducer } from "@reduxjs/toolkit";
 
 // Define a type for the slice state
@@ -27,5 +27,9 @@ export const reducer = createReducer(initialState, {
   },
   [setErrorUser.type]: (state) => {
     state.status = "failed";
+  },
+  [setResetUser.type]: (state) => {
+    state.user = {};
+    state.status = "Initial";
   },
 });

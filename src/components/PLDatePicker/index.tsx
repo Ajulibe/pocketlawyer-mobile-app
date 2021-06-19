@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { Datepicker } from "@ui-kitten/components";
+import { CalendarViewModes, Datepicker } from "@ui-kitten/components";
 import { AntDesign } from "@expo/vector-icons";
 import { wp, hp } from "../../utils/Dimensions";
 import COLORS from "../../utils/Colors";
@@ -29,6 +29,7 @@ export const PLDatePicker: React.FC<PLDatePicker> = ({
   return (
     <View style={styles.DatepickerWrapper}>
       <Datepicker
+        startView={CalendarViewModes.YEAR}
         textStyle={{
           color: COLORS.light.black,
           fontSize: wp(12),
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     color: COLORS.light.darkgrey,
-    fontSize: wp(12),
+    fontSize: wp(13),
     marginLeft: wp(8),
     fontFamily: "Roboto-Medium",
   },

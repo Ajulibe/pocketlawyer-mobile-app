@@ -1,13 +1,12 @@
+import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import { AccountStackParamList } from "navigation/AccountStack";
 import { ROUTES } from "navigation/Routes";
-import React, { useState } from "react";
+
 import {
-  Image,
-  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -21,10 +20,40 @@ import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 import UserDescListTile from "./Components/UserDescListTile";
 import { Avatar } from "react-native-elements";
+import { AntDesign } from "@expo/vector-icons";
+import dayjs from "dayjs";
+
+//--> REDUX
+import { useAppSelector } from "redux/hooks";
+import { getFirstLetterFromName } from "./UpdateProfile/utilsFn";
 
 type Props = StackScreenProps<AccountStackParamList, ROUTES.ACCOUNT_SCREEN>;
 
 const AccountScreen = ({ navigation }: Props) => {
+  //--> state from redux store
+  const userData = useAppSelector((state) => state?.users?.user);
+  const { user_, metaData } = userData;
+  const [profileImage, setProfileImage] = useState("abc.jpg");
+
+  // console.log(userData);
+
+  React.useEffect(() => {
+    if (typeof metaData === "undefined") {
+      return;
+    }
+    setAvatar();
+  }, [metaData]);
+
+  const setAvatar = () => {
+    if (metaData?.length !== 0) {
+      setProfileImage(metaData[metaData?.length - 1]?.value);
+    } else {
+      setProfileImage("abc.jpg");
+    }
+  };
+
+  const addressArray = user_?.address?.split(",");
+
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -39,32 +68,62 @@ const AccountScreen = ({ navigation }: Props) => {
           keyboardShouldPersistTaps="handled"
           bounces={false}
         >
-          <TouchableOpacity>
-            <Avatar
-              rounded
-              size="large"
-              source={{
-                uri: CONSTANTS.user,
-              }}
-              containerStyle={styles.userPhoto}
-            />
+          <Avatar
+            rounded
+            titleStyle={{
+              fontFamily: "Roboto-Medium",
+              fontSize: wp(17),
+              color: COLORS.light.white,
+            }}
+            size="large"
+            placeholderStyle={{ backgroundColor: COLORS.light.primary }}
+            title={`${getFirstLetterFromName(
+              user_ ? user_?.firstName : ""
+            )} ${getFirstLetterFromName(user_ ? user_?.lastName : "")}`}
+            source={{
+              uri: `https://${profileImage}`,
+            }}
+            onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE)}
+            containerStyle={styles.userPhoto}
+          >
+            <Avatar.Accessory size={18} underlayColor={COLORS.light.black} />
+          </Avatar>
+
+          <TouchableOpacity
+            style={styles.textBtn}
+            onPress={() => {
+              navigation.navigate(ROUTES.UPDATE_PROFILE);
+            }}
+          >
+            <AntDesign name="edit" size={15} color={COLORS.light.white} />
           </TouchableOpacity>
 
-          <Text style={styles.changePhotoBtn}>Tap to change your photo</Text>
-          <View style={{ height: hp(32) }} />
-          <UserDescListTile leading="First Name" value="Bode" />
-          <UserDescListTile leading="Last Name" value="Akachukwu" />
-          <UserDescListTile leading="State" value="Benin" />
-          <UserDescListTile leading="City" value="Onipanu" />
-          <UserDescListTile leading="Date of Birth" value="03/05/1997" />
-          <Text style={[{ ...styles.changePhotoBtn, textAlign: "center" }]}>
+          <View style={{ height: hp(20) }} />
+          <UserDescListTile leading="First Name" value={user_?.firstName} />
+          <UserDescListTile leading="Last Name" value={user_?.lastName} />
+          <UserDescListTile leading="State" value={addressArray[1]} />
+          <UserDescListTile leading="City" value={addressArray[0]} />
+          <UserDescListTile
+            leading="Date of Birth"
+            value={dayjs(user_?.dob).format("DD/MM/YYYY")}
+          />
+          <Text
+            style={[
+              {
+                ...styles.changePhotoBtn,
+                textAlign: "center",
+                color: COLORS.light.black,
+                marginTop: hp(10),
+              },
+            ]}
+          >
             If you have any issues with your information, please send a message
             to info@pocket-lawyers.com
           </Text>
           <Text style={styles.subTitle}>Contact Information</Text>
           <View style={{ height: hp(18) }} />
-          <UserDescListTile leading="Phone Number" value="+2348134888880" />
-          <UserDescListTile leading="Email Address" value="Bode@gmail.com" />
+          <UserDescListTile leading="Phone Number" value={user_?.phone} />
+          <UserDescListTile leading="Email Address" value={user_?.email} />
 
           <TouchableOpacity
             style={styles.changePasswordBth}
@@ -88,19 +147,29 @@ export default AccountScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: wp(20),
-    paddingVertical: hp(12),
+    paddingVertical: hp(6),
     alignItems: "center",
   },
   userPhoto: {
-    marginBottom: wp(13),
+    marginBottom: hp(20),
+  },
+  textBtn: {
+    backgroundColor: COLORS.light.primary,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    height: wp(30),
+    borderRadius: wp(30),
+    width: wp(30),
+    alignSelf: "flex-start",
+    marginBottom: hp(10),
   },
   changePhotoBtn: {
     fontWeight: "300",
     fontSize: wp(12),
     lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
-    marginTop: hp(6),
-    color: "rgba(0, 0, 0, 0.7)",
-    fontFamily: "Roboto",
+    color: COLORS.light.white,
+    fontFamily: "Roboto-Medium",
   },
   subTitle: {
     fontSize: wp(14),

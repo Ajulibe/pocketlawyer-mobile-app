@@ -5,7 +5,7 @@ import { hp, wp } from "utils/Dimensions";
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: wp(20),
-    paddingVertical: hp(18),
+    paddingTop: hp(18),
   },
   header: {
     display: "flex",
@@ -24,13 +24,11 @@ const styles = StyleSheet.create({
     marginTop: hp(3),
   },
   user: {
-    resizeMode: "cover",
     width: wp(40),
     height: wp(40),
-    borderRadius: wp(40),
-    marginTop: hp(6),
-    borderWidth: 2,
     borderColor: COLORS.light.primary,
+    marginRight: wp(7),
+    borderWidth: 1,
   },
   searchWrapper: {
     backgroundColor: "#F1F1F2",

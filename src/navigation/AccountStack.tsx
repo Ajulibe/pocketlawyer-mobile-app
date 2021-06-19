@@ -6,11 +6,15 @@ import {
 import { ROUTES } from "./Routes";
 import COLORS from "../utils/Colors";
 import AccountScreen from "../screens/TabScreens/Account/AccountScreen";
-import UpdatePassword from "../screens/TabScreens/Account/UpdatePassword";
+import UpdatePassword from "../screens/TabScreens/Account/UpdateProfile/UpdatePassword";
+import UpdateProfile from "screens/TabScreens/Account/UpdateProfile/UpdateProfile";
+import UpdateImage from "screens/TabScreens/Account/UpdateImage";
 
 export type AccountStackParamList = {
-  [ROUTES.ACCOUNT_SCREEN]: undefined;
-  [ROUTES.UPDATE_PASSWORD]: undefined;
+  [ROUTES.ACCOUNT_SCREEN]: any;
+  [ROUTES.UPDATE_PASSWORD]: any;
+  [ROUTES.UPDATE_PROFILE]: any;
+  [ROUTES.UPDATE_IMAGE]: any;
 };
 
 const AccountStack = createStackNavigator<AccountStackParamList>();
@@ -43,6 +47,16 @@ export default function AccountNavigationStack() {
       <AccountStack.Screen
         name={ROUTES.UPDATE_PASSWORD}
         component={UpdatePassword}
+        options={headerOptions}
+      />
+      <AccountStack.Screen
+        name={ROUTES.UPDATE_PROFILE}
+        component={UpdateProfile}
+        options={headerOptions}
+      />
+      <AccountStack.Screen
+        name={ROUTES.UPDATE_IMAGE}
+        component={UpdateImage}
         options={headerOptions}
       />
     </AccountStack.Navigator>

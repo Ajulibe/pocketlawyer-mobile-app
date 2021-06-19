@@ -1,31 +1,46 @@
+import React, { useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "navigation/HomeStack";
 import { ROUTES } from "navigation/Routes";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
-import React from "react";
+
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { hp, wp } from "utils/Dimensions";
 import LawyerTile from "./Components/LawyerTile";
 import axiosClient from "utils/axiosClient";
 import { LawyerModel } from "models/Interfaces";
 import FullPageLoader from "components/FullPageLoader";
+import { CategoryDb } from "database/CategoryDb";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.PICK_LAWYER_SCREEN>;
 
 export default function PickLawyer({ navigation, route }: Props) {
-  const category = route.params.category;
   const service = route.params.service;
+  const [category, setCategory] = useState<any>("");
+
+  React.useEffect(() => {
+    if (typeof route.params.service === "undefined") {
+      return;
+    }
+    getCategoryData();
+  }, [service]);
+
+  const getCategoryData = () => {
+    const category = CategoryDb.findByCode({
+      catCode: service?.categoryCode,
+    });
+    setCategory(category);
+  };
 
   //--> state for the section
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (typeof route.params.category === "undefined") {
+    if (category === "") {
       return;
     }
-
     getLawyersByCategory();
   }, [category]);
 

@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-  ActivityIndicator,
-} from "react-native";
+import React from "react";
+import { Modal, StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import COLORS from "utils/Colors";
 import { hp } from "utils/Dimensions";
 
@@ -38,7 +30,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-    // backgroundColor: "red",
   },
   textStyle: {
     color: "white",

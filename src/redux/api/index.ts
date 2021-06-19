@@ -1,12 +1,13 @@
 import axiosClient from "utils/axiosClient";
 
 export async function getUser({ userID }: any): Promise<any> {
-  console.log(userID, "main function");
   try {
     const { data } = await axiosClient.get(
       `user/GetUserDetails?UserID=${userID}`
     );
-    return data;
+    const user_ = data.data.user_;
+    const metaData = data.data;
+    return { user_, metaData };
   } catch (error) {
     return error;
   }

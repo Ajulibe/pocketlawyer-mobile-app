@@ -4,7 +4,6 @@ import axiosClient from "utils/axiosClient";
 import { PLToast } from "components/PLToast";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { CommonActions } from "@react-navigation/native";
 
 export const useLogin = (navigation: any) => {

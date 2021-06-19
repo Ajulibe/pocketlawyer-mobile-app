@@ -12,6 +12,7 @@ import FullPageLoader from "components/FullPageLoader";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "redux/store";
 import { Provider } from "react-redux";
+import { toastConfig } from "components/PLToast";
 
 const App: FC = () => {
   const isLoadingComplete = useCachedResources();
@@ -63,7 +64,7 @@ const App: FC = () => {
               persistor={persistor}
             >
               <Navigation colorScheme={colorScheme} />
-              <Toast ref={(ref) => Toast.setRef(ref)} />
+              <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
             </PersistGate>
           </Provider>
         </ApplicationProvider>

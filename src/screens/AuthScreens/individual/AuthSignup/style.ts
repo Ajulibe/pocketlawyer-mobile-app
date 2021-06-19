@@ -97,6 +97,7 @@ export const styles = StyleSheet.create({
     width: wpercent("80%"),
     justifyContent: "space-around",
   },
+
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(11),

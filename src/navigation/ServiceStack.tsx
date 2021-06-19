@@ -6,9 +6,10 @@ import {
 import { ROUTES } from "./Routes";
 import COLORS from "../utils/Colors";
 import ServiceScreen from "../screens/TabScreens/Services/ServiceScreen";
+import { Service } from "database/DBData";
 
 export type ServiceStackParamList = {
-  [ROUTES.SERVICE_SCREEN]: undefined;
+  [ROUTES.SERVICE_SCREEN]: { service: any };
 };
 
 const ServiceStack = createStackNavigator<ServiceStackParamList>();

@@ -53,4 +53,6 @@ export enum ROUTES {
   ACCOUNT_STACK = "AccountStack",
   ACCOUNT_SCREEN = "AccountSCreen",
   UPDATE_PASSWORD = "UpdatePasswordScreen",
+  UPDATE_PROFILE = "UpdateProfileScreen",
+  UPDATE_IMAGE = "UpdateImageScreen",
 }
