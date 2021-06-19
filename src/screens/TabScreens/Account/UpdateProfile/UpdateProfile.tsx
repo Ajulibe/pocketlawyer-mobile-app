@@ -113,7 +113,7 @@ const UpdateProfile = ({ navigation }: Props) => {
     }
   }, [firstName, lastName, state, city, date, phonenumber]);
 
-  const register = async () => {
+  const updateDetails = async () => {
     const dob = dayjs(date).format("DD/MM/YYYY");
     setIsLoading(true);
 
@@ -343,7 +343,7 @@ const UpdateProfile = ({ navigation }: Props) => {
             style={styles.plButton}
             textColor={COLORS.light.white}
             btnText={"Update details"}
-            onClick={register}
+            onClick={updateDetails}
           />
         </Animatable.View>
       </KeyboardAwareScrollView>

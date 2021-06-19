@@ -33,7 +33,7 @@ const UpdateProfile = ({ navigation }: Props) => {
 
   //--> get previous password from redux store
   const usersCurrentPassword = useAppSelector(
-    (state) => state.users.user.password
+    (state) => state.users.user.user_.password
   );
 
   const dispatch = useAppDispatch();
@@ -75,19 +75,20 @@ const UpdateProfile = ({ navigation }: Props) => {
     }
   };
 
-  const register = async () => {
+  const updatePassword = async () => {
     setIsLoading(true);
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
       const updatePayload = {
+        userid: Number(userID),
         password: newpassword,
       };
 
       await axiosClient.post("User/UpdateProfile", updatePayload);
       dispatch(getUser({ userID: Number(userID) }));
       setIsLoading(false);
-      PLToast({ message: "Profile Updated", type: "success" });
+      PLToast({ message: "Password Updated", type: "success" });
       setTimeout(() => {
         navigation.goBack();
       }, 300);
@@ -145,7 +146,7 @@ const UpdateProfile = ({ navigation }: Props) => {
             )}
 
             {error === "false" && (
-              <Text style={styles.errorText}>
+              <Text style={styles.validText}>
                 Correct Current password &nbsp; &#10003;
               </Text>
             )}
@@ -196,7 +197,7 @@ const UpdateProfile = ({ navigation }: Props) => {
             style={styles.plButton}
             textColor={COLORS.light.white}
             btnText={"Update password"}
-            onClick={register}
+            onClick={updatePassword}
           />
         </Animatable.View>
       </KeyboardAwareScrollView>
