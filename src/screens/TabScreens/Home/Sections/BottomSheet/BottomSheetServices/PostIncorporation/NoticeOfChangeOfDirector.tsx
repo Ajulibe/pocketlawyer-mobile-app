@@ -34,6 +34,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import COLORS from "utils/Colors";
 import PickerInput from "components/PickerInput";
 import { meansOfIdentification } from "../../BottomSheetUtils/FormStaticData";
+import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const allFomKeys = [...Array(10).keys()].map((item, index) => {
   const idx = index + 1;
@@ -180,10 +181,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                   Director's Info {idx}
                 </Text>
 
-                <Text style={modalFormstyles.inputLabel}>
-                  Company Name
-                  <Text style={modalFormstyles.required}> *</Text>
-                </Text>
+                <ModalFormLabel text="Company Name" giveMargin={false} />
                 <Input
                   placeholder="Type company name"
                   errorText={formData?.[FormKeys?.[`companyName${idx}`]]?.error}
@@ -194,11 +192,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                     });
                   }}
                 />
-                <View style={{ height: 16 }} />
-                <Text style={modalFormstyles.inputLabel}>
-                  Company Registration Number
-                  <Text style={modalFormstyles.required}>*</Text>
-                </Text>
+                <ModalFormLabel text="Company Registration Number" />
                 <Input
                   placeholder="Type company registration number"
                   errorText={
@@ -211,11 +205,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                     });
                   }}
                 />
-                <View style={{ height: 16 }} />
-                <Text style={modalFormstyles.inputLabel}>
-                  Name of New Director
-                  <Text style={modalFormstyles.required}>*</Text>
-                </Text>
+                <ModalFormLabel text="Name of New Director" />
                 <Input
                   placeholder="Type name of new director"
                   errorText={
@@ -228,11 +218,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                     });
                   }}
                 />
-                <View style={{ height: 16 }} />
-                <Text style={modalFormstyles.inputLabel}>
-                  Means of Identification
-                  <Text style={modalFormstyles.required}>*</Text>
-                </Text>
+                <ModalFormLabel text="Means of Identification" />
                 <PickerInput
                   data={meansOfIdentification}
                   errorText={formData?.[FormKeys?.[`meansOfId${idx}`]]?.error}
@@ -247,11 +233,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                     });
                   }}
                 />
-                <View style={{ height: 16 }} />
-                <Text style={modalFormstyles.inputLabel}>
-                  ID Number
-                  <Text style={modalFormstyles.required}>*</Text>
-                </Text>
+                <ModalFormLabel text="ID Number" />
                 <Input
                   placeholder="Type identification number"
                   errorText={formData?.[FormKeys?.[`idNo${idx}`]]?.error}
@@ -262,11 +244,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                     });
                   }}
                 />
-                <View style={{ height: 16 }} />
-                <Text style={modalFormstyles.inputLabel}>
-                  Upload Means of Identification
-                  <Text style={modalFormstyles.required}> *</Text>
-                </Text>
+                <ModalFormLabel text="Upload Means of Identification" />
                 <Input
                   onPress={() =>
                     uploadFile(FormKeys?.[`uploadMeansOfId${idx}`])
@@ -280,11 +258,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                   }
                   icon
                 />
-                <View style={{ height: 16 }} />
-                <Text style={modalFormstyles.inputLabel}>
-                  Signature
-                  <Text style={modalFormstyles.required}> *</Text>
-                </Text>
+                <ModalFormLabel text="Signature" />
                 <Input
                   onPress={() => uploadFile(FormKeys?.[`signature${idx}`])}
                   errorText={formData?.[FormKeys?.[`signature${idx}`]]?.error}

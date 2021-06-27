@@ -33,15 +33,42 @@ export const shareCapital = [
 ]
 export const contractDuration = [
     {
-        key:"1Month",
-        label:"1 Month",
+        key:"3Months",
+        label:"3 Months",
+    },
+    {
+        key:"6Months",
+        label:"6 Months",
     },
     {
         key:"1Year",
         label:"1 Year",
     },
+]
+
+
+
+
+
+export const documentType = [
     {
-        key:"2Year",
-        label:"2 Years",
+        key:"Contract",
+        label:"Contract",
+    },
+    {
+        key:"DemandLetter",
+        label:"Demand letter",
+    },
+    {
+        key:"JointVentureAgreement",
+        label:"Joint Venture Agreement",
+    },
+    {
+        key:"ArtistManagementAgreement",
+        label:"Artist Management Agreement",
+    },
+    {
+        key:"Others",
+        label:"Others",
     },
 ]

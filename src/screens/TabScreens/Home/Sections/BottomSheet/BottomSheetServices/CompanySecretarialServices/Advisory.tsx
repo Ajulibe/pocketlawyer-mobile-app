@@ -32,8 +32,7 @@ import {
 } from "../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
 import { contractDuration } from "../../BottomSheetUtils/FormStaticData";
-import AsyncStorageUtil from "utils/AsyncStorageUtil";
-import axiosClient from "utils/axiosClient";
+import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
   name: "BusinessName",
@@ -145,9 +144,8 @@ export function Advisory(props: BottomSheetProps) {
         <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details
         </Text>
-        <Text style={modalFormstyles.inputLabel}>
-          Business Name <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+
+        <ModalFormLabel text="Business Name" giveMargin={false} />
         <Input
           placeholder="Type business name"
           errorText={formData?.[FormKeys.name]?.error}
@@ -155,10 +153,7 @@ export function Advisory(props: BottomSheetProps) {
             handleTextChange({ field: FormKeys.name, value: text });
           }}
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Business Sector <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Business Sector" />
         <Input
           placeholder="Enter business sector"
           errorText={formData?.[FormKeys.sector]?.error}
@@ -166,11 +161,7 @@ export function Advisory(props: BottomSheetProps) {
             handleTextChange({ field: FormKeys.sector, value: text });
           }}
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Contract Duration <Text style={modalFormstyles.required}>*</Text>
-        </Text>
-
+        <ModalFormLabel text="Contract Duration" />
         <PickerInput
           data={contractDuration}
           errorText={formData?.[FormKeys.duration]?.error}
@@ -181,33 +172,21 @@ export function Advisory(props: BottomSheetProps) {
             handleTextChange({ field: FormKeys.duration, value: text });
           }}
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Certificate of Registration (SMEs)
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Certificate of Registration (SMEs)" />
         <Input
           onPress={() => uploadFile(FormKeys.certOfReg)}
           errorText={formData?.[FormKeys.certOfReg]?.error}
           dataValue={formData?.[FormKeys.certOfReg]?.value ?? "Select file"}
           icon
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Certificate of Incorporation (Companies)
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Certificate of Incorporation (Companies)" />
         <Input
           onPress={() => uploadFile(FormKeys.certOfInc)}
           errorText={formData?.[FormKeys.certOfInc]?.error}
           dataValue={formData?.[FormKeys.certOfInc]?.value ?? "Select file"}
           icon
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Memorandum and Articles of Association
-          <Text style={modalFormstyles.required}> *</Text>
-        </Text>
+        <ModalFormLabel text="Memorandum and Articles of Association" />
         <Input
           onPress={() => uploadFile(FormKeys.memAndArtOfAssoc)}
           errorText={formData?.[FormKeys.memAndArtOfAssoc]?.error}

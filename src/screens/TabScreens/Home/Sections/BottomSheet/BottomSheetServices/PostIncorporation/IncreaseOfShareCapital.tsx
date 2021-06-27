@@ -30,6 +30,7 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
+import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
   companyName: "CompanyName",
@@ -141,9 +142,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details
           </Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Company Name <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Company Name" giveMargin={false} />
           <Input
             placeholder="Type company name"
             errorText={formData?.[FormKeys.companyName]?.error}
@@ -151,11 +150,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
               handleTextChange({ field: FormKeys.companyName, value: text });
             }}
           />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Company Registration Number{" "}
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Company Registration Number" />
           <Input
             placeholder="Type company registration number "
             errorText={formData?.[FormKeys.companyRegNo]?.error}
@@ -163,11 +158,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
               handleTextChange({ field: FormKeys.companyRegNo, value: text });
             }}
           />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Means of Identification
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Means of Identification" />
           <Input
             onPress={() => uploadFile(FormKeys.meansOfId)}
             errorText={formData?.[FormKeys.meansOfId]?.error}
@@ -177,11 +168,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
             }
             icon
           />
-          <View style={{ height: 16 }} />
-          <Text style={modalFormstyles.inputLabel}>
-            Number of New Shares to be Added
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Number of New Shares to be Added" />
           <Input
             placeholder="Type number of shares to be added"
             errorText={formData?.[FormKeys.noOfShares]?.error}
