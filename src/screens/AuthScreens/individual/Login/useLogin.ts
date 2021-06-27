@@ -61,7 +61,7 @@ export const useLogin = (navigation: any) => {
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("firstName", firstName);
-      await AsyncStorageUtil.setUser(JSON.stringify(data));
+      await AsyncStorageUtil.setUser(JSON.stringify(data?.data?.user_));
       navigation.dispatch(
         CommonActions.reset({
           index: 0,

@@ -12,6 +12,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  LogBox,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
@@ -85,12 +86,21 @@ const HomeScreen = ({ navigation }: Props) => {
   React.useEffect(() => {
     getTimePeriod();
     getCategories();
+    getUserDetails();
   }, []);
-  const getCategories = async () => {
-    const userID = await AsyncStorageUtil.getUserId();
+  const getUserDetails = async () => {
     const name = await AsyncStorage.getItem("firstName");
     const firstname = capitalizeFirstLetter(name ? name : "");
     setUser(firstname ? firstname : "");
+    //--> Get all the user data
+    let user: any = await AsyncStorageUtil.getUser();
+    if (user != null) {
+      user = JSON.parse(user);
+    }
+  };
+  const getCategories = async () => {
+    const userID = await AsyncStorageUtil.getUserId();
+
     const getCats = await axiosClient.get(
       `Category/GetUserCategories/${userID}`
     );
@@ -116,12 +126,11 @@ const HomeScreen = ({ navigation }: Props) => {
 
     if (data != null) {
       const lawyers: LawyerModel[] = data?.data;
-      console.log(lawyers, "Lawyers");
-
       setLawyers(lawyers);
     }
   };
 
+  LogBox.ignoreAllLogs();
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -183,14 +192,21 @@ const HomeScreen = ({ navigation }: Props) => {
             Based on selected categories
           </Text>
 
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
-          <TopFindingsCard />
+          <FlatList
+            data={lawyers}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TopFindingsCard
+                lawyer={item}
+                onClick={() => {
+                  // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                  //   category: item,
+                  // });
+                }}
+              />
+            )}
+          />
         </ScrollView>
       </SafeAreaView>
     </>

@@ -13,6 +13,8 @@ import {
   IncreaseOfShareCapital,
   NoticeOfChangeOfDirector,
 } from "./BottomSheetServices/PostIncorporation";
+import { ReviewOfLegalDocs } from "./BottomSheetServices/ReviewOfLegalDocs";
+import { LegalDrafting } from "./BottomSheetServices/LegalDrafting";
 import { ModalProps } from "./BottomSheetModal";
 
 export default function renderView(props: ModalProps) {
@@ -42,6 +44,22 @@ export default function renderView(props: ModalProps) {
       return <IncreaseOfShareCapital {...props} />;
     case "11":
       return <ChangeOfTrustee {...props} />;
+    //-->Review of Legal Documents
+    case "12":
+      return <ReviewOfLegalDocs {...props} />;
+    case "13":
+      return <ReviewOfLegalDocs {...props} />;
+    case "14":
+      return <ReviewOfLegalDocs {...props} />;
+    case "15":
+      return <ReviewOfLegalDocs {...props} />;
+    case "16":
+      return <ReviewOfLegalDocs {...props} />;
+    //-->Review of Legal Documents
+    case "19":
+      return <LegalDrafting {...props} />;
+    case "20":
+      return <LegalDrafting {...props} />;
 
     default:
       return <BusinessNameAndRegistration {...props} />;

@@ -84,10 +84,14 @@ export const transformMeta = async (
   serviceCode:string
 ) => {
   const userId = await AsyncStorageUtil.getUserId();
+  
   const arraypayload = [];
 
   for (const property in formData) {
     const data = formData[property];
+
+    //--> For optional fields(keys)
+    if (data==null) continue;
 
     data.userID = Number(userId);
     data.tempServiceHistoryID = historyID;

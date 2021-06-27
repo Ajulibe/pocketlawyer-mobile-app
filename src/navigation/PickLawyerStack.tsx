@@ -14,7 +14,7 @@ export type PickLawyerParamList = {
 };
 const PickLawyerStack = createStackNavigator<PickLawyerParamList>();
 
-export const PickLawyerScreen = () => {
+export const PickLawyerNavigationStack = () => {
   const headerOptions = {
     headerShown: false,
   };

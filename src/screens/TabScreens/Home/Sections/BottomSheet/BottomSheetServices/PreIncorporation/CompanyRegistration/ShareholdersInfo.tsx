@@ -27,6 +27,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import COLORS from "utils/Colors";
 import { meansOfIdentification } from "../../../BottomSheetUtils/FormStaticData";
 import PickerInput from "components/PickerInput";
+import ModalFormLabel from "../../../BottomSheetUtils/ModalFormLabel";
 
 const allFomKeys = [...Array(30).keys()].map((item, index) => {
   const idx = index + 1;
@@ -151,10 +152,7 @@ export function ShareholdersInfo(props: Props) {
                 Shareholder's Information {idx}
               </Text>
 
-              <Text style={modalFormstyles.inputLabel}>
-                First Name
-                <Text style={modalFormstyles.required}> *</Text>
-              </Text>
+              <ModalFormLabel text="First Name" giveMargin={false} />
               <Input
                 placeholder="Type first name"
                 errorText={formData?.[FormKeys?.[`firstName${idx}`]]?.error}
@@ -165,11 +163,7 @@ export function ShareholdersInfo(props: Props) {
                   });
                 }}
               />
-              <View style={{ height: 16 }} />
-              <Text style={modalFormstyles.inputLabel}>
-                Last Name
-                <Text style={modalFormstyles.required}>*</Text>
-              </Text>
+              <ModalFormLabel text="Last Name" />
               <Input
                 placeholder="Type last name"
                 errorText={formData?.[FormKeys?.[`lastName${idx}`]]?.error}
@@ -180,11 +174,7 @@ export function ShareholdersInfo(props: Props) {
                   });
                 }}
               />
-              <View style={{ height: 16 }} />
-              <Text style={modalFormstyles.inputLabel}>
-                Means of Identification
-                <Text style={modalFormstyles.required}>*</Text>
-              </Text>
+              <ModalFormLabel text="Means of Identification" />
               <PickerInput
                 data={meansOfIdentification}
                 errorText={formData?.[FormKeys?.[`meansOfId${idx}`]]?.error}
@@ -199,11 +189,7 @@ export function ShareholdersInfo(props: Props) {
                   });
                 }}
               />
-              <View style={{ height: 16 }} />
-              <Text style={modalFormstyles.inputLabel}>
-                ID Number
-                <Text style={modalFormstyles.required}>*</Text>
-              </Text>
+              <ModalFormLabel text="ID Number" />
               <Input
                 placeholder="Type identification number"
                 errorText={formData?.[FormKeys?.[`idNo${idx}`]]?.error}
@@ -214,11 +200,7 @@ export function ShareholdersInfo(props: Props) {
                   });
                 }}
               />
-              <View style={{ height: 16 }} />
-              <Text style={modalFormstyles.inputLabel}>
-                Signature
-                <Text style={modalFormstyles.required}> *</Text>
-              </Text>
+              <ModalFormLabel text="Signature" />
               <Input
                 onPress={() => uploadFile(FormKeys?.[`signature${idx}`])}
                 errorText={formData?.[FormKeys?.[`signature${idx}`]]?.error}

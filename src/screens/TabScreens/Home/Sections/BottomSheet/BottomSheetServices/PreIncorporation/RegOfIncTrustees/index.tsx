@@ -65,15 +65,15 @@ export function RegOfIncTrustees(props: BottomSheetProps) {
       ref={ref}
       style={{ flex: 1 }}
       initialPage={0}
-      showPageIndicator={true}
+      showPageIndicator={false}
       pageMargin={8}
-      scrollEnabled={true}
+      scrollEnabled={false}
       orientation="horizontal"
     >
       <TrusteeRegistration
         key="1"
         {...props}
-        formTitle={"Incorporated Trustees Registration"}
+        formTitle={"Incorporated Trustees Registration (1/2)"}
         subTitle={"Please fill the form with your proposed business details"}
         onSubmit={(meta) => {
           setFormData1(meta);
@@ -83,7 +83,7 @@ export function RegOfIncTrustees(props: BottomSheetProps) {
       <TrusteeMemberInfo
         key="2"
         {...props}
-        formTitle={"Trustee Member Information"}
+        formTitle={"Trustee Member Information (2/2)"}
         subTitle={"Add a minimum of two people and a maximum of ten"}
         onSubmit={(meta) => {
           //--> Pass meta to submit because use state would take time to take effect

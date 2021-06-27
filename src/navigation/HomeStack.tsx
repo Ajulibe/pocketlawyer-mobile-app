@@ -8,12 +8,11 @@ import COLORS from "../utils/Colors";
 import HomeScreen from "../screens/TabScreens/Home/HomeScreen";
 import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
 import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
-import Checkout from "../screens/TabScreens/Home/Sections/Checkout/Checkout";
 import AllCategory from "../screens/TabScreens/Home/Sections/AllCategory/AllCategory";
 import CatServiceScreen from "../screens/TabScreens/Home/Sections/CatServiceScreen/CatServiceScreen";
 import { Category, Service } from "database/DBData";
 import { LawyerModel } from "models/Interfaces";
-import { PickLawyerScreen } from "./PickLawyerStack";
+import { PickLawyerNavigationStack } from "./PickLawyerStack";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN]: undefined;
@@ -25,12 +24,12 @@ export type HomeStackParamList = {
     category: Category;
     service: Service;
   };
-  [ROUTES.CHECKOUT_SCREEN]: {
-    lawyer: LawyerModel;
-    service: Service;
-    serviceHistoryID: number | string;
-    amount: number;
-  };
+  // [ROUTES.CHECKOUT_SCREEN]: {
+  //   lawyer: LawyerModel;
+  //   service: Service;
+  //   serviceHistoryID: number | string;
+  //   amount: number;
+  // };
 };
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -86,11 +85,11 @@ export default function HomeNavigationStack() {
         component={LawyerDetail}
         options={headerOptions}
       /> */}
-      <HomeStack.Screen
+      {/* <HomeStack.Screen
         name={ROUTES.CHECKOUT_SCREEN}
         component={Checkout}
         options={headerOptions}
-      />
+      /> */}
     </HomeStack.Navigator>
   );
 }

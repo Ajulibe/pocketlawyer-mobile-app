@@ -16,10 +16,10 @@ import {
 import {
   loadingReducer,
   loadingInitialState,
-  LoadingActionType,
 } from "../../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
 import { shareCapital } from "../../../BottomSheetUtils/FormStaticData";
+import ModalFormLabel from "../../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
   name1: "BuisnessNameOne",
@@ -75,10 +75,8 @@ export function CompReg(props: Props) {
       <KeyboardAwareScrollView>
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
-        <Text style={modalFormstyles.inputLabel}>
-          Proposed Business Name 1
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+
+        <ModalFormLabel text="Proposed Business Name 1" giveMargin={false} />
         <Input
           placeholder="Type business name 1"
           errorText={formData?.[FormKeys.name1]?.error}
@@ -86,11 +84,7 @@ export function CompReg(props: Props) {
             handleTextChange({ field: FormKeys.name1, value: text });
           }}
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Proposed Business Name 2
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Proposed Business Name 2" />
         <Input
           placeholder="Type business name 2"
           errorText={formData?.[FormKeys.name2]?.error}
@@ -98,25 +92,17 @@ export function CompReg(props: Props) {
             handleTextChange({ field: FormKeys.name2, value: text });
           }}
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Brief Description of Business
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Brief Description of Business" />
         <Input
           placeholder=""
           errorText={formData?.[FormKeys.desc]?.error}
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={3}
           onChangeText={(text: string) => {
             handleTextChange({ field: FormKeys.desc, value: text });
           }}
         />
-        <View style={{ height: 16 }} />
-        <Text style={modalFormstyles.inputLabel}>
-          Proposed Share Capital
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Proposed Share Capital" />
         <PickerInput
           data={shareCapital}
           errorText={formData?.[FormKeys.shareCapital]?.error}

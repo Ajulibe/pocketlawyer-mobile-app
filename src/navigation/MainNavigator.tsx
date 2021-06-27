@@ -34,6 +34,7 @@ import AuthPasswordLawyer from "../screens/AuthScreens/serviceprovider/lawyer/Au
 import AuthEducationLawyer from "../screens/AuthScreens/serviceprovider/lawyer/EducationDetails";
 import AuthProfileImageLawyer from "../screens/AuthScreens/serviceprovider/lawyer/ProfileImage";
 import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
+import Checkout from "../screens/TabScreens/Home/Sections/Checkout/Checkout";
 import { LawyerModel } from "models/Interfaces";
 
 import AuthLawCategoryLawyer from "../screens/AuthScreens/serviceprovider/lawyer/LawCategory";
@@ -93,6 +94,13 @@ export type RootStackParamList = {
     lawyer: LawyerModel;
     category: Category;
     service: Service;
+  };
+  //CHECKOUT SCREEN
+  [ROUTES.CHECKOUT_SCREEN]: {
+    lawyer: LawyerModel;
+    service: Service;
+    serviceHistoryID: number | string;
+    amount: number;
   };
 };
 
@@ -259,6 +267,8 @@ export default function MainNavigator() {
         name={ROUTES.LAWYER_DETAIL_SCREEN}
         component={LawyerDetail}
       />
+      {/* CHECKOUT  */}
+      <MainStack.Screen name={ROUTES.CHECKOUT_SCREEN} component={Checkout} />
     </MainStack.Navigator>
   );
 }
