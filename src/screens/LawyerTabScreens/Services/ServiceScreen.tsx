@@ -1,4 +1,3 @@
-import React from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
@@ -7,7 +6,7 @@ import { CategoryDb } from "database/CategoryDb";
 import { ServiceDb } from "database/ServiceDb";
 import { ROUTES } from "navigation/Routes";
 import { ServiceStackParamList } from "navigation/ServiceStack";
-
+import React from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -22,7 +21,7 @@ import { useScrollToTop } from "@react-navigation/native";
 
 type Props = StackScreenProps<ServiceStackParamList, ROUTES.SERVICE_SCREEN>;
 
-const ServiceScreen: React.FC<Props> = ({ navigation }) => {
+const ServiceScreen = ({ navigation }: Props) => {
   const ref = React.useRef<FlatList | null>(null);
 
   useScrollToTop(ref);
@@ -58,9 +57,6 @@ const ServiceScreen: React.FC<Props> = ({ navigation }) => {
                 service={item}
                 onClick={() => {
                   navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-                    // category: CategoryDb.findByCode({
-                    //   catCode: item.categoryCode,
-                    // }),
                     service: item,
                   });
                 }}

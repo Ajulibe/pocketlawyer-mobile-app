@@ -1,44 +1,24 @@
 import * as React from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-  TextInput,
-} from "react-native";
+import {TouchableOpacity, Text} from "react-native";
 
-interface IProps {
-  questions: any;
-  onSubmit: (data: any) => void;
-}
-
-const QuestionsBoard: React.FC<IProps> = ({ questions, onSubmit }) => {
-  const [data, setData] = React.useState({});
-
+const QuestionsButton: React.FC = () => {
+  const [color, setColor] = React.useState("red");
+  const [btnTitle, setBtnTitle] = React.useState("Delete item");
+  const [isDisabled, setIsDisabled] = React.useState(false);
   return (
-    <ScrollView>
-      {questions.map((q: any, index: any) => {
-        return (
-          <View key={q}>
-            <Text>{q}</Text>
-            <TextInput
-              accessibilityLabel="answer input"
-              accessibilityHint="input"
-              onChangeText={(text) => {
-                setData((state) => ({
-                  ...state,
-                  [index + 1]: { q, a: text },
-                }));
-              }}
-            />
-          </View>
-        );
-      })}
-      <TouchableOpacity onPress={() => onSubmit(data)}>
-        <Text>Submit</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    <TouchableOpacity
+      disabled={isDisabled}
+      onPress={() => {
+        setColor("blue");
+        setBtnTitle("color changed");
+        setIsDisabled(true);
+      }}
+      accessibilityRole={"button"}
+      accessibilityLabel={"upvote count"}
+      style={{backgroundColor: color}}>
+      <Text>{btnTitle}</Text>
+    </TouchableOpacity>
   );
 };
 
-export default QuestionsBoard;
+export default QuestionsButton;

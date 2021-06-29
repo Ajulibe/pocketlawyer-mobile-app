@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {createStackNavigator} from "@react-navigation/stack";
 import AuthSplashScreen from "../screens/AuthScreens/AuthSplashScreen";
 import AuthGetStartedScreen from "../screens/AuthScreens/AuthGetStarted";
 import AuthBlankScreen from "../screens/AuthScreens/AuthBlankScreen";
@@ -12,12 +14,6 @@ import AuthSignUp from "../screens/AuthScreens/individual/AuthSignup/AuthSignup"
 import AuthSignupSectionTwo from "../screens/AuthScreens/individual/AuthSignupSectionTwo";
 import AuthLogin from "../screens/AuthScreens/individual/Login/AuthLogin";
 import AuthValidateEmail from "../screens/AuthScreens/individual/ValidateEmail";
-
-//------------------INTERFACE----------------->
-import {
-  IndividualSignUpInterface,
-  IndividualSignUpInterfaceSectionTwo,
-} from "./interfaces";
 
 //SME
 import AuthSignUpSme from "../screens/AuthScreens/sme/AuthSignup";
@@ -34,7 +30,7 @@ import AuthPasswordLawyer from "../screens/AuthScreens/serviceprovider/lawyer/Au
 import AuthEducationLawyer from "../screens/AuthScreens/serviceprovider/lawyer/EducationDetails";
 import AuthProfileImageLawyer from "../screens/AuthScreens/serviceprovider/lawyer/ProfileImage";
 import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
-import { LawyerModel } from "models/Interfaces";
+import {LawyerModel} from "models/Interfaces";
 
 import AuthLawCategoryLawyer from "../screens/AuthScreens/serviceprovider/lawyer/LawCategory";
 import AuthSignUpSolicitor from "../screens/AuthScreens/serviceprovider/solicitor/AuthSignup";
@@ -45,10 +41,14 @@ import AuthCACLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/CACDo
 //TABS SCREENS STACK
 import BottomTabStack from "./BottomTabStack";
 
-import { ROUTES } from "./Routes";
+//LAWYER TAB/STACK SCREENS
+import LawyerBottomTabStack from "./LawyerTabScreens/BottomTabStack.navigator";
+import LawyerPickLawyer from "../screens/LawyerTabScreens/Home/Sections/PickLawyer/PickLawyer";
+import LawyerLawyerDetail from "../screens/LawyerTabScreens/Home/Sections/LawyerDetail/LawyerDetail";
+
+import {ROUTES} from "./Routes";
 import Colors from "utils/Colors";
-import { Category, Service } from "database/DBData";
-import COLORS from "utils/Colors";
+import {Category, Service} from "database/DBData";
 
 export type RootStackParamList = {
   [ROUTES.AUTH_BLANK_SCREEN]: undefined;
@@ -83,13 +83,20 @@ export type RootStackParamList = {
   [ROUTES.AUTH_LAW_CATEGORY_LAWYER]: undefined;
   [ROUTES.AUTH_CAC_LAWFIRM]: undefined;
   [ROUTES.AUTH_VALIDATE_EMAIL_LAWFIRM]: any;
-  //TABS SCREENS STACK
+
+  //INDIVIDUAL TAB/STACK SCREENS STACK
   [ROUTES.TABSCREEN_STACK]: undefined;
-
-  //PICK LAWYER
-  [ROUTES.PICK_LAWYER_SCREEN]: { category: Category; service: Service };
-
+  [ROUTES.PICK_LAWYER_SCREEN]: {category: Category; service: Service};
   [ROUTES.LAWYER_DETAIL_SCREEN]: {
+    lawyer: LawyerModel;
+    category: Category;
+    service: Service;
+  };
+
+  //LAWYER TAB/STACK SCREENS
+  [ROUTES.TABSCREEN_STACK_LAWYER]: undefined;
+  [ROUTES.PICK_LAWYER_SCREEN_LAWYER]: {category: Category; service: Service};
+  [ROUTES.LAWYER_DETAIL_SCREEN_LAWYER]: {
     lawyer: LawyerModel;
     category: Category;
     service: Service;
@@ -98,8 +105,8 @@ export type RootStackParamList = {
 
 export type NestedNavigatorParams<ParamList> = {
   [K in keyof ParamList]: undefined extends ParamList[K]
-    ? { screen: K; params?: ParamList[K] }
-    : { screen: K; params: ParamList[K] };
+    ? {screen: K; params?: ParamList[K]}
+    : {screen: K; params: ParamList[K]};
 }[keyof ParamList];
 
 const MainStack = createStackNavigator<RootStackParamList>();
@@ -113,9 +120,8 @@ export default function MainNavigator() {
         // headerStyle: {
         //   // backgroundColor: "#fff",
         // },
-        cardStyle: { backgroundColor: Colors.light.white },
-      }}
-    >
+        cardStyle: {backgroundColor: Colors.light.white},
+      }}>
       <MainStack.Screen
         name={ROUTES.AUTH_BLANK_SCREEN}
         component={AuthBlankScreen}
@@ -137,106 +143,106 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP}
         component={AuthSignUp}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_VALIDATE_EMAIL}
         component={AuthValidateEmail}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_SECTION_TWO}
         component={AuthSignupSectionTwo}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_LOGIN}
         component={AuthLogin}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR}
         component={AuthLoginCategorySelector}
-        options={{ headerShown: false, gestureEnabled: false }}
+        options={{headerShown: false, gestureEnabled: false}}
       />
 
       {/* SME */}
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_SME}
         component={AuthSignUpSme}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_SECTION_TWO_SME}
         component={AuthSignupSectionTwoSme}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_VALIDATE_EMAIL_SME}
         component={AuthValidateEmailSme}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_LOGIN_SME}
         component={AuthLoginSme}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_CONGRATS_SME}
         component={CongratSme}
-        options={{ headerShown: false, gestureEnabled: false }}
+        options={{headerShown: false, gestureEnabled: false}}
       />
 
       {/* SERVICE PROVIDER */}
       <MainStack.Screen
         name={ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR}
         component={ServiceProviderCategory}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_LAWYER}
         component={AuthSignUpLawyer}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_SECTION_TWO_LAWYER}
         component={AuthSignUpLawyerSectionTwo}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_SOLICITOR}
         component={AuthSignUpSolicitor}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_LAWFIRM}
         component={AuthSignUpLawFirm}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_PASSWORD_LAWYER}
         component={AuthPasswordLawyer}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_EDUCATION_LAWYER}
         component={AuthEducationLawyer}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_PROFILE_IMAGE_LAWYER}
         component={AuthProfileImageLawyer}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_LAW_CATEGORY_LAWYER}
         component={AuthLawCategoryLawyer}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_SIGN_UP_LAWFIRM_SECTION_TWO}
         component={AuthSignUpLawFirmSectionTwo}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_CAC_LAWFIRM}
@@ -258,6 +264,21 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.LAWYER_DETAIL_SCREEN}
         component={LawyerDetail}
+      />
+
+      {/*LAWYER DASHBOARD STACK...  */}
+      <MainStack.Screen
+        name={ROUTES.TABSCREEN_STACK_LAWYER}
+        component={LawyerBottomTabStack}
+      />
+      {/* PICKLAWYER STACK */}
+      <MainStack.Screen
+        name={ROUTES.PICK_LAWYER_SCREEN_LAWYER}
+        component={LawyerPickLawyer}
+      />
+      <MainStack.Screen
+        name={ROUTES.LAWYER_DETAIL_SCREEN_LAWYER}
+        component={LawyerLawyerDetail}
       />
     </MainStack.Navigator>
   );

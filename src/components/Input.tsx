@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState } from "react";
+import React, {useReducer, useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   GestureResponderEvent,
 } from "react-native";
-import { Input as TextInput } from "@ui-kitten/components";
-import { hp, wp } from "utils/Dimensions";
+import {Input as TextInput} from "@ui-kitten/components";
+import {hp, wp} from "utils/Dimensions";
 import COLORS from "../utils/Colors";
-import { AntDesign } from "@expo/vector-icons";
+import {AntDesign} from "@expo/vector-icons";
 
 interface Props {
   keyboardType?: any;
@@ -33,7 +33,7 @@ interface Props {
   onSubmit?: () => void;
   onChangeText?: any;
   icon?: any;
-  onPress: (event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent) => void;
   dataValue?: string;
   multiline?: boolean;
   numberOfLines?: number;
@@ -45,7 +45,7 @@ const Input: React.FC<Props> = (props) => {
   );
 
   const fileUploadName = () => {
-    const { dataValue } = props;
+    const {dataValue} = props;
     if (dataValue != null) {
       const split = dataValue.split("/");
       if (split.length > 1) {
@@ -70,22 +70,19 @@ const Input: React.FC<Props> = (props) => {
           backgroundColor: COLORS.light.inputBackgnd,
           borderRadius: 4,
           alignItems: "center",
-        }}
-      >
-        <View style={{ width: "70%", paddingLeft: wp(20) }}>
+        }}>
+        <View style={{width: "70%", paddingLeft: wp(20)}}>
           <Text
             style={{
               fontSize: wp(13),
               fontFamily: "Roboto-Medium",
               color: COLORS.light.disabled,
-            }}
-          >
+            }}>
             {fileUploadName()}
           </Text>
         </View>
         <View
-          style={{ width: "30%", alignItems: "flex-end", paddingRight: wp(20) }}
-        >
+          style={{width: "30%", alignItems: "flex-end", paddingRight: wp(20)}}>
           {renderIcon()}
         </View>
       </TouchableOpacity>
@@ -103,9 +100,7 @@ const Input: React.FC<Props> = (props) => {
       {/* <View> */}
       <TextInput
         {...props}
-        textStyle={[
-          { ...styles.input, height: props.multiline ? 100 : hp(20) },
-        ]}
+        textStyle={[{...styles.input, height: props.multiline ? 100 : hp(20)}]}
         placeholderTextColor={COLORS.light.darkgrey}
         keyboardType="default"
         onChangeText={props.onChangeText}

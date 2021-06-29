@@ -1,14 +1,14 @@
 import React from "react";
-import { View, StyleSheet, Image, Text, Platform } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../navigation/MainNavigator";
-import { ROUTES } from "../../navigation/Routes";
+import {View, StyleSheet, Image, Text, Platform} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "../../navigation/MainNavigator";
+import {ROUTES} from "../../navigation/Routes";
 import COLORS from "../../utils/Colors";
 import IMAGES from "../../utils/Images";
-import { wp, hp } from "../../utils/Dimensions";
-import PLButton from "../../components/PLButton/PLButton";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {wp, hp} from "../../utils/Dimensions";
+import PLButton from "../../components/PLButton/PLButton.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
@@ -16,7 +16,7 @@ type Props = StackScreenProps<
   ROUTES.AUTH_GET_STARTED_SCREEN
 >;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   return (
     <Animatable.View animation="fadeIn" style={styles.wrapper}>
       <Image
@@ -43,8 +43,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
           onPress={() => {
             navigation.navigate(ROUTES.AUTH_LOGIN);
           }}
-          style={{ justifyContent: "center" }}
-        >
+          style={{justifyContent: "center"}}>
           <Text style={styles.already}>
             Already have an account? &nbsp;
             <Text style={styles.login}>Log in</Text>

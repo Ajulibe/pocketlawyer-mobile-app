@@ -1,29 +1,48 @@
 import * as React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import HiddenMessage from "screens/HiddenMessage";
+import renderer from "react-test-renderer";
+import {render, fireEvent} from "@testing-library/react-native";
+import "@testing-library/jest-native/extend-expect";
+import Button from "screens/HiddenMessage";
 
-test("form submits two answers", () => {
-  const allQuestions = ["q1", "q2"];
-  const mockFn = jest.fn();
+//**dependecies used are from react-testing-library/react-native and jest-native */
 
-  const { getAllByA11yLabel, getByText } = render(
-    <HiddenMessage questions={allQuestions} onSubmit={mockFn} />
-  );
+it("renders correctly", () => {
+  renderer.create(<Button>Login</Button>);
+});
 
-  console.log(
-    render(
-      <HiddenMessage questions={allQuestions} onSubmit={mockFn} />
-    ).toJSON().children
-  );
+test("button has correct intial color", () => {
+  const {getByRole} = render(<Button />);
+  const element = getByRole("button");
 
-  const answerInputs = getAllByA11yLabel("answer input");
+  //--> you can test using thr JSON print of the component
+  // const element = render(<Button />).toJSON();
+  // console.log(render(<Button />).toJSON());
 
-  fireEvent.changeText(answerInputs[0], "a1");
-  fireEvent.changeText(answerInputs[1], "a2");
-  fireEvent.press(getByText("Submit"));
-
-  expect(mockFn).toBeCalledWith({
-    "1": { q: "q1", a: "a1" },
-    "2": { q: "q2", a: "a2" },
+  //--> expect the background color to be red
+  expect(element).toHaveStyle({
+    backgroundColor: "red",
   });
+
+  //--> click the button
+  fireEvent.press(element);
+  //--> expect the background color to turn blue
+  expect(element).toHaveStyle({
+    backgroundColor: "blue",
+  });
+  //--> expect the button text to change
+  expect(element).toHaveTextContent("color changed");
+});
+
+it("gets the button", () => {
+  const {getByA11yRole, getByA11yLabel} = render(<Button />);
+  expect(getByA11yRole("button")).toBeDefined();
+  expect(getByA11yLabel("upvote count")).toBeDefined();
+});
+
+test("button disabled on click", () => {
+  const {getByRole} = render(<Button />);
+  const button = getByRole("button");
+  expect(button).toBeEnabled();
+  fireEvent.press(button);
+  expect(button).toBeDisabled();
 });

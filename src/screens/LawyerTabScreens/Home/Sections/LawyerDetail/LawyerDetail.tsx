@@ -1,6 +1,6 @@
-import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "navigation/HomeStack";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {HomeStackParamList} from "navigation/HomeStack";
+import {ROUTES} from "navigation/Routes";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import React from "react";
@@ -14,24 +14,24 @@ import {
   Button,
   Platform,
 } from "react-native";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import CONSTANTS from "utils/Constants";
 import COLORS from "utils/Colors";
 import CustomButton from "components/CustomButton";
 import BottomSheetModal from "../BottomSheet/BottomSheetModal";
-import { getHistoryId } from "services/UploadDocsService";
-import { PLToast } from "components/PLToast";
-import LoadingSpinner from "components/LoadingSpinner";
+import {getHistoryId} from "services/UploadDocsService";
+import {PLToast} from "components/PLToast/index.component";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
 import axiosClient from "utils/axiosClient";
-import { showError } from "../BottomSheet/BottomSheetUtils/FormHelpers";
+import {showError} from "../BottomSheet/BottomSheetUtils/FormHelpers";
 import Utilities from "utils/Utilities";
-import { Category } from "database/DBData";
-import { FontAwesome5 } from "@expo/vector-icons";
-import FullPageLoader from "components/FullPageLoader";
+import {Category} from "database/DBData";
+import {FontAwesome5} from "@expo/vector-icons";
+import FullPageLoader from "components/FullPageLoader/index.component";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
-export default function LawyerDetail({ navigation, route }: Props) {
+export default function LawyerDetail({navigation, route}: Props) {
   const category = route.params.category;
   const lawyer = route.params.lawyer;
   const service = route.params.service;
@@ -55,7 +55,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
     setSpinnerText("Fetching Info...");
     try {
       const response = await axiosClient.get(
-        `Category/GetUserCategories/${lawyer.serviceProviderID}`
+        `Category/GetUserCategories/${lawyer.serviceProviderID}`,
       );
       const cats: Category[] = response?.data?.data;
       setLawyerCats(cats);
@@ -68,9 +68,9 @@ export default function LawyerDetail({ navigation, route }: Props) {
   const getPrice = async () => {
     try {
       const response = await axiosClient.get(
-        `Service/GetServiceAmount?ServiceCode=${service?.serviceCode}`
+        `Service/GetServiceAmount?ServiceCode=${service?.serviceCode}`,
       );
-      const { amount } = response.data?.data;
+      const {amount} = response.data?.data;
       setAmount(amount);
     } catch (error) {
       showError("Network error!");
@@ -89,7 +89,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
       setIsLoading(false);
 
       if (hID == null) {
-        PLToast({ message: "An Error occured, try again", type: "error" });
+        PLToast({message: "An Error occured, try again", type: "error"});
       } else {
         setHistoryId(hID);
         setTimeout(function () {
@@ -118,8 +118,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
             fontSize: faintTrailing ? wp(10) : wp(12),
             color: faintTrailing ? "#6E58B3" : COLORS.light.primary,
           },
-        ]}
-      >
+        ]}>
         {value}
       </Text>
     </View>
@@ -144,10 +143,9 @@ export default function LawyerDetail({ navigation, route }: Props) {
         <SafeAreaView style={globalStyles.AndroidSafeArea}>
           <CustomAppbar navigation={navigation} title="" />
           <ScrollView
-            contentContainerStyle={[styles.container, { flexGrow: 1 }]}
+            contentContainerStyle={[styles.container, {flexGrow: 1}]}
             keyboardShouldPersistTaps="handled"
-            bounces={false}
-          >
+            bounces={false}>
             <Image
               source={{
                 uri: CONSTANTS.user,
@@ -179,8 +177,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
                 // />
                 <View
                   style={styles.catWrapper}
-                  key={`${index}.${cat.categoryName}`}
-                >
+                  key={`${index}.${cat.categoryName}`}>
                   <FontAwesome5
                     name="check-circle"
                     size={18}
@@ -189,7 +186,7 @@ export default function LawyerDetail({ navigation, route }: Props) {
                   <Text style={styles.categoryHeading}>{cat.categoryName}</Text>
                 </View>
               ))}
-              <View style={{ flex: 1 }} />
+              <View style={{flex: 1}} />
               <CustomButton btnText="Confirm" onClick={getHistory} />
             </View>
           </ScrollView>

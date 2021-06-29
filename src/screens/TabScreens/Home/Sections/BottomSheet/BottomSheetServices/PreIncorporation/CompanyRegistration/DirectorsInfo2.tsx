@@ -2,22 +2,19 @@ import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
 import {
   DocUploadInterface,
   uploadFileToS3,
   pickFile,
 } from "services/S3FileUploadHelper";
-import { confirmUpload, transformMeta } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../../BottomSheetUtils/BottomSheetProps";
-import {
-  validateInputs,
-  showError,
-} from "../../../BottomSheetUtils/FormHelpers";
+import {confirmUpload, transformMeta} from "services/UploadDocsService";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../../BottomSheetUtils/BottomSheetProps";
+import {validateInputs, showError} from "../../../BottomSheetUtils/FormHelpers";
 
 import {
   loadingReducer,
@@ -40,17 +37,17 @@ interface Props extends BottomSheetProps {
 }
 
 export function DirectorsInfo2(props: Props) {
-  const { formTitle, service, subTitle, historyId } = props;
+  const {formTitle, service, subTitle, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -64,7 +61,7 @@ export function DirectorsInfo2(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         props.onSubmit(formMeta);
@@ -84,25 +81,25 @@ export function DirectorsInfo2(props: Props) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
   };
 
   return (
-    <View style={{ paddingBottom: 90 }}>
+    <View style={{paddingBottom: 90}}>
       <LoadingSpinner
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
@@ -110,8 +107,7 @@ export function DirectorsInfo2(props: Props) {
       <ScrollView>
         <KeyboardAwareScrollView
           extraScrollHeight={wp(100)}
-          keyboardShouldPersistTaps={"handled"}
-        >
+          keyboardShouldPersistTaps={"handled"}>
           <Text style={globalStyles.H1Style}>{formTitle}</Text>
           <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
           <View>
@@ -123,10 +119,10 @@ export function DirectorsInfo2(props: Props) {
               placeholder="Type first name"
               errorText={formData?.[FormKeys.firstName]?.error}
               onChangeText={(text: string) => {
-                handleTextChange({ field: FormKeys.firstName, value: text });
+                handleTextChange({field: FormKeys.firstName, value: text});
               }}
             />
-            <View style={{ height: 16 }} />
+            <View style={{height: 16}} />
             <Text style={modalFormstyles.inputLabel}>
               Last Name
               <Text style={modalFormstyles.required}>*</Text>
@@ -135,10 +131,10 @@ export function DirectorsInfo2(props: Props) {
               placeholder="Type last name"
               errorText={formData?.[FormKeys.lastName]?.error}
               onChangeText={(text: string) => {
-                handleTextChange({ field: FormKeys.lastName, value: text });
+                handleTextChange({field: FormKeys.lastName, value: text});
               }}
             />
-            <View style={{ height: 16 }} />
+            <View style={{height: 16}} />
             <Text style={modalFormstyles.inputLabel}>
               Means of Identification
               <Text style={modalFormstyles.required}>*</Text>
@@ -147,10 +143,10 @@ export function DirectorsInfo2(props: Props) {
               placeholder="Select means of identification"
               errorText={formData?.[FormKeys.meansOfId]?.error}
               onChangeText={(text: string) => {
-                handleTextChange({ field: FormKeys.meansOfId, value: text });
+                handleTextChange({field: FormKeys.meansOfId, value: text});
               }}
             />
-            <View style={{ height: 16 }} />
+            <View style={{height: 16}} />
             <Text style={modalFormstyles.inputLabel}>
               ID Number
               <Text style={modalFormstyles.required}>*</Text>
@@ -159,10 +155,10 @@ export function DirectorsInfo2(props: Props) {
               placeholder="Type identification number"
               errorText={formData?.[FormKeys.idNo]?.error}
               onChangeText={(text: string) => {
-                handleTextChange({ field: FormKeys.idNo, value: text });
+                handleTextChange({field: FormKeys.idNo, value: text});
               }}
             />
-            <View style={{ height: 16 }} />
+            <View style={{height: 16}} />
             <Text style={modalFormstyles.inputLabel}>
               Signature
               <Text style={modalFormstyles.required}> *</Text>
@@ -178,7 +174,7 @@ export function DirectorsInfo2(props: Props) {
           </View>
         </KeyboardAwareScrollView>
       </ScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Next" onClick={submit} />
     </View>
   );

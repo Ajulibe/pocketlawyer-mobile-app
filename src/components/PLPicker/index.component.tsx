@@ -1,9 +1,9 @@
 import React from "react";
-import { View, StyleSheet, Text, ViewStyle } from "react-native";
+import {View, StyleSheet, Text, ViewStyle} from "react-native";
 import COLORS from "../../utils/Colors";
-import { wp, hp } from "../../utils/Dimensions";
-import { Entypo } from "@expo/vector-icons";
-import { Picker, Form } from "native-base";
+import {wp, hp} from "../../utils/Dimensions";
+import {Entypo} from "@expo/vector-icons";
+import {Picker, Form} from "native-base";
 
 interface Props {
   data: any;
@@ -47,8 +47,7 @@ const AuthGetStarted: React.FC<Props> = ({
               fontSize: 12,
             }}
             placeholderIconColor={COLORS.light.darkgrey}
-            style={styles.picker}
-          >
+            style={styles.picker}>
             {data.map(function (item: any) {
               return <Picker.Item key={key} label={label} value={value} />;
             })}

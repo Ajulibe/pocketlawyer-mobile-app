@@ -1,20 +1,20 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "../../../navigation/MainNavigator";
+import {ROUTES} from "../../../navigation/Routes";
 import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
+import {wp, hp} from "../../../utils/Dimensions";
 import NavBar from "../../../components/NavBar";
-import { CheckBox as RNECheckBox } from "react-native-elements";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import PLButton from "../../../components/PLButton/PLButton";
+import {CheckBox as RNECheckBox} from "react-native-elements";
+import {AntDesign} from "@expo/vector-icons";
+import {MaterialIcons} from "@expo/vector-icons";
+import PLButton from "../../../components/PLButton/PLButton.component";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [preincorporation, setPreIncorporation] = React.useState(false);
   const [companysecretarial, setCompanysecretarial] = React.useState(false);
   const [postincorporation, setPostincorporation] = React.useState(false);

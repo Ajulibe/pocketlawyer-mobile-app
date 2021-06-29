@@ -1,37 +1,38 @@
-import React, { useState, useEffect } from "react";
-import { View, SafeAreaView, Text, TouchableOpacity } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
+import React, {useState, useEffect} from "react";
+import {View, SafeAreaView, Text, TouchableOpacity} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
 import COLORS from "utils/Colors";
-import { wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { PLDatePicker } from "components/PLDatePicker";
+import PLButton from "components/PLButton/PLButton.component";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {PLDatePicker} from "components/PLDatePicker/index.component";
 import * as Animatable from "react-native-animatable";
-import { states } from "utils/nigerianStates";
-import { Entypo } from "@expo/vector-icons";
-import { Input } from "@ui-kitten/components";
+import {states} from "utils/nigerianStates";
+import {Entypo} from "@expo/vector-icons";
+import {Input} from "@ui-kitten/components";
 import dayjs from "dayjs";
 
 import axiosClient from "utils/axiosClient";
-import { PLToast } from "components/PLToast";
-import { BottomSheet, ListItem } from "react-native-elements";
+import {PLToast} from "components/PLToast/index.component";
+import {BottomSheet, ListItem} from "react-native-elements";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
-import { styles } from "./style";
+import {styles} from "./style";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "types";
-import { AccountStackParamList } from "navigation/AccountStack";
-import LoadingSpinner from "components/LoadingSpinner";
+import {CountryCode, Country, CallingCode} from "types";
+import {AccountStackParamList} from "navigation/AccountStack";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
 
 //--> REDUX
-import { useAppDispatch } from "redux/hooks";
-import { getUser } from "redux/actions";
+import {useAppDispatch} from "redux/hooks";
+import {getUser} from "redux/actions";
+import {useAppSelector} from "redux/hooks";
 
 type Props = StackScreenProps<AccountStackParamList>;
 
-const UpdateProfile = ({ navigation }: Props) => {
+const UpdateProfile = ({navigation}: Props) => {
   //--> state values for the section
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -64,6 +65,10 @@ const UpdateProfile = ({ navigation }: Props) => {
   //--> state  for bottom sheet
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
+  //--> state from redux store
+  const userData = useAppSelector((state) => state?.users?.user);
+  const {user_} = userData;
+
   useEffect(() => {
     if (state === "Change your location") {
       return;
@@ -79,7 +84,7 @@ const UpdateProfile = ({ navigation }: Props) => {
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisible(false),
     },
   ];
@@ -91,7 +96,7 @@ const UpdateProfile = ({ navigation }: Props) => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const useDatepickerState = (intial = null) => {
-    return { date, onSelect: setDate };
+    return {date, onSelect: setDate};
   };
 
   const minMaxPickerState = useDatepickerState();
@@ -119,6 +124,7 @@ const UpdateProfile = ({ navigation }: Props) => {
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
+
       const updatePayload = {
         userid: Number(userID),
         firstName: firstName === "" ? null : firstName,
@@ -128,18 +134,30 @@ const UpdateProfile = ({ navigation }: Props) => {
         dob: dob === "" ? null : dob,
       };
 
-      await axiosClient.post("User/UpdateProfile", updatePayload);
-      dispatch(getUser({ userID: Number(userID) }));
+      const updatePayloadSme = {
+        userid: Number(userID),
+        company: {
+          contactFirstName: firstName === "" ? null : firstName,
+          contactLastName: lastName === "" ? null : lastName,
+        },
+        phone: phonenumber === "" ? null : phonenumber,
+      };
+
+      await axiosClient.post(
+        "User/UpdateProfile",
+        user_ && user_?.userType === 1 ? updatePayload : updatePayloadSme,
+      );
+      dispatch(getUser({userID: Number(userID)}));
       setIsLoading(false);
-      PLToast({ message: "Profile Updated", type: "success" });
-      // setTimeout(() => {
-      //   navigation.goBack();
-      // }, 300);
+      PLToast({message: "Profile Updated", type: "success"});
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000);
     } catch (error: any) {
       console.log(error);
-      const { message } = error?.response.data;
+      const {message} = error?.response.data;
       setIsDisabled(true);
-      PLToast({ message: message, type: "error" });
+      PLToast({message: message, type: "error"});
       setIsLoading(false);
       return;
     }
@@ -161,8 +179,7 @@ const UpdateProfile = ({ navigation }: Props) => {
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <LoadingSpinner
           modalVisible={isLoading}
           content="Updating Profile..."
@@ -190,117 +207,117 @@ const UpdateProfile = ({ navigation }: Props) => {
             />
           </View>
 
-          <View>
-            <Text style={styles.inputText}>State</Text>
-            <View
-              style={{
-                borderWidth: 1,
-                width: wp(334),
-                height: wp(40),
-                borderRadius: 4,
-                borderColor: COLORS.light.textinputborder,
-                justifyContent: "space-between",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  setIsVisible(true);
-                }}
-              >
+          {user_ && user_?.userType === 2 ? null : (
+            <>
+              <View>
+                <Text style={styles.inputText}>State</Text>
                 <View
                   style={{
+                    borderWidth: 1,
+                    width: wp(334),
+                    height: wp(40),
+                    borderRadius: 4,
+                    borderColor: COLORS.light.textinputborder,
+                    justifyContent: "space-between",
                     flexDirection: "row",
                     alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <View style={{ width: wp(300) }}>
-                    <Text
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIsVisible(true);
+                    }}>
+                    <View
                       style={{
-                        marginLeft: wp(16),
-                        fontSize: wp(13),
-                        fontFamily: "Roboto-Medium",
-                        color:
-                          statePlaceholder === 0
-                            ? COLORS.light.darkgrey
-                            : COLORS.light.black,
-                      }}
-                    >
-                      {state}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      width: wp(30),
-                      alignItems: "flex-end",
-                    }}
-                  >
-                    <Entypo name="chevron-small-down" size={20} color="grey" />
-                  </View>
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}>
+                      <View style={{width: wp(300)}}>
+                        <Text
+                          style={{
+                            marginLeft: wp(16),
+                            fontSize: wp(13),
+                            fontFamily: "Roboto-Medium",
+                            color:
+                              statePlaceholder === 0
+                                ? COLORS.light.darkgrey
+                                : COLORS.light.black,
+                          }}>
+                          {state}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          width: wp(30),
+                          alignItems: "flex-end",
+                        }}>
+                        <Entypo
+                          name="chevron-small-down"
+                          size={20}
+                          color="grey"
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
 
-            <BottomSheet
-              modalProps={{
-                visible: isVisible,
-                statusBarTranslucent: true,
-              }}
-              isVisible={isVisible}
-              containerStyle={{ backgroundColor: COLORS.light.primary }}
-            >
-              {states.map((l, i) => (
-                <ListItem
-                  key={i}
-                  // containerStyle={l.containerStyle}
-                  onPress={() => {
-                    setState(l.state);
+                <BottomSheet
+                  modalProps={{
+                    visible: isVisible,
+                    statusBarTranslucent: true,
                   }}
-                >
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <Text>{l.state}</Text>
-                    </ListItem.Title>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-              {list.map((l, i) => (
-                <ListItem
-                  key={i}
-                  containerStyle={l.containerStyle}
-                  onPress={l.onPress}
-                >
-                  <ListItem.Content>
-                    <ListItem.Title style={l.titleStyle}>
-                      <Text>{l.title}</Text>
-                    </ListItem.Title>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-            </BottomSheet>
-          </View>
+                  isVisible={isVisible}
+                  containerStyle={{backgroundColor: COLORS.light.primary}}>
+                  {states.map((l, i) => (
+                    <ListItem
+                      key={i}
+                      // containerStyle={l.containerStyle}
+                      onPress={() => {
+                        setState(l.state);
+                      }}>
+                      <ListItem.Content>
+                        <ListItem.Title>
+                          <Text>{l.state}</Text>
+                        </ListItem.Title>
+                      </ListItem.Content>
+                    </ListItem>
+                  ))}
+                  {list.map((l, i) => (
+                    <ListItem
+                      key={i}
+                      containerStyle={l.containerStyle}
+                      onPress={l.onPress}>
+                      <ListItem.Content>
+                        <ListItem.Title style={l.titleStyle}>
+                          <Text>{l.title}</Text>
+                        </ListItem.Title>
+                      </ListItem.Content>
+                    </ListItem>
+                  ))}
+                </BottomSheet>
+              </View>
 
-          <View>
-            <PLTextInput
-              labelText="City"
-              labelTextRequired={false}
-              onChangeText={setCity}
-              textContentType="addressCity"
-              style={styles.input}
-              placeholder="Change the city you are based"
-            />
-          </View>
+              <View>
+                <PLTextInput
+                  labelText="City"
+                  labelTextRequired={false}
+                  onChangeText={setCity}
+                  textContentType="addressCity"
+                  style={styles.input}
+                  placeholder="Change the city you are based"
+                />
+              </View>
 
-          <View>
-            <Text style={styles.inputText}>Date of Birth</Text>
+              <View>
+                <Text style={styles.inputText}>Date of Birth</Text>
 
-            <PLDatePicker
-              placeholder="Change your Date of Birth"
-              useDatepickerState={minMaxPickerState}
-            />
-          </View>
+                <PLDatePicker
+                  placeholder="Change your Date of Birth"
+                  useDatepickerState={minMaxPickerState}
+                />
+              </View>
+            </>
+          )}
 
           <View style={{}}>
             <Text style={styles.inputText}>Phone Number</Text>
@@ -340,7 +357,10 @@ const UpdateProfile = ({ navigation }: Props) => {
             disabled={isDisabled}
             isLoading={isLoading}
             loadingText="Updating..."
-            style={styles.plButton}
+            style={[
+              styles.plButton,
+              {marginTop: user_ && user_?.userType === 2 ? hp(80) : hp(1)},
+            ]}
             textColor={COLORS.light.white}
             btnText={"Update details"}
             onClick={updateDetails}

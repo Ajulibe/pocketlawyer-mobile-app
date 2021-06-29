@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
   View,
   StyleSheet,
@@ -7,35 +7,35 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { FontAwesome } from "@expo/vector-icons";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { PLDatePicker } from "components/PLDatePicker";
+import PLButton from "components/PLButton/PLButton.component";
+import {FontAwesome} from "@expo/vector-icons";
+import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {PLDatePicker} from "components/PLDatePicker/index.component";
 import * as Animatable from "react-native-animatable";
-import { states } from "utils/nigerianStates";
-import { Entypo } from "@expo/vector-icons";
+import {states} from "utils/nigerianStates";
+import {Entypo} from "@expo/vector-icons";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosClient from "utils/axiosClient";
-import { RegisterInterface } from "navigation/interfaces";
-import { PLToast } from "components/PLToast";
-import { BottomSheet, ListItem } from "react-native-elements";
+import {RegisterInterface} from "navigation/interfaces";
+import {PLToast} from "components/PLToast/index.component";
+import {BottomSheet, ListItem} from "react-native-elements";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
 import dayjs from "dayjs";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   //--> state values for the section
   const [state, setState] = useState("Select your location");
   const [statePlaceholder, setStatePlaceholder] = useState(0);
@@ -60,7 +60,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisible(false),
     },
   ];
@@ -87,7 +87,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [date, setDate] = React.useState<any>(null);
 
   const useDatepickerState = (intial = null) => {
-    return { date, onSelect: setDate };
+    return {date, onSelect: setDate};
   };
 
   const minMaxPickerState = useDatepickerState();
@@ -126,22 +126,32 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
       register(individualPayload);
     }
-  }, [initialload]);
+  }, [
+    city,
+    date,
+    initialState.email,
+    initialState.firstName,
+    initialState.lastName,
+    initialState.phone,
+    initialload,
+    password,
+    state,
+  ]);
 
   const register = async (individualPayload: RegisterInterface) => {
     setIsLoading(true);
     console.log(individualPayload);
 
     try {
-      const { data } = await axiosClient.post("User", individualPayload);
+      const {data} = await axiosClient.post("User", individualPayload);
       setIsLoading(false);
-      PLToast({ message: "Successfully Registered", type: "success" });
+      PLToast({message: "Successfully Registered", type: "success"});
 
       //--> setting async stoarage data for usage later
-      const { token } = data.data;
-      const { userType } = data.data;
-      const { userID } = data.data;
-      const { firstName } = data.data;
+      const {token} = data.data;
+      const {userType} = data.data;
+      const {userID} = data.data;
+      const {firstName} = data.data;
 
       //--> setting the received token in local storage
 
@@ -155,9 +165,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
       }, 1000);
     } catch (error: any) {
-      const { message } = error?.response.data;
+      const {message} = error?.response.data;
       setIsDisabled(true);
-      PLToast({ message: message, type: "error" });
+      PLToast({message: message, type: "error"});
       setIsLoading(false);
       return;
     }
@@ -167,12 +177,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const yesterday = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate() - 1
+    now.getDate() - 1,
   );
   const tomorrow = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate() + 1
+    now.getDate() + 1,
   );
 
   return (
@@ -191,8 +201,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
             Complete your account setup to access top notch legal services.
@@ -223,21 +232,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 justifyContent: "space-between",
                 flexDirection: "row",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   setIsVisible(true);
-                }}
-              >
+                }}>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
-                  <View style={{ width: wp(300) }}>
+                  }}>
+                  <View style={{width: wp(300)}}>
                     <Text
                       style={{
                         marginLeft: wp(16),
@@ -247,8 +253,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                           statePlaceholder === 0
                             ? COLORS.light.darkgrey
                             : COLORS.light.black,
-                      }}
-                    >
+                      }}>
                       {state}
                     </Text>
                   </View>
@@ -256,8 +261,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                     style={{
                       width: wp(30),
                       alignItems: "flex-end",
-                    }}
-                  >
+                    }}>
                     <Entypo name="chevron-small-down" size={20} color="grey" />
                   </View>
                 </View>
@@ -270,16 +274,14 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 statusBarTranslucent: true,
               }}
               isVisible={isVisible}
-              containerStyle={{ backgroundColor: COLORS.light.primary }}
-            >
+              containerStyle={{backgroundColor: COLORS.light.primary}}>
               {states.map((l, i) => (
                 <ListItem
                   key={i}
                   // containerStyle={l.containerStyle}
                   onPress={() => {
                     setState(l.state);
-                  }}
-                >
+                  }}>
                   <ListItem.Content>
                     <ListItem.Title>
                       <Text>{l.state}</Text>
@@ -291,8 +293,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 <ListItem
                   key={i}
                   containerStyle={l.containerStyle}
-                  onPress={l.onPress}
-                >
+                  onPress={l.onPress}>
                   <ListItem.Content>
                     <ListItem.Title style={l.titleStyle}>
                       <Text>{l.title}</Text>
@@ -353,7 +354,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               const getData = async () => {
                 try {
                   const jsonValue = await AsyncStorage.getItem(
-                    "@signup_payload"
+                    "@signup_payload",
                   );
 
                   jsonValue != null
@@ -398,14 +399,6 @@ const styles = StyleSheet.create({
     marginBottom: hp(39),
     width: wpercent("90%"),
   },
-  city: {
-    width: wp(334),
-    borderColor: COLORS.light.textinputborder,
-    borderWidth: 0.5,
-    borderRadius: 4,
-    height: wp(40),
-    paddingRight: wp(4),
-  },
   signUpText: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
@@ -425,12 +418,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
   },
-  textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(12),
-    color: COLORS.light.darkgrey,
-  },
-
   inputText: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(12),
@@ -440,11 +427,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(4),
     marginTop: hp(12),
   },
-  codeText: {
-    fontFamily: "Roboto-Medium",
-    color: COLORS.light.darkgrey,
-    fontSize: wp(12),
-  },
+
   plButton: {
     marginTop: hp(31),
   },

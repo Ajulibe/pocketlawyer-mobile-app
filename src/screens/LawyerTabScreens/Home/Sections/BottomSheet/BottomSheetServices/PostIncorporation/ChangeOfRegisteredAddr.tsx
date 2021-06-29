@@ -1,9 +1,9 @@
 import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../ModalFormStyles";
 import {
   DocUploadInterface,
@@ -16,10 +16,10 @@ import {
   addMetadata,
   submitHistory,
 } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../BottomSheetUtils/BottomSheetProps";
 import {
   validateInputs,
   showError,
@@ -39,17 +39,17 @@ const FormKeys = {
   oldAddr: "OldAddress",
 };
 export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const {navigation, closeModal, service, lawyer, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -63,15 +63,15 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Submiting, please wait..." },
+          payload: {content: "Submiting, please wait..."},
         });
         const submit = await addMetadata(formMeta);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (submit === 200) {
           //--> Submit Service
           try {
@@ -112,18 +112,18 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -148,10 +148,10 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
             placeholder="Type company name"
             errorText={formData?.[FormKeys.companyName]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.companyName, value: text });
+              handleTextChange({field: FormKeys.companyName, value: text});
             }}
           />
-          <View style={{ height: 16 }} />
+          <View style={{height: 16}} />
           <Text style={modalFormstyles.inputLabel}>
             Company Registration Number{" "}
             <Text style={modalFormstyles.required}>*</Text>
@@ -160,10 +160,10 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
             placeholder="Type company registration number "
             errorText={formData?.[FormKeys.companyRegNo]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.companyRegNo, value: text });
+              handleTextChange({field: FormKeys.companyRegNo, value: text});
             }}
           />
-          <View style={{ height: 16 }} />
+          <View style={{height: 16}} />
           <Text style={modalFormstyles.inputLabel}>
             Means of Identification
             <Text style={modalFormstyles.required}>*</Text>
@@ -177,7 +177,7 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
             }
             icon
           />
-          <View style={{ height: 16 }} />
+          <View style={{height: 16}} />
           <Text style={modalFormstyles.inputLabel}>
             New Address of Company
             <Text style={modalFormstyles.required}> *</Text>
@@ -186,10 +186,10 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
             placeholder="Type new address of company"
             errorText={formData?.[FormKeys.newAddr]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.newAddr, value: text });
+              handleTextChange({field: FormKeys.newAddr, value: text});
             }}
           />
-          <View style={{ height: 16 }} />
+          <View style={{height: 16}} />
           <Text style={modalFormstyles.inputLabel}>
             Old Address of Company{" "}
             <Text style={modalFormstyles.required}>*</Text>
@@ -198,12 +198,12 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
             placeholder="Type old address of company"
             errorText={formData?.[FormKeys.oldAddr]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.oldAddr, value: text });
+              handleTextChange({field: FormKeys.oldAddr, value: text});
             }}
           />
         </KeyboardAwareScrollView>
       </ScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );

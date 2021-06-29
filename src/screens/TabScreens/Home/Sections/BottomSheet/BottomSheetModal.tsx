@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import COLORS from "utils/Colors";
-import { Service } from "database/DBData";
-import { LawyerModel } from "models/Interfaces";
+import {Service} from "database/DBData";
+import {LawyerModel} from "models/Interfaces";
 import renderView from "./renderView";
+import {AntDesign} from "@expo/vector-icons";
 
-import { BlurView } from "expo-blur";
+import {BlurView} from "expo-blur";
 
 export interface ModalProps {
   modalVisible: boolean;
@@ -32,22 +33,23 @@ export default function BottomSheetModal(props: ModalProps) {
       animationType="fade"
       transparent={true}
       visible={props.modalVisible}
-      onRequestClose={() => props.closeModal()}
-    >
+      onRequestClose={() => props.closeModal()}>
       <View style={[styles.container]}>
-        <View style={{ height: 60 }} />
+        <View style={{height: 60}} />
         <View style={styles.quickActions}>
           <TouchableOpacity
+            style={styles.backButton}
             onPress={() => {
               props.closeModal();
               props.navigation.goBack();
-            }}
-          >
+            }}>
             <Text style={styles.action}>Back</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={props.closeModal}>
-            <Text style={styles.action}>Close</Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={props.closeModal}>
+            <AntDesign name="closecircle" size={27} color="white" />
           </TouchableOpacity>
         </View>
 
@@ -56,9 +58,8 @@ export default function BottomSheetModal(props: ModalProps) {
           key={0}
           animation={"slideInUp"} //pulse
           easing={"linear"}
-          duration={500}
-        >
-          <View style={{ flex: 1 }}>{renderView(props)}</View>
+          duration={500}>
+          <View style={{flex: 1}}>{renderView(props)}</View>
         </Animatable.View>
       </View>
     </Modal>
@@ -89,9 +90,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    paddingHorizontal: wp(22),
+    paddingHorizontal: wp(7),
     paddingVertical: hp(20),
     justifyContent: "space-between",
+    // borderWidth: 1,
   },
   action: {
     fontSize: wp(16),
@@ -100,4 +102,9 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Medium",
     color: COLORS.light.white,
   },
+  backButton: {
+    height: 0,
+    opacity: 0,
+  },
+  closeButton: {},
 });

@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
-import Toast, { BaseToast } from "react-native-toast-message";
-import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
-import { icons, colors } from "./assets";
+import Toast, {BaseToast} from "react-native-toast-message";
 
-type ToastTypes = "success | error | info";
+import {wp} from "utils/Dimensions";
+import {icons, colors} from "./assets";
 
 interface PLToastProps {
   message: string;
@@ -44,7 +44,7 @@ export interface ToastProps {
 
 //--> to be properly configured later
 export const toastConfig = {
-  success: ({ type, ...rest }: ToastProps) => (
+  success: ({type, ...rest}: ToastProps) => (
     <BaseToast
       {...rest}
       style={{
@@ -56,7 +56,7 @@ export const toastConfig = {
         backgroundColor: "#DDEADE",
       }}
       leadingIcon={icons.success}
-      leadingIconStyle={{ backgroundColor: "white", borderRadius: wp(50) }}
+      leadingIconStyle={{backgroundColor: "white", borderRadius: wp(50)}}
       text1Style={{
         fontSize: wp(15),
         fontFamily: "Roboto-Bold",
@@ -78,7 +78,7 @@ export const toastConfig = {
     />
   ),
 
-  error: ({ type, ...rest }: ToastProps) => (
+  error: ({type, ...rest}: ToastProps) => (
     <BaseToast
       {...rest}
       style={{
@@ -90,11 +90,11 @@ export const toastConfig = {
         backgroundColor: colors.lightRed,
       }}
       leadingIcon={icons.error}
-      leadingIconStyle={{ backgroundColor: "white", borderRadius: wp(50) }}
+      leadingIconStyle={{backgroundColor: "white", borderRadius: wp(50)}}
       text1Style={{
         fontSize: wp(15),
         fontFamily: "Roboto-Bold",
-        color: colors.red,
+        color: "white",
       }}
       onTrailingIconPress={() => {
         Toast.hide();
@@ -102,7 +102,7 @@ export const toastConfig = {
       text2Style={{
         fontSize: wp(13),
         fontFamily: "Roboto-Regular",
-        color: "grey",
+        color: "white",
       }}
       text1={
         type === "success" ? "Success" : type === "error" ? "Error" : "Info"

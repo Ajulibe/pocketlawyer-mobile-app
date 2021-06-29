@@ -4,7 +4,7 @@ import { wp, hp } from "utils/Dimensions";
 import { Input } from "@ui-kitten/components";
 import COLORS from "utils/Colors";
 
-interface Props {
+export interface Props {
   id?: string;
   keyboardType?: any;
   secureTextEntry?: boolean;
@@ -34,6 +34,7 @@ interface Props {
   labelText?: string;
   labelTextRequired?: boolean;
   maxLength?: number;
+  testID?: string;
 }
 
 export const PLTextInput: React.FC<Props> = (props) => {

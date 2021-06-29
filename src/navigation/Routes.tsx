@@ -33,7 +33,7 @@ export enum ROUTES {
   AUTH_CAC_LAWFIRM = "AuthCACLawFirm",
   AUTH_VALIDATE_EMAIL_LAWFIRM = "ValidateEmail",
 
-  // TABS...
+  // INDIVIDUAL TABS...
   TABSCREEN_STACK = "TabScreenStack",
   //HOME STACK
   HOME_STACK = "HomeStack",
@@ -55,4 +55,27 @@ export enum ROUTES {
   UPDATE_PASSWORD = "UpdatePasswordScreen",
   UPDATE_PROFILE = "UpdateProfileScreen",
   UPDATE_IMAGE = "UpdateImageScreen",
+
+  // LAWYER TABS...
+  TABSCREEN_STACK_LAWYER = "LawyerBottomTabStack",
+  //HOME STACK
+  HOME_STACK_LAWYER = "LawyerHomeStack",
+  HOME_SCREEN_LAWYER = "LawyerHomeScreen",
+  ALL_CATEGORY_SCREEN_LAWYER = "LawyerAllCategory",
+  CAT_SERVICE_SCREEN_LAWYER = "LawyerCatServiceScreen",
+  PICK_LAWYER_SCREEN_LAWYER = "LawyerPickLawyer",
+  LAWYER_DETAIL_SCREEN_LAWYER = "LawyerLawyerDetail",
+  CHECKOUT_SCREEN_LAWYER = "LawyerCheckoutScreen",
+  // SERIVE STACK...
+  SERVICE_STACK_LAWYER = "LawyerServiceStack",
+  SERVICE_SCREEN_LAWYER = "LawyerServiceScreen",
+  // HISTORY STACK...
+  HISTORY_STACK_LAWYER = "LawyerHistoryStack",
+  HISTORY_SCREEN_LAWYER = "LawyerHistoryScreen",
+  // ACCOUNT STACK...
+  ACCOUNT_STACK_LAWYER = "LawyerAccountStack",
+  ACCOUNT_SCREEN_LAWYER = "LawyerAccountSCreen",
+  UPDATE_PASSWORD_LAWYER = "LawyerUpdatePasswordScreen",
+  UPDATE_PROFILE_LAWYER = "LawyerUpdateProfileScreen",
+  UPDATE_IMAGE_LAWYER = "LawyerUpdateImageScreen",
 }

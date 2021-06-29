@@ -1,9 +1,9 @@
-import { PLToast } from "components/PLToast";
+import {PLToast} from "components/PLToast/index.component";
 
 export function validateInputs(
   FormKeys: Object,
   formData: any,
-  callBack: (vData: Object, isError: boolean) => void
+  callBack: (vData: Object, isError: boolean) => void,
 ) {
   const newData: any = {};
   let isError = false;
@@ -14,10 +14,10 @@ export function validateInputs(
       field == null || field?.value == null || field?.value === "";
 
     if (fieldEmpty) {
-      field = { key: mValue, error: "This field is required" };
+      field = {key: mValue, error: "This field is required"};
       isError = true;
     } else {
-      delete field.error
+      delete field.error;
     }
 
     newData[mValue] = field;

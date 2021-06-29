@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, {useState, useEffect} from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { Entypo } from "@expo/vector-icons";
-import { CountryCode, Country, CallingCode } from "../../../../types";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { states } from "utils/nigerianStates";
-import { BottomSheet, ListItem } from "react-native-elements";
-import { lawyerPayload } from "navigation/interfaces";
+import PLButton from "components/PLButton/PLButton.component";
+import {Entypo} from "@expo/vector-icons";
+import {CountryCode, Country, CallingCode} from "../../../../types";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {states} from "utils/nigerianStates";
+import {BottomSheet, ListItem} from "react-native-elements";
+import {lawyerPayload} from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native-gesture-handler";
-import reactotron from "reactotron-react-native";
-import AsyncStorageUtil from "utils/AsyncStorageUtil";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<
@@ -36,10 +32,10 @@ type Props = StackScreenProps<
 
 const useInputState = (initialValue = "") => {
   const [value, setValue] = React.useState(initialValue);
-  return { value, onChangeText: setValue };
+  return {value, onChangeText: setValue};
 };
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
   const [withCountryNameButton, setWithCountryNameButton] =
@@ -62,13 +58,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
   useEffect(() => {
     if (previous === "") {
       AsyncStorage.getItem("previousPath").then((res) => {
-        console.log(res);
         setPrevious(res);
       });
     } else {
       return;
     }
-  }, []);
+  }, [previous]);
 
   //--> state values
   const [firstName, setFirstName] = useState("");
@@ -116,7 +111,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisible(false),
     },
   ];
@@ -126,7 +121,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       //--> setting async stoarage data for usage later
       await AsyncStorage.setItem(
         "lawyerPayload",
-        JSON.stringify(lawyerPayload)
+        JSON.stringify(lawyerPayload),
       );
       const previousPath = await AsyncStorage.getItem("previousPath");
 
@@ -135,7 +130,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
       if (previousPath !== "lawfirm") {
         await AsyncStorage.setItem("previousPath", "solicitor");
         await AsyncStorage.setItem("@email", email);
-        console.log(email);
       }
 
       setTimeout(() => {
@@ -148,9 +142,9 @@ const AuthGetStarted = ({ navigation }: Props) => {
   };
 
   //->> trying out generics with typescript --- ignore ---
-  const f = <T,>(arg: T): T => {
-    return arg;
-  };
+  // const f = <T,>(arg: T): T => {
+  //   return arg;
+  // };
   //--- ******* ---
 
   return (
@@ -165,8 +159,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps={"handled"}
-        enableOnAndroid={true}
-      >
+        enableOnAndroid={true}>
         <View style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
             {previous === "lawfirm" ? (
@@ -225,36 +218,19 @@ const AuthGetStarted = ({ navigation }: Props) => {
             />
           </View>
 
-          <View style={{ marginTop: wp(4) }}>
+          <View style={{marginTop: wp(4)}}>
             <Text style={styles.inputText}>
               State <Text style={styles.required}>*</Text>
             </Text>
-            <View
-              style={{
-                borderWidth: 1,
-                width: wp(334),
-                height: wp(40),
-                borderRadius: 4,
-                borderColor: COLORS.light.textinputborder,
-                justifyContent: "space-between",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.stateView}>
               <TouchableOpacity
                 onPress={() => {
                   setIsVisible(true);
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <View style={{ width: wp(300) }}>
+                }}>
+                <View style={styles.rowCenter}>
+                  <View style={{width: wp(300)}}>
                     <Text
+                      // eslint-disable-next-line react-native/no-inline-styles
                       style={{
                         marginLeft: wp(16),
                         fontSize: wp(12),
@@ -263,17 +239,11 @@ const AuthGetStarted = ({ navigation }: Props) => {
                           statePlaceholder === 0
                             ? COLORS.light.darkgrey
                             : COLORS.light.black,
-                      }}
-                    >
+                      }}>
                       {state}
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      width: wp(30),
-                      alignItems: "flex-end",
-                    }}
-                  >
+                  <View style={styles.arrowContainer}>
                     <Entypo name="chevron-small-down" size={20} color="grey" />
                   </View>
                 </View>
@@ -286,15 +256,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 statusBarTranslucent: true,
               }}
               isVisible={isVisible}
-              containerStyle={{ backgroundColor: COLORS.light.primary }}
-            >
+              containerStyle={{backgroundColor: COLORS.light.primary}}>
               {states.map((l, i) => (
                 <ListItem
                   key={i}
                   onPress={() => {
                     setState(l.state);
-                  }}
-                >
+                  }}>
                   <ListItem.Content>
                     <ListItem.Title>
                       <Text>{l.state}</Text>
@@ -306,8 +274,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 <ListItem
                   key={i}
                   containerStyle={l.containerStyle}
-                  onPress={l.onPress}
-                >
+                  onPress={l.onPress}>
                   <ListItem.Content>
                     <ListItem.Title style={l.titleStyle}>
                       <Text>{l.title}</Text>
@@ -350,15 +317,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             }}
           />
           <View style={styles.loginWrapper}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "Roboto-Regular",
-                fontSize: wp(11),
-                lineHeight: wp(20),
-                color: COLORS.light.black,
-              }}
-            >
+            <Text style={styles.signUpText}>
               By signing up, you agree with the
               <Text style={styles.login}> Terms of services </Text>and{" "}
               <Text style={styles.login}>Privacy policy </Text>
@@ -371,10 +330,6 @@ const AuthGetStarted = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
   wrapper: {
     flex: 1,
     alignItems: "center",
@@ -411,20 +366,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLORS.light.white,
   },
-  inputPhoneNumber: {
-    width: wp(230),
-    height: wp(40),
-    borderRadius: 0,
-    backgroundColor: COLORS.light.white,
-    borderLeftWidth: 0,
-    borderColor: "#fff",
-  },
-
-  textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(12),
-    color: COLORS.light.darkgrey,
-  },
 
   inputText: {
     fontFamily: "Roboto-Medium",
@@ -435,23 +376,11 @@ const styles = StyleSheet.create({
     marginBottom: hp(4),
     marginTop: hp(4),
   },
-  codeText: {
-    fontFamily: "Roboto-Medium",
-    color: COLORS.light.darkgrey,
-    fontSize: wp(12),
-  },
+
   plButton: {
     marginTop: hp(80),
   },
 
-  phoneNumberWrapper: {
-    width: wpercent("90%"),
-    flexDirection: "row",
-    borderWidth: 1,
-    justifyContent: "space-between",
-    borderRadius: 4,
-    borderColor: COLORS.light.textinputborder,
-  },
   loginWrapper: {
     flexDirection: "row",
     width: wpercent("80%"),
@@ -464,19 +393,36 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
-  countryPickerWrapper: {
+  arrowContainer: {
+    width: wp(30),
+    alignItems: "flex-end",
+  },
+  stateView: {
+    borderWidth: 1,
+    width: wp(334),
+    height: wp(40),
+    borderRadius: 4,
+    borderColor: COLORS.light.textinputborder,
+    justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
-    padding: 2,
-    borderRightWidth: 1,
-    borderRightColor: COLORS.light.textinputborder,
-    paddingLeft: wpercent("2%"),
-    width: wpercent("26%"),
+  },
+  rowCenter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   CompanyDetails: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
     color: COLORS.light.primary,
+  },
+  signUpText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(11),
+    lineHeight: wp(20),
+    color: COLORS.light.black,
   },
   required: {
     color: "red",

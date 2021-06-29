@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  StyleSheet,
-  GestureResponderEvent,
-  ActivityIndicator,
-  View,
-  ViewStyle,
-  Platform,
-} from "react-native";
-import { wp, hp } from "../../utils/Dimensions";
+import {StyleSheet, ActivityIndicator, Platform} from "react-native";
+import {wp} from "../../utils/Dimensions";
 import COLORS from "../../utils/Colors";
-import { Button, Spinner } from "@ui-kitten/components";
+import {Button} from "@ui-kitten/components";
 
-type Props = {
+export interface ButtonProps {
   textColor: string;
   btnText: string;
   onClick: (event: any) => void;
@@ -19,7 +12,8 @@ type Props = {
   style?: any;
   disabled?: boolean;
   loadingText?: any;
-};
+  testID?: string;
+}
 
 const LoadingIndicator = (props: any) => (
   <ActivityIndicator style={[props.style, styles.indicator]} color="#fff" />
@@ -34,13 +28,13 @@ export default function PLButton({
   disabled,
   loadingText,
   ...rest
-}: Props) {
+}: ButtonProps) {
   return isLoading ? (
     <Button
       style={[styles.btn, style]}
       accessoryLeft={LoadingIndicator}
       disabled={true}
-    >
+      {...rest}>
       {loadingText}
     </Button>
   ) : (
@@ -48,8 +42,7 @@ export default function PLButton({
       onPress={onClick}
       style={[styles.btn, style]}
       {...rest}
-      disabled={disabled ? disabled : false}
-    >
+      disabled={disabled ? disabled : false}>
       {btnText}
     </Button>
   );

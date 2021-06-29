@@ -7,7 +7,7 @@ import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 
 interface Props {
-  onClick?: () => void;
+  onClick: () => void;
   data: LawyerModel;
 }
 

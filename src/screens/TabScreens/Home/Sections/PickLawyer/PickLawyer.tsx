@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "navigation/HomeStack";
-import { ROUTES } from "navigation/Routes";
+import React, {useState} from "react";
+import {StackScreenProps} from "@react-navigation/stack";
+import {HomeStackParamList} from "navigation/HomeStack";
+import {ROUTES} from "navigation/Routes";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { hp, wp } from "utils/Dimensions";
+import {FlatList, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {hp, wp} from "utils/Dimensions";
 import LawyerTile from "./Components/LawyerTile";
 import axiosClient from "utils/axiosClient";
-import { LawyerModel } from "models/Interfaces";
-import FullPageLoader from "components/FullPageLoader";
-import { CategoryDb } from "database/CategoryDb";
+import {LawyerModel} from "models/Interfaces";
+import FullPageLoader from "components/FullPageLoader/index.component";
+import {CategoryDb} from "database/CategoryDb";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.PICK_LAWYER_SCREEN>;
 
-export default function PickLawyer({ navigation, route }: Props) {
+export default function PickLawyer({navigation, route}: Props) {
   const service = route.params.service;
   const [category, setCategory] = useState<any>("");
 
@@ -48,7 +48,7 @@ export default function PickLawyer({ navigation, route }: Props) {
   const getLawyersByCategory = async () => {
     setIsLoading(true);
     try {
-      const { data } = await axiosClient.post("Category/GetSPUserCategories", [
+      const {data} = await axiosClient.post("Category/GetSPUserCategories", [
         {
           CategoryCode: category.categoryCode,
         },
@@ -72,15 +72,16 @@ export default function PickLawyer({ navigation, route }: Props) {
             title={category.categoryName}
             showBorderBottom={true}
           />
-          <View style={[styles.container, { flexGrow: 1 }]}>
+          <View style={[styles.container, {flexGrow: 1}]}>
             <Text style={globalStyles.H2Style}>Pick a Lawyer</Text>
-            <View style={{ height: hp(13) }} />
+            <View style={{height: hp(13)}} />
 
             <FlatList
+              showsVerticalScrollIndicator={false}
               data={lawyers} //--> change back to lawyers
               numColumns={3}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }: any) => (
+              renderItem={({item}: any) => (
                 <>
                   <LawyerTile
                     data={item}

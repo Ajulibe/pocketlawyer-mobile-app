@@ -1,37 +1,35 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import {StackScreenProps} from "@react-navigation/stack";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
-import { HomeStackParamList } from "navigation/HomeStack";
-import { ROUTES } from "navigation/Routes";
-import React, { useState } from "react";
+import {HomeStackParamList} from "navigation/HomeStack";
+import {ROUTES} from "navigation/Routes";
+import React, {useState} from "react";
 import {
   SafeAreaView,
   ScrollView,
   Text,
   View,
-  Image,
   TouchableOpacity,
   FlatList,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import CONSTANTS from "utils/Constants";
-import { hp, wp } from "utils/Dimensions";
-import { Category, Service } from "database/DBData";
+import {hp, wp} from "utils/Dimensions";
+import {Category} from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
-import { CategoryDb } from "database/CategoryDb";
-import { LawyerModel } from "models/Interfaces";
-import { useScrollToTop } from "@react-navigation/native";
+import {CategoryDb} from "database/CategoryDb";
+import {LawyerModel} from "models/Interfaces";
+import {useScrollToTop} from "@react-navigation/native";
 
 //--> REDUX
-import { useAppSelector, useAppDispatch } from "redux/hooks";
-import PLButton from "components/PLButton/PLButton";
+import {useAppSelector, useAppDispatch} from "redux/hooks";
+import PLButton from "components/PLButton/PLButton.component";
 import COLORS from "utils/Colors";
-import { getUser } from "redux/actions";
-import { RectangularSkeleton } from "components/PLSkeleton/PLSkeleton";
-import { Avatar } from "react-native-elements";
+import {getUser} from "redux/actions";
+import {RectangularSkeleton} from "components/PLSkeleton/PLSkeleton.component";
+import {Avatar} from "react-native-elements";
 import {
   capitalizeFirstLetter,
   getFirstLetterFromName,
@@ -39,7 +37,7 @@ import {
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
-const HomeScreen = ({ navigation }: Props) => {
+const HomeScreen = ({navigation}: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   const time = React.useRef("");
@@ -49,8 +47,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
 
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
-  const { user_, metaData } = userData;
-  // console.log(metaData, "called from homescreen");
+  const {user_, metaData} = userData;
 
   const dispatch = useAppDispatch();
 
@@ -126,9 +123,9 @@ const HomeScreen = ({ navigation }: Props) => {
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
-      dispatch(getUser({ userID: Number(userID) }));
+      dispatch(getUser({userID: Number(userID)}));
       const getCats = await axiosClient.get(
-        `Category/GetUserCategories/${userID}`
+        `Category/GetUserCategories/${userID}`,
       );
       if (getCats != null && getCats?.data?.data?.length != 0) {
         const cats: Category[] = getCats?.data?.data;
@@ -148,13 +145,13 @@ const HomeScreen = ({ navigation }: Props) => {
   const getLawyers = async () => {
     if (category == null) return;
     const catCodes = category.map((item) => {
-      return { CategoryCode: item.categoryCode };
+      return {CategoryCode: item.categoryCode};
     });
 
     try {
-      const { data } = await axiosClient.post(
+      const {data} = await axiosClient.post(
         "Category/GetSPUserCategories",
-        catCodes
+        catCodes,
       );
 
       if (data != null) {
@@ -171,12 +168,17 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <View style={[styles.container, { flexGrow: 1 }]}>
+        <View style={[styles.container, {flexGrow: 1}]}>
           <View style={styles.header}>
             <View style={styles.headerTitleWrapper}>
               <Text style={globalStyles.H1Style}>
-                Hi {capitalizeFirstLetter(user_ ? user_?.firstName : "")}
-                👋🏼
+                Hi&nbsp;
+                {capitalizeFirstLetter(
+                  user_ && user_?.userType === 1
+                    ? user_?.firstName
+                    : user_?.company?.contactFirstName,
+                )}
+                &nbsp;👋🏼
               </Text>
               <Text style={styles.greeting}>
                 Here are your available services
@@ -190,33 +192,38 @@ const HomeScreen = ({ navigation }: Props) => {
               }}
               containerStyle={styles.user}
               size="medium"
-              placeholderStyle={{ backgroundColor: COLORS.light.primary }}
+              placeholderStyle={{backgroundColor: COLORS.light.primary}}
               rounded
               title={`${getFirstLetterFromName(
-                user_ ? user_?.firstName : ""
-              )} ${getFirstLetterFromName(user_ ? user_?.lastName : "")}`}
+                user_ && user_?.userType === 1
+                  ? user_?.firstName
+                  : user_?.company?.contactFirstName,
+              )} ${getFirstLetterFromName(
+                user_ && user_?.userType === 1
+                  ? user_?.lastName
+                  : user_?.company?.contactLastName,
+              )}`}
               source={{
                 uri: `https://${profileImage}`,
               }}
               activeOpacity={0}
+              onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE)}
             />
           </View>
 
           <ServiceSearch />
 
           <ScrollView
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             ref={ref}
             contentContainerStyle={{}}
             keyboardShouldPersistTaps="handled"
             bounces={false}
-            showsVerticalScrollIndicator={false}
-          >
+            showsVerticalScrollIndicator={false}>
             <View style={styles.titleWithViewMore}>
               <Text style={globalStyles.H2Style}>Your Categories</Text>
               <TouchableOpacity
-                onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}
-              >
+                onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}>
                 {!isCategoryLoading && (
                   <Text style={styles.viewMore}>View all</Text>
                 )}
@@ -226,8 +233,7 @@ const HomeScreen = ({ navigation }: Props) => {
               style={{
                 display: "flex",
                 flexDirection: "row",
-              }}
-            >
+              }}>
               <RectangularSkeleton isLoading={isCategoryLoading} />
 
               {!isCategoryLoading && (
@@ -236,7 +242,7 @@ const HomeScreen = ({ navigation }: Props) => {
                   data={category}
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
+                  renderItem={({item}) => (
                     <CategoryCard
                       category={item}
                       onClick={() =>
@@ -252,9 +258,8 @@ const HomeScreen = ({ navigation }: Props) => {
             <Text
               style={[
                 globalStyles.H2Style,
-                { marginTop: hp(22), marginBottom: hp(6) },
-              ]}
-            >
+                {marginTop: hp(22), marginBottom: hp(6)},
+              ]}>
               Top Findings
             </Text>
 

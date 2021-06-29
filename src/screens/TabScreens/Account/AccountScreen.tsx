@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { StackScreenProps } from "@react-navigation/stack";
+import React, {useEffect, useState} from "react";
+import {MaterialIcons} from "@expo/vector-icons";
+import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
-import { AccountStackParamList } from "navigation/AccountStack";
-import { ROUTES } from "navigation/Routes";
+import {AccountStackParamList} from "navigation/AccountStack";
+import {ROUTES} from "navigation/Routes";
 
 import {
   Platform,
@@ -16,23 +16,22 @@ import {
   View,
 } from "react-native";
 import COLORS from "utils/Colors";
-import CONSTANTS from "utils/Constants";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import UserDescListTile from "./Components/UserDescListTile";
-import { Avatar } from "react-native-elements";
-import { AntDesign } from "@expo/vector-icons";
+import {Avatar} from "react-native-elements";
+import {AntDesign} from "@expo/vector-icons";
 import dayjs from "dayjs";
 
 //--> REDUX
-import { useAppSelector } from "redux/hooks";
-import { getFirstLetterFromName } from "./UpdateProfile/utilsFn";
+import {useAppSelector} from "redux/hooks";
+import {getFirstLetterFromName} from "./UpdateProfile/utilsFn";
 
 type Props = StackScreenProps<AccountStackParamList, ROUTES.ACCOUNT_SCREEN>;
 
-const AccountScreen = ({ navigation }: Props) => {
+const AccountScreen = ({navigation}: Props) => {
   //--> state from redux store
   const userData = useAppSelector((state) => state?.users?.user);
-  const { user_, metaData } = userData;
+  const {user_, metaData} = userData;
   const [profileImage, setProfileImage] = useState("abc.jpg");
 
   // console.log(userData);
@@ -64,10 +63,9 @@ const AccountScreen = ({ navigation }: Props) => {
           hideBackButton={true}
         />
         <ScrollView
-          contentContainerStyle={[styles.container, { flexGrow: 1 }]}
+          contentContainerStyle={[styles.container, {flexGrow: 1}]}
           keyboardShouldPersistTaps="handled"
-          bounces={false}
-        >
+          bounces={false}>
           <Avatar
             rounded
             titleStyle={{
@@ -76,16 +74,21 @@ const AccountScreen = ({ navigation }: Props) => {
               color: COLORS.light.white,
             }}
             size="large"
-            placeholderStyle={{ backgroundColor: COLORS.light.primary }}
+            placeholderStyle={{backgroundColor: COLORS.light.primary}}
             title={`${getFirstLetterFromName(
-              user_ ? user_?.firstName : ""
-            )} ${getFirstLetterFromName(user_ ? user_?.lastName : "")}`}
+              user_ && user_?.userType === 1
+                ? user_?.firstName
+                : user_?.company?.contactFirstName,
+            )} ${getFirstLetterFromName(
+              user_ && user_?.userType === 1
+                ? user_?.lastName
+                : user_?.company?.contactLastName,
+            )}`}
             source={{
               uri: `https://${profileImage}`,
             }}
             onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE)}
-            containerStyle={styles.userPhoto}
-          >
+            containerStyle={styles.userPhoto}>
             <Avatar.Accessory size={18} underlayColor={COLORS.light.black} />
           </Avatar>
 
@@ -93,20 +96,38 @@ const AccountScreen = ({ navigation }: Props) => {
             style={styles.textBtn}
             onPress={() => {
               navigation.navigate(ROUTES.UPDATE_PROFILE);
-            }}
-          >
+            }}>
             <AntDesign name="edit" size={15} color={COLORS.light.white} />
           </TouchableOpacity>
 
-          <View style={{ height: hp(20) }} />
-          <UserDescListTile leading="First Name" value={user_?.firstName} />
-          <UserDescListTile leading="Last Name" value={user_?.lastName} />
-          <UserDescListTile leading="State" value={addressArray[1]} />
-          <UserDescListTile leading="City" value={addressArray[0]} />
+          <View style={{height: hp(20)}} />
           <UserDescListTile
-            leading="Date of Birth"
-            value={dayjs(user_?.dob).format("DD/MM/YYYY")}
+            leading="First Name"
+            value={
+              user_ && user_?.userType === 1
+                ? user_?.firstName
+                : user_?.company?.contactFirstName
+            }
           />
+          <UserDescListTile
+            leading="Last Name"
+            value={
+              user_ && user_?.userType === 1
+                ? user_?.lastName
+                : user_?.company?.contactLastName
+            }
+          />
+          {user_ && user_?.userType === 1 ? (
+            <>
+              <UserDescListTile leading="State" value={addressArray[1]} />
+              <UserDescListTile leading="City" value={addressArray[0]} />
+              <UserDescListTile
+                leading="Date of Birth"
+                value={dayjs(user_?.dob).format("DD/MM/YYYY")}
+              />
+            </>
+          ) : null}
+
           <Text
             style={[
               {
@@ -115,20 +136,18 @@ const AccountScreen = ({ navigation }: Props) => {
                 color: COLORS.light.black,
                 marginTop: hp(10),
               },
-            ]}
-          >
+            ]}>
             If you have any issues with your information, please send a message
             to info@pocket-lawyers.com
           </Text>
           <Text style={styles.subTitle}>Contact Information</Text>
-          <View style={{ height: hp(18) }} />
+          <View style={{height: hp(18)}} />
           <UserDescListTile leading="Phone Number" value={user_?.phone} />
           <UserDescListTile leading="Email Address" value={user_?.email} />
 
           <TouchableOpacity
             style={styles.changePasswordBth}
-            onPress={() => navigation.navigate(ROUTES.UPDATE_PASSWORD)}
-          >
+            onPress={() => navigation.navigate(ROUTES.UPDATE_PASSWORD)}>
             <Text style={styles.passBtnText}>Update Password</Text>
             <MaterialIcons
               name="keyboard-arrow-right"

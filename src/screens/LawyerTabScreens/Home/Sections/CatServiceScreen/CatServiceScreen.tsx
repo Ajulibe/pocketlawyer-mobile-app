@@ -1,4 +1,3 @@
-import { CommonActions } from "@react-navigation/routers";
 import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
@@ -45,7 +44,7 @@ const CatServiceScreen = ({ navigation, route }: Props) => {
               service={item}
               onClick={() =>
                 navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-                  category: category,
+                  // category: category,
                   service: item,
                 })
               }

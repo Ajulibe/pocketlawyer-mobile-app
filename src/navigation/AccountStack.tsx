@@ -3,7 +3,7 @@ import {
   CardStyleInterpolators,
   createStackNavigator,
 } from "@react-navigation/stack";
-import { ROUTES } from "./Routes";
+import {ROUTES} from "./Routes";
 import COLORS from "../utils/Colors";
 import AccountScreen from "../screens/TabScreens/Account/AccountScreen";
 import UpdatePassword from "../screens/TabScreens/Account/UpdateProfile/UpdatePassword";
@@ -22,14 +22,14 @@ const AccountStack = createStackNavigator<AccountStackParamList>();
 export default function AccountNavigationStack() {
   const headerOptions = {
     headerShown: false,
-    cardStyle: { backgroundColor: COLORS.light.white },
+    cardStyle: {backgroundColor: COLORS.light.white},
   };
   return (
     <AccountStack.Navigator
       initialRouteName={ROUTES.ACCOUNT_SCREEN}
       headerMode={"none"}
       screenOptions={{
-        cardStyle: { backgroundColor: COLORS.light.white },
+        cardStyle: {backgroundColor: COLORS.light.white},
         gestureEnabled: true,
         headerShown: false,
         gestureDirection: "horizontal",
@@ -37,8 +37,7 @@ export default function AccountNavigationStack() {
         headerStyle: {
           backgroundColor: "#fff",
         },
-      }}
-    >
+      }}>
       <AccountStack.Screen
         name={ROUTES.ACCOUNT_SCREEN}
         component={AccountScreen}

@@ -1,9 +1,13 @@
-import { StyleSheet, Platform } from "react-native";
+import {StyleSheet, Platform} from "react-native";
 import COLORS from "utils/Colors";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { wp, hp } from "utils/Dimensions";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {wp, hp} from "utils/Dimensions";
 
 export const styles = StyleSheet.create({
+  contentContainerStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   wrapper: {
     flex: 1,
     alignItems: "center",

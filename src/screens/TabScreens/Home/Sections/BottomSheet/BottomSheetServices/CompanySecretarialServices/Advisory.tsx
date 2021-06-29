@@ -1,9 +1,9 @@
 import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../ModalFormStyles";
 import {
   DocUploadInterface,
@@ -16,10 +16,10 @@ import {
   addMetadata,
   submitHistory,
 } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../BottomSheetUtils/BottomSheetProps";
 import {
   validateInputs,
   showError,
@@ -31,7 +31,7 @@ import {
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
-import { contractDuration } from "../../BottomSheetUtils/FormStaticData";
+import {contractDuration} from "../../BottomSheetUtils/FormStaticData";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
 
@@ -44,17 +44,17 @@ const FormKeys = {
   memAndArtOfAssoc: "MemorandumAndArticlesOfAssociation",
 };
 export function Advisory(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId, amount } = props;
+  const {navigation, closeModal, service, lawyer, historyId, amount} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -68,15 +68,15 @@ export function Advisory(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Submiting, please wait..." },
+          payload: {content: "Submiting, please wait..."},
         });
         const submit = await addMetadata(formMeta);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (submit === 200) {
           //--> Submit Service
           try {
@@ -117,18 +117,18 @@ export function Advisory(props: BottomSheetProps) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -140,7 +140,9 @@ export function Advisory(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
         <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
         <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details
@@ -152,10 +154,10 @@ export function Advisory(props: BottomSheetProps) {
           placeholder="Type business name"
           errorText={formData?.[FormKeys.name]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.name, value: text });
+            handleTextChange({field: FormKeys.name, value: text});
           }}
         />
-        <View style={{ height: 16 }} />
+        <View style={{height: 16}} />
         <Text style={modalFormstyles.inputLabel}>
           Business Sector <Text style={modalFormstyles.required}>*</Text>
         </Text>
@@ -163,10 +165,10 @@ export function Advisory(props: BottomSheetProps) {
           placeholder="Enter business sector"
           errorText={formData?.[FormKeys.sector]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.sector, value: text });
+            handleTextChange({field: FormKeys.sector, value: text});
           }}
         />
-        <View style={{ height: 16 }} />
+        <View style={{height: 16}} />
         <Text style={modalFormstyles.inputLabel}>
           Contract Duration <Text style={modalFormstyles.required}>*</Text>
         </Text>
@@ -178,10 +180,10 @@ export function Advisory(props: BottomSheetProps) {
             formData?.[FormKeys.duration]?.value ?? "Select contract duration"
           }
           onSelectChange={(text: string) => {
-            handleTextChange({ field: FormKeys.duration, value: text });
+            handleTextChange({field: FormKeys.duration, value: text});
           }}
         />
-        <View style={{ height: 16 }} />
+        <View style={{height: 16}} />
         <Text style={modalFormstyles.inputLabel}>
           Certificate of Registration (SMEs)
           <Text style={modalFormstyles.required}>*</Text>
@@ -192,7 +194,7 @@ export function Advisory(props: BottomSheetProps) {
           dataValue={formData?.[FormKeys.certOfReg]?.value ?? "Select file"}
           icon
         />
-        <View style={{ height: 16 }} />
+        <View style={{height: 16}} />
         <Text style={modalFormstyles.inputLabel}>
           Certificate of Incorporation (Companies)
           <Text style={modalFormstyles.required}>*</Text>
@@ -203,7 +205,7 @@ export function Advisory(props: BottomSheetProps) {
           dataValue={formData?.[FormKeys.certOfInc]?.value ?? "Select file"}
           icon
         />
-        <View style={{ height: 16 }} />
+        <View style={{height: 16}} />
         <Text style={modalFormstyles.inputLabel}>
           Memorandum and Articles of Association
           <Text style={modalFormstyles.required}> *</Text>
@@ -217,7 +219,7 @@ export function Advisory(props: BottomSheetProps) {
           icon
         />
       </KeyboardAwareScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );

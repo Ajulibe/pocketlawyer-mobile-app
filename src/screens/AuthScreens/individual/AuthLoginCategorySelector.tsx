@@ -1,28 +1,28 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
-import { CheckBox as RNECheckBox } from "react-native-elements";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import PLButton from "components/PLButton/PLButton";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLToast } from "components/PLToast";
+import {wp, hp} from "utils/Dimensions";
+import {CheckBox as RNECheckBox} from "react-native-elements";
+import {AntDesign} from "@expo/vector-icons";
+import {MaterialIcons} from "@expo/vector-icons";
+import PLButton from "components/PLButton/PLButton.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {PLToast} from "components/PLToast/index.component";
 import axiosClient from "utils/axiosClient";
-import { submitCategories } from "navigation/interfaces";
-import FullPageLoader from "components/FullPageLoader";
-import { CommonActions, StackActions } from "@react-navigation/native";
+import {submitCategories} from "navigation/interfaces";
+import FullPageLoader from "components/FullPageLoader/index.component";
+import {CommonActions} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CategoryDb } from "database/CategoryDb";
+import {CategoryDb} from "database/CategoryDb";
 import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList>;
 
-const AuthGetStarted: React.FC<Props> = ({ navigation }) => {
+const AuthGetStarted: React.FC<Props> = ({navigation}) => {
   const [preincorporation, setPreIncorporation] =
     React.useState<boolean>(false);
   const [companysecretarial, setCompanysecretarial] =
@@ -75,7 +75,7 @@ const AuthGetStarted: React.FC<Props> = ({ navigation }) => {
     });
 
     const Categorylist = fliteredCategories.map((item) => {
-      return { CategoryCode: item.code, CategoryName: item.name };
+      return {CategoryCode: item.code, CategoryName: item.name};
     });
 
     try {
@@ -89,32 +89,29 @@ const AuthGetStarted: React.FC<Props> = ({ navigation }) => {
         Categorylist: Categorylist,
       };
 
-      submitCategories(Payload);
+      submitCategoriesFn(Payload);
     } catch (error) {
       //---> return the error
     }
   };
 
-  const submitCategories = async (Payload: submitCategories) => {
+  const submitCategoriesFn = async (Payload: submitCategories) => {
     setLoading(true);
 
     try {
-      const response = await axiosClient.post(
-        "Category/AddUSerCategory",
-        Payload
-      );
+      await axiosClient.post("Category/AddUSerCategory", Payload);
 
-      PLToast({ message: "Categories Saved", type: "success" });
+      PLToast({message: "Categories Saved", type: "success"});
 
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: ROUTES.TABSCREEN_STACK }],
-        })
+          routes: [{name: ROUTES.TABSCREEN_STACK}],
+        }),
       );
     } catch (error) {
       setLoading(false);
-      PLToast({ message: "Error Saving Categories", type: "error" });
+      PLToast({message: "Error Saving Categories", type: "error"});
 
       return;
     }
@@ -370,8 +367,7 @@ const AuthGetStarted: React.FC<Props> = ({ navigation }) => {
         <View style={styles.btnWrapper}>
           <TouchableOpacity
             style={styles.skipButton}
-            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
-          >
+            onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}>
             <Text style={styles.skip}>Skip</Text>
           </TouchableOpacity>
 
@@ -464,13 +460,3 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
-function actions(
-  index: any,
-  arg1: number,
-  key: any,
-  arg3: null,
-  actions: any,
-  arg5: any[]
-) {
-  throw new Error("Function not implemented.");
-}

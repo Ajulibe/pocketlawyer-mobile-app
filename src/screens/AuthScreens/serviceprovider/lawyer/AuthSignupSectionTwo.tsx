@@ -1,38 +1,32 @@
-import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, {useState} from "react";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { FontAwesome } from "@expo/vector-icons";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import PLButton from "components/PLButton/PLButton.component";
+import {FontAwesome} from "@expo/vector-icons";
+import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
 import * as Animatable from "react-native-animatable";
-import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosClient from "utils/axiosClient";
-import { RegisterInterface } from "navigation/interfaces";
-import { PLToast } from "components/PLToast";
-import { CountryCode, Country, CallingCode } from "types";
+import {RegisterInterface} from "navigation/interfaces";
+import {PLToast} from "components/PLToast/index.component";
+import {CountryCode, Country, CallingCode} from "types";
 import CountryPicker from "react-native-country-picker-modal";
-import { Input } from "@ui-kitten/components";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {Input} from "@ui-kitten/components";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation, route }: Props) => {
+const AuthGetStarted = ({navigation, route}: Props) => {
   //--> state values for the section
   const [phonenumber, setPhonenumber] = useState("");
   const [password, setPassword] = useState("");
@@ -84,18 +78,6 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
       officeaddress: "",
       userType: 3,
     },
-    // email: "",
-    // userType: 2,
-    // password: "",
-    // address: "",
-    // phone: "",
-    // company: {
-    //   name: "",
-    //   CompanyType: 1,
-    //   ContactFirstName: "",
-    //   ContactLastName: "",
-    //   ContactEmail: "",
-    //   ContactPhone: "",
   });
   const [initialload, setInitialLoad] = useState(0);
 
@@ -108,25 +90,13 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
   //--> setting the previous path
   const [previous, setPrevious] = useState<any>("");
 
-  // React.useEffect(() => {
-  //   if (previous === "") {
-  //     AsyncStorage.getItem("previousPath").then((res) => {
-  //       console.log(res);
-  //       setPrevious(res);
-  //     });
-  //   } else {
-  //     return;
-  //   }
-  // }, []);
-
   //--> check the state of the input forms and enable the button when all fields are complete
   React.useEffect(() => {
     if (previous === "") {
       AsyncStorage.getItem("previousPath").then((res) => {
-        console.log(res);
         setPrevious(res);
       });
-    } else if (previous == "lawfirm") {
+    } else if (previous === "lawfirm") {
       if (
         phonenumber.length === 0 ||
         password.length === 0 ||
@@ -172,10 +142,8 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
         userType: 3,
       };
 
-      console.log(lawfirmState);
-
       //--> contact person information
-      const { email, firstName, lastName } = lawfirmState.firstpayload;
+      const {email, firstName, lastName} = lawfirmState.firstpayload;
 
       //--> company information
       const {
@@ -186,7 +154,7 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
 
       const lawfirmPayload = {
         email: email,
-        userType: 2,
+        userType: 5,
         password: password,
         address: officeaddress,
         phone: phonenumber,
@@ -202,13 +170,24 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
 
       callRegister(individualPayload, solicitorPayload, lawfirmPayload);
     }
-  }, [initialload]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    initialState.SuppremeCourtNumber,
+    initialState.address,
+    initialState.email,
+    initialState.firstName,
+    initialState.lastName,
+    initialload,
+    lawfirmState,
+    password,
+    phonenumber,
+  ]);
 
   //--> explicit interfaces to be configured later
   const callRegister = async (
     individualPayload: any,
     solicitorPayload: any,
-    lawfirmPayload: any
+    lawfirmPayload: any,
   ) => {
     try {
       const previousPath = await AsyncStorage.getItem("previousPath");
@@ -227,36 +206,40 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
 
   const register = async (Payload: RegisterInterface) => {
     setIsLoading(true);
-    // console.log(individualPayload);
+    // console.log(Payload, "calling");
 
     try {
-      const { data } = await axiosClient.post("User", Payload);
+      const {data} = await axiosClient.post("User", Payload);
+      console.log(data);
 
       setIsLoading(false);
-      PLToast({ message: "Successfully Registered", type: "success" });
+      PLToast({message: "Successfully Registered", type: "success"});
 
       //--> setting async stoarage data for usage later
-      const { token } = data.data;
-      const { userType } = data.data;
-      const { userID } = data.data;
-      const { firstName } = data.data;
+      const {token} = data.data;
+      const {userType} = data.data;
+      const {userID} = data.data;
+      const {firstName} = data.data;
 
+      if (userType === 5) {
+        const {contactFirstName} = data.data.company;
+        await AsyncStorage.setItem("firstName", contactFirstName);
+      } else {
+        await AsyncStorage.setItem("firstName", firstName);
+      }
+      navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("@email", Payload.email);
-      await AsyncStorage.setItem("firstName", firstName);
 
       //--> setting lawyer as the prvios path
       // await AsyncStorage.setItem("previousPath", "barrister");
-
-      setTimeout(() => {
-        navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL);
-      }, 1000);
+      // console.log("called");
     } catch (error: any) {
-      const { message } = error?.response.data;
-      PLToast({ message: message, type: "error" });
+      const {message} = error?.response.data;
+      PLToast({message: message, type: "error"});
       setIsLoading(false);
       setIsDisabled(true);
       return;
@@ -276,11 +259,7 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
         keyboardShouldPersistTaps={"handled"}
         showsVerticalScrollIndicator={false}
         enableOnAndroid={true}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+        contentContainerStyle={styles.container}>
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
             Complete your account setup.
@@ -377,11 +356,11 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
                 try {
                   const jsonValue = await AsyncStorage.getItem("lawyerPayload");
                   const lawfirmPayload = await AsyncStorage.getItem(
-                    "lawfirmPayload"
+                    "lawfirmPayload",
                   );
 
                   const previousPath = await AsyncStorage.getItem(
-                    "previousPath"
+                    "previousPath",
                   );
 
                   if (previousPath === "lawfirm") {
@@ -421,8 +400,8 @@ const AuthGetStarted = ({ navigation, route }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   wrapper: {
     flex: 1,
@@ -439,14 +418,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(19),
     width: wpercent("90%"),
   },
-  city: {
-    width: wp(334),
-    borderColor: COLORS.light.textinputborder,
-    borderWidth: 0.5,
-    borderRadius: 4,
-    height: wp(40),
-    paddingRight: wp(4),
-  },
+
   signUpText: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
@@ -480,11 +452,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(4),
     marginTop: hp(12),
   },
-  codeText: {
-    fontFamily: "Roboto-Medium",
-    color: COLORS.light.black,
-    fontSize: wp(12),
-  },
+
   plButton: {
     marginTop: hp(31),
   },

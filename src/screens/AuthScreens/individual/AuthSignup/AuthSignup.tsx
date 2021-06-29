@@ -1,52 +1,35 @@
-import React, { useState } from "react";
-import { View, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import React, {useState} from "react";
+import {View, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
-import { Input } from "@ui-kitten/components";
+import {wp, hp} from "utils/Dimensions";
+import {Input} from "@ui-kitten/components";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import PLButton from "components/PLButton/PLButton.component";
+import {Entypo} from "@expo/vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "types";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import {CountryCode, Country} from "types";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
 import * as Animatable from "react-native-animatable";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IndividualSignUpInterface } from "navigation/interfaces";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {IndividualSignUpInterface} from "navigation/interfaces";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
-import { styles } from "./style";
+import {styles} from "./style";
 
 type Props = StackScreenProps<
   RootStackParamList,
   ROUTES.AUTH_GET_STARTED_SCREEN
 >;
 
-const useInputState = (initialValue = "") => {
-  const [value, setValue] = React.useState(initialValue);
-  return { value, onChangeText: setValue };
-};
-
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   //--> country component info
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
-  const [country, setCountry] = useState<Country>();
-  const [withCountryNameButton, setWithCountryNameButton] =
-    useState<boolean>(false);
-  const [callingCode, setCallingCode] = useState<CallingCode[]>(["234"]);
-
-  const [withFlag, setWithFlag] = useState<boolean>(true);
-  const [withEmoji, setWithEmoji] = useState<boolean>(true);
-  const [withFilter, setWithFilter] = useState<boolean>(true);
-  const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(true);
-  const [withCallingCode, setWithCallingCode] = useState<boolean>(true);
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
-    setCountry(country);
-    setCallingCode(country.callingCode);
   };
 
   //--> state values
@@ -76,7 +59,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   //--> creating payload and saving to async
   const onClick = () => {
-    const Payload = {
+    const Payload: IndividualSignUpInterface = {
       email: email,
       firstName: firstName,
       lastName: lastName,
@@ -84,7 +67,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
     };
 
     //-->  saving payload to local staorage
-    const storeData = async (Payload: IndividualSignUpInterface) => {
+    const storeData = async () => {
       try {
         await AsyncStorage.setItem("@signup_payload", JSON.stringify(Payload));
         await AsyncStorage.setItem("@email", email);
@@ -94,7 +77,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       }
     };
 
-    storeData(Payload);
+    storeData();
   };
 
   return (
@@ -114,11 +97,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps={"handled"}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+        contentContainerStyle={styles.contentContainerStyle}>
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <View style={styles.TextWrapper}>
             <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
@@ -159,23 +138,21 @@ const AuthGetStarted = ({ navigation }: Props) => {
             <Text style={styles.inputText}>
               Phone Number <Text style={styles.required}>*</Text>
             </Text>
-            {/* <PLPhoneNumber /> */}
 
             <View style={styles.phoneNumberWrapper}>
               <View style={styles.countryPickerWrapper}>
                 <CountryPicker
                   {...{
                     countryCode,
-                    withFilter,
-                    withFlag,
-                    withCountryNameButton,
-                    withAlphaFilter,
-                    withCallingCode,
-                    withEmoji,
+                    withFilter: true,
+                    withFlag: true,
+                    withCountryNameButton: false,
+                    withAlphaFilter: true,
+                    withCallingCode: true,
+                    withEmoji: true,
                     onSelect,
                   }}
                 />
-                {/* <Text style={styles.codeText}>+{callingCode}</Text> */}
               </View>
 
               <Input

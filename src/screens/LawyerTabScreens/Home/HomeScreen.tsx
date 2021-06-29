@@ -1,91 +1,59 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import {StackScreenProps} from "@react-navigation/stack";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
-import { HomeStackParamList } from "navigation/HomeStack";
-import { ROUTES } from "navigation/Routes";
-import React, { useState } from "react";
+import {HomeStackParamList} from "navigation/LawyerStackScreens/HomeStack";
+import {ROUTES} from "navigation/Routes";
+import React, {useState} from "react";
 import {
   SafeAreaView,
   ScrollView,
   Text,
   View,
-  Image,
   TouchableOpacity,
   FlatList,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import CONSTANTS from "utils/Constants";
-import { hp, wp } from "utils/Dimensions";
-import { Category, Service } from "database/DBData";
+import {hp, wp} from "utils/Dimensions";
+import {Category} from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
 import styles from "./homeStyles";
-import { CategoryDb } from "database/CategoryDb";
-import { LawyerModel } from "models/Interfaces";
-import { useScrollToTop } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {CategoryDb} from "database/CategoryDb";
+import {LawyerModel} from "models/Interfaces";
+import {useScrollToTop} from "@react-navigation/native";
 
 //--> REDUX
-import { useAppSelector, useAppDispatch } from "redux/hooks";
-import PLButton from "components/PLButton/PLButton";
+import {useAppSelector, useAppDispatch} from "redux/hooks";
+import PLButton from "components/PLButton/PLButton.component";
 import COLORS from "utils/Colors";
-import { getUser } from "redux/actions";
+import {getUser} from "redux/actions";
+import {RectangularSkeleton} from "components/PLSkeleton/PLSkeleton.component";
+import {Avatar} from "react-native-elements";
 import {
-  CircularSkeleton,
-  RectangularSkeleton,
-} from "components/PLSkeleton/PLSkeleton";
+  capitalizeFirstLetter,
+  getFirstLetterFromName,
+} from "../Account/UpdateProfile/utilsFn";
 
-type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
+type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
-const HomeScreen = ({ navigation }: Props) => {
+const HomeScreen = ({navigation}: Props) => {
   const [category, setCategory] = React.useState<Category[]>([]);
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
-  const [user, setUser] = React.useState("");
-  const [time, setTime] = React.useState("");
-
-  const [search, setSearch] = useState<string>("");
-  const [focus, setFocus] = useState<boolean>(false);
+  const time = React.useRef("");
+  const [profileImage, setProfileImage] = useState("abc.jpg");
 
   const [isCategoryLoading, setIsCategoryLoading] = React.useState(true);
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
 
-  const data = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
+  const {user_, metaData} = userData;
 
+  console.log(user_);
+  const dispatch = useAppDispatch();
   const ref = React.useRef<ScrollView | null>(null);
 
   useScrollToTop(ref);
-
-  console.log(data);
-
-  //--> Route redirects...
-  React.useLayoutEffect(() => {
-    (async () => {
-      const catRoute = await AsyncStorageUtil.getGotoPickLawyer();
-      const checkoutRoute = await AsyncStorageUtil.getGotoCheckout();
-
-      if (catRoute != null && catRoute != "") {
-        const service: Service = JSON.parse(catRoute);
-        AsyncStorageUtil.setGotoPickLawyer("");
-        navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-          category: CategoryDb.findByCode({
-            catCode: service.categoryCode,
-          }),
-          service: service,
-        });
-      } else if (checkoutRoute != null && checkoutRoute != "") {
-        const service: Service = JSON.parse(checkoutRoute);
-        AsyncStorageUtil.setGotoCheckout("");
-        navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-          category: CategoryDb.findByCode({
-            catCode: service.categoryCode,
-          }),
-          service: service,
-        });
-      }
-    })();
-  });
 
   //--> get the time of the day
   const getTimePeriod = () => {
@@ -93,34 +61,43 @@ const HomeScreen = ({ navigation }: Props) => {
     const curHr = today.getHours();
 
     if (curHr < 12) {
-      setTime("Good morning");
+      time.current = "Good morning";
     } else if (curHr < 18) {
-      setTime("Good afternoon");
+      time.current = "Good afternoon";
     } else {
-      setTime("Good evening");
+      time.current = "Good evening";
     }
   };
 
-  //--> capitalize the first letter of the name
-  const capitalizeFirstLetter = (name: string) => {
-    const lower = name?.toLowerCase();
-    return name?.charAt(0).toUpperCase() + lower?.slice(1);
-  };
   //-->Get User's Categories
   React.useEffect(() => {
     getTimePeriod();
     getCategories();
   }, []);
+
+  React.useEffect(() => {
+    if (typeof metaData === "undefined") {
+      return;
+    }
+    setAvatar();
+  }, [metaData]);
+
+  const setAvatar = () => {
+    if (metaData?.length !== 0) {
+      setProfileImage(metaData[metaData?.length - 1]?.value);
+    } else {
+      setProfileImage("abc.jpg");
+    }
+  };
+
   const getCategories = async () => {
     setIsCategoryLoading(true);
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
-      const name = await AsyncStorage.getItem("firstName");
-      const firstname = capitalizeFirstLetter(name ? name : "");
-      setUser(firstname ? firstname : "");
+      dispatch(getUser({userID: Number(userID)}));
       const getCats = await axiosClient.get(
-        `Category/GetUserCategories/${userID}`
+        `Category/GetUserCategories/${userID}`,
       );
       if (getCats != null && getCats?.data?.data?.length != 0) {
         const cats: Category[] = getCats?.data?.data;
@@ -140,13 +117,13 @@ const HomeScreen = ({ navigation }: Props) => {
   const getLawyers = async () => {
     if (category == null) return;
     const catCodes = category.map((item) => {
-      return { CategoryCode: item.categoryCode };
+      return {CategoryCode: item.categoryCode};
     });
 
     try {
-      const { data } = await axiosClient.post(
+      const {data} = await axiosClient.post(
         "Category/GetSPUserCategories",
-        catCodes
+        catCodes,
       );
 
       if (data != null) {
@@ -163,79 +140,65 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <View style={[styles.container, { flexGrow: 1 }]}>
+        <View style={[styles.container, {flexGrow: 1}]}>
           <View style={styles.header}>
             <View style={styles.headerTitleWrapper}>
-              <Text style={globalStyles.H1Style}>Hi {user} 👋🏼</Text>
+              <Text style={globalStyles.H1Style}>
+                Hi &nbsp;
+                {capitalizeFirstLetter(
+                  user_ && user_?.firstName
+                    ? user_?.firstName
+                    : user_?.company?.contactFirstName,
+                )}
+                &nbsp;👋🏼
+              </Text>
               <Text style={styles.greeting}>
-                {time}, here are your available services
+                Here are your available services
               </Text>
             </View>
-            <Image source={{ uri: CONSTANTS.user }} style={styles.user} />
+            <Avatar
+              titleStyle={{
+                fontFamily: "Roboto-Medium",
+                fontSize: wp(14),
+                color: COLORS.light.white,
+              }}
+              containerStyle={styles.user}
+              size="medium"
+              placeholderStyle={{backgroundColor: COLORS.light.primary}}
+              rounded
+              title={`${getFirstLetterFromName(
+                user_ && user_?.firstName
+                  ? user_?.firstName
+                  : user_?.company?.contactFirstName,
+              )} ${getFirstLetterFromName(
+                user_ && user_?.lastName
+                  ? user_?.lastName
+                  : user_?.company?.contactLastName,
+              )}`}
+              source={{
+                uri: `https://${profileImage}`,
+              }}
+              activeOpacity={0}
+              onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE_LAWYER)}
+            />
           </View>
 
           <ServiceSearch />
 
           <ScrollView
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             ref={ref}
             contentContainerStyle={{}}
             keyboardShouldPersistTaps="handled"
             bounces={false}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.titleWithViewMore}>
-              <Text style={globalStyles.H2Style}>Your Categories</Text>
-              <TouchableOpacity
-                onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}
-              >
-                <Text style={styles.viewMore}>View all</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <RectangularSkeleton isLoading={isCategoryLoading} />
-
-              {!isCategoryLoading && (
-                <FlatList
-                  horizontal={true}
-                  data={category}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <CategoryCard
-                      category={item}
-                      onClick={() =>
-                        navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
-                          category: item,
-                        })
-                      }
-                    />
-                  )}
-                />
-              )}
-            </View>
+            showsVerticalScrollIndicator={false}>
             <Text
               style={[
                 globalStyles.H2Style,
-                { marginTop: hp(22), marginBottom: hp(6) },
-              ]}
-            >
+                {marginTop: hp(10), marginBottom: hp(6)},
+              ]}>
               Top Findings
             </Text>
-
-            {/* <PLButton
-            style={{ width: "100%" }}
-            textColor={COLORS.light.white}
-            btnText={"Next"}
-            onClick={() => {
-              dispatch(getUser({ userID: 12 }));
-            }}
-          /> */}
 
             <Text style={styles.topFindingSubtitle}>
               Based on selected categories
@@ -252,13 +215,46 @@ const HomeScreen = ({ navigation }: Props) => {
                 <TopFindingsCard />
                 <TopFindingsCard />
                 <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
               </>
             )}
+
+            <View style={styles.titleWithViewMore}>
+              <Text style={globalStyles.H2Style}>Your Categories</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER)
+                }>
+                {!isCategoryLoading && (
+                  <Text style={styles.viewMore}>View all</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}>
+              <RectangularSkeleton isLoading={isCategoryLoading} />
+
+              {!isCategoryLoading && (
+                <FlatList
+                  horizontal={true}
+                  data={category}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => (
+                    <CategoryCard
+                      category={item}
+                      onClick={() =>
+                        navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER, {
+                          category: item,
+                        })
+                      }
+                    />
+                  )}
+                />
+              )}
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>
