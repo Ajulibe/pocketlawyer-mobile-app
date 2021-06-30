@@ -6,9 +6,17 @@ import {
 import {ROUTES} from "./Routes";
 import COLORS from "../utils/Colors";
 import HistoryScreen from "../screens/TabScreens/History/HistoryScreen";
+import { LawyerModel } from "models/Interfaces";
+import { Service } from "database/DBData";
 
 export type HistoryStackParamList = {
   [ROUTES.HISTORY_SCREEN]: undefined;
+  [ROUTES.CHECKOUT_SCREEN]: {
+    lawyer: LawyerModel;
+    service: Service;
+    serviceHistoryID: number | string;
+    amount: number;
+  };
 };
 
 const HistoryStack = createStackNavigator<HistoryStackParamList>();

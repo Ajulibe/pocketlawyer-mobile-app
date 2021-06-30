@@ -5,8 +5,6 @@ import React from "react";
 import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
 import {confirmUpload, transformMeta} from "services/UploadDocsService";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {wp} from "utils/Dimensions";
 import LoadingSpinner from "components/LoadingSpinner/index.component";
 import {BottomSheetProps} from "../../../BottomSheetUtils/BottomSheetProps";
 import {validateInputs, showError} from "../../../BottomSheetUtils/FormHelpers";
@@ -20,6 +18,7 @@ import {
   pickFile,
   uploadFileToS3,
 } from "services/S3FileUploadHelper";
+import ModalFormLabel from "../../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
   name1: "ProposedName1",
@@ -101,12 +100,11 @@ export function TrusteeRegistration(props: Props) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <KeyboardAwareScrollView>
+      <ScrollView>
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
-        <Text style={modalFormstyles.inputLabel}>
-          Proposed Name 1<Text style={modalFormstyles.required}>*</Text>
-        </Text>
+
+        <ModalFormLabel text="Proposed Name 1" giveMargin={false} />
         <Input
           placeholder="Type business name 1"
           errorText={formData?.[FormKeys.name1]?.error}
@@ -114,10 +112,7 @@ export function TrusteeRegistration(props: Props) {
             handleTextChange({field: FormKeys.name1, value: text});
           }}
         />
-        <View style={{height: 16}} />
-        <Text style={modalFormstyles.inputLabel}>
-          Proposed Name 2<Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="Proposed Name 2" />
         <Input
           placeholder="Type business name 2"
           errorText={formData?.[FormKeys.name2]?.error}
@@ -125,25 +120,27 @@ export function TrusteeRegistration(props: Props) {
             handleTextChange({field: FormKeys.name2, value: text});
           }}
         />
-        <View style={{height: 16}} />
-        <Text style={modalFormstyles.inputLabel}>
-          First Publication
-          <Text style={modalFormstyles.required}>*</Text>
-        </Text>
+        <ModalFormLabel text="First Publication" />
         <Input
           placeholder=""
           errorText={formData?.[FormKeys.firstPub]?.error}
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={3}
           onChangeText={(text: string) => {
             handleTextChange({field: FormKeys.firstPub, value: text});
           }}
         />
-        <View style={{height: 16}} />
-        <Text style={modalFormstyles.inputLabel}>
-          Company Seal
-          <Text style={modalFormstyles.required}> *</Text>
-        </Text>
+        <ModalFormLabel text="Second Publication" />
+        <Input
+          placeholder=""
+          errorText={formData?.[FormKeys.secondPub]?.error}
+          multiline={true}
+          numberOfLines={3}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.secondPub, value: text});
+          }}
+        />
+        <ModalFormLabel text="Company Seal" />
         <Input
           onPress={() => uploadFile(FormKeys.comapanySeal)}
           errorText={formData?.[FormKeys.comapanySeal]?.error}
@@ -152,7 +149,7 @@ export function TrusteeRegistration(props: Props) {
           }
           icon
         />
-      </KeyboardAwareScrollView>
+      </ScrollView>
       <View style={{height: 16}} />
       <CustomButton btnText="Next" onClick={submit} />
     </View>

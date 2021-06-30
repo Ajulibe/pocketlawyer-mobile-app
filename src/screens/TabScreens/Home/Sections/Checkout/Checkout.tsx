@@ -11,6 +11,7 @@ import PaystackWebView from "components/PaystackSDK/index";
 import {
   Image,
   KeyboardAvoidingView,
+  LogBox,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -40,11 +41,13 @@ import {
 } from "../BottomSheet/BottomSheetUtils/LoadingReducer";
 import LoadingSpinner from "components/LoadingSpinner/index.component";
 import {CommonActions} from "@react-navigation/routers";
+import {RootStackParamList} from "navigation/MainNavigator";
 
-type Props = StackScreenProps<HomeStackParamList, ROUTES.CHECKOUT_SCREEN>;
+type Props = StackScreenProps<RootStackParamList, ROUTES.CHECKOUT_SCREEN>;
 
 const Checkout = ({navigation, route}: Props) => {
   const [showModal, setshowModal] = useState(false);
+  const [userEmail, setUserEmail] = useState("pluser@gmail.com");
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState,
@@ -57,6 +60,16 @@ const Checkout = ({navigation, route}: Props) => {
 
   //--> lawyer details
   const {name, address} = lawyer;
+  //--> User Details
+  React.useEffect(() => {
+    (async () => {
+      let user: any = await AsyncStorageUtil.getUser();
+      if (user != null) {
+        user = JSON.parse(user);
+        setUserEmail(user?.email);
+      }
+    })();
+  });
 
   const showPaymentModal = () => {
     setshowModal(true);
@@ -95,7 +108,7 @@ const Checkout = ({navigation, route}: Props) => {
     }
     loadingDispatch({type: LoadingActionType.HIDE});
   };
-
+  LogBox.ignoreAllLogs();
   return (
     <>
       <LoadingSpinner
@@ -162,7 +175,7 @@ const Checkout = ({navigation, route}: Props) => {
             showPayButton={false}
             paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
             amount={amount}
-            billingEmail="chinedum412@gmail.com" //change this email to the inidividuals email
+            billingEmail={userEmail} //change this email to the inidividuals email
             billingMobile="0531714677" //change
             billingName="Akachukwu Ajulibe"
             channels={JSON.stringify([

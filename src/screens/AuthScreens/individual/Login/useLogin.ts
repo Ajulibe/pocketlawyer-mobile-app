@@ -80,6 +80,13 @@ export const useLogin = (navigation: any) => {
           }),
         );
       }
+      // await AsyncStorageUtil.setUser(JSON.stringify(data?.data?.user_));
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{ name: ROUTES.TABSCREEN_STACK }],
+      //   })
+      // );
     } catch (error: any) {
       setIsLoading(false);
       const {message} = error?.response.data;

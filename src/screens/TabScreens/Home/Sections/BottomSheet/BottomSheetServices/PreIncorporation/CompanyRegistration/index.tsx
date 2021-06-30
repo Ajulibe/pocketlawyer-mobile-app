@@ -67,15 +67,15 @@ export function CompanyRegistration(props: BottomSheetProps) {
       ref={ref}
       style={{ flex: 1 }}
       initialPage={0}
-      showPageIndicator={true}
+      showPageIndicator={false}
       pageMargin={8}
-      scrollEnabled={true}
+      scrollEnabled={false}
       orientation="horizontal"
     >
       <CompReg
         key="1"
         {...props}
-        formTitle={"Company Registration"}
+        formTitle={"Company Registration(1/3)"}
         subTitle={"Please fill the form with your proposed business details"}
         onSubmit={(meta) => {
           setFormData1(meta);
@@ -85,7 +85,7 @@ export function CompanyRegistration(props: BottomSheetProps) {
       <DirectorsInfo
         key="2"
         {...props}
-        formTitle={"Director’s Information"}
+        formTitle={"Director’s Information(2/3)"}
         subTitle={"Add a minimum of two people and a maximum of ten"}
         onSubmit={(meta) => {
           setFormData2(meta);
@@ -95,7 +95,7 @@ export function CompanyRegistration(props: BottomSheetProps) {
       <ShareholdersInfo
         key="3"
         {...props}
-        formTitle={"Shareholder’s Information"}
+        formTitle={"Shareholder’s Information(3/3)"}
         subTitle={"Add a minimum of two people and a maximum of thirty"}
         onSubmit={(meta) => {
           //--> Pass meta to submit because use state would take time to take effect

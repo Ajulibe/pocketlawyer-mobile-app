@@ -32,6 +32,7 @@ import {
 } from "../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
 import {meansOfIdentification} from "../../BottomSheetUtils/FormStaticData";
+import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
   name1: "BuisnessNameOne",
@@ -147,10 +148,8 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details
           </Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Proposed Business Name 1{" "}
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+
+          <ModalFormLabel text="Proposed Business Name 1" giveMargin={false} />
           <Input
             placeholder="Type business name 1"
             errorText={formData?.[FormKeys.name1]?.error}
@@ -158,11 +157,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
               handleTextChange({field: FormKeys.name1, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Proposed Business Name 2{" "}
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Proposed Business Name 2" />
           <Input
             placeholder="Type business name 2"
             errorText={formData?.[FormKeys.name2]?.error}
@@ -170,10 +165,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
               handleTextChange({field: FormKeys.name2, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Nature of Business <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Nature of Business" />
           <Input
             placeholder="Type the business nature"
             errorText={formData?.[FormKeys.nature]?.error}
@@ -181,11 +173,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
               handleTextChange({field: FormKeys.nature, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Means of Identification
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Means of Identification" />
           <PickerInput
             data={meansOfIdentification}
             errorText={formData?.[FormKeys.meansOfId]?.error}
@@ -198,11 +186,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             }}
           />
 
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            ID Number
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="ID Number" />
           <Input
             placeholder="Type identification number"
             errorText={formData?.[FormKeys.idNo]?.error}
@@ -210,11 +194,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
               handleTextChange({field: FormKeys.idNo, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Signature
-            <Text style={modalFormstyles.required}> *</Text>
-          </Text>
+          <ModalFormLabel text="Signature" />
           <Input
             onPress={() => uploadFile(FormKeys.signature)}
             errorText={formData?.[FormKeys.signature]?.error}

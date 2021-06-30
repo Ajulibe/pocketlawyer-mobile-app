@@ -154,11 +154,10 @@ const AuthGetStarted = ({navigation}: Props) => {
       const {firstName} = data.data;
 
       //--> setting the received token in local storage
-
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
-      await AsyncStorageUtil.setUser(JSON.stringify(data));
+      await AsyncStorageUtil.setUser(JSON.stringify(data?.data));
       await AsyncStorage.setItem("firstName", firstName);
 
       setTimeout(() => {

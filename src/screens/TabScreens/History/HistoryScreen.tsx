@@ -2,6 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
+import { HistoryStackParamList } from "navigation/HistoryStack";
 import { ROUTES } from "navigation/Routes";
 import React, { useState } from "react";
 import {
@@ -22,7 +23,7 @@ import HistoryListTile from "./Components/HistoryListTile";
 import { useScrollToTop } from "@react-navigation/native";
 
 // type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
-type Props = StackScreenProps<any>;
+type Props = StackScreenProps<HistoryStackParamList, ROUTES.HISTORY_SCREEN>;
 export interface ServiceHistoryInterface {
   serviceHistoryID: number;
   tempServiceHistoryID: number;
@@ -70,6 +71,15 @@ const HistoryScreen = ({ navigation }: Props) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const gotoCheckout = () => {
+    // navigation.navigate(ROUTES.CHECKOUT_SCREEN, {
+    //   amount:21,
+    //   lawyer:sdsd,
+    //   service:sdsds,
+    //   serviceHistoryID:sdsdsd,
+    // })
   };
   const CategoryHeader = () => (
     <>

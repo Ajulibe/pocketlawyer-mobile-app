@@ -1,50 +1,49 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {createStackNavigator} from "@react-navigation/stack";
-import AuthSplashScreen from "../screens/AuthScreens/AuthSplashScreen";
-import AuthGetStartedScreen from "../screens/AuthScreens/AuthGetStarted";
-import AuthBlankScreen from "../screens/AuthScreens/AuthBlankScreen";
-import AuthLoginCategorySelector from "../screens/AuthScreens/individual/AuthLoginCategorySelector";
-import AuthSelectCategory from "../screens/AuthScreens/individual/AuthSelectCategory";
-import PickLawyer from "../screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
+import AuthSplashScreen from "screens/AuthScreens/AuthSplashScreen";
+import AuthGetStartedScreen from "screens/AuthScreens/AuthGetStarted";
+import AuthBlankScreen from "screens/AuthScreens/AuthBlankScreen";
+import AuthLoginCategorySelector from "screens/AuthScreens/individual/AuthLoginCategorySelector";
+import AuthSelectCategory from "screens/AuthScreens/individual/AuthSelectCategory";
+import PickLawyer from "screens/TabScreens/Home/Sections/PickLawyer/PickLawyer";
 
 //INDIVIDUAL
-import AuthSignUp from "../screens/AuthScreens/individual/AuthSignup/AuthSignup";
-import AuthSignupSectionTwo from "../screens/AuthScreens/individual/AuthSignupSectionTwo";
-import AuthLogin from "../screens/AuthScreens/individual/Login/AuthLogin";
-import AuthValidateEmail from "../screens/AuthScreens/individual/ValidateEmail";
+import AuthSignUp from "screens/AuthScreens/individual/AuthSignup/AuthSignup";
+import AuthSignupSectionTwo from "screens/AuthScreens/individual/AuthSignupSectionTwo";
+import AuthLogin from "screens/AuthScreens/individual/Login/AuthLogin";
+import AuthValidateEmail from "screens/AuthScreens/individual/ValidateEmail";
 
 //SME
-import AuthSignUpSme from "../screens/AuthScreens/sme/AuthSignup";
-import AuthSignupSectionTwoSme from "../screens/AuthScreens/sme/AuthSignupSectionTwo";
-import AuthLoginSme from "../screens/AuthScreens/sme/AuthLogin";
-import AuthValidateEmailSme from "../screens/AuthScreens/sme/ValidateEmail";
-import CongratSme from "../screens/AuthScreens/sme/Congrats";
+import AuthSignUpSme from "screens/AuthScreens/sme/AuthSignup";
+import AuthSignupSectionTwoSme from "screens/AuthScreens/sme/AuthSignupSectionTwo";
+import AuthLoginSme from "screens/AuthScreens/sme/AuthLogin";
+import AuthValidateEmailSme from "screens/AuthScreens/sme/ValidateEmail";
+import CongratSme from "screens/AuthScreens/sme/Congrats";
 
 //SERVICE PROVIDER
-import ServiceProviderCategory from "../screens/AuthScreens/serviceprovider/AuthSelectCategory";
-import AuthSignUpLawyer from "../screens/AuthScreens/serviceprovider/lawyer/AuthSignup";
-import AuthSignUpLawyerSectionTwo from "../screens/AuthScreens/serviceprovider/lawyer/AuthSignupSectionTwo";
-import AuthPasswordLawyer from "../screens/AuthScreens/serviceprovider/lawyer/AuthLogin";
-import AuthEducationLawyer from "../screens/AuthScreens/serviceprovider/lawyer/EducationDetails";
-import AuthProfileImageLawyer from "../screens/AuthScreens/serviceprovider/lawyer/ProfileImage";
-import LawyerDetail from "../screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
+import ServiceProviderCategory from "screens/AuthScreens/serviceprovider/AuthSelectCategory";
+import AuthSignUpLawyer from "screens/AuthScreens/serviceprovider/lawyer/AuthSignup";
+import AuthSignUpLawyerSectionTwo from "screens/AuthScreens/serviceprovider/lawyer/AuthSignupSectionTwo";
+import AuthPasswordLawyer from "screens/AuthScreens/serviceprovider/lawyer/AuthLogin";
+import AuthEducationLawyer from "screens/AuthScreens/serviceprovider/lawyer/EducationDetails";
+import AuthProfileImageLawyer from "screens/AuthScreens/serviceprovider/lawyer/ProfileImage";
+import LawyerDetail from "screens/TabScreens/Home/Sections/LawyerDetail/LawyerDetail";
 import {LawyerModel} from "models/Interfaces";
+import Checkout from "screens/TabScreens/Home/Sections/Checkout/Checkout";
 
-import AuthLawCategoryLawyer from "../screens/AuthScreens/serviceprovider/lawyer/LawCategory";
-import AuthSignUpSolicitor from "../screens/AuthScreens/serviceprovider/solicitor/AuthSignup";
-import AuthSignUpLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/AuthSignup";
-import AuthSignUpLawFirmSectionTwo from "../screens/AuthScreens/serviceprovider/lawfirm/AuthSignUpSectionTwo";
-import AuthCACLawFirm from "../screens/AuthScreens/serviceprovider/lawfirm/CACDocument";
+import AuthLawCategoryLawyer from "screens/AuthScreens/serviceprovider/lawyer/LawCategory";
+import AuthSignUpSolicitor from "screens/AuthScreens/serviceprovider/solicitor/AuthSignup";
+import AuthSignUpLawFirm from "screens/AuthScreens/serviceprovider/lawfirm/AuthSignup";
+import AuthSignUpLawFirmSectionTwo from "screens/AuthScreens/serviceprovider/lawfirm/AuthSignUpSectionTwo";
+import AuthCACLawFirm from "screens/AuthScreens/serviceprovider/lawfirm/CACDocument";
 
 //TABS SCREENS STACK
 import BottomTabStack from "./BottomTabStack";
 
 //LAWYER TAB/STACK SCREENS
 import LawyerBottomTabStack from "./LawyerTabScreens/BottomTabStack.navigator";
-import LawyerPickLawyer from "../screens/LawyerTabScreens/Home/Sections/PickLawyer/PickLawyer";
-import LawyerLawyerDetail from "../screens/LawyerTabScreens/Home/Sections/LawyerDetail/LawyerDetail";
+import LawyerPickLawyer from "screens/LawyerTabScreens/Home/Sections/PickLawyer/PickLawyer";
+import LawyerLawyerDetail from "screens/LawyerTabScreens/Home/Sections/LawyerDetail/LawyerDetail";
 
 import {ROUTES} from "./Routes";
 import Colors from "utils/Colors";
@@ -100,6 +99,14 @@ export type RootStackParamList = {
     lawyer: LawyerModel;
     category: Category;
     service: Service;
+  };
+
+  //CHECKOUT SCREEN
+  [ROUTES.CHECKOUT_SCREEN]: {
+    lawyer: LawyerModel;
+    service: Service;
+    serviceHistoryID: number | string;
+    amount: number;
   };
 };
 
@@ -280,6 +287,8 @@ export default function MainNavigator() {
         name={ROUTES.LAWYER_DETAIL_SCREEN_LAWYER}
         component={LawyerLawyerDetail}
       />
+      {/* CHECKOUT  */}
+      <MainStack.Screen name={ROUTES.CHECKOUT_SCREEN} component={Checkout} />
     </MainStack.Navigator>
   );
 }

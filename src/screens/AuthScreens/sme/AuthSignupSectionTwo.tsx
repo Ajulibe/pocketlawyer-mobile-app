@@ -137,7 +137,7 @@ const AuthGetStarted = ({navigation}: Props) => {
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
-      await AsyncStorageUtil.setUser(JSON.stringify(data));
+      await AsyncStorageUtil.setUser(JSON.stringify(data?.data));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("firstName", firstName);
 

@@ -5,14 +5,21 @@ import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import { hp, wp } from "utils/Dimensions";
 import StarRating from "react-native-star-rating";
+import { LawyerModel } from "models/Interfaces";
 
-export default function TopFindingsCard() {
+interface Props {
+  lawyer: LawyerModel;
+  onClick: () => void;
+}
+
+export default function TopFindingsCard(props: Props) {
+  const { lawyer } = props;
   return (
     <View style={styles.wrapper}>
       <Image style={styles.user} source={{ uri: CONSTANTS.user }} />
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Omoye Afosa</Text>
-        <Text style={styles.subtitle}>Legal Documents Review</Text>
+        <Text style={styles.title}>{lawyer?.name}</Text>
+        <Text style={styles.subtitle}>{lawyer?.categoryName}</Text>
       </View>
       <View style={styles.trailingWrapper}>
         {/* <Text style={styles.trailingTitle}>N56,000</Text> */}

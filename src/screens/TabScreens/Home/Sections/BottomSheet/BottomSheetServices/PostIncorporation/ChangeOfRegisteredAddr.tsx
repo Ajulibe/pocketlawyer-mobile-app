@@ -30,6 +30,7 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
+import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
   companyName: "CompanyName",
@@ -143,21 +144,15 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details
           </Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Company Name <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Type company name" giveMargin={false} />
           <Input
-            placeholder="Type company name"
+            placeholder=""
             errorText={formData?.[FormKeys.companyName]?.error}
             onChangeText={(text: string) => {
               handleTextChange({field: FormKeys.companyName, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Company Registration Number{" "}
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Company Registration Number" />
           <Input
             placeholder="Type company registration number "
             errorText={formData?.[FormKeys.companyRegNo]?.error}
@@ -165,11 +160,7 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
               handleTextChange({field: FormKeys.companyRegNo, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Means of Identification
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Means of Identification" />
           <Input
             onPress={() => uploadFile(FormKeys.meansOfId)}
             errorText={formData?.[FormKeys.meansOfId]?.error}
@@ -179,11 +170,7 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
             }
             icon
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            New Address of Company
-            <Text style={modalFormstyles.required}> *</Text>
-          </Text>
+          <ModalFormLabel text="New Address of Company" />
           <Input
             placeholder="Type new address of company"
             errorText={formData?.[FormKeys.newAddr]?.error}
@@ -191,11 +178,7 @@ export function ChangeOfRegisteredAddr(props: BottomSheetProps) {
               handleTextChange({field: FormKeys.newAddr, value: text});
             }}
           />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Old Address of Company{" "}
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
+          <ModalFormLabel text="Old Address of Company" />
           <Input
             placeholder="Type old address of company"
             errorText={formData?.[FormKeys.oldAddr]?.error}

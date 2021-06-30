@@ -7,11 +7,11 @@ import {ROUTES} from "./Routes";
 import COLORS from "../utils/Colors";
 import HomeScreen from "../screens/TabScreens/Home/HomeScreen";
 import Checkout from "../screens/TabScreens/Home/Sections/Checkout/Checkout";
+import UpdateImage from "screens/TabScreens/Account/UpdateImage";
 import AllCategory from "../screens/TabScreens/Home/Sections/AllCategory/AllCategory";
 import CatServiceScreen from "../screens/TabScreens/Home/Sections/CatServiceScreen/CatServiceScreen";
 import {Category, Service} from "database/DBData";
 import {LawyerModel} from "models/Interfaces";
-import UpdateImage from "screens/TabScreens/Account/UpdateImage";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN]: undefined;
@@ -78,6 +78,27 @@ export default function HomeNavigationStack() {
         component={UpdateImage}
         options={headerOptions}
       />
+      {/* <HomeStack.Screen
+        name={ROUTES.PICK_LAWYER_SCREEN}
+        component={PickLawyer}
+        options={headerOptions}
+      /> */}
+      {/* 
+      <HomeStack.Screen
+        name={ROUTES.PICK_LAWYER_SCREEN}
+        component={PickLawyerScreen}
+        options={headerOptions}
+      /> */}
+      {/* <HomeStack.Screen
+        name={ROUTES.LAWYER_DETAIL_SCREEN}
+        component={LawyerDetail}
+        options={headerOptions}
+      /> */}
+      {/* <HomeStack.Screen
+        name={ROUTES.CHECKOUT_SCREEN}
+        component={Checkout}
+        options={headerOptions}
+      /> */}
     </HomeStack.Navigator>
   );
 }

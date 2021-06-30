@@ -11,6 +11,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  LogBox,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
@@ -55,34 +56,6 @@ const HomeScreen = ({navigation}: Props) => {
 
   useScrollToTop(ref);
 
-  //--> Route redirects...
-  // React.useLayoutEffect(() => {
-  //   (async () => {
-  //     const catRoute = await AsyncStorageUtil.getGotoPickLawyer();
-  //     const checkoutRoute = await AsyncStorageUtil.getGotoCheckout();
-
-  //     if (catRoute != null && catRoute != "") {
-  //       const service: Service = JSON.parse(catRoute);
-  //       AsyncStorageUtil.setGotoPickLawyer("");
-  //       navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-  //         // category: CategoryDb.findByCode({
-  //         //   catCode: service.categoryCode,
-  //         // }),
-  //         service: service,
-  //       });
-  //     } else if (checkoutRoute != null && checkoutRoute != "") {
-  //       const service: Service = JSON.parse(checkoutRoute);
-  //       AsyncStorageUtil.setGotoCheckout("");
-  //       navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-  //         // category: CategoryDb.findByCode({
-  //         //   catCode: service.categoryCode,
-  //         // }),
-  //         service: service,
-  //       });
-  //     }
-  //   })();
-  // });
-
   //--> get the time of the day
   const getTimePeriod = () => {
     const today = new Date();
@@ -101,6 +74,7 @@ const HomeScreen = ({navigation}: Props) => {
   React.useEffect(() => {
     getTimePeriod();
     getCategories();
+    // getUserDetails();
   }, []);
 
   React.useEffect(() => {
@@ -153,7 +127,7 @@ const HomeScreen = ({navigation}: Props) => {
         "Category/GetSPUserCategories",
         catCodes,
       );
-
+      console.log(data);
       if (data != null) {
         const lawyers: LawyerModel[] = data?.data;
 
@@ -165,6 +139,7 @@ const HomeScreen = ({navigation}: Props) => {
     } catch (error) {}
   };
 
+  LogBox.ignoreAllLogs();
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -276,14 +251,29 @@ const HomeScreen = ({navigation}: Props) => {
               </>
             ) : (
               <>
+                {/* <TopFindingsCard />
                 <TopFindingsCard />
                 <TopFindingsCard />
                 <TopFindingsCard />
                 <TopFindingsCard />
                 <TopFindingsCard />
                 <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
+                <TopFindingsCard /> */}
+                <FlatList
+                  data={lawyers}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => (
+                    <TopFindingsCard
+                      lawyer={item}
+                      onClick={() => {
+                        // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                        //   category: item,
+                        // });
+                      }}
+                    />
+                  )}
+                />
               </>
             )}
           </ScrollView>
