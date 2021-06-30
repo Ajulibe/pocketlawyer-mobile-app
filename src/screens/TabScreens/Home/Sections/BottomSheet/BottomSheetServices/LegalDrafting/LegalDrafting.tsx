@@ -1,18 +1,18 @@
 import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { Text, View } from "react-native";
+import {Text, View} from "react-native";
 import modalFormstyles from "../ModalFormStyles";
 import {
   transformMeta,
   addMetadata,
   submitHistory,
 } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../BottomSheetUtils/BottomSheetProps";
 import {
   validateInputs,
   showError,
@@ -24,7 +24,7 @@ import {
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
-import { documentType } from "../../BottomSheetUtils/FormStaticData";
+import {documentType} from "../../BottomSheetUtils/FormStaticData";
 import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
@@ -39,17 +39,17 @@ const OptionalKeys = {
 };
 
 export function LegalDrafting(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId, amount } = props;
+  const {navigation, closeModal, service, lawyer, historyId, amount} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -75,15 +75,15 @@ export function LegalDrafting(props: BottomSheetProps) {
           const formMeta = await transformMeta(
             newData,
             historyId,
-            service.serviceCode
+            service.serviceCode,
           );
 
           loadingDispatch({
             type: LoadingActionType.SHOW_WITH_CONTENT,
-            payload: { content: "Submiting, please wait..." },
+            payload: {content: "Submiting, please wait..."},
           });
           const submit = await addMetadata(formMeta);
-          loadingDispatch({ type: LoadingActionType.HIDE });
+          loadingDispatch({type: LoadingActionType.HIDE});
           if (submit === 200) {
             //--> Submit Service
             try {
@@ -110,7 +110,7 @@ export function LegalDrafting(props: BottomSheetProps) {
           }
         }
       },
-      OptionalKeys
+      OptionalKeys,
     );
   };
 
@@ -134,13 +134,13 @@ export function LegalDrafting(props: BottomSheetProps) {
             formData?.[FormKeys.documentType]?.value ?? "Select document type"
           }
           onSelectChange={(text: string) => {
-            handleTextChange({ field: FormKeys.documentType, value: text });
+            handleTextChange({field: FormKeys.documentType, value: text});
           }}
         />
         {/* Show Others input field if others is selected */}
         {formData?.[FormKeys.documentType]?.value === "Others" && (
           <>
-            <View style={{ height: 8 }} />
+            <View style={{height: 8}} />
             <Input
               placeholder="Type document type"
               errorText={formData?.[FormKeys.otherDocumentType]?.error}
@@ -158,7 +158,7 @@ export function LegalDrafting(props: BottomSheetProps) {
           placeholder="Type parties involved"
           errorText={formData?.[FormKeys.involvedParty]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.involvedParty, value: text });
+            handleTextChange({field: FormKeys.involvedParty, value: text});
           }}
         />
         <ModalFormLabel text="Document Highlights" />
@@ -168,11 +168,11 @@ export function LegalDrafting(props: BottomSheetProps) {
           multiline={true}
           numberOfLines={3}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.docHighlight, value: text });
+            handleTextChange({field: FormKeys.docHighlight, value: text});
           }}
         />
       </KeyboardAwareScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );

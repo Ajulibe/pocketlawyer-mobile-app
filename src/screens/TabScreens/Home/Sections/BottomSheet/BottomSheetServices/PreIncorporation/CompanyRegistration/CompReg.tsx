@@ -2,23 +2,20 @@ import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
-import { transformMeta } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../../BottomSheetUtils/BottomSheetProps";
-import {
-  validateInputs,
-  showError,
-} from "../../../BottomSheetUtils/FormHelpers";
+import {transformMeta} from "services/UploadDocsService";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../../BottomSheetUtils/BottomSheetProps";
+import {validateInputs, showError} from "../../../BottomSheetUtils/FormHelpers";
 import {
   loadingReducer,
   loadingInitialState,
 } from "../../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
-import { shareCapital } from "../../../BottomSheetUtils/FormStaticData";
+import {shareCapital} from "../../../BottomSheetUtils/FormStaticData";
 import ModalFormLabel from "../../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
@@ -34,17 +31,17 @@ interface Props extends BottomSheetProps {
 }
 
 export function CompReg(props: Props) {
-  const { formTitle, service, subTitle, historyId } = props;
+  const {formTitle, service, subTitle, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -58,7 +55,7 @@ export function CompReg(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         props.onSubmit(formMeta);
@@ -81,7 +78,7 @@ export function CompReg(props: Props) {
           placeholder="Type business name 1"
           errorText={formData?.[FormKeys.name1]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.name1, value: text });
+            handleTextChange({field: FormKeys.name1, value: text});
           }}
         />
         <ModalFormLabel text="Proposed Business Name 2" />
@@ -89,7 +86,7 @@ export function CompReg(props: Props) {
           placeholder="Type business name 2"
           errorText={formData?.[FormKeys.name2]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.name2, value: text });
+            handleTextChange({field: FormKeys.name2, value: text});
           }}
         />
         <ModalFormLabel text="Brief Description of Business" />
@@ -99,7 +96,7 @@ export function CompReg(props: Props) {
           multiline={true}
           numberOfLines={3}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.desc, value: text });
+            handleTextChange({field: FormKeys.desc, value: text});
           }}
         />
         <ModalFormLabel text="Proposed Share Capital" />
@@ -111,11 +108,11 @@ export function CompReg(props: Props) {
             "Select your shared capital"
           }
           onSelectChange={(text: string) => {
-            handleTextChange({ field: FormKeys.shareCapital, value: text });
+            handleTextChange({field: FormKeys.shareCapital, value: text});
           }}
         />
       </KeyboardAwareScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Next" onClick={submit} />
     </View>
   );

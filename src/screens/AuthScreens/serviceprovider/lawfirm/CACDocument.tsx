@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   View,
   StyleSheet,
@@ -8,25 +8,25 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "components/PLModal";
-import { states } from "utils/nigerianStates";
-import { Picker, Form, Icon } from "native-base";
-import { Entypo } from "@expo/vector-icons";
+import PLButton from "components/PLButton/PLButton.component";
+import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {PLModal} from "components/PLModal/index.component";
+import {states} from "utils/nigerianStates";
+import {Picker, Form, Icon} from "native-base";
+import {Entypo} from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
-import { FontAwesome } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { AntDesign } from "@expo/vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
+
+import {AntDesign} from "@expo/vector-icons";
 import globalStyles from "css/GlobalCss";
 import {
   DocUploadInterface,
@@ -38,26 +38,23 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/LoadingReducer";
-import { showError } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
-import LoadingSpinner from "components/LoadingSpinner";
-import { confirmUpload } from "services/UploadDocsService";
+import {showError} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {confirmUpload} from "services/UploadDocsService";
 import * as FileSystem from "expo-file-system";
-import PDFReader from "rn-pdf-reader-js";
+
 import * as Animatable from "react-native-animatable";
-import axiosClient from "utils/axiosClient";
-import AsyncStorageUtil from "utils/AsyncStorageUtil";
-import Colors from "constants/Colors";
 
 type Props = StackScreenProps<
   RootStackParamList,
   ROUTES.AUTH_SIGN_UP_SECTION_TWO
 >;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [visible, setVisible] = React.useState(false);
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
 
   const [CAC, setCAC] = useState("");
@@ -83,7 +80,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       const pickedFile = await pickFile();
       if (pickedFile != null) {
         //--> extra formatting on the picked file
-        let { name, size, uri } = pickedFile;
+        let {name, size, uri} = pickedFile;
 
         let nameParts = name.split(".");
         let fileType = nameParts[nameParts.length - 1];
@@ -93,7 +90,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Uploading file..." },
+          payload: {content: "Uploading file..."},
         });
         const upload = await uploadFileToS3(payload, pickedFile);
 
@@ -102,12 +99,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
         } else {
           const confirm = await confirmUpload(upload);
 
-          loadingDispatch({ type: LoadingActionType.HIDE });
+          loadingDispatch({type: LoadingActionType.HIDE});
           if (confirm == null || confirm?.url == null) {
             showError("Error occured while uploading, try again...");
           } else {
             setCAC(name);
-            handleTextChange({ field: field, value: confirm?.url });
+            handleTextChange({field: field, value: confirm?.url});
           }
         }
       }
@@ -138,8 +135,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             onPress={() => {
               uploadFile("CompanyAgreement");
             }}
-            style={styles.inputButton}
-          >
+            style={styles.inputButton}>
             <AntDesign
               name="filetext1"
               size={24}
@@ -162,16 +158,14 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 borderColor: COLORS.light.imageinputborder,
                 backgroundColor: COLORS.light.splashscreenbg,
                 padding: 10,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   color: COLORS.light.primary,
                   fontSize: wp(15),
                   fontFamily: "Roboto-Medium",
                   marginBottom: hp(10),
-                }}
-              >
+                }}>
                 Selected File
               </Text>
               <Text>{CAC}</Text>
@@ -401,6 +395,6 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
-function handleTextChange(arg0: { field: string; value: any }) {
+function handleTextChange(arg0: {field: string; value: any}) {
   throw new Error("Function not implemented.");
 }

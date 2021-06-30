@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../../navigation/MainNavigator";
-import { ROUTES } from "../../../../navigation/Routes";
+import React, {useState} from "react";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "../../../../navigation/MainNavigator";
+import {ROUTES} from "../../../../navigation/Routes";
 import COLORS from "../../../../utils/Colors";
-import { wp, hp } from "../../../../utils/Dimensions";
+import {wp, hp} from "../../../../utils/Dimensions";
 import NavBar from "../../../../components/NavBar";
-import PLButton from "../../../../components/PLButton/PLButton";
-import { PLPasswordInput } from "../../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../../components/PLTextInput/PLTextInput";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "../../../../components/PLModal";
+import PLButton from "../../../../components/PLButton/PLButton.component";
+import {PLPasswordInput} from "../../../../components/PLPasswordInput/PLPasswordInput.component";
+import {PLTextInput} from "../../../../components/PLTextInput/PLTextInput.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {PLModal} from "../../../../components/PLModal/index.component";
 
 type Props = StackScreenProps<
   RootStackParamList,
   ROUTES.AUTH_SIGN_UP_SECTION_TWO
 >;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [visible, setVisible] = React.useState(false);
 
   return (
@@ -46,8 +46,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         <PLModal
           onBackdropPress={() => setVisible(false)}
           visible={visible}
-          onPress={() => setVisible(false)}
-        >
+          onPress={() => setVisible(false)}>
           <Text style={styles.resetPasswordText}>Please Enter your Email</Text>
           <PLTextInput
             textContentType="emailAddress"
@@ -76,8 +75,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 fontFamily: "Roboto-Regular",
                 fontSize: wp(11),
                 color: COLORS.light.black,
-              }}
-            >
+              }}>
               By signing up, you agree with the
               <Text style={styles.login}> Terms of services</Text>{" "}
               <Text>and</Text>{" "}

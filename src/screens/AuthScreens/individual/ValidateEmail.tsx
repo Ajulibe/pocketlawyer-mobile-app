@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import React, {useState, useEffect} from "react";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import ActivityIndicatorPage from "components/ActivityIndicator";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import ActivityIndicatorPage from "components/ActivityIndicator/index.component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import globalStyles from "css/GlobalCss";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const ValidateEmail = ({ navigation, route }: Props) => {
+const ValidateEmail = ({navigation, route}: Props) => {
   const [email, setEmail] = useState<any>("");
   //--> Otp state
   const [OTP, setOTP] = useState<string>("");
@@ -76,7 +75,6 @@ const ValidateEmail = ({ navigation, route }: Props) => {
       //--> error reading value
     }
   };
-  console.log(email);
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
@@ -94,7 +92,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
           </Text>
         </View>
 
-        <View style={{ height: wp(130) }}>
+        <View style={{height: wp(130)}}>
           <Text style={styles.inputText}>Code</Text>
           <PLTextInput
             maxLength={6}
@@ -138,8 +136,7 @@ const ValidateEmail = ({ navigation, route }: Props) => {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(ROUTES.AUTH_SIGN_UP);
-            }}
-          >
+            }}>
             <Text style={styles.signUpText}>
               Wrong Email?
               <Text style={styles.login}> Start Over </Text>

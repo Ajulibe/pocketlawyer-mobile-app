@@ -1,34 +1,30 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import React, {useState} from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   Text,
-  KeyboardAvoidingView,
-  Platform,
   ActivityIndicator,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Entypo } from "@expo/vector-icons";
-import * as DocumentPicker from "expo-document-picker";
-import { FontAwesome } from "@expo/vector-icons";
-import { BottomSheet, ListItem } from "react-native-elements";
-import { states } from "utils/nigerianStates";
-import { ScrollView } from "react-native-gesture-handler";
+import PLButton from "components/PLButton/PLButton.component";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {Entypo} from "@expo/vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
+import {BottomSheet, ListItem} from "react-native-elements";
+import {states} from "utils/nigerianStates";
+import {ScrollView} from "react-native-gesture-handler";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
-import axios from "axios";
-import { PLToast } from "components/PLToast";
+import {PLToast} from "components/PLToast/index.component";
 import globalStyles from "css/GlobalCss";
 import {
   DocUploadInterface,
@@ -40,19 +36,18 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/LoadingReducer";
-import { showError } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
-import LoadingSpinner from "components/LoadingSpinner";
-import { confirmUpload } from "services/UploadDocsService";
-import { AntDesign } from "@expo/vector-icons";
+import {showError} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {confirmUpload} from "services/UploadDocsService";
+import {AntDesign} from "@expo/vector-icons";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<
   RootStackParamList,
   ROUTES.AUTH_SIGN_UP_SECTION_TWO
 >;
 
-const AuthGetStarted = ({ navigation }: Props) => {
-  const [visible, setVisible] = React.useState(false);
-
+const AuthGetStarted = ({navigation}: Props) => {
   //--> state  for bottom sheet
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -63,7 +58,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
 
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
 
   //-->  data for bottom sheet
@@ -73,7 +68,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisible(false),
     },
   ];
@@ -82,7 +77,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [school, setSchool] = useState("");
   const [CGPA, setCGPA] = useState("");
   const [Identification, setIdentification] = useState(
-    "Select your means of Identification"
+    "Select your means of Identification",
   );
   const [identificationPlaceholder, setIdentificationPlaceholder] = useState(0);
   const [errors, setErrors] = useState<boolean>(false);
@@ -107,20 +102,20 @@ const AuthGetStarted = ({ navigation }: Props) => {
   const [resumeName, setResumeName] = useState("Select from files");
 
   React.useEffect(() => {
-    const { name, uri, type } = resume[0];
+    const {name, uri, type} = resume[0];
     if (name === "" || uri === "" || type === "") {
       return;
     }
     //--> get the user id from async storage
     AsyncStorage.getItem("userID").then((res) => {
       setUserID(Number(res));
-      const payload: DocUploadUserInfo = {
-        fileName: name,
-        fileType: 1,
-        isfor: "Certificate",
-        contentType: type,
-        userID: Number(res),
-      };
+      // const payload: DocUploadUserInfo = {
+      //   fileName: name,
+      //   fileType: 1,
+      //   isfor: "Certificate",
+      //   contentType: type,
+      //   userID: Number(res),
+      // };
 
       // postDocument(payload);
     });
@@ -136,15 +131,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
       const pickedFile = await pickFile();
       if (pickedFile != null) {
         //--> extra formatting on the picked file
-        let { name, size, uri } = pickedFile;
+        const {name, uri} = pickedFile;
 
-        let nameParts = name.split(".");
-        let fileType = nameParts[nameParts.length - 1];
         setUri(uri);
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Uploading file..." },
+          payload: {content: "Uploading file..."},
         });
         const upload = await uploadFileToS3(payload, pickedFile);
 
@@ -153,13 +146,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
         } else {
           const confirm = await confirmUpload(upload);
 
-          loadingDispatch({ type: LoadingActionType.HIDE });
+          loadingDispatch({type: LoadingActionType.HIDE});
           if (confirm == null || confirm?.url == null) {
             showError("Error occured while uploading, try again...");
           } else {
             setIsUploaded(true);
             setResumeName(name);
-            handleTextChange({ field: field, value: confirm?.url });
+            // handleTextChange({field: field, value: confirm?.url});
           }
         }
       }
@@ -225,16 +218,15 @@ const AuthGetStarted = ({ navigation }: Props) => {
         },
       ];
 
-      const { data } = await axiosClient.post("User/AddMetadataUser", payload);
+      const {data} = await axiosClient.post("User/AddMetadataUser", payload);
       setIsLoading(false);
-      PLToast({ message: data.message, type: "success" });
-      setTimeout(() => {
-        navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER);
-      }, 1000);
+      PLToast({message: data.message, type: "success"});
+
+      navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER);
     } catch (error: any) {
       setIsLoading(false);
-      const { message } = error?.response.data;
-      PLToast({ message: message, type: "error" });
+      const {message} = error?.response.data;
+      PLToast({message: message, type: "error"});
     }
   };
 
@@ -244,10 +236,12 @@ const AuthGetStarted = ({ navigation }: Props) => {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={styles.container}>
         <NavBar
           onPress={() => {
             navigation.goBack();
@@ -290,7 +284,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               />
             </View>
 
-            <View style={{ marginTop: wp(4) }}>
+            <View style={{marginTop: wp(4)}}>
               <Text style={styles.inputText}>Means of Identification</Text>
               <View
                 style={{
@@ -302,21 +296,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
                   justifyContent: "space-between",
                   flexDirection: "row",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <TouchableOpacity
                   onPress={() => {
                     setIsVisible(true);
-                  }}
-                >
+                  }}>
                   <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "center",
-                    }}
-                  >
-                    <View style={{ width: wp(300) }}>
+                    }}>
+                    <View style={{width: wp(300)}}>
                       <Text
                         style={{
                           marginLeft: wp(16),
@@ -326,8 +317,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                             identificationPlaceholder === 0
                               ? COLORS.light.darkgrey
                               : COLORS.light.black,
-                        }}
-                      >
+                        }}>
                         {Identification}
                       </Text>
                     </View>
@@ -335,8 +325,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                       style={{
                         width: wp(30),
                         alignItems: "flex-end",
-                      }}
-                    >
+                      }}>
                       <Entypo
                         name="chevron-small-down"
                         size={20}
@@ -353,15 +342,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
                   statusBarTranslucent: true,
                 }}
                 isVisible={isVisible}
-                containerStyle={{ backgroundColor: COLORS.light.primary }}
-              >
+                containerStyle={{backgroundColor: COLORS.light.primary}}>
                 {states.map((l, i) => (
                   <ListItem
                     key={i}
                     onPress={() => {
                       setIdentification(l.state);
-                    }}
-                  >
+                    }}>
                     <ListItem.Content>
                       <ListItem.Title>
                         <Text>{l.state}</Text>
@@ -373,8 +360,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                   <ListItem
                     key={i}
                     containerStyle={l.containerStyle}
-                    onPress={l.onPress}
-                  >
+                    onPress={l.onPress}>
                     <ListItem.Content>
                       <ListItem.Title style={l.titleStyle}>
                         <Text>{l.title}</Text>
@@ -408,8 +394,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 onPress={() => {
                   uploadFile("resume");
                 }}
-                style={styles.inputButton}
-              >
+                style={styles.inputButton}>
                 <Text style={styles.selectText}>{resumeName}</Text>
                 <AntDesign
                   name="clouduploado"
@@ -455,8 +440,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 style={styles.skipButton}
                 onPress={() =>
                   navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
-                }
-              >
+                }>
                 <Text style={styles.skip}>Skip</Text>
               </TouchableOpacity>
 
@@ -472,7 +456,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
             </View>
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -517,6 +501,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
     // borderColor: COLORS.light.textinputborder,
   },
+  carouselWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp(24),
+    width: wpercent("90%"),
+  },
+  carouselIcon: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: wpercent("7%"),
+  },
   inputButton: {
     flexDirection: "row",
     height: wp(40),
@@ -544,30 +540,9 @@ const styles = StyleSheet.create({
     color: COLORS.light.darkgrey,
     fontSize: 12,
   },
-  resetPasswordInput: {
-    width: wp(300),
-    height: wp(40),
-    marginTop: wp(20),
-    borderRadius: 4,
-    backgroundColor: COLORS.light.white,
-  },
+
   verifyEmail: {
     fontFamily: "Roboto-MediumItalic",
-  },
-  resetPasswordText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    color: COLORS.light.black,
-    textAlign: "center",
-  },
-  resetPasswordBtn: {
-    marginTop: wp(40),
-    width: wp(300),
-  },
-  textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(12),
-    color: COLORS.light.darkgrey,
   },
   btnWrapper: {
     flexDirection: "row",
@@ -611,71 +586,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(4),
     marginTop: hp(10),
   },
-  forgotPassword: {
-    fontFamily: "Roboto-Medium",
-    color: COLORS.light.lightpurple,
-    textAlign: "right",
-    fontSize: wp(12),
-    marginTop: wp(8),
-  },
-  codeText: {
-    fontFamily: "Roboto-Medium",
-    color: COLORS.light.darkgrey,
-    fontSize: wp(12),
-  },
-  plButton: {
-    // marginTop: hp(390),
-  },
-  carouselWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: hp(18),
-    width: wpercent("90%"),
-  },
-  identification: {
-    width: wp(334),
-    borderColor: COLORS.light.textinputborder,
-    borderWidth: 0.5,
-    borderRadius: 4,
-    height: wp(40),
-    paddingRight: wp(4),
-  },
-  carouselIcon: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: wpercent("11%"),
-  },
-  phoneNumberWrapper: {
-    width: wpercent("90%"),
-    flexDirection: "row",
-    borderWidth: 1,
-    justifyContent: "space-between",
-    borderRadius: 4,
-    borderColor: "#f0f0f0",
-  },
-  loginWrapper: {
-    flexDirection: "row",
-    width: wpercent("80%"),
-    justifyContent: "space-around",
-    marginTop: hp(12),
-  },
-  login: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(16),
-    letterSpacing: 0,
-    color: COLORS.light.lightpurple,
-  },
-  countryPickerWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 2,
-    borderRightWidth: 1,
-    borderRightColor: "#f0f0f0",
-    paddingLeft: wpercent("2%"),
-    width: wpercent("26%"),
-  },
+
   errorText: {
     color: "red",
     fontFamily: "Roboto-Regular",
@@ -693,10 +604,3 @@ const styles = StyleSheet.create({
 });
 
 export default AuthGetStarted;
-function loadingDispatch(arg0: { type: any; payload: { content: string } }) {
-  throw new Error("Function not implemented.");
-}
-
-function handleTextChange(arg0: { field: string; value: any }) {
-  throw new Error("Function not implemented.");
-}

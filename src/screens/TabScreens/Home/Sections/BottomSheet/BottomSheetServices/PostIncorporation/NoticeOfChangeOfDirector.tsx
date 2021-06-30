@@ -1,9 +1,9 @@
 import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import {Text, View, ScrollView, TouchableOpacity} from "react-native";
 import modalFormstyles from "../ModalFormStyles";
 import {
   DocUploadInterface,
@@ -16,10 +16,10 @@ import {
   addMetadata,
   submitHistory,
 } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../BottomSheetUtils/BottomSheetProps";
 import {
   validateInputs,
   showError,
@@ -30,10 +30,10 @@ import {
   loadingInitialState,
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import COLORS from "utils/Colors";
 import PickerInput from "components/PickerInput";
-import { meansOfIdentification } from "../../BottomSheetUtils/FormStaticData";
+import {meansOfIdentification} from "../../BottomSheetUtils/FormStaticData";
 import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const allFomKeys = [...Array(10).keys()].map((item, index) => {
@@ -52,18 +52,18 @@ const allFomKeys = [...Array(10).keys()].map((item, index) => {
 });
 
 export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const {navigation, closeModal, service, lawyer, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
   const [noOfDirector, setNoOfDirector] = React.useState<number>(1);
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -82,15 +82,15 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Submiting, please wait..." },
+          payload: {content: "Submiting, please wait..."},
         });
         const submit = await addMetadata(formMeta);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (submit === 200) {
           //--> Submit Service
           try {
@@ -131,18 +131,18 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -164,8 +164,10 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
           <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with the required details
@@ -268,7 +270,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
                   }
                   icon
                 />
-                <View style={{ height: 16 }} />
+                <View style={{height: 16}} />
               </View>
             );
           })}
@@ -276,8 +278,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
             {noOfDirector < allFomKeys.length ? (
               <TouchableOpacity
                 style={modalFormstyles.addMoreBtn}
-                onPress={() => addNew()}
-              >
+                onPress={() => addNew()}>
                 <Ionicons
                   name="ios-add"
                   size={18}
@@ -292,8 +293,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
             {noOfDirector > 1 && (
               <TouchableOpacity
                 style={modalFormstyles.addMoreBtn}
-                onPress={() => remove()}
-              >
+                onPress={() => remove()}>
                 <MaterialCommunityIcons
                   name="minus"
                   size={18}
@@ -305,7 +305,7 @@ export function NoticeOfChangeOfDirector(props: BottomSheetProps) {
           </View>
         </KeyboardAwareScrollView>
       </ScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );

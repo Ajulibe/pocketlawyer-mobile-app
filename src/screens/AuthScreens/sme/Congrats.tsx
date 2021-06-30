@@ -1,14 +1,14 @@
 import React from "react";
-import { View, StyleSheet, Image, Text, Platform } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
+import {View, StyleSheet, Image, Text, Platform} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "../../../navigation/MainNavigator";
+import {ROUTES} from "../../../navigation/Routes";
 import COLORS from "../../../utils/Colors";
 import IMAGES from "../../../utils/Images";
-import { wp, hp } from "../../../utils/Dimensions";
-import PLButton from "../../../components/PLButton/PLButton";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {wp, hp} from "../../../utils/Dimensions";
+import PLButton from "../../../components/PLButton/PLButton.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
@@ -16,14 +16,13 @@ type Props = StackScreenProps<
   ROUTES.AUTH_GET_STARTED_SCREEN
 >;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   return (
     <Animatable.View animation="fadeIn" style={styles.wrapper}>
       <Animatable.Text
         animation="zoomIn"
         easing="ease-in"
-        style={styles.textHeader}
-      >
+        style={styles.textHeader}>
         You're all set!
       </Animatable.Text>
       <Image
@@ -48,8 +47,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       <TouchableOpacity
         onPress={() => {
           navigation.navigate(ROUTES.TABSCREEN_STACK);
-        }}
-      >
+        }}>
         <View style={styles.loginWrapper}>
           <Text style={styles.already}>Go to Dashboard</Text>
         </View>

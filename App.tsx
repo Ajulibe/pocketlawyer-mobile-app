@@ -1,25 +1,27 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-
+import React, {FC, useState, Suspense} from "react";
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider } from "@ui-kitten/components";
+import {ApplicationProvider} from "@ui-kitten/components";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import useCachedResources from "./src/hooks/useCachedResources";
 import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
-import { default as theme } from "./src/theme.json";
+import {default as theme} from "./src/theme.json";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "components/PLToast";
+import FullPageLoader from "components/FullPageLoader/index.component";
+import {PersistGate} from "redux-persist/integration/react";
+import {persistor, store} from "redux/store";
+import {Provider} from "react-redux";
+import {toastConfig} from "components/PLToast/index.component";
 
-export default function App() {
+const App: FC = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
   //--> reactotron debugger setup
   if (__DEV__) {
     import("config/ReactotronConfig").then(() =>
-      console.log("Reactotron Configured")
+      console.log("Reactotron Configured"),
     );
   }
 
@@ -54,11 +56,20 @@ export default function App() {
     return null;
   } else {
     return (
-      <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-        <Toast ref={(ref) => Toast.setRef(ref)} />
-      </ApplicationProvider>
+      <Suspense fallback={<FullPageLoader message="LOADING" />}>
+        <ApplicationProvider {...eva} theme={{...eva.light, ...theme}}>
+          <Provider store={store}>
+            <PersistGate
+              loading={<FullPageLoader message="LOADING" />}
+              persistor={persistor}>
+              <Navigation colorScheme={colorScheme} />
+              <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
+            </PersistGate>
+          </Provider>
+        </ApplicationProvider>
+      </Suspense>
     );
   }
-}
+};
+
+export default App;

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "471632242709",
+    "project_id": "pocketlawyerdemo",
+    "storage_bucket": "pocketlawyerdemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471632242709:android:9e5e0a210e65e19e55861c",
+        "android_client_info": {
+          "package_name": "com.pocketLawyer.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "471632242709-k7reb6aajfr8gfk3pvlhsjnpu5tf3466.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOiUEAFh21b6GsZEK2nGjmbkB_iMbxzJI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471632242709-k7reb6aajfr8gfk3pvlhsjnpu5tf3466.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-import { PLToast } from "components/PLToast";
+import {PLToast} from "components/PLToast/index.component";
 
 export function validateInputs(
   FormKeys: Object,
@@ -11,16 +11,18 @@ export function validateInputs(
   Object.entries(FormKeys).map(([mkey, mValue]) => {
     let field = formData?.[mValue];
 
-    const isOptional = OptionalKeys!=null && OptionalKeys?.hasOwnProperty(mkey);
-     
+    const isOptional =
+      OptionalKeys != null && OptionalKeys?.hasOwnProperty(mkey);
+
     const fieldEmpty =
-      (field == null || field?.value == null || field?.value === "")&&(!isOptional);
+      (field == null || field?.value == null || field?.value === "") &&
+      !isOptional;
 
     if (fieldEmpty) {
-      field = { key: mValue, error: "This field is required" };
+      field = {key: mValue, error: "This field is required"};
       isError = true;
     } else {
-      delete field?.error
+      delete field?.error;
     }
 
     newData[mValue] = field;
@@ -28,14 +30,12 @@ export function validateInputs(
   callBack(newData, isError);
 }
 
-
 export function showError(msg: string) {
   PLToast({
     message: msg,
     type: "error",
   });
 }
-
 
 export function showSuccess(msg: string) {
   PLToast({

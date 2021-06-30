@@ -1,5 +1,5 @@
-import { Platform } from "react-native";
-import React, { useState } from "react";
+import {Platform} from "react-native";
+import React, {useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
@@ -7,10 +7,10 @@ import * as Print from "expo-print";
 
 import axiosClient from "utils/axiosClient";
 
-import { DocUploadUserInfo, confirmLawyerResume } from "navigation/interfaces";
-import { PLToast } from "components/PLToast";
+import {DocUploadUserInfo, confirmLawyerResume} from "navigation/interfaces";
+import {PLToast} from "components/PLToast/index.component";
 
-import { Buffer } from "buffer"; // get this via: npm install buffer
+import {Buffer} from "buffer"; // get this via: npm install buffer
 import * as FileSystem from "expo-file-system";
 
 interface uploadInterfaace {
@@ -75,7 +75,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
 
       //--> check if successful
       if (response.type == "success") {
-        let { name, size, uri } = response;
+        let {name, size, uri} = response;
         let nameParts = name.split(".");
         let fileType = nameParts[nameParts.length - 1];
         // const uploadUri =
@@ -118,7 +118,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
         if (fileToUpload[0].type !== "application/pdf") {
           setDocName("Invalid file type");
           setErrors(false);
-          PLToast({ message: "Only PDF is allowed", type: "error" });
+          PLToast({message: "Only PDF is allowed", type: "error"});
           return;
         }
 
@@ -139,7 +139,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
   };
 
   React.useEffect(() => {
-    const { name, uri, type } = resume[0];
+    const {name, uri, type} = resume[0];
     if (name === "" || uri === "" || type === "") {
       return;
     }
@@ -177,7 +177,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
     setIsUploaded("loading");
     try {
       await axiosClient.post("Upload/Generates3URL", payload).then((res) => {
-        const { url, uploadID, fileName } = res.data.data;
+        const {url, uploadID, fileName} = res.data.data;
 
         // const fileToUpload = {
         //   ...resume[0],
@@ -216,8 +216,8 @@ export const useDocUpload = (documentUse: string, section: string) => {
           })
 
           .catch(function (error) {
-            const { message } = error?.response.data;
-            PLToast({ message: message, type: "error" });
+            const {message} = error?.response.data;
+            PLToast({message: message, type: "error"});
           });
       });
     } catch (error) {}
@@ -226,18 +226,18 @@ export const useDocUpload = (documentUse: string, section: string) => {
   const confirmUpload = async <T>(confirmPayload: T) => {
     try {
       //--> confirm the upload
-      const { data } = await axiosClient.post(
+      const {data} = await axiosClient.post(
         "Upload/ConfirmUpload",
-        confirmPayload
+        confirmPayload,
       );
 
-      PLToast({ message: data.message, type: "success" });
+      PLToast({message: data.message, type: "success"});
       console.log(data, "resposne");
 
       setIsUploaded("success");
     } catch (error) {
-      const { message } = error?.response.data;
-      PLToast({ message: message, type: "success" });
+      const {message} = error?.response.data;
+      PLToast({message: message, type: "success"});
       setIsUploaded("intial");
     }
   };

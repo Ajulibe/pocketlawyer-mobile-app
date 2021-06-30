@@ -1,5 +1,5 @@
 import axiosClient from "utils/axiosClient";
-import { PLToast } from "components/PLToast";
+import {PLToast} from "components/PLToast/index.component";
 
 ///---> LOOK INTO THIS LATER
 //   const Login = async () => {

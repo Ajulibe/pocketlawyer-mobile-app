@@ -1,17 +1,17 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView, Text, Alert } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
+import {View, StyleSheet, SafeAreaView, Text, Alert} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "../../../navigation/MainNavigator";
+import {ROUTES} from "../../../navigation/Routes";
 import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
-import PLButton from "../../../components/PLButton/PLButton";
-import { Radio, RadioGroup } from "@ui-kitten/components";
+import {wp, hp} from "../../../utils/Dimensions";
+import PLButton from "../../../components/PLButton/PLButton.component";
+import {Radio, RadioGroup} from "@ui-kitten/components";
 import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const selectCategory = () => {
@@ -38,12 +38,10 @@ const AuthGetStarted = ({ navigation }: Props) => {
       <Animatable.View
         animation="fadeIn"
         easing="ease-in"
-        style={styles.radiobtnFirstWrapper}
-      >
+        style={styles.radiobtnFirstWrapper}>
         <RadioGroup
           selectedIndex={selectedIndex}
-          onChange={(index) => setSelectedIndex(index)}
-        >
+          onChange={(index) => setSelectedIndex(index)}>
           <Radio style={styles.radioBtn}>Individual</Radio>
           <Radio style={styles.radioBtn}>SME/Business</Radio>
           <Radio style={styles.radioBtn}>Service Provider</Radio>

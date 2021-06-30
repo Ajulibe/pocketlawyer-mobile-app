@@ -5,7 +5,7 @@ import { hp, wp } from "utils/Dimensions";
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: wp(20),
-    paddingVertical: hp(18),
+    paddingTop: hp(18),
   },
   header: {
     display: "flex",
@@ -15,18 +15,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   greeting: {
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontWeight: "400",
     fontSize: wp(14),
     lineHeight: Platform.OS === "ios" ? hp(24) : hp(28),
     color: "rgba(0, 0, 0, 0.7)",
     marginBottom: hp(18),
+    marginTop: hp(3),
   },
   user: {
-    resizeMode: "cover",
-    width: wp(50),
-    height: wp(50),
-    borderRadius: 50,
+    width: wp(40),
+    height: wp(40),
+    borderColor: COLORS.light.primary,
+    marginRight: wp(7),
+    borderWidth: 1,
   },
   searchWrapper: {
     backgroundColor: "#F1F1F2",
@@ -68,7 +70,7 @@ const styles = StyleSheet.create({
   topFindingSubtitle: {
     fontFamily: "Roboto",
     fontWeight: "300",
-    fontSize: wp(12),
+    fontSize: wp(14),
     lineHeight: hp(20),
     color: COLORS.light.primary,
     marginBottom: hp(20),

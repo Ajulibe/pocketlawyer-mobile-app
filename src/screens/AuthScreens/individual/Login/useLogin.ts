@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { ROUTES } from "navigation/Routes";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, {useState} from "react";
+import {ROUTES} from "navigation/Routes";
 import axiosClient from "utils/axiosClient";
-import { PLToast } from "components/PLToast";
+import {PLToast} from "components/PLToast/index.component";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { CommonActions } from "@react-navigation/native";
+import {CommonActions} from "@react-navigation/native";
 
 export const useLogin = (navigation: any) => {
   const [visible, setVisible] = React.useState(false);
@@ -27,13 +28,13 @@ export const useLogin = (navigation: any) => {
   }, [password, email]);
   //------------------------------------------------------
 
-  // React.useEffect(() => {
-  //   if (resetemail.length === 0) {
-  //     setResetIsDisabled(true);
-  //   } else {
-  //     setResetIsDisabled(false);
-  //   }
-  // }, [resetemail]);
+  React.useEffect(() => {
+    if (resetemail.length === 0) {
+      setResetIsDisabled(true);
+    } else {
+      setResetIsDisabled(false);
+    }
+  }, [resetemail]);
   //----------------------------------------------------------
 
   const Login = async () => {
@@ -44,34 +45,52 @@ export const useLogin = (navigation: any) => {
     };
 
     try {
-      const { data } = await axiosClient.post("User/Login", payload);
+      const {data} = await axiosClient.post("User/Login", payload);
 
       setIsLoading(false);
-      PLToast({ message: "Successful", type: "success" });
+      PLToast({message: "Successful", type: "success"});
 
       const dataObject = data.data.user_;
 
       //--> setting async stoarage data for usage later
-      const { token } = dataObject;
-      const { userType } = dataObject;
-      const { userID } = dataObject;
-      const { firstName } = dataObject;
+      const {token} = dataObject;
+      const {userType} = dataObject;
+      const {userID} = dataObject;
+      const {firstName} = dataObject;
 
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("userType", JSON.stringify(userType));
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("firstName", firstName);
-      await AsyncStorageUtil.setUser(JSON.stringify(data?.data?.user_));
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: ROUTES.TABSCREEN_STACK }],
-        })
-      );
+      await AsyncStorageUtil.setUser(JSON.stringify(data));
+
+      //--> Checking th etype of user loggin in
+      if (userType === 1 || userType === 2) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: ROUTES.TABSCREEN_STACK}],
+          }),
+        );
+      } else {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: ROUTES.TABSCREEN_STACK_LAWYER}],
+          }),
+        );
+      }
+      // await AsyncStorageUtil.setUser(JSON.stringify(data?.data?.user_));
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{ name: ROUTES.TABSCREEN_STACK }],
+      //   })
+      // );
     } catch (error: any) {
       setIsLoading(false);
-      const { message } = error?.response.data;
-      PLToast({ message: message, type: "error" });
+      const {message} = error?.response.data;
+      PLToast({message: message, type: "error"});
     }
   };
 
@@ -82,8 +101,7 @@ export const useLogin = (navigation: any) => {
     };
 
     try {
-      const { data } = await axiosClient.post("user/ForgetPassword", payload);
-      console.log(data);
+      await axiosClient.post("user/ForgetPassword", payload);
       PLToast({
         message: "A Temporary password has been sent to your mail",
         type: "success",
@@ -92,14 +110,14 @@ export const useLogin = (navigation: any) => {
     } catch (error: any) {
       setResetIsLoading(false);
       setVisible(false);
-      console.log(error.response.status);
+
       if (error.response.status === 401) {
-        PLToast({ message: "Authentication Error", type: "error" });
+        PLToast({message: "Authentication Error", type: "error"});
         return;
       } else {
       }
-      const { message } = error?.response.data;
-      PLToast({ message: message, type: "error" });
+      const {message} = error?.response.data;
+      PLToast({message: message, type: "error"});
     }
   };
 

@@ -2,30 +2,27 @@ import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import { Text, View, TouchableOpacity, TextInput } from "react-native";
+import {Text, View, TouchableOpacity, TextInput} from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
 import {
   DocUploadInterface,
   uploadFileToS3,
   pickFile,
 } from "services/S3FileUploadHelper";
-import { confirmUpload, transformMeta } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../../BottomSheetUtils/BottomSheetProps";
-import {
-  validateInputs,
-  showError,
-} from "../../../BottomSheetUtils/FormHelpers";
+import {confirmUpload, transformMeta} from "services/UploadDocsService";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../../BottomSheetUtils/BottomSheetProps";
+import {validateInputs, showError} from "../../../BottomSheetUtils/FormHelpers";
 
 import {
   loadingReducer,
   loadingInitialState,
   LoadingActionType,
 } from "../../../BottomSheetUtils/LoadingReducer";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import COLORS from "utils/Colors";
-import { meansOfIdentification } from "../../../BottomSheetUtils/FormStaticData";
+import {meansOfIdentification} from "../../../BottomSheetUtils/FormStaticData";
 import ModalFormLabel from "../../../BottomSheetUtils/ModalFormLabel";
 import PickerInput from "components/PickerInput";
 
@@ -50,18 +47,18 @@ interface Props extends BottomSheetProps {
 }
 
 export function DirectorsInfo(props: Props) {
-  const { formTitle, service, subTitle, historyId } = props;
+  const {formTitle, service, subTitle, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
   const [noOfDirectors, setNoOfDirectors] = React.useState<number>(2);
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -81,7 +78,7 @@ export function DirectorsInfo(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         props.onSubmit(formMeta);
@@ -101,18 +98,18 @@ export function DirectorsInfo(props: Props) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -136,8 +133,7 @@ export function DirectorsInfo(props: Props) {
       />
       <KeyboardAwareScrollView
         // extraScrollHeight={wp(20)}
-        keyboardShouldPersistTaps="handled"
-      >
+        keyboardShouldPersistTaps="handled">
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
 
@@ -209,7 +205,7 @@ export function DirectorsInfo(props: Props) {
                 }
                 icon
               />
-              <View style={{ height: 16 }} />
+              <View style={{height: 16}} />
             </View>
           );
         })}
@@ -217,8 +213,7 @@ export function DirectorsInfo(props: Props) {
           {noOfDirectors < allFomKeys.length ? (
             <TouchableOpacity
               style={modalFormstyles.addMoreBtn}
-              onPress={() => addNewDir()}
-            >
+              onPress={() => addNewDir()}>
               <Ionicons name="ios-add" size={18} color={COLORS.light.primary} />
               <Text style={modalFormstyles.addText}>Add New Director</Text>
             </TouchableOpacity>
@@ -229,8 +224,7 @@ export function DirectorsInfo(props: Props) {
           {noOfDirectors > 2 && (
             <TouchableOpacity
               style={modalFormstyles.addMoreBtn}
-              onPress={() => removeDir()}
-            >
+              onPress={() => removeDir()}>
               <MaterialCommunityIcons
                 name="minus"
                 size={18}
@@ -241,7 +235,7 @@ export function DirectorsInfo(props: Props) {
           )}
         </View>
       </KeyboardAwareScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Next" onClick={submit} />
     </View>
   );

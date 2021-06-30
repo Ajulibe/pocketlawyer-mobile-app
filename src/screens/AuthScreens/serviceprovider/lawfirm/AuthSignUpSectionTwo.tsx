@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import React, {useState} from "react";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
-import { Input } from "@ui-kitten/components";
+import {wp, hp} from "utils/Dimensions";
+import {Input} from "@ui-kitten/components";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import PLButton from "components/PLButton/PLButton.component";
+import {Entypo} from "@expo/vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "types";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { states } from "utils/nigerianStates";
-import { Picker, Form, Icon } from "native-base";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import {CountryCode, Country, CallingCode} from "types";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {states} from "utils/nigerianStates";
+import {Picker, Form, Icon} from "native-base";
+import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -25,10 +25,10 @@ type Props = StackScreenProps<
 
 const useInputState = (initialValue = "") => {
   const [value, setValue] = React.useState(initialValue);
-  return { value, onChangeText: setValue };
+  return {value, onChangeText: setValue};
 };
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
   const [withCountryNameButton, setWithCountryNameButton] =
@@ -147,8 +147,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               fontFamily: "Roboto-Regular",
               fontSize: wp(14),
               color: COLORS.light.black,
-            }}
-          >
+            }}>
             By signing up, you agree with the
             <Text style={styles.login}> Terms of services </Text>and{" "}
             <Text style={styles.login}>Privacy policy </Text>

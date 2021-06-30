@@ -1,9 +1,9 @@
 import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../ModalFormStyles";
 import {
   DocUploadInterface,
@@ -16,10 +16,10 @@ import {
   addMetadata,
   submitHistory,
 } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../BottomSheetUtils/BottomSheetProps";
 import {
   validateInputs,
   showError,
@@ -39,18 +39,18 @@ const FormKeys = {
   noOfShares: "NumberOfSharesToBeAdded",
 };
 export function IncreaseOfShareCapital(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const {navigation, closeModal, service, lawyer, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
 
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -64,15 +64,15 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Submiting, please wait..." },
+          payload: {content: "Submiting, please wait..."},
         });
         const submit = await addMetadata(formMeta);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (submit === 200) {
           //--> Submit Service
           try {
@@ -113,18 +113,18 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -136,8 +136,10 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={wp(100)}
+          showsVerticalScrollIndicator={false}>
           <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details
@@ -147,7 +149,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
             placeholder="Type company name"
             errorText={formData?.[FormKeys.companyName]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.companyName, value: text });
+              handleTextChange({field: FormKeys.companyName, value: text});
             }}
           />
           <ModalFormLabel text="Company Registration Number" />
@@ -155,7 +157,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
             placeholder="Type company registration number "
             errorText={formData?.[FormKeys.companyRegNo]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.companyRegNo, value: text });
+              handleTextChange({field: FormKeys.companyRegNo, value: text});
             }}
           />
           <ModalFormLabel text="Means of Identification" />
@@ -173,12 +175,12 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
             placeholder="Type number of shares to be added"
             errorText={formData?.[FormKeys.noOfShares]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.noOfShares, value: text });
+              handleTextChange({field: FormKeys.noOfShares, value: text});
             }}
           />
         </KeyboardAwareScrollView>
       </ScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );

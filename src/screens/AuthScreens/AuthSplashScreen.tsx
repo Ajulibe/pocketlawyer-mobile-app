@@ -8,6 +8,8 @@ import IMAGES from "utils/Images";
 import { wp, hp } from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setResetUser } from "redux/actions";
+import { useAppSelector, useAppDispatch } from "redux/hooks";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SPLASH_SCREEN>;
 
@@ -15,8 +17,11 @@ const AuthSplashScreen = ({ navigation }: Props) => {
   React.useEffect(() => {
     removeValue();
   }, []);
+  const dispatch = useAppDispatch();
+  const userData = useAppSelector((state) => state.users.user);
 
   const removeValue = async () => {
+    dispatch(setResetUser());
     try {
       await AsyncStorage.removeItem("@MyApp_key");
       // await AsyncStorage.removeItem("token");// --> This is meant to persist
@@ -33,8 +38,6 @@ const AuthSplashScreen = ({ navigation }: Props) => {
     } catch (e) {
       // remove error
     }
-
-    console.log("Done.");
   };
 
   return (

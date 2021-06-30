@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   View,
   StyleSheet,
@@ -8,27 +8,27 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { CountryCode, Country, CallingCode } from "../../../types";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { states } from "utils/nigerianStates";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
+import PLButton from "components/PLButton/PLButton.component";
+import {Entypo} from "@expo/vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
+import {CountryCode, Country, CallingCode} from "../../../types";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {states} from "utils/nigerianStates";
+import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
 import * as Animatable from "react-native-animatable";
-import { ScrollView } from "react-native-gesture-handler";
-import { smeSignupSectionOne } from "navigation/interfaces";
+import {ScrollView} from "react-native-gesture-handler";
+import {smeSignupSectionOne} from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BottomSheet, ListItem } from "react-native-elements";
+import {BottomSheet, ListItem} from "react-native-elements";
 import globalStyles from "css/GlobalCss";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -37,10 +37,10 @@ type Props = StackScreenProps<
 
 const useInputState = (initialValue = "") => {
   const [value, setValue] = React.useState(initialValue);
-  return { value, onChangeText: setValue };
+  return {value, onChangeText: setValue};
 };
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
   const [withCountryNameButton, setWithCountryNameButton] =
@@ -83,7 +83,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisible(false),
     },
   ];
@@ -94,7 +94,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisibleBusiness(false),
     },
   ];
@@ -177,8 +177,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <View style={styles.TextWrapper}>
             <Text style={styles.welcomeMessage}>
@@ -223,21 +222,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 justifyContent: "space-between",
                 flexDirection: "row",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   setIsVisible(true);
-                }}
-              >
+                }}>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
-                  <View style={{ width: wp(300) }}>
+                  }}>
+                  <View style={{width: wp(300)}}>
                     <Text
                       style={{
                         marginLeft: wp(16),
@@ -247,8 +243,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                           statePlaceholder === 0
                             ? COLORS.light.darkgrey
                             : COLORS.light.black,
-                      }}
-                    >
+                      }}>
                       {state}
                     </Text>
                   </View>
@@ -256,8 +251,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                     style={{
                       width: wp(30),
                       alignItems: "flex-end",
-                    }}
-                  >
+                    }}>
                     <Entypo name="chevron-small-down" size={20} color="grey" />
                   </View>
                 </View>
@@ -269,15 +263,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 statusBarTranslucent: true,
               }}
               isVisible={isVisible}
-              containerStyle={{ backgroundColor: COLORS.light.primary }}
-            >
+              containerStyle={{backgroundColor: COLORS.light.primary}}>
               {states.map((l, i) => (
                 <ListItem
                   key={i}
                   onPress={() => {
                     setState(l.state);
-                  }}
-                >
+                  }}>
                   <ListItem.Content>
                     <ListItem.Title>
                       <Text>{l.state}</Text>
@@ -289,8 +281,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 <ListItem
                   key={i}
                   containerStyle={l.containerStyle}
-                  onPress={l.onPress}
-                >
+                  onPress={l.onPress}>
                   <ListItem.Content>
                     <ListItem.Title style={l.titleStyle}>
                       <Text>{l.title}</Text>
@@ -326,21 +317,18 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 justifyContent: "space-between",
                 flexDirection: "row",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   setIsVisibleBusiness(true);
-                }}
-              >
+                }}>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
-                  <View style={{ width: wp(300) }}>
+                  }}>
+                  <View style={{width: wp(300)}}>
                     <Text
                       style={{
                         marginLeft: wp(16),
@@ -350,8 +338,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                           stateBusinessPlaceholder === 0
                             ? COLORS.light.darkgrey
                             : COLORS.light.black,
-                      }}
-                    >
+                      }}>
                       {state}
                     </Text>
                   </View>
@@ -359,8 +346,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                     style={{
                       width: wp(30),
                       alignItems: "flex-end",
-                    }}
-                  >
+                    }}>
                     <Entypo name="chevron-small-down" size={20} color="grey" />
                   </View>
                 </View>
@@ -373,15 +359,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 statusBarTranslucent: true,
               }}
               isVisible={isVisibleBusiness}
-              containerStyle={{ backgroundColor: COLORS.light.primary }}
-            >
+              containerStyle={{backgroundColor: COLORS.light.primary}}>
               {states.map((l, i) => (
                 <ListItem
                   key={i}
                   onPress={() => {
                     setBusiness(l.state);
-                  }}
-                >
+                  }}>
                   <ListItem.Content>
                     <ListItem.Title>
                       <Text>{l.state}</Text>
@@ -393,8 +377,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                 <ListItem
                   key={i}
                   containerStyle={l.containerStyle}
-                  onPress={l.onPress}
-                >
+                  onPress={l.onPress}>
                   <ListItem.Content>
                     <ListItem.Title style={l.titleStyle}>
                       <Text>{l.title}</Text>
@@ -557,10 +540,8 @@ const styles = StyleSheet.create({
   phoneNumberWrapper: {
     width: wpercent("90%"),
     flexDirection: "row",
-    borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: COLORS.light.textinputborder,
   },
   loginWrapper: {
     flexDirection: "row",

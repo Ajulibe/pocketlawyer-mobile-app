@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { StackScreenProps } from "@react-navigation/stack";
+import React, {useState} from "react";
+import {MaterialIcons} from "@expo/vector-icons";
+import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
-import { HomeStackParamList } from "navigation/HomeStack";
-import { ROUTES } from "navigation/Routes";
+import {HomeStackParamList} from "navigation/HomeStack";
+import {ROUTES} from "navigation/Routes";
 import PaystackWebView from "components/PaystackSDK/index";
 
 // @ts-ignore
@@ -22,12 +22,12 @@ import {
 } from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import UserDescListTile from "screens/TabScreens/Account/Components/UserDescListTile";
 import CustomButton from "components/CustomButton";
 import moment from "moment";
 import axiosClient from "utils/axiosClient";
-import { PLToast } from "components/PLToast";
+import {PLToast} from "components/PLToast/index.component";
 import Utilities from "utils/Utilities";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import {
@@ -39,18 +39,18 @@ import {
   loadingInitialState,
   loadingReducer,
 } from "../BottomSheet/BottomSheetUtils/LoadingReducer";
-import LoadingSpinner from "components/LoadingSpinner";
-import { CommonActions } from "@react-navigation/routers";
-import { RootStackParamList } from "navigation/MainNavigator";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {CommonActions} from "@react-navigation/routers";
+import {RootStackParamList} from "navigation/MainNavigator";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.CHECKOUT_SCREEN>;
 
-const Checkout = ({ navigation, route }: Props) => {
+const Checkout = ({navigation, route}: Props) => {
   const [showModal, setshowModal] = useState(false);
   const [userEmail, setUserEmail] = useState("pluser@gmail.com");
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
 
   const lawyer = route.params?.lawyer;
@@ -59,7 +59,7 @@ const Checkout = ({ navigation, route }: Props) => {
   const serviceHistoryID = route.params?.serviceHistoryID;
 
   //--> lawyer details
-  const { name, address } = lawyer;
+  const {name, address} = lawyer;
   //--> User Details
   React.useEffect(() => {
     (async () => {
@@ -85,7 +85,7 @@ const Checkout = ({ navigation, route }: Props) => {
     setTimeout(function () {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Verifying payment..." },
+        payload: {content: "Verifying payment..."},
       });
     }, 500);
 
@@ -97,8 +97,8 @@ const Checkout = ({ navigation, route }: Props) => {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: ROUTES.TABSCREEN_STACK }],
-          })
+            routes: [{name: ROUTES.TABSCREEN_STACK}],
+          }),
         );
       } else {
         showError("An error occured");
@@ -106,7 +106,7 @@ const Checkout = ({ navigation, route }: Props) => {
     } catch (error) {
       showError(`Error occured: ${error}`);
     }
-    loadingDispatch({ type: LoadingActionType.HIDE });
+    loadingDispatch({type: LoadingActionType.HIDE});
   };
   LogBox.ignoreAllLogs();
   return (
@@ -122,20 +122,19 @@ const Checkout = ({ navigation, route }: Props) => {
           showBorderBottom={false}
         />
         <ScrollView
-          contentContainerStyle={[styles.container, { flexGrow: 1 }]}
+          contentContainerStyle={[styles.container, {flexGrow: 1}]}
           keyboardShouldPersistTaps="handled"
-          bounces={false}
-        >
+          bounces={false}>
           <Text style={styles.subTitle}>
             Hello Tola, confirm the details you have entered before you proceed
             to make payment.
           </Text>
-          <View style={{ height: hp(16) }} />
+          <View style={{height: hp(16)}} />
           <Text style={styles.subTitle}>
             Please note that in a situation where service is not offered your
             consultation fee would be fully refunded.
           </Text>
-          <View style={{ height: hp(60) }} />
+          <View style={{height: hp(60)}} />
           <UserDescListTile leading="Service" value={service?.serviceName} />
           <UserDescListTile leading="Lawyer" value={name!} />
           <UserDescListTile leading="Location" value={address!} />
@@ -158,16 +157,16 @@ const Checkout = ({ navigation, route }: Props) => {
             value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
           />
 
-          <Text style={[{ ...styles.subTitle, textAlign: "center" }]}>
+          <Text style={[{...styles.subTitle, textAlign: "center"}]}>
             You will receive notification on the progress of your request on
             your service history.
           </Text>
-          <View style={{ flex: 1 }} />
+          <View style={{flex: 1}} />
 
           <CustomButton btnText="Proceed to Pay" onClick={showPaymentModal} />
         </ScrollView>
 
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <PaystackWebView
             setshowModal={setshowModal}
             showModal={showModal}
@@ -190,7 +189,7 @@ const Checkout = ({ navigation, route }: Props) => {
             SafeAreaViewContainer={{
               marginTop: 5,
             }}
-            SafeAreaViewContainerModal={{ marginTop: 5 }}
+            SafeAreaViewContainerModal={{marginTop: 5}}
             handleWebViewMessage={(e: any) => {}}
             onCancel={(resp: any) => {
               if (resp?.status === "cancelled") {

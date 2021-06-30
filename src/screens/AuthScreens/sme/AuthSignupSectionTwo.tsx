@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   View,
   StyleSheet,
@@ -7,31 +7,31 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { FontAwesome } from "@expo/vector-icons";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import PLButton from "components/PLButton/PLButton.component";
+import {FontAwesome} from "@expo/vector-icons";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
 import CountryPicker from "react-native-country-picker-modal";
-import { CountryCode, Country, CallingCode } from "../../../types";
-import { Input } from "@ui-kitten/components";
-import { ScrollView } from "react-native-gesture-handler";
+import {CountryCode, Country, CallingCode} from "../../../types";
+import {Input} from "@ui-kitten/components";
+import {ScrollView} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PLToast } from "components/PLToast";
-import { smeSignupSectionTwo } from "navigation/interfaces";
+import {PLToast} from "components/PLToast/index.component";
+import {smeSignupSectionTwo} from "navigation/interfaces";
 import axiosClient from "utils/axiosClient";
 import globalStyles from "css/GlobalCss";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   const [countryCode, setCountryCode] = useState<CountryCode>("NG");
   const [country, setCountry] = useState<Country>();
   const [withCountryNameButton, setWithCountryNameButton] =
@@ -125,14 +125,14 @@ const AuthGetStarted = ({ navigation }: Props) => {
     setIsLoading(true);
 
     try {
-      const { data } = await axiosClient.post("User", smePayload);
+      const {data} = await axiosClient.post("User", smePayload);
       setIsLoading(false);
-      PLToast({ message: "Successfully Registered", type: "success" });
+      PLToast({message: "Successfully Registered", type: "success"});
 
       //--> setting async stoarage data for usage later
-      const { token } = data.data;
-      const { userType } = data.data;
-      const { userID } = data.data;
+      const {token} = data.data;
+      const {userType} = data.data;
+      const {userID} = data.data;
 
       //--> setting the received token in local storage
       await AsyncStorage.setItem("token", token);
@@ -145,13 +145,13 @@ const AuthGetStarted = ({ navigation }: Props) => {
         navigation.navigate(ROUTES.AUTH_VALIDATE_EMAIL_SME);
       }, 1000);
     } catch (error: any) {
-      const { message } = error?.response.data;
+      const {message} = error?.response.data;
       // if (error.message === "Request failed with status code 400") {
       //   PLToast({ message: "Email already taken", type: "error" });
       // } else {
       setIsDisabled(true);
       setIsLoading(false);
-      PLToast({ message: message, type: "error" });
+      PLToast({message: message, type: "error"});
     }
 
     return;
@@ -174,8 +174,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <View style={styles.contentWraper}>
           <View style={styles.TextWrapper}>
             <Text style={styles.welcomeMessage}>
@@ -227,7 +226,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
                     onSelect,
                   }}
                 />
-                <Text style={styles.codeText}>+{callingCode}</Text>
+                {/* <Text style={styles.codeText}>+{callingCode}</Text> */}
               </View>
 
               <Input
@@ -283,7 +282,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               const getData = async () => {
                 try {
                   const jsonValue = await AsyncStorage.getItem(
-                    "@signup_payload"
+                    "@signup_payload",
                   );
 
                   jsonValue != null
@@ -355,13 +354,13 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontSize: wp(13),
     color: COLORS.light.black,
   },
 
   inputText: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontSize: wp(13),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
@@ -390,11 +389,11 @@ const styles = StyleSheet.create({
   },
   phoneNumberWrapper: {
     width: wpercent("90%"),
+    height: wp(42),
     flexDirection: "row",
-    borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
-    borderColor: "#f0f0f0",
+    borderColor: "red",
   },
   loginWrapper: {
     flexDirection: "row",
@@ -409,13 +408,15 @@ const styles = StyleSheet.create({
     color: COLORS.light.lightpurple,
   },
   countryPickerWrapper: {
+    maxHeight: 40,
     flexDirection: "row",
     alignItems: "center",
-    padding: 2,
-    borderRightWidth: 1,
-    borderRightColor: "#f0f0f0",
-    paddingLeft: wpercent("2%"),
-    width: wpercent("26%"),
+    justifyContent: "center",
+    borderColor: COLORS.light.textinputborder,
+    paddingLeft: wpercent("1%"),
+    width: "16%",
+    borderWidth: 1,
+    borderRadius: 4,
   },
   ContactPerson: {
     fontFamily: "Roboto-Medium",
@@ -423,13 +424,12 @@ const styles = StyleSheet.create({
     color: COLORS.light.primary,
   },
   inputPhoneNumber: {
-    width: wp(230),
-    height: wp(40),
-    borderRadius: 0,
+    width: "82%",
+    borderRadius: 4,
     backgroundColor: COLORS.light.white,
-    borderLeftWidth: 0,
-    borderColor: "#fff",
     color: COLORS.light.black,
+    borderWidth: 1,
+    height: wp(30),
   },
   required: {
     color: "red",

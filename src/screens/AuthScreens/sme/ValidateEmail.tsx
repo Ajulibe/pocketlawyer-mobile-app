@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  BackHandler,
-} from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import React, {useState, useEffect} from "react";
+import {View, StyleSheet, SafeAreaView, Text, BackHandler} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
+import PLButton from "components/PLButton/PLButton.component";
 
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
 
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {TouchableOpacity} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import globalStyles from "css/GlobalCss";
-import { useFocusEffect } from "@react-navigation/native";
+import {useFocusEffect} from "@react-navigation/native";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const ValidateEmail = ({ navigation }: Props) => {
+const ValidateEmail = ({navigation}: Props) => {
   //--> Otp state
   const [OTP, setOTP] = useState<string>("");
   const [validating, setSetValidating] = useState<boolean>(false);
@@ -32,10 +26,10 @@ const ValidateEmail = ({ navigation }: Props) => {
   const [email, setEmail] = useState("");
 
   //--> validate OTP
-  const validateOTP = () => {
+  const validateOTP = React.useCallback(() => {
     // console.log(OTP);
     navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
-  };
+  }, []);
 
   //--> prevent back button from working
   useFocusEffect(
@@ -48,7 +42,7 @@ const ValidateEmail = ({ navigation }: Props) => {
 
       return () =>
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
+    }, []),
   );
 
   //-> listen to OTP Change and call validation
@@ -69,7 +63,7 @@ const ValidateEmail = ({ navigation }: Props) => {
     }, 3000);
 
     validateOTP();
-  }, [OTP]);
+  }, [OTP, validateOTP]);
 
   useEffect(() => {
     getData();
@@ -101,7 +95,7 @@ const ValidateEmail = ({ navigation }: Props) => {
           </Text>
         </View>
 
-        <View style={{ height: wp(130) }}>
+        <View style={{height: wp(130)}}>
           <Text style={styles.inputText}>Code</Text>
           <PLTextInput
             maxLength={6}
@@ -131,8 +125,7 @@ const ValidateEmail = ({ navigation }: Props) => {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(ROUTES.AUTH_SIGN_UP_SME);
-            }}
-          >
+            }}>
             <Text style={styles.signUpText}>
               Wrong Email?
               <Text style={styles.login}> &nbsp; Start Over </Text>

@@ -20,6 +20,7 @@ import axiosClient from "utils/axiosClient";
 import { hp, wp } from "utils/Dimensions";
 import { showError } from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import HistoryListTile from "./Components/HistoryListTile";
+import { useScrollToTop } from "@react-navigation/native";
 
 // type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
 type Props = StackScreenProps<HistoryStackParamList, ROUTES.HISTORY_SCREEN>;
@@ -42,6 +43,9 @@ export interface ServiceHistoryInterface {
 
 const HistoryScreen = ({ navigation }: Props) => {
   const [history, setHistory] = React.useState<ServiceHistoryInterface[]>([]);
+  const ref = React.useRef<FlatList | null>(null);
+
+  useScrollToTop(ref);
 
   React.useEffect(() => {
     getHistory();
@@ -98,6 +102,7 @@ const HistoryScreen = ({ navigation }: Props) => {
             hideBackButton={true}
           />
           <FlatList
+            ref={ref}
             data={history}
             showsHorizontalScrollIndicator={false}
             ListHeaderComponent={() => CategoryHeader()}

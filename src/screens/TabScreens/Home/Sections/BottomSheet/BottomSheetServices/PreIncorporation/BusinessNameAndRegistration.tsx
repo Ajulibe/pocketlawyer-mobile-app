@@ -1,9 +1,9 @@
 import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../ModalFormStyles";
 import {
   DocUploadInterface,
@@ -16,10 +16,10 @@ import {
   addMetadata,
   submitHistory,
 } from "services/UploadDocsService";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { wp } from "utils/Dimensions";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../BottomSheetUtils/BottomSheetProps";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {wp} from "utils/Dimensions";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../BottomSheetUtils/BottomSheetProps";
 import {
   validateInputs,
   showError,
@@ -31,7 +31,7 @@ import {
   LoadingActionType,
 } from "../../BottomSheetUtils/LoadingReducer";
 import PickerInput from "components/PickerInput";
-import { meansOfIdentification } from "../../BottomSheetUtils/FormStaticData";
+import {meansOfIdentification} from "../../BottomSheetUtils/FormStaticData";
 import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
 
 const FormKeys = {
@@ -43,17 +43,17 @@ const FormKeys = {
   signature: "Signature",
 };
 export function BusinessNameAndRegistration(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const {navigation, closeModal, service, lawyer, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -67,15 +67,15 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         loadingDispatch({
           type: LoadingActionType.SHOW_WITH_CONTENT,
-          payload: { content: "Submiting, please wait..." },
+          payload: {content: "Submiting, please wait..."},
         });
         const submit = await addMetadata(formMeta);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (submit === 200) {
           //--> Submit Service
           try {
@@ -116,18 +116,18 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -139,11 +139,11 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
           enableOnAndroid={true}
-          keyboardShouldPersistTaps={"handled"}
-        >
+          keyboardShouldPersistTaps={"handled"}>
           <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
           <Text style={modalFormstyles.titleDesc}>
             Please fill the form with your proposed business details
@@ -154,7 +154,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             placeholder="Type business name 1"
             errorText={formData?.[FormKeys.name1]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name1, value: text });
+              handleTextChange({field: FormKeys.name1, value: text});
             }}
           />
           <ModalFormLabel text="Proposed Business Name 2" />
@@ -162,7 +162,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             placeholder="Type business name 2"
             errorText={formData?.[FormKeys.name2]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.name2, value: text });
+              handleTextChange({field: FormKeys.name2, value: text});
             }}
           />
           <ModalFormLabel text="Nature of Business" />
@@ -170,7 +170,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             placeholder="Type the business nature"
             errorText={formData?.[FormKeys.nature]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.nature, value: text });
+              handleTextChange({field: FormKeys.nature, value: text});
             }}
           />
           <ModalFormLabel text="Means of Identification" />
@@ -182,7 +182,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
               "Select your means of identification"
             }
             onSelectChange={(text: string) => {
-              handleTextChange({ field: FormKeys.meansOfId, value: text });
+              handleTextChange({field: FormKeys.meansOfId, value: text});
             }}
           />
 
@@ -191,7 +191,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
             placeholder="Type identification number"
             errorText={formData?.[FormKeys.idNo]?.error}
             onChangeText={(text: string) => {
-              handleTextChange({ field: FormKeys.idNo, value: text });
+              handleTextChange({field: FormKeys.idNo, value: text});
             }}
           />
           <ModalFormLabel text="Signature" />
@@ -203,7 +203,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
           />
         </KeyboardAwareScrollView>
       </ScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
   );

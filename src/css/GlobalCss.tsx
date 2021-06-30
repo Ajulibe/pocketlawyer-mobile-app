@@ -31,7 +31,7 @@ const globalStyles = StyleSheet.create({
   H1Style: {
     fontFamily: "Roboto-Bold",
     fontWeight: "700",
-    fontSize: wp(18),
+    fontSize: wp(19),
     lineHeight: wp(24),
     color: COLORS.light.primary,
   },
@@ -50,6 +50,29 @@ const globalStyles = StyleSheet.create({
     elevation: Platform.OS === "ios" ? 8 : 0,
   },
   divider: {},
+  topWrapper: {
+    height: hp(55),
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingTop: wp(12),
+  },
+  iconWrapper: {
+    width: wp(30),
+    height: wp(30),
+    borderRadius: wp(35),
+    backgroundColor: COLORS.light.white,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+    borderColor: COLORS.light.primary,
+    // borderWidth: 1,
+
+    shadowColor: COLORS.light.black,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+  },
 });
 
 export default globalStyles;

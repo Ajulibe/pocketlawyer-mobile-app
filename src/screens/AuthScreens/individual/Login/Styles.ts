@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
+import {wp, hp} from "utils/Dimensions";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
 
   inputText: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontSize: wp(13),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
@@ -91,7 +91,6 @@ export const styles = StyleSheet.create({
   phoneNumberWrapper: {
     width: wpercent("90%"),
     flexDirection: "row",
-    borderWidth: 1,
     justifyContent: "space-between",
     borderRadius: 4,
     borderColor: "#f0f0f0",
@@ -116,6 +115,13 @@ export const styles = StyleSheet.create({
     borderRightColor: "#f0f0f0",
     paddingLeft: wpercent("2%"),
     width: wpercent("26%"),
+  },
+  signupText: {
+    textAlign: "center",
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(14),
+    lineHeight: wp(20),
+    color: COLORS.light.black,
   },
   required: {
     color: "red",

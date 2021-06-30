@@ -2,15 +2,12 @@ import CustomButton from "components/CustomButton";
 import Input from "components/Input";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import {Text, View, ScrollView} from "react-native";
 import modalFormstyles from "../../ModalFormStyles";
-import { confirmUpload, transformMeta } from "services/UploadDocsService";
-import LoadingSpinner from "components/LoadingSpinner";
-import { BottomSheetProps } from "../../../BottomSheetUtils/BottomSheetProps";
-import {
-  validateInputs,
-  showError,
-} from "../../../BottomSheetUtils/FormHelpers";
+import {confirmUpload, transformMeta} from "services/UploadDocsService";
+import LoadingSpinner from "components/LoadingSpinner/index.component";
+import {BottomSheetProps} from "../../../BottomSheetUtils/BottomSheetProps";
+import {validateInputs, showError} from "../../../BottomSheetUtils/FormHelpers";
 import {
   loadingReducer,
   loadingInitialState,
@@ -37,17 +34,17 @@ interface Props extends BottomSheetProps {
 }
 
 export function TrusteeRegistration(props: Props) {
-  const { formTitle, service, subTitle, historyId } = props;
+  const {formTitle, service, subTitle, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData, setFormData] = React.useState<any>({});
 
-  const handleTextChange = (payload: { field: string; value: string }) => {
+  const handleTextChange = (payload: {field: string; value: string}) => {
     setFormData((values: any) => ({
       ...values,
-      [payload.field]: { key: payload.field, value: payload.value },
+      [payload.field]: {key: payload.field, value: payload.value},
     }));
   };
 
@@ -61,7 +58,7 @@ export function TrusteeRegistration(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode
+          service.serviceCode,
         );
 
         props.onSubmit(formMeta);
@@ -81,18 +78,18 @@ export function TrusteeRegistration(props: Props) {
     if (pickedFile != null) {
       loadingDispatch({
         type: LoadingActionType.SHOW_WITH_CONTENT,
-        payload: { content: "Uploading file..." },
+        payload: {content: "Uploading file..."},
       });
       const upload = await uploadFileToS3(payload, pickedFile);
       if (upload == null) {
         showError("Error occured while uploading, try again...");
       } else {
         const confirm = await confirmUpload(upload);
-        loadingDispatch({ type: LoadingActionType.HIDE });
+        loadingDispatch({type: LoadingActionType.HIDE});
         if (confirm == null || confirm?.url == null) {
           showError("Error occured while uploading, try again...");
         } else {
-          handleTextChange({ field: field, value: confirm?.url });
+          handleTextChange({field: field, value: confirm?.url});
         }
       }
     }
@@ -112,7 +109,7 @@ export function TrusteeRegistration(props: Props) {
           placeholder="Type business name 1"
           errorText={formData?.[FormKeys.name1]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.name1, value: text });
+            handleTextChange({field: FormKeys.name1, value: text});
           }}
         />
         <ModalFormLabel text="Proposed Name 2" />
@@ -120,7 +117,7 @@ export function TrusteeRegistration(props: Props) {
           placeholder="Type business name 2"
           errorText={formData?.[FormKeys.name2]?.error}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.name2, value: text });
+            handleTextChange({field: FormKeys.name2, value: text});
           }}
         />
         <ModalFormLabel text="First Publication" />
@@ -130,7 +127,7 @@ export function TrusteeRegistration(props: Props) {
           multiline={true}
           numberOfLines={3}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.firstPub, value: text });
+            handleTextChange({field: FormKeys.firstPub, value: text});
           }}
         />
         <ModalFormLabel text="Second Publication" />
@@ -140,7 +137,7 @@ export function TrusteeRegistration(props: Props) {
           multiline={true}
           numberOfLines={3}
           onChangeText={(text: string) => {
-            handleTextChange({ field: FormKeys.secondPub, value: text });
+            handleTextChange({field: FormKeys.secondPub, value: text});
           }}
         />
         <ModalFormLabel text="Company Seal" />
@@ -153,7 +150,7 @@ export function TrusteeRegistration(props: Props) {
           icon
         />
       </ScrollView>
-      <View style={{ height: 16 }} />
+      <View style={{height: 16}} />
       <CustomButton btnText="Next" onClick={submit} />
     </View>
   );

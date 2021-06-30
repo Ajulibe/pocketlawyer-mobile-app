@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../../navigation/MainNavigator";
-import { ROUTES } from "../../../navigation/Routes";
+import React, {useState} from "react";
+import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "../../../navigation/MainNavigator";
+import {ROUTES} from "../../../navigation/Routes";
 import COLORS from "../../../utils/Colors";
-import { wp, hp } from "../../../utils/Dimensions";
+import {wp, hp} from "../../../utils/Dimensions";
 import NavBar from "../../../components/NavBar";
-import PLButton from "../../../components/PLButton/PLButton";
-import { FontAwesome } from "@expo/vector-icons";
-import { PLPasswordInput } from "../../../components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "../../../components/PLTextInput/PLTextInput";
-import { PLDatePicker } from "../../../components/PLDatePicker";
+import PLButton from "../../../components/PLButton/PLButton.component";
+import {FontAwesome} from "@expo/vector-icons";
+import {PLPasswordInput} from "../../../components/PLPasswordInput/PLPasswordInput.component";
+import {PLTextInput} from "../../../components/PLTextInput/PLTextInput.component";
+import {PLDatePicker} from "../../../components/PLDatePicker/index.component";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <NavBar
@@ -80,8 +80,7 @@ const AuthGetStarted = ({ navigation }: Props) => {
               fontFamily: "Roboto-Regular",
               fontSize: wp(14),
               color: COLORS.light.black,
-            }}
-          >
+            }}>
             By signing up, you agree with the
             <Text style={styles.login}> Terms of services </Text>and{" "}
             <Text style={styles.login}>Privacy policy </Text>

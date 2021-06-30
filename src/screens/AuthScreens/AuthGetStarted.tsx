@@ -1,14 +1,14 @@
 import React from "react";
-import { View, StyleSheet, Image, Text, Platform } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
-import { RootStackParamList } from "../../navigation/MainNavigator";
-import { ROUTES } from "../../navigation/Routes";
+import {View, StyleSheet, Image, Text, Platform} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {RootStackParamList} from "../../navigation/MainNavigator";
+import {ROUTES} from "../../navigation/Routes";
 import COLORS from "../../utils/Colors";
 import IMAGES from "../../utils/Images";
-import { wp, hp } from "../../utils/Dimensions";
-import PLButton from "../../components/PLButton/PLButton";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {wp, hp} from "../../utils/Dimensions";
+import PLButton from "../../components/PLButton/PLButton.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 
 type Props = StackScreenProps<
@@ -16,7 +16,7 @@ type Props = StackScreenProps<
   ROUTES.AUTH_GET_STARTED_SCREEN
 >;
 
-const AuthGetStarted = ({ navigation }: Props) => {
+const AuthGetStarted = ({navigation}: Props) => {
   return (
     <Animatable.View animation="fadeIn" style={styles.wrapper}>
       <Image
@@ -39,13 +39,15 @@ const AuthGetStarted = ({ navigation }: Props) => {
         onClick={() => navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY)}
       />
       <View style={styles.loginWrapper}>
-        <Text style={styles.already}>Already have an account?</Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate(ROUTES.AUTH_LOGIN);
           }}
-        >
-          <Text style={styles.login}>Log in</Text>
+          style={{justifyContent: "center"}}>
+          <Text style={styles.already}>
+            Already have an account? &nbsp;
+            <Text style={styles.login}>Log in</Text>
+          </Text>
         </TouchableOpacity>
       </View>
     </Animatable.View>
@@ -70,10 +72,10 @@ const styles = StyleSheet.create({
   intro: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(15),
     width: wp(260),
     fontStyle: "normal",
-    lineHeight: Platform.OS === "ios" ? hp(24) : hp(32),
+    lineHeight: Platform.OS === "ios" ? hp(28) : hp(32),
     color: COLORS.light.black,
   },
   textWrapper: {
@@ -83,13 +85,13 @@ const styles = StyleSheet.create({
   },
   textHeader: {
     fontFamily: "Roboto-Bold",
-    fontSize: wp(20),
+    fontSize: wp(22),
     color: COLORS.light.primary,
     marginTop: hp(78),
   },
   already: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(15),
     lineHeight: hp(20),
     color: COLORS.light.black,
   },
@@ -102,10 +104,11 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Bold",
-    fontSize: wp(14),
+    fontSize: wp(15),
     lineHeight: hp(16),
     letterSpacing: 0,
     color: COLORS.light.primary,
+    justifyContent: "center",
   },
 });
 

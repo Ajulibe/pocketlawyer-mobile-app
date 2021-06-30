@@ -1,26 +1,26 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
-import { View, SafeAreaView, Text } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {View, SafeAreaView, Text} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
-import { wp } from "utils/Dimensions";
 import NavBar from "components/NavBar";
-import PLButton from "components/PLButton/PLButton";
-import { PLPasswordInput } from "components/PLPasswordInput/PLPasswordInput";
-import { PLTextInput } from "components/PLTextInput/PLTextInput";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { PLModal } from "components/PLModal";
+import PLButton from "components/PLButton/PLButton.component";
+import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
+import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {PLModal} from "components/PLModal/index.component";
 import globalStyles from "css/GlobalCss";
-import { styles } from "./Styles";
-import { useLogin } from "./useLogin";
+import {styles} from "./Styles";
+import {useLogin} from "./useLogin";
 
 type Props = StackScreenProps<
   RootStackParamList,
   ROUTES.AUTH_SIGN_UP_SECTION_TWO
 >;
 
-const AuthLogin = ({ navigation }: Props) => {
+const AuthLogin = ({navigation}: Props) => {
   const {
     resetPassword,
     Login,
@@ -80,8 +80,7 @@ const AuthLogin = ({ navigation }: Props) => {
         <PLModal
           onBackdropPress={() => setVisible(false)}
           visible={visible}
-          onPress={() => setVisible(false)}
-        >
+          onPress={() => setVisible(false)}>
           <Text style={styles.resetPasswordText}>Please Enter your Email</Text>
 
           <PLTextInput
@@ -114,17 +113,8 @@ const AuthLogin = ({ navigation }: Props) => {
         />
         <View style={styles.loginWrapper}>
           <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY)}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "Roboto-Regular",
-                fontSize: wp(14),
-                lineHeight: wp(20),
-                color: COLORS.light.black,
-              }}
-            >
+            onPress={() => navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY)}>
+            <Text style={styles.signupText}>
               Do not have an account?
               <Text style={styles.login}>&nbsp; Sign up </Text>
             </Text>
