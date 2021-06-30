@@ -103,7 +103,6 @@ const HomeScreen = ({navigation}: Props) => {
       );
       if (getCats != null && getCats?.data?.data?.length != 0) {
         const cats: Category[] = getCats?.data?.data;
-
         setCategory(cats);
         getLawyers();
         setIsCategoryLoading(false);
@@ -116,6 +115,14 @@ const HomeScreen = ({navigation}: Props) => {
     }
   };
 
+  const getLawyersFn = React.useCallback(() => {
+    getLawyers();
+  }, [category]);
+
+  React.useEffect(() => {
+    getLawyersFn();
+  }, [getLawyersFn]);
+
   const getLawyers = async () => {
     if (category == null) return;
     const catCodes = category.map((item) => {
@@ -127,7 +134,7 @@ const HomeScreen = ({navigation}: Props) => {
         "Category/GetSPUserCategories",
         catCodes,
       );
-      console.log(data);
+
       if (data != null) {
         const lawyers: LawyerModel[] = data?.data;
 

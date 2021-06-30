@@ -1,13 +1,14 @@
 import React from "react";
 import IMAGES from "../utils/Images";
 
-import { FontAwesome5 } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Octicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Foundation } from "@expo/vector-icons";
+import {FontAwesome5} from "@expo/vector-icons";
+import {AntDesign} from "@expo/vector-icons";
+import {Octicons} from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {Foundation} from "@expo/vector-icons";
 
 import COLORS from "utils/Colors";
+import {wp} from "utils/Dimensions";
 
 export interface Category {
   categoryName: string;
@@ -23,7 +24,7 @@ export const allCategories: Category[] = [
     newImage: (
       <MaterialCommunityIcons
         name="office-building"
-        size={18}
+        size={wp(17)}
         color={COLORS.light.primary}
       />
     ),
@@ -35,7 +36,7 @@ export const allCategories: Category[] = [
     newImage: (
       <AntDesign
         name="customerservice"
-        size={18}
+        size={wp(15)}
         color={COLORS.light.primary}
       />
     ),
@@ -47,7 +48,7 @@ export const allCategories: Category[] = [
     newImage: (
       <FontAwesome5
         name="acquisitions-incorporated"
-        size={18}
+        size={wp(15)}
         color={COLORS.light.primary}
       />
     ),
@@ -56,13 +57,17 @@ export const allCategories: Category[] = [
     categoryName: "Review of Legal Documents",
     categoryCode: "04",
     image: IMAGES["cat-company-reg"],
-    newImage: <AntDesign name="file1" size={17} color={COLORS.light.primary} />,
+    newImage: (
+      <AntDesign name="file1" size={wp(14)} color={COLORS.light.primary} />
+    ),
   },
   {
     categoryName: "Legal Advice and Consultancy",
     categoryCode: "05",
     image: IMAGES["cat-pre-incorporation"],
-    newImage: <Octicons name="law" size={18} color={COLORS.light.primary} />,
+    newImage: (
+      <Octicons name="law" size={wp(16)} color={COLORS.light.primary} />
+    ),
   },
   {
     categoryName: "Legal Drafting",
@@ -71,7 +76,7 @@ export const allCategories: Category[] = [
     newImage: (
       <FontAwesome5
         name="drafting-compass"
-        size={17}
+        size={wp(14)}
         color={COLORS.light.primary}
       />
     ),
@@ -81,7 +86,11 @@ export const allCategories: Category[] = [
     categoryCode: "07",
     image: IMAGES["cat-company-reg"],
     newImage: (
-      <FontAwesome5 name="registered" size={18} color={COLORS.light.primary} />
+      <FontAwesome5
+        name="registered"
+        size={wp(16)}
+        color={COLORS.light.primary}
+      />
     ),
   },
   {
@@ -89,7 +98,7 @@ export const allCategories: Category[] = [
     categoryCode: "08",
     image: IMAGES["cat-company-reg"],
     newImage: (
-      <Foundation name="mountains" size={18} color={COLORS.light.primary} />
+      <Foundation name="mountains" size={wp(18)} color={COLORS.light.primary} />
     ),
   },
 ];

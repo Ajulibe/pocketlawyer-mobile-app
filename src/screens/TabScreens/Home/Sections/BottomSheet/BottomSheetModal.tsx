@@ -25,7 +25,7 @@ export interface ModalProps {
   lawyer: LawyerModel;
   historyId: number;
   amount: number;
-  serviceHistoryID: number;
+  serviceHistoryID?: number;
 }
 
 export default function BottomSheetModal(props: ModalProps) {
