@@ -34,6 +34,7 @@ import {
   capitalizeFirstLetter,
   getFirstLetterFromName,
 } from "../Account/UpdateProfile/utilsFn";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
@@ -140,8 +141,8 @@ const HomeScreen = ({navigation}: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <View style={[styles.container, {flexGrow: 1}]}>
-          <View style={styles.header}>
+        <View style={[styles.container, {flexGrow: 1, paddingHorizontal: 0}]}>
+          <View style={[styles.header, {paddingHorizontal: wp(20)}]}>
             <View style={styles.headerTitleWrapper}>
               <Text style={globalStyles.H1Style}>
                 Hi &nbsp;
@@ -245,9 +246,11 @@ const HomeScreen = ({navigation}: Props) => {
               </>
             ) : (
               <>
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
+                <View style={{paddingHorizontal: wp(15)}}>
+                  <TopFindingsCard />
+                  <TopFindingsCard />
+                  <TopFindingsCard />
+                </View>
               </>
             )}
 
@@ -262,11 +265,7 @@ const HomeScreen = ({navigation}: Props) => {
                 )} */}
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}>
+            <View style={styles.slidingScroll}>
               <RectangularSkeleton isLoading={isCategoryLoading} />
 
               {!isCategoryLoading && (

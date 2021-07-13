@@ -259,7 +259,6 @@ const styles = StyleSheet.create({
     lineHeight: hp(25),
     textDecorationLine: "underline",
     fontFamily: "Roboto-Regular",
-    borderWidth: 1,
   },
   formWrapperTitle: {
     textAlign: "left",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   Animated,
   StyleSheet,
@@ -8,8 +8,8 @@ import {
   ViewStyle,
 } from "react-native";
 import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
-import { SearchBar } from "react-native-elements";
+import {hp, wp} from "utils/Dimensions";
+import {SearchBar} from "react-native-elements";
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -19,7 +19,7 @@ interface ISearch {
   style?: ViewStyle;
 }
 
-const ServiceSearch: React.FC<ISearch> = ({ style }) => {
+const ServiceSearch: React.FC<ISearch> = ({style}) => {
   const [search, setSearch] = useState<string | any>();
   const [focus, setFocus] = useState<boolean>(false);
   const searchBar = React.useRef<any>();
@@ -55,10 +55,10 @@ const ServiceSearch: React.FC<ISearch> = ({ style }) => {
             width: "100%",
             justifyContent: "space-between",
             marginBottom: hp(20),
+            paddingHorizontal: wp(8),
           },
           style,
-        ]}
-      >
+        ]}>
         <SearchBar
           ref={searchBar}
           inputStyle={styles.searchbar}
@@ -83,9 +83,9 @@ const ServiceSearch: React.FC<ISearch> = ({ style }) => {
             },
           ]}
           cancelButtonProps={{
-            buttonStyle: { width: "wp(30)" },
+            buttonStyle: {width: "wp(30)"},
             color: "red",
-            buttonTextStyle: { color: "blue" },
+            buttonTextStyle: {color: "blue"},
           }}
         />
       </View>
@@ -106,8 +106,7 @@ const ServiceSearch: React.FC<ISearch> = ({ style }) => {
             paddingTop: hp(20),
             // Bind opacity to animated value
             opacity: fadeAnim,
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
@@ -115,8 +114,7 @@ const ServiceSearch: React.FC<ISearch> = ({ style }) => {
               width: "95%",
               justifyContent: "space-between",
               marginBottom: hp(20),
-            }}
-          >
+            }}>
             <SearchBar
               inputStyle={styles.searchbar}
               inputContainerStyle={styles.inputContainerStyle}
@@ -147,14 +145,12 @@ const ServiceSearch: React.FC<ISearch> = ({ style }) => {
                   setTimeout(() => {
                     setFocus(false);
                   }, 500);
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: COLORS.light.primary,
                     fontFamily: "Roboto-Medium",
-                  }}
-                >
+                  }}>
                   Cancel
                 </Text>
               </TouchableOpacity>
