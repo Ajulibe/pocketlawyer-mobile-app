@@ -1,9 +1,11 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-animatable";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { MaterialIcons } from "@expo/vector-icons";
-import { hp, wp } from "../utils/Dimensions";
+import {StyleSheet, View} from "react-native";
+import {Text} from "react-native-animatable";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {MaterialIcons} from "@expo/vector-icons";
+import {hp, wp} from "../utils/Dimensions";
+import {Avatar} from "react-native-elements";
+import COLORS from "utils/Colors";
 
 interface Props {
   onBackPress?: () => void; //Back button press
@@ -13,6 +15,8 @@ interface Props {
   navigation?: any; //list click listener
   showBorderBottom?: boolean;
   hideBackButton?: any;
+  profileImage?: any;
+  avatar?: Boolean;
 }
 const CustomAppbar = (props: Props) => {
   const onBackPress = () => {
@@ -33,8 +37,7 @@ const CustomAppbar = (props: Props) => {
             ? "rgba(0, 0, 0, 0.1)"
             : "transparent",
         },
-      ]}
-    >
+      ]}>
       <TouchableOpacity
         onPress={onBackPress}
         style={[
@@ -43,14 +46,33 @@ const CustomAppbar = (props: Props) => {
             height: props.hideBackButton && 0,
             opacity: props.hideBackButton && 0,
           },
-        ]}
-      >
+        ]}>
         <MaterialIcons
           name="keyboard-arrow-left"
           size={28}
           color={"rgba(0, 0, 0, 0.7)"}
         />
       </TouchableOpacity>
+
+      {props.avatar ? (
+        <Avatar
+          rounded
+          titleStyle={{
+            fontFamily: "Roboto-Medium",
+            fontSize: wp(17),
+            color: COLORS.light.white,
+          }}
+          size="large"
+          placeholderStyle={{backgroundColor: COLORS.light.white}}
+          title="Name"
+          source={{
+            uri: `https://${props.profileImage}`,
+          }}
+          onPress={() => {
+            return true;
+          }}
+          containerStyle={styles.userPhoto}></Avatar>
+      ) : null}
 
       <View style={styles.textContainer}>
         <Text style={styles.title}>{props.title}</Text>
@@ -95,10 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "rgba(0, 0, 0, 0.7)",
     width: "100%",
-    // display: "flex",
-    // flexWrap: "nowrap",
-    // flex: 1,
-    // flexShrink: 1,
   },
   subtitle: {
     fontFamily: "Roboto-Regular",
@@ -109,5 +127,9 @@ const styles = StyleSheet.create({
   trailing: {
     alignItems: "flex-end",
     minWidth: 40,
+  },
+  userPhoto: {
+    width: wp(30),
+    height: wp(30),
   },
 });

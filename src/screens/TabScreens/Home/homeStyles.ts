@@ -1,6 +1,6 @@
-import { Platform, StyleSheet } from "react-native";
+import {Platform, StyleSheet} from "react-native";
 import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
   user: {
     width: wp(40),
     height: wp(40),
-    borderColor: COLORS.light.primary,
+    // borderColor: COLORS.light.primary,
     marginRight: wp(7),
-    borderWidth: 1,
+    // borderWidth: 1,
   },
   searchWrapper: {
     backgroundColor: "#F1F1F2",

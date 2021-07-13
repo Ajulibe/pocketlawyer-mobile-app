@@ -1,30 +1,36 @@
-import { View } from "native-base";
+import {View} from "native-base";
 import React from "react";
-import { Image, Platform, StyleSheet, Text } from "react-native";
+import {Image, Platform, Pressable, StyleSheet, Text} from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import StarRating from "react-native-star-rating";
 
-export default function TopFindingsCard() {
+interface Props {
+  onClick?: () => void;
+}
+
+export default function TopFindingsCard({onClick}: Props) {
   return (
-    <View style={styles.wrapper}>
-      <Image style={styles.user} source={{ uri: CONSTANTS.user }} />
-      <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Omoye Afosa</Text>
-        <Text style={styles.subtitle}>Legal Documents Review</Text>
+    <Pressable onPress={onClick}>
+      <View style={styles.wrapper}>
+        <Image style={styles.user} source={{uri: CONSTANTS.user}} />
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>Omoye Afosa</Text>
+          <Text style={styles.subtitle}>Legal Documents Review</Text>
+        </View>
+        <View style={styles.trailingWrapper}>
+          {/* <Text style={styles.trailingTitle}>N56,000</Text> */}
+          <StarRating
+            maxStars={5}
+            rating={3}
+            disabled={true}
+            starSize={8}
+            fullStarColor={"rgba(50, 173, 38, 1)"}
+          />
+        </View>
       </View>
-      <View style={styles.trailingWrapper}>
-        {/* <Text style={styles.trailingTitle}>N56,000</Text> */}
-        <StarRating
-          maxStars={5}
-          rating={3}
-          disabled={true}
-          starSize={8}
-          fullStarColor={"rgba(50, 173, 38, 1)"}
-        />
-      </View>
-    </View>
+    </Pressable>
   );
 }
 

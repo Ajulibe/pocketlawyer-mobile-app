@@ -211,6 +211,7 @@ const AuthGetStarted = ({navigation}: Props) => {
               labelText="Email Address"
               labelTextRequired={true}
               error={false}
+              autoCapitalize="none"
               name="EmailAddress"
               style={styles.input}
               placeholder="Type your email address"

@@ -17,7 +17,8 @@ import LawyerUpdateImageScreen from "screens/LawyerTabScreens/Account/UpdateImag
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN_LAWYER]: undefined;
   [ROUTES.ALL_CATEGORY_SCREEN_LAWYER]: undefined;
-  [ROUTES.CAT_SERVICE_SCREEN_LAWYER]: {category: Category};
+  // [ROUTES.CAT_SERVICE_SCREEN_LAWYER]: {category: Category};
+  [ROUTES.CAT_SERVICE_SCREEN_LAWYER]: undefined;
   [ROUTES.UPDATE_IMAGE_LAWYER]: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [ROUTES.PICK_LAWYER_SCREEN_LAWYER]: {service: any};

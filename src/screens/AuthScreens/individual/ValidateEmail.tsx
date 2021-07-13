@@ -67,10 +67,7 @@ const ValidateEmail = ({navigation, route}: Props) => {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@email");
-      const email = jsonValue ? jsonValue : "";
-      console.log(email, "calling email");
-
-      setEmail(email);
+      setEmail(jsonValue);
     } catch (e) {
       //--> error reading value
     }

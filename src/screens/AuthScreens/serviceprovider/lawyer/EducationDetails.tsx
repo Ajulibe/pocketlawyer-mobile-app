@@ -502,6 +502,7 @@ const styles = StyleSheet.create({
     // borderColor: COLORS.light.textinputborder,
   },
   carouselWrapper: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginTop: hp(24),
@@ -511,7 +512,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: wpercent("7%"),
+    width: wpercent("10%"),
   },
   inputButton: {
     flexDirection: "row",

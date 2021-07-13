@@ -68,7 +68,7 @@ export const toastConfig = {
       text2Style={{
         fontSize: wp(13),
         fontFamily: "Roboto-Regular",
-        color: "grey",
+        color: colors.mantis,
       }}
       text1={
         type === "success" ? "Success" : type === "error" ? "Error" : "Info"

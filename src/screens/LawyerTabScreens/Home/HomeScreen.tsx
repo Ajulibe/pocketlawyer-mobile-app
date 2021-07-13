@@ -146,9 +146,14 @@ const HomeScreen = ({navigation}: Props) => {
               <Text style={globalStyles.H1Style}>
                 Hi &nbsp;
                 {capitalizeFirstLetter(
-                  user_ && user_?.firstName
+                  user_ &&
+                    user_?.firstName &&
+                    typeof user_?.firstName !== "undefined"
                     ? user_?.firstName
-                    : user_?.company?.contactFirstName,
+                    : user_?.company?.contactFirstName &&
+                      typeof user_?.company?.contactFirstName !== "undefined"
+                    ? user_?.company?.contactFirstName
+                    : "",
                 )}
                 &nbsp;👋🏼
               </Text>
@@ -167,13 +172,23 @@ const HomeScreen = ({navigation}: Props) => {
               placeholderStyle={{backgroundColor: COLORS.light.primary}}
               rounded
               title={`${getFirstLetterFromName(
-                user_ && user_?.firstName
+                user_ &&
+                  user_?.firstName &&
+                  typeof user_?.firstName !== "undefined"
                   ? user_?.firstName
-                  : user_?.company?.contactFirstName,
+                  : user_?.company?.contactFirstName &&
+                    typeof user_?.company?.contactFirstName !== "undefined"
+                  ? user_?.company?.contactFirstName
+                  : "",
               )} ${getFirstLetterFromName(
-                user_ && user_?.lastName
+                user_ &&
+                  user_?.lastName &&
+                  typeof user_?.lastName !== "undefined"
                   ? user_?.lastName
-                  : user_?.company?.contactLastName,
+                  : user_?.company?.contactLastName &&
+                    typeof user_?.company?.contactLastName !== "undefined"
+                  ? user_?.company?.contactLastName
+                  : "",
               )}`}
               source={{
                 uri: `https://${profileImage}`,
@@ -192,23 +207,41 @@ const HomeScreen = ({navigation}: Props) => {
             keyboardShouldPersistTaps="handled"
             bounces={false}
             showsVerticalScrollIndicator={false}>
-            <Text
-              style={[
-                globalStyles.H2Style,
-                {marginTop: hp(10), marginBottom: hp(6)},
-              ]}>
-              Top Findings
-            </Text>
+            <View style={styles.titleWithViewMore}>
+              <Text style={globalStyles.H2Style}>Recent Requests</Text>
 
-            <Text style={styles.topFindingSubtitle}>
-              Based on selected categories
-            </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER)
+                }>
+                {!isCategoryLoading && (
+                  <Text style={styles.viewMore}>View all</Text>
+                )}
+              </TouchableOpacity>
+            </View>
 
             {isTopFindingsLoading ? (
               <>
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
+
+                {/* map through the list of service requests */}
+                {/* <FlatList
+                  data={lawyers}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => (
+                    <TopFindingsCard
+                      lawyer={item}
+                      onClick={() => {
+                        // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                        //   category: item,
+                        // });
+                      }}
+                    />
+                  )}
+                /> */}
               </>
             ) : (
               <>
@@ -224,9 +257,9 @@ const HomeScreen = ({navigation}: Props) => {
                 onPress={() =>
                   navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER)
                 }>
-                {!isCategoryLoading && (
+                {/* {!isCategoryLoading && (
                   <Text style={styles.viewMore}>View all</Text>
-                )}
+                )} */}
               </TouchableOpacity>
             </View>
             <View
@@ -245,10 +278,11 @@ const HomeScreen = ({navigation}: Props) => {
                   renderItem={({item}) => (
                     <CategoryCard
                       category={item}
-                      onClick={() =>
-                        navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER, {
-                          category: item,
-                        })
+                      onClick={
+                        () => {}
+                        // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER, {
+                        //   category: item,
+                        // })
                       }
                     />
                   )}
