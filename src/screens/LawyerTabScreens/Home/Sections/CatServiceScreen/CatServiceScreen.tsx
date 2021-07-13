@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   formWrapper: {
     color: COLORS.light.primary,
     fontSize: wp(15),
-    lineHeight: hp(15),
+    lineHeight: hp(20),
     textDecorationLine: "underline",
     fontFamily: "Roboto-Regular",
   },
