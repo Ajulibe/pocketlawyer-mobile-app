@@ -256,9 +256,10 @@ const styles = StyleSheet.create({
   formWrapper: {
     color: COLORS.light.primary,
     fontSize: wp(15),
-    lineHeight: hp(20),
+    lineHeight: hp(25),
     textDecorationLine: "underline",
     fontFamily: "Roboto-Regular",
+    borderWidth: 1,
   },
   formWrapperTitle: {
     textAlign: "left",
