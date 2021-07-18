@@ -97,6 +97,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     paddingBottom: hp(7),
   },
+  addCategory: {
+    width: widthPercentageToDP("26"),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
 
 export default styles;

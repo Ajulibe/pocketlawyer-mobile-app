@@ -3,7 +3,7 @@ import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import _ from "lodash";
-import {HomeStackParamList} from "navigation/HomeStack";
+import {HomeStackParamList} from "navigation/LawyerStackScreens/HomeStack";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
 import {MaterialIcons} from "@expo/vector-icons";
@@ -26,7 +26,10 @@ import {showError} from "../BottomSheet/BottomSheetUtils/FormHelpers";
 import PLButton from "components/PLButton/PLButton.component";
 import {styles} from "./styles";
 
-type Props = StackScreenProps<HomeStackParamList, ROUTES.CAT_SERVICE_SCREEN>;
+type Props = StackScreenProps<
+  HomeStackParamList,
+  ROUTES.CAT_SERVICE_SCREEN_LAWYER
+>;
 
 interface ServiceDetails {
   historyID: Number;
@@ -134,7 +137,7 @@ const CatServiceScreen = ({navigation, route}: Props) => {
     const {data} = await axiosClient.post("Service/Decision", payload);
 
     if (decision === 6 && data.status === 200) {
-      navigation.goBack();
+      navigation.navigate(ROUTES.HOME_SCREEN_LAWYER);
     } else {
       setAccepted("true");
     }

@@ -66,6 +66,7 @@ export enum ROUTES {
   PICK_LAWYER_SCREEN_LAWYER = "LawyerPickLawyer",
   LAWYER_DETAIL_SCREEN_LAWYER = "LawyerLawyerDetail",
   CHECKOUT_SCREEN_LAWYER = "LawyerCheckoutScreen",
+  ADD_MORE_CATEGORIES = "LayerAddMoreCategories",
   // SERIVE STACK...
   SERVICE_STACK_LAWYER = "LawyerServiceStack",
   SERVICE_SCREEN_LAWYER = "LawyerServiceScreen",

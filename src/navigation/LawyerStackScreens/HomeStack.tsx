@@ -14,12 +14,14 @@ import {Category, Service} from "database/DBData";
 import {LawyerModel} from "models/Interfaces";
 import LawyerUpdateImageScreen from "screens/LawyerTabScreens/Account/UpdateImage";
 import {ServiceHistoryInterface} from "screens/LawyerTabScreens/History/HistoryScreen";
+import LayerAddMoreCategories from "screens/LawyerTabScreens/Home/Sections/AddMoreCategories/AddMoreCategories";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN_LAWYER]: undefined;
   [ROUTES.ALL_CATEGORY_SCREEN_LAWYER]: ServiceHistoryInterface[];
   [ROUTES.CAT_SERVICE_SCREEN_LAWYER]: String;
   [ROUTES.UPDATE_IMAGE_LAWYER]: any;
+  [ROUTES.ADD_MORE_CATEGORIES]: Category[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [ROUTES.PICK_LAWYER_SCREEN_LAWYER]: {service: any};
   [ROUTES.LAWYER_DETAIL_SCREEN_LAWYER]: {
@@ -79,6 +81,11 @@ export default function HomeNavigationStack() {
       <HomeStack.Screen
         name={ROUTES.UPDATE_IMAGE_LAWYER}
         component={LawyerUpdateImageScreen}
+        options={headerOptions}
+      />
+      <HomeStack.Screen
+        name={ROUTES.ADD_MORE_CATEGORIES}
+        component={LayerAddMoreCategories}
         options={headerOptions}
       />
     </HomeStack.Navigator>

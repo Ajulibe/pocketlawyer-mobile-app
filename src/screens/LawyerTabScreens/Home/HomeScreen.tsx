@@ -11,6 +11,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
@@ -37,6 +38,7 @@ import {
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import {ServiceHistoryInterface} from "screens/TabScreens/History/HistoryScreen";
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import {Ionicons} from "@expo/vector-icons";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
@@ -48,7 +50,7 @@ const HomeScreen = ({navigation}: Props) => {
 
   const [isCategoryLoading, setIsCategoryLoading] = React.useState(true);
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
-
+  const [refreshing, setRefreshing] = React.useState(false);
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
   const {user_, metaData} = userData;
 
@@ -57,6 +59,17 @@ const HomeScreen = ({navigation}: Props) => {
   const [history, setHistory] = React.useState<ServiceHistoryInterface[]>([]);
 
   useScrollToTop(ref);
+
+  const wait = (timeout: any) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   //--> get the time of the day
   const getTimePeriod = () => {
@@ -250,7 +263,13 @@ const HomeScreen = ({navigation}: Props) => {
               <View style={styles.requestWrapper}>
                 {/* map through the list of service requests */}
                 <FlatList
-                  scrollEnabled={false}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                  scrollEnabled={true}
                   data={history.length > 2 ? history.slice(0, 3) : history}
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
@@ -277,13 +296,19 @@ const HomeScreen = ({navigation}: Props) => {
             <View style={styles.titleWithViewMore}>
               <Text style={globalStyles.H2Style}>Your Categories</Text>
               <TouchableOpacity
-                onPress={
-                  () => true
-                  // navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER, history)
+                onPress={() =>
+                  navigation.push(ROUTES.ADD_MORE_CATEGORIES, category)
                 }>
-                {/* {!isCategoryLoading && (
-                  <Text style={styles.viewMore}>View all</Text>
-                )} */}
+                {!isCategoryLoading && (
+                  <View style={styles.addCategory}>
+                    <Text style={styles.viewMore}>Add Category</Text>
+                    <Ionicons
+                      name="add-circle-sharp"
+                      size={17}
+                      color={COLORS.light.primary}
+                    />
+                  </View>
+                )}
               </TouchableOpacity>
             </View>
 
