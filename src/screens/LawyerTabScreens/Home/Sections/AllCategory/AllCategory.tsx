@@ -1,71 +1,75 @@
 import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "navigation/HomeStack";
+import {HomeStackParamList} from "navigation/LawyerStackScreens/HomeStack";
 import {ROUTES} from "navigation/Routes";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import React from "react";
-import {FlatList, SafeAreaView, ScrollView, View} from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  View,
+  StyleSheet,
+} from "react-native";
 import {CategoryDb} from "database/CategoryDb";
 import CategoryCard from "../../Components/CategoryCard";
 import TopFindingsCard from "../../Components/TopFindingsCard";
 import {widthPercentageToDP} from "react-native-responsive-screen";
-import {hp} from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
+import {ServiceHistoryInterface} from "screens/LawyerTabScreens/History/HistoryScreen";
 
-type Props = StackScreenProps<HomeStackParamList, ROUTES.ALL_CATEGORY_SCREEN>;
+type Props = StackScreenProps<
+  HomeStackParamList,
+  ROUTES.ALL_CATEGORY_SCREEN_LAWYER
+>;
 
-export default function AllCategory({navigation}: Props) {
+export default function AllCategory({navigation, route}: Props) {
+  const history = route.params;
+  console.log(history);
+
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <CustomAppbar navigation={navigation} title="All Categories" />
-        <ScrollView
-          contentContainerStyle={{
-            width: widthPercentageToDP("100"),
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: hp(20),
-          }}>
-          <View style={{width: widthPercentageToDP("90")}}>
-            <TopFindingsCard
-              onClick={() => {
-                navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER);
-              }}
+        <View style={styles.container}>
+          <View style={styles.resultsWrapper}>
+            <FlatList
+              scrollEnabled={false}
+              data={history}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item}) => (
+                <TopFindingsCard
+                  status={item.status}
+                  history={item}
+                  onClick={() => {
+                    if (item.status === 6) {
+                      return;
+                    } else {
+                      navigation.navigate(
+                        ROUTES.CAT_SERVICE_SCREEN_LAWYER,
+                        item.serviceName,
+                      );
+                    }
+                  }}
+                />
+              )}
             />
-            <TopFindingsCard />
-            <TopFindingsCard />
-            <TopFindingsCard />
-            <TopFindingsCard />
-            <TopFindingsCard />
-            <TopFindingsCard />
-            <TopFindingsCard />
           </View>
-        </ScrollView>
-        {/* <FlatList
-          data={CategoryDb.categories}
-          numColumns={2}
-          contentContainerStyle={{flexGrow: 1, alignItems: "center"}}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            
-            <CategoryCard
-              category={item}
-              onClick={
-                () => {}
-                // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
-                //   category: item,
-                // })
-              }
-            />
-          )}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                height: 20,
-              }}
-            />
-          )}
-        /> */}
+        </View>
       </SafeAreaView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: widthPercentageToDP("100"),
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp(20),
+  },
+  resultsWrapper: {
+    width: widthPercentageToDP("90"),
+  },
+});

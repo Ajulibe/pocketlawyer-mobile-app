@@ -60,23 +60,16 @@ const Checkout = ({navigation, route}: Props) => {
 
   //--> lawyer details
   const {name, address} = lawyer;
-
-  React.useEffect(() => {
-    getUser();
-  }, []);
-
   //--> User Details
-  const getUser = async () => {
-    let user: any = await AsyncStorageUtil.getUser();
-    const userObject = JSON.parse(user);
-    const {email} = userObject.data.user_;
-    if (user != null || typeof user !== "undefined") {
-      user = JSON.parse(user);
-      setUserEmail(email);
-    }
-  };
-
-  console.log(amount, userEmail, showModal);
+  React.useEffect(() => {
+    (async () => {
+      let user: any = await AsyncStorageUtil.getUser();
+      if (user != null) {
+        user = JSON.parse(user);
+        setUserEmail(user?.email);
+      }
+    })();
+  });
 
   const showPaymentModal = () => {
     setshowModal(true);

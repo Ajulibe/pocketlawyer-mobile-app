@@ -1,11 +1,11 @@
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import { DocUploadResponse } from "services/S3FileUploadHelper";
-import { ModalProps } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetModal";
-import { BottomSheetProps } from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/BottomSheetProps";
+import {DocUploadResponse} from "services/S3FileUploadHelper";
+import {ModalProps} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetModal";
+import {BottomSheetProps} from "screens/TabScreens/Home/Sections/BottomSheet/BottomSheetUtils/BottomSheetProps";
 
 export const getHistoryId = async (
-  serviceCode: string
+  serviceCode: string,
 ): Promise<number | null> => {
   const userId = await AsyncStorageUtil.getUserId();
   const data = {
@@ -14,7 +14,7 @@ export const getHistoryId = async (
   };
   const getHistory = await axiosClient.post(
     "Service/InitiateServiceHistory",
-    data
+    data,
   );
   if (getHistory == null) {
     return null;
@@ -23,7 +23,7 @@ export const getHistoryId = async (
 };
 
 export const confirmUpload = async (
-  payload: DocUploadResponse
+  payload: DocUploadResponse,
 ): Promise<any> => {
   const response = await axiosClient.post("Upload/ConfirmUpload", payload);
 
@@ -31,13 +31,13 @@ export const confirmUpload = async (
     return null;
   }
   console.log(response?.data?.data);
-  
+
   return response?.data?.data ?? null;
 };
 
 //--> uploading metadata
-export const submitHistory = async (props:BottomSheetProps) => {
-  const { service, lawyer, historyId, amount } = props;
+export const submitHistory = async (props: BottomSheetProps) => {
+  const {service, lawyer, historyId, amount} = props;
   const userId = await AsyncStorageUtil.getUserId();
   const userType = await AsyncStorageUtil.getUserType();
   const payload = {
@@ -53,11 +53,11 @@ export const submitHistory = async (props:BottomSheetProps) => {
     status: 1,
   };
   try {
-    const { data } = await axiosClient.post(
+    const {data} = await axiosClient.post(
       "Service/SubmitServiceHistory",
-      payload
+      payload,
     );
-    
+
     return data;
   } catch (error) {
     return error;
@@ -67,10 +67,11 @@ export const submitHistory = async (props:BottomSheetProps) => {
 //--> uploading metadata
 export const addMetadata = async (payload: any) => {
   try {
-    const { data } = await axiosClient.post(
+    const {data} = await axiosClient.post(
       "Service/AddMetadataHistory",
-      payload
+      payload,
     );
+    console.log(data, "metadata call response");
     return data.status;
   } catch (error) {
     return error;
@@ -81,17 +82,17 @@ export const addMetadata = async (payload: any) => {
 export const transformMeta = async (
   formData: any,
   historyID: any,
-  serviceCode:string
+  serviceCode: string,
 ) => {
   const userId = await AsyncStorageUtil.getUserId();
-  
+
   const arraypayload = [];
 
   for (const property in formData) {
     const data = formData[property];
 
     //--> For optional fields(keys)
-    if (data==null) continue;
+    if (data == null) continue;
 
     data.userID = Number(userId);
     data.tempServiceHistoryID = historyID;

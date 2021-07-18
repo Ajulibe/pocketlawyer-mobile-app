@@ -1,6 +1,7 @@
 import React from "react";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import SkeletonContent from "react-native-skeleton-content";
+import {View} from "react-native";
 
 const secondLayout = [
   {
@@ -51,7 +52,7 @@ interface ICircularProps {
   isLoading: boolean;
 }
 
-export const CircularSkeleton: React.FC<ICircularProps> = ({ isLoading }) => {
+export const CircularSkeleton: React.FC<ICircularProps> = ({isLoading}) => {
   return (
     <SkeletonContent
       layout={firstLayout}
@@ -61,14 +62,14 @@ export const CircularSkeleton: React.FC<ICircularProps> = ({ isLoading }) => {
   );
 };
 
-export const RectangularSkeleton: React.FC<ICircularProps> = ({
-  isLoading,
-}) => {
+export const RectangularSkeleton: React.FC<ICircularProps> = ({isLoading}) => {
   return (
-    <SkeletonContent
-      layout={secondLayout}
-      isLoading={isLoading}
-      animationType="shiver"
-    />
+    <View style={{paddingHorizontal: wp(15)}}>
+      <SkeletonContent
+        layout={secondLayout}
+        isLoading={isLoading}
+        animationType="shiver"
+      />
+    </View>
   );
 };

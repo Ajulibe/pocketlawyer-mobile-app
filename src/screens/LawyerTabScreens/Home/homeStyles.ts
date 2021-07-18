@@ -61,6 +61,10 @@ const styles = StyleSheet.create({
     marginTop: hp(22),
     paddingHorizontal: wp(20),
   },
+  skeleton: {
+    marginBottom: hp(42),
+    marginTop: hp(42),
+  },
   viewMore: {
     color: COLORS.light.primary,
     textDecorationStyle: "solid",
@@ -82,6 +86,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: widthPercentageToDP("100"),
+  },
+  requestWrapper: {
+    paddingTop: hp(7),
+    paddingHorizontal: wp(15),
+    maxHeight: hp(225),
+    overflow: "hidden",
+    paddingBottom: hp(7),
   },
 });
 

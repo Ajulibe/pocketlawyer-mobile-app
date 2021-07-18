@@ -1,42 +1,48 @@
+import React, {useRef} from "react";
 import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
-import {ServiceDb} from "database/ServiceDb";
+import _ from "lodash";
 import {HomeStackParamList} from "navigation/HomeStack";
 import {ROUTES} from "navigation/Routes";
-import React from "react";
 import COLORS from "utils/Colors";
 import {MaterialIcons} from "@expo/vector-icons";
 import {
-  FlatList,
-  Pressable,
   SafeAreaView,
-  StyleSheet,
   ScrollView,
   Text,
-  Platform,
   TouchableOpacity,
   View,
-  Linking,
-  Button,
 } from "react-native";
-import {hp, wp} from "utils/Dimensions";
+import {hp} from "utils/Dimensions";
 import * as WebBrowser from "expo-web-browser";
-import ServiceCardTile from "../../../Services/Components/ServiceCardTile";
-
 import UserDescListTile from "./Components/UserDescListTile";
-import {Avatar} from "react-native-elements";
-import {AntDesign} from "@expo/vector-icons";
-import dayjs from "dayjs";
 import {useAppSelector} from "redux/hooks";
-import {widthPercentageToDP} from "react-native-responsive-screen";
 import * as Animatable from "react-native-animatable";
 import {Entypo} from "@expo/vector-icons";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import axiosClient from "utils/axiosClient";
+import {showError} from "../BottomSheet/BottomSheetUtils/FormHelpers";
+import PLButton from "components/PLButton/PLButton.component";
+import {styles} from "./styles";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.CAT_SERVICE_SCREEN>;
 
+interface ServiceDetails {
+  historyID: Number;
+  key: string;
+  section: string;
+  tempServiceHistoryID: Number;
+  userID: Number;
+  value: string;
+}
+interface Links {
+  name: string;
+  link: string;
+}
+
 const CatServiceScreen = ({navigation, route}: Props) => {
-  const category = route.params?.category;
+  const userDetails = route.params;
 
   //--> state from redux store
   const userData = useAppSelector((state) => state?.users?.user);
@@ -44,6 +50,11 @@ const CatServiceScreen = ({navigation, route}: Props) => {
   const [profileImage, setProfileImage] = React.useState("abc.jpg");
   const [isOpen, setIsOpen] = React.useState(false);
   const [isAttachmentOpen, setAttachmentIsOpen] = React.useState(false);
+  const [documents, setDocuments] = React.useState<Links[]>([]);
+  const [history, setHistory] = React.useState<Links[]>();
+  const [accepted, setAccepted] = React.useState<string>("null");
+
+  const historyIDRef = useRef<string>();
 
   React.useEffect(() => {
     if (typeof metaData === "undefined") {
@@ -60,12 +71,87 @@ const CatServiceScreen = ({navigation, route}: Props) => {
     }
   };
 
-  const handleOpenWithLinking = () => {
-    Linking.openURL("https://expo.io");
+  React.useEffect(() => {
+    getHistory();
+  }, []);
+
+  const handleOpenWithWebBrowser = (linkUrl: string) => {
+    WebBrowser.openBrowserAsync(`https://${linkUrl}`);
   };
 
-  const handleOpenWithWebBrowser = () => {
-    WebBrowser.openBrowserAsync("https://expo.io");
+  const getHistory = async () => {
+    try {
+      const userID = await AsyncStorageUtil.getUserId();
+
+      const response = await axiosClient.get(
+        `Service/GetServiceHistory?UserID=${userID}`,
+      );
+
+      const data = response?.data?.data;
+
+      if (response != null && response?.data?.data?.length != 0) {
+        const serviceDetails = data.find((item: any) => {
+          return item.serviceHistory.serviceName === userDetails;
+        });
+
+        const {
+          metaDataHistories,
+          serviceHistory: {status},
+        } = serviceDetails;
+        const detailsArray: Links[] = [];
+        const infoArray: Links[] = [];
+        const {historyID} = metaDataHistories[0];
+        historyIDRef.current = historyID;
+
+        if (status === 4) {
+          setAccepted("true");
+        } else {
+          setAccepted("false");
+        }
+
+        metaDataHistories.map((item: any) => {
+          if (
+            item.value.includes(".pdf") ||
+            item.value.includes(".png") ||
+            item.value.includes(".svg") ||
+            item.value.includes(".jpg")
+          ) {
+            const data = {name: _.startCase(item.key), link: item.value};
+            detailsArray.push(data);
+          } else {
+            const data = {name: _.startCase(item.key), link: item.value};
+            infoArray.push(data);
+          }
+        });
+        setDocuments(detailsArray);
+        setHistory(infoArray);
+      } else {
+        showError("Error encountered while loading Service Details");
+      }
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const acceptOrDecline = async (decision: number) => {
+    if (
+      historyIDRef.current === null ||
+      typeof historyIDRef.current === "undefined"
+    ) {
+      return;
+    }
+
+    const payload = {
+      Decision: decision,
+      HistoryID: historyIDRef.current,
+    };
+    const {data} = await axiosClient.post("Service/Decision", payload);
+
+    if (decision === 6 && data.status === 200) {
+      navigation.goBack();
+    } else {
+      setAccepted("true");
+    }
   };
 
   return (
@@ -86,7 +172,7 @@ const CatServiceScreen = ({navigation, route}: Props) => {
           <View style={{height: hp(20)}} />
           <UserDescListTile
             leading="Service"
-            value="Business Registration"
+            value={userDetails ?? ""}
             makeBold
           />
 
@@ -110,28 +196,20 @@ const CatServiceScreen = ({navigation, route}: Props) => {
               animation="fadeIn"
               duration={500}
               easing="ease-in">
-              <Text style={styles.subTitle}>Proposed Business Name 1 </Text>
-              <UserDescListTile
-                leading="Dedayo Nig Ltd"
-                value=""
-                makeBold={false}
-              />
-
-              <Text style={styles.subTitle}>Proposed Business Name 2 </Text>
-              <UserDescListTile
-                leading="Dedayo Nig Ltd"
-                value=""
-                makeBold={false}
-              />
-
-              <Text style={styles.subTitle}>Nature of Business </Text>
-              <UserDescListTile leading="Oil and Gas" value="" />
-
-              <Text style={styles.subTitle}>Means of Identification</Text>
-              <UserDescListTile leading="International Passport" value="" />
-
-              <Text style={styles.subTitle}>ID Number</Text>
-              <UserDescListTile leading="I23679871AE678" value="" />
+              {history?.map((item: any, i: any) => {
+                return (
+                  <View key={i}>
+                    <Text style={styles.subTitle}>
+                      {_.startCase(item?.name)}
+                    </Text>
+                    <UserDescListTile
+                      leading={item.link}
+                      value=""
+                      makeBold={false}
+                    />
+                  </View>
+                );
+              })}
             </Animatable.View>
           )}
 
@@ -155,134 +233,56 @@ const CatServiceScreen = ({navigation, route}: Props) => {
               duration={500}
               easing="ease-in"
               style={styles.dataWrapper}>
-              <TouchableOpacity
-                onPress={handleOpenWithWebBrowser}
-                style={styles.links}>
-                <Entypo
-                  name="attachment"
-                  size={14}
-                  color={COLORS.light.primary}
-                />
-                <Text style={styles.linkText}>Signature</Text>
-              </TouchableOpacity>
+              {documents?.length > 0 ? (
+                documents?.map((item: any, i: any) => {
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={() => handleOpenWithWebBrowser(item?.link)}
+                      style={styles.links}>
+                      <Entypo
+                        name="attachment"
+                        size={14}
+                        color={COLORS.light.primary}
+                      />
+
+                      <Text style={styles.linkText}>{item?.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })
+              ) : (
+                <TouchableOpacity onPress={() => true} style={styles.links}>
+                  <MaterialIcons
+                    name="hourglass-empty"
+                    size={14}
+                    color={COLORS.light.primary}
+                  />
+                  <Text style={styles.linkText}>No Attachments</Text>
+                </TouchableOpacity>
+              )}
             </Animatable.View>
           )}
-        </ScrollView>
 
-        {/* <FlatList
-          data={ServiceDb.findByCategoryCode({
-            catCode: category.categoryCode,
-          })}
-          showsHorizontalScrollIndicator={false}
-          ListHeaderComponent={() => (
-            <Text style={[globalStyles.H2Style, { marginBottom: 12 }]}>
-              Services
-            </Text>
+          {accepted === "false" && (
+            <View style={styles.btnWrapper}>
+              <TouchableOpacity
+                style={styles.declineButton}
+                onPress={() => acceptOrDecline(6)}>
+                <Text style={styles.skip}>Decline</Text>
+              </TouchableOpacity>
+
+              <PLButton
+                style={styles.acceptButton}
+                textColor={COLORS.light.white}
+                btnText={"Accept"}
+                onClick={() => acceptOrDecline(4)}
+              />
+            </View>
           )}
-          contentContainerStyle={[styles.container]}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <ServiceCardTile
-              service={item}
-              onClick={() =>
-                navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
-                  // category: category,
-                  service: item,
-                })
-              }
-            />
-          )}
-        /> */}
+        </ScrollView>
       </SafeAreaView>
     </>
   );
 };
 
 export default CatServiceScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: wp(20),
-    paddingVertical: hp(6),
-    alignItems: "center",
-  },
-  userPhoto: {
-    marginBottom: hp(20),
-  },
-  textBtn: {
-    backgroundColor: COLORS.light.primary,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: wp(30),
-    borderRadius: wp(30),
-    width: wp(30),
-    alignSelf: "flex-start",
-    marginBottom: hp(10),
-  },
-  changePhotoBtn: {
-    fontWeight: "300",
-    fontSize: wp(12),
-    lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
-    color: COLORS.light.white,
-    fontFamily: "Roboto-Medium",
-  },
-  subTitle: {
-    fontSize: wp(14),
-    lineHeight: hp(16),
-    fontWeight: "500",
-    fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
-    marginBottom: hp(2),
-    width: "100%",
-    marginTop: hp(24),
-  },
-  changePasswordBth: {
-    width: "100%",
-    marginBottom: hp(2),
-    marginTop: hp(16),
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  passBtnText: {
-    fontSize: wp(14),
-    lineHeight: hp(20),
-    fontWeight: "500",
-    fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
-  },
-  formWrapper: {
-    color: COLORS.light.primary,
-    fontSize: wp(15),
-    lineHeight: hp(25),
-    textDecorationLine: "underline",
-    fontFamily: "Roboto-Regular",
-  },
-  formWrapperTitle: {
-    textAlign: "left",
-  },
-  links: {
-    marginVertical: 10,
-    flexDirection: "row",
-  },
-  linkText: {
-    color: COLORS.light.primary,
-    textDecorationLine: "underline",
-    fontFamily: "Roboto-Regular",
-    fontSize: wp(12),
-    marginLeft: wp(10),
-  },
-  dataWrapper: {
-    width: widthPercentageToDP("90"),
-    backgroundColor: COLORS.light.splashscreenbg,
-    padding: wp(10),
-    paddingLeft: wp(12),
-    borderRadius: 8,
-    marginTop: hp(10),
-    borderColor: COLORS.light.lightpurple,
-    borderWidth: 0.2,
-    marginBottom: hp(10),
-  },
-});

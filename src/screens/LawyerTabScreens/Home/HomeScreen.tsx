@@ -35,6 +35,8 @@ import {
   getFirstLetterFromName,
 } from "../Account/UpdateProfile/utilsFn";
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import {ServiceHistoryInterface} from "screens/TabScreens/History/HistoryScreen";
+import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
@@ -50,9 +52,9 @@ const HomeScreen = ({navigation}: Props) => {
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
   const {user_, metaData} = userData;
 
-  console.log(user_);
   const dispatch = useAppDispatch();
   const ref = React.useRef<ScrollView | null>(null);
+  const [history, setHistory] = React.useState<ServiceHistoryInterface[]>([]);
 
   useScrollToTop(ref);
 
@@ -74,6 +76,7 @@ const HomeScreen = ({navigation}: Props) => {
   React.useEffect(() => {
     getTimePeriod();
     getCategories();
+    getHistory();
   }, []);
 
   React.useEffect(() => {
@@ -129,13 +132,33 @@ const HomeScreen = ({navigation}: Props) => {
 
       if (data != null) {
         const lawyers: LawyerModel[] = data?.data;
-
         setLawyers(lawyers);
-        setTimeout(() => {
-          setIsTopFindingsLoading(false);
-        }, 2000);
+        setIsTopFindingsLoading(false);
       }
     } catch (error) {}
+  };
+
+  const getHistory = async () => {
+    try {
+      const userID = await AsyncStorageUtil.getUserId();
+
+      const response = await axiosClient.get(
+        `Service/GetServiceHistory?UserID=${userID}`,
+      );
+      const totalCount = response?.data?.count;
+      const data = response?.data?.data;
+
+      if (response != null && response?.data?.data?.length != 0) {
+        const history: ServiceHistoryInterface[] = data.map(
+          (h: any) => h?.serviceHistory,
+        );
+        setHistory(history);
+      } else {
+        showError("Error encountered while loading service history");
+      }
+    } catch (error) {
+      return;
+    }
   };
 
   return (
@@ -201,19 +224,13 @@ const HomeScreen = ({navigation}: Props) => {
 
           <ServiceSearch />
 
-          <ScrollView
-            style={{flex: 1}}
-            ref={ref}
-            contentContainerStyle={{}}
-            keyboardShouldPersistTaps="handled"
-            bounces={false}
-            showsVerticalScrollIndicator={false}>
+          <View style={{flex: 1}}>
             <View style={styles.titleWithViewMore}>
               <Text style={globalStyles.H2Style}>Recent Requests</Text>
 
               <TouchableOpacity
                 onPress={() =>
-                  navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER)
+                  navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER, history)
                 }>
                 {!isCategoryLoading && (
                   <Text style={styles.viewMore}>View all</Text>
@@ -221,44 +238,48 @@ const HomeScreen = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
 
-            {isTopFindingsLoading ? (
-              <>
+            {isTopFindingsLoading && (
+              <View style={styles.skeleton}>
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
+              </View>
+            )}
 
+            {!isTopFindingsLoading && (
+              <View style={styles.requestWrapper}>
                 {/* map through the list of service requests */}
-                {/* <FlatList
-                  data={lawyers}
+                <FlatList
+                  scrollEnabled={false}
+                  data={history.length > 2 ? history.slice(0, 3) : history}
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({item}) => (
                     <TopFindingsCard
-                      lawyer={item}
+                      status={item.status}
+                      history={item}
                       onClick={() => {
-                        // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
-                        //   category: item,
-                        // });
+                        if (item.status === 6) {
+                          return;
+                        } else {
+                          navigation.navigate(
+                            ROUTES.CAT_SERVICE_SCREEN_LAWYER,
+                            item.serviceName,
+                          );
+                        }
                       }}
                     />
                   )}
-                /> */}
-              </>
-            ) : (
-              <>
-                <View style={{paddingHorizontal: wp(15)}}>
-                  <TopFindingsCard />
-                  <TopFindingsCard />
-                  <TopFindingsCard />
-                </View>
-              </>
+                />
+              </View>
             )}
 
             <View style={styles.titleWithViewMore}>
               <Text style={globalStyles.H2Style}>Your Categories</Text>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER)
+                onPress={
+                  () => true
+                  // navigation.push(ROUTES.ALL_CATEGORY_SCREEN_LAWYER, history)
                 }>
                 {/* {!isCategoryLoading && (
                   <Text style={styles.viewMore}>View all</Text>
@@ -266,9 +287,7 @@ const HomeScreen = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
             <View style={styles.slidingScroll}>
-              <RectangularSkeleton isLoading={isCategoryLoading} />
-
-              {!isCategoryLoading && (
+              {!isCategoryLoading ? (
                 <FlatList
                   horizontal={true}
                   data={category}
@@ -286,9 +305,11 @@ const HomeScreen = ({navigation}: Props) => {
                     />
                   )}
                 />
+              ) : (
+                <RectangularSkeleton isLoading={isCategoryLoading} />
               )}
             </View>
-          </ScrollView>
+          </View>
         </View>
       </SafeAreaView>
     </>

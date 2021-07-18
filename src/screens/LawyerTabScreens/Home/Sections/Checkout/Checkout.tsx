@@ -172,7 +172,7 @@ const Checkout = ({navigation, route}: Props) => {
               "qr",
               "mobile_money",
             ])}
-            ActivityIndicatorColor="green"
+            ActivityIndicatorColor="purple"
             SafeAreaViewContainer={{
               marginTop: 5,
             }}

@@ -54,7 +54,7 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
             alignItems: "center",
             width: "100%",
             justifyContent: "space-between",
-            marginBottom: hp(20),
+            // marginBottom: hp(20),
             paddingHorizontal: wp(8),
           },
           style,

@@ -1,4 +1,5 @@
 import {Platform, StyleSheet} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import COLORS from "utils/Colors";
 import {hp, wp} from "utils/Dimensions";
 
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: hp(12),
+    marginTop: hp(12),
   },
   viewMore: {
     color: COLORS.light.primary,
@@ -66,6 +68,11 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: wp(12),
     lineHeight: hp(24),
+  },
+  slidingScroll: {
+    display: "flex",
+    flexDirection: "row",
+    width: widthPercentageToDP("100"),
   },
   topFindingSubtitle: {
     fontFamily: "Roboto",

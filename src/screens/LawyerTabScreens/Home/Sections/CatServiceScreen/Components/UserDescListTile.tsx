@@ -5,7 +5,7 @@ import {hp, wp} from "utils/Dimensions";
 
 interface Props {
   leading: String;
-  value: string;
+  value: any;
   makeBold?: boolean;
 }
 export default function UserDescListTile(props: Props) {

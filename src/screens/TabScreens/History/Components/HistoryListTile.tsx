@@ -9,16 +9,16 @@ import {
 } from "react-native";
 import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import Utilities from "utils/Utilities";
-import { ServiceHistoryInterface } from "../HistoryScreen";
-import { Avatar, Badge, Icon, withBadge } from "react-native-elements";
+import {ServiceHistoryInterface} from "../HistoryScreen";
+import {Avatar, Badge, Icon, withBadge} from "react-native-elements";
 
 interface Props {
   history: ServiceHistoryInterface;
   onClick: () => void;
 }
-export default function HistoryListTile({ history, onClick }: Props) {
+export default function HistoryListTile({history, onClick}: Props) {
   const status = () => {
     if (history.status === 1) {
       return "pending";
@@ -29,11 +29,13 @@ export default function HistoryListTile({ history, onClick }: Props) {
 
   return (
     <TouchableOpacity style={styles.wrapper} onPress={() => onClick()}>
-      <Image style={styles.user} source={{ uri: CONSTANTS.user }} />
+      <Image style={styles.user} source={{uri: CONSTANTS.user}} />
 
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>{history.serviceProvider}</Text>
-        <Text style={styles.subtitle}>{history.serviceName}</Text>
+        <Text style={styles.subtitle} numberOfLines={2}>
+          {history.serviceName}
+        </Text>
         <View style={styles.dateWrapper}>
           <Text style={styles.date}>
             {Utilities.currentDate(history.createdAt.toString())}

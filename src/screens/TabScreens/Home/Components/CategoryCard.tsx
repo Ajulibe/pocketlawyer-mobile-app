@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F3F2FD",
     borderRadius: 8,
-    marginHorizontal: wp(5),
+    marginLeft: wp(15),
     borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.carouselBtn2,
     ...globalStyles.shadowLight,

@@ -5,29 +5,72 @@ import COLORS from "utils/Colors";
 import CONSTANTS from "utils/Constants";
 import {hp, wp} from "utils/Dimensions";
 import StarRating from "react-native-star-rating";
+import {ServiceHistoryInterface} from "screens/LawyerTabScreens/History/HistoryScreen";
+import {Badge} from "native-base";
 
 interface Props {
   onClick?: () => void;
+  history?: ServiceHistoryInterface;
+  status?: number;
 }
 
-export default function TopFindingsCard({onClick}: Props) {
+const renderBadge = (status: number) => {
+  switch (status) {
+    case 2:
+      return (
+        <Badge warning style={styles.badge}>
+          <Text style={styles.badgetitle}>In progress</Text>
+        </Badge>
+      );
+    case 4:
+      return (
+        <Badge success style={styles.badge}>
+          <Text style={styles.badgetitle}>Accepted</Text>
+        </Badge>
+      );
+    case 6:
+      return (
+        <Badge danger style={styles.badge}>
+          <Text style={styles.badgetitle}>Declined</Text>
+        </Badge>
+      );
+    default:
+      return (
+        <Badge info style={styles.badge}>
+          <Text style={styles.badgetitle}>Unassigned</Text>
+        </Badge>
+      );
+  }
+};
+
+export default function TopFindingsCard({onClick, history, status}: Props) {
   return (
     <Pressable onPress={onClick}>
       <View style={styles.wrapper}>
-        <Image style={styles.user} source={{uri: CONSTANTS.user}} />
+        <Image
+          style={styles.user}
+          source={{
+            uri: `https://${history?.serviceProviderImage}`,
+          }}
+        />
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Omoye Afosa</Text>
-          <Text style={styles.subtitle}>Legal Documents Review</Text>
+          <Text style={styles.title}>{history?.serviceProvider}</Text>
+          <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">
+            {history?.serviceName}
+          </Text>
         </View>
         <View style={styles.trailingWrapper}>
-          {/* <Text style={styles.trailingTitle}>N56,000</Text> */}
-          <StarRating
-            maxStars={5}
-            rating={3}
-            disabled={true}
-            starSize={8}
-            fullStarColor={"rgba(50, 173, 38, 1)"}
-          />
+          {status ? (
+            renderBadge(status)
+          ) : (
+            <StarRating
+              maxStars={5}
+              rating={3}
+              disabled={true}
+              starSize={8}
+              fullStarColor={"rgba(50, 173, 38, 1)"}
+            />
+          )}
         </View>
       </View>
     </Pressable>
@@ -70,10 +113,22 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     color: COLORS.light.primary,
     fontFamily: "Roboto-Regular",
+    width: wp(180),
+  },
+  badgetitle: {
+    fontSize: wp(8),
+    color: COLORS.light.white,
+    fontFamily: "Roboto-Regular",
+  },
+  badge: {
+    height: hp(17),
+    borderWidth: 0.5,
+    borderColor: "white",
   },
   trailingWrapper: {
-    flex: 1,
-    alignItems: "flex-end",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: wp(70),
   },
   trailingTitle: {
     fontSize: wp(10),

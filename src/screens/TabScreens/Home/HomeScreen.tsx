@@ -49,6 +49,7 @@ const HomeScreen = ({navigation}: Props) => {
 
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
   const {user_, metaData} = userData;
+  console.log(user_);
 
   const dispatch = useAppDispatch();
 
@@ -150,8 +151,8 @@ const HomeScreen = ({navigation}: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <View style={[styles.container, {flexGrow: 1}]}>
-          <View style={styles.header}>
+        <View style={[styles.container, {flexGrow: 1, paddingHorizontal: 0}]}>
+          <View style={[styles.header, {paddingHorizontal: wp(20)}]}>
             <View style={styles.headerTitleWrapper}>
               <Text style={globalStyles.H1Style}>
                 Hi&nbsp;
@@ -202,7 +203,8 @@ const HomeScreen = ({navigation}: Props) => {
             keyboardShouldPersistTaps="handled"
             bounces={false}
             showsVerticalScrollIndicator={false}>
-            <View style={styles.titleWithViewMore}>
+            <View
+              style={[styles.titleWithViewMore, {paddingHorizontal: wp(20)}]}>
               <Text style={globalStyles.H2Style}>Your Categories</Text>
               <TouchableOpacity
                 onPress={() => navigation.push(ROUTES.ALL_CATEGORY_SCREEN)}>
@@ -211,13 +213,10 @@ const HomeScreen = ({navigation}: Props) => {
                 )}
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}>
-              <RectangularSkeleton isLoading={isCategoryLoading} />
 
+            <RectangularSkeleton isLoading={isCategoryLoading} />
+
+            <View style={styles.slidingScroll}>
               {!isCategoryLoading && (
                 <FlatList
                   horizontal={true}
@@ -237,35 +236,26 @@ const HomeScreen = ({navigation}: Props) => {
                 />
               )}
             </View>
-            <Text
-              style={[
-                globalStyles.H2Style,
-                {marginTop: hp(22), marginBottom: hp(6)},
-              ]}>
-              Top Findings
-            </Text>
 
-            <Text style={styles.topFindingSubtitle}>
-              Based on selected categories
-            </Text>
+            <View style={{paddingHorizontal: wp(20)}}>
+              <Text
+                style={[
+                  globalStyles.H2Style,
+                  {marginTop: hp(22), marginBottom: hp(6)},
+                ]}>
+                Top Findings
+              </Text>
 
-            {isTopFindingsLoading ? (
-              <>
-                <RectangularSkeleton isLoading={isTopFindingsLoading} />
-                <RectangularSkeleton isLoading={isTopFindingsLoading} />
-                <RectangularSkeleton isLoading={isTopFindingsLoading} />
-                <RectangularSkeleton isLoading={isTopFindingsLoading} />
-              </>
-            ) : (
-              <>
-                {/* <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard />
-                <TopFindingsCard /> */}
+              <Text style={styles.topFindingSubtitle}>
+                Based on selected categories
+              </Text>
+
+              <RectangularSkeleton isLoading={isTopFindingsLoading} />
+              <RectangularSkeleton isLoading={isTopFindingsLoading} />
+              <RectangularSkeleton isLoading={isTopFindingsLoading} />
+              <RectangularSkeleton isLoading={isTopFindingsLoading} />
+
+              {!isTopFindingsLoading && (
                 <FlatList
                   data={lawyers}
                   showsHorizontalScrollIndicator={false}
@@ -281,8 +271,8 @@ const HomeScreen = ({navigation}: Props) => {
                     />
                   )}
                 />
-              </>
-            )}
+              )}
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>
