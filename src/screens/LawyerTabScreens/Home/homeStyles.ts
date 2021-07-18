@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: widthPercentageToDP("100"),
   },
+  skeletonScroll: {
+    marginTop: hp(40),
+  },
   requestWrapper: {
     paddingTop: hp(7),
     paddingHorizontal: wp(15),

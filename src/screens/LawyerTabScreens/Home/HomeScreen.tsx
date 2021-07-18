@@ -238,13 +238,13 @@ const HomeScreen = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
 
-            {isTopFindingsLoading && (
+            {isTopFindingsLoading ? (
               <View style={styles.skeleton}>
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
               </View>
-            )}
+            ) : null}
 
             {!isTopFindingsLoading && (
               <View style={styles.requestWrapper}>
@@ -286,8 +286,15 @@ const HomeScreen = ({navigation}: Props) => {
                 )} */}
               </TouchableOpacity>
             </View>
-            <View style={styles.slidingScroll}>
-              {!isCategoryLoading ? (
+
+            {isCategoryLoading ? (
+              <View style={styles.skeletonScroll}>
+                <RectangularSkeleton isLoading={isCategoryLoading} />
+              </View>
+            ) : null}
+
+            {!isCategoryLoading && (
+              <View style={styles.slidingScroll}>
                 <FlatList
                   horizontal={true}
                   data={category}
@@ -305,10 +312,8 @@ const HomeScreen = ({navigation}: Props) => {
                     />
                   )}
                 />
-              ) : (
-                <RectangularSkeleton isLoading={isCategoryLoading} />
-              )}
-            </View>
+              </View>
+            )}
           </View>
         </View>
       </SafeAreaView>

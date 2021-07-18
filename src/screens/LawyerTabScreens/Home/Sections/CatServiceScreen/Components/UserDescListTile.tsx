@@ -25,6 +25,7 @@ export default function UserDescListTile(props: Props) {
         {leading}
       </Text>
       <Text
+        numberOfLines={1}
         style={[
           styles.tileTrailing,
           {
@@ -62,5 +63,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
     color: "rgba(0, 0, 0, 1)",
     fontFamily: "Roboto-Regular",
+    width: wp(200),
+    textAlign: "right",
   },
 });

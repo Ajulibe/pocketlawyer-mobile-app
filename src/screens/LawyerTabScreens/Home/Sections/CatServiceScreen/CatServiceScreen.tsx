@@ -53,23 +53,7 @@ const CatServiceScreen = ({navigation, route}: Props) => {
   const [documents, setDocuments] = React.useState<Links[]>([]);
   const [history, setHistory] = React.useState<Links[]>();
   const [accepted, setAccepted] = React.useState<string>("null");
-
   const historyIDRef = useRef<string>();
-
-  React.useEffect(() => {
-    if (typeof metaData === "undefined") {
-      return;
-    }
-    setAvatar();
-  }, [metaData]);
-
-  const setAvatar = () => {
-    if (metaData?.length !== 0) {
-      setProfileImage(metaData[metaData?.length - 1]?.value);
-    } else {
-      setProfileImage("abc.jpg");
-    }
-  };
 
   React.useEffect(() => {
     getHistory();
@@ -96,7 +80,7 @@ const CatServiceScreen = ({navigation, route}: Props) => {
 
         const {
           metaDataHistories,
-          serviceHistory: {status},
+          serviceHistory: {status, serviceProviderImage},
         } = serviceDetails;
         const detailsArray: Links[] = [];
         const infoArray: Links[] = [];
@@ -108,6 +92,8 @@ const CatServiceScreen = ({navigation, route}: Props) => {
         } else {
           setAccepted("false");
         }
+
+        setProfileImage(serviceProviderImage);
 
         metaDataHistories.map((item: any) => {
           if (
