@@ -14,6 +14,16 @@ interface Props {
   status?: number;
 }
 
+type actionType = "warning" | "success" | "danger" | "info";
+
+// const badgeCreator = ({name, ...rest}:Props ) => {
+//   return (
+//     <Badge  {...rest} style={styles.badge}>
+//       <Text style={styles.badgetitle}>{name}</Text>
+//     </Badge>
+//   );
+// };
+
 const renderBadge = (status: number) => {
   switch (status) {
     case 2:
@@ -121,9 +131,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
   },
   badge: {
-    height: hp(17),
-    borderWidth: 0.5,
-    borderColor: "white",
+    height: hp(20),
   },
   trailingWrapper: {
     flexDirection: "row",

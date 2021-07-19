@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: hp(12),
-    marginTop: hp(22),
+    marginTop: hp(32),
     paddingHorizontal: wp(20),
   },
   skeleton: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   requestWrapper: {
     paddingTop: hp(7),
     paddingHorizontal: wp(15),
-    maxHeight: hp(225),
+    maxHeight: hp(290),
     overflow: "hidden",
     paddingBottom: hp(7),
   },
