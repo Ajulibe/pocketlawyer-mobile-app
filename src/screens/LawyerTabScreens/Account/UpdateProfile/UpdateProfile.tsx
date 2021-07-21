@@ -28,6 +28,8 @@ import LoadingSpinner from "components/LoadingSpinner/index.component";
 //--> REDUX
 import {useAppDispatch} from "redux/hooks";
 import {getUser} from "redux/actions";
+//--> REDUX
+import {useAppSelector} from "redux/hooks";
 
 type Props = StackScreenProps<AccountStackParamList>;
 
@@ -60,6 +62,10 @@ const UpdateProfile = ({navigation}: Props) => {
     setCountry(country);
     setCallingCode(country.callingCode);
   };
+
+  //--> state from redux store
+  const userData = useAppSelector((state) => state?.users?.user);
+  const {user_} = userData;
 
   //--> state  for bottom sheet
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -119,6 +125,7 @@ const UpdateProfile = ({navigation}: Props) => {
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
+
       const updatePayload = {
         userid: Number(userID),
         firstName: firstName === "" ? null : firstName,
@@ -128,7 +135,22 @@ const UpdateProfile = ({navigation}: Props) => {
         dob: dob === "" ? null : dob,
       };
 
-      await axiosClient.post("User/UpdateProfile", updatePayload);
+      const companyPayload = {
+        userid: Number(userID),
+        address: state === "Change your location" ? null : `${city},${state}`,
+        phone: phonenumber === "" ? null : phonenumber,
+        company: {
+          ContactFirstName: firstName === "" ? null : firstName,
+          ContactLastName: lastName === "" ? null : lastName,
+        },
+      };
+
+      const payload =
+        user_ && typeof user_.userType !== "undefined" && user_.userType === 5
+          ? companyPayload
+          : updatePayload;
+
+      await axiosClient.post("User/UpdateProfile", payload);
       dispatch(getUser({userID: Number(userID)}));
       setIsLoading(false);
       PLToast({message: "Profile Updated", type: "success"});
@@ -284,14 +306,18 @@ const UpdateProfile = ({navigation}: Props) => {
             />
           </View>
 
-          <View>
-            <Text style={styles.inputText}>Date of Birth</Text>
+          {user_ &&
+          typeof user_.userType !== "undefined" &&
+          user_.userType === 5 ? null : (
+            <View>
+              <Text style={styles.inputText}>Date of Birth</Text>
 
-            <PLDatePicker
-              placeholder="Change your Date of Birth"
-              useDatepickerState={minMaxPickerState}
-            />
-          </View>
+              <PLDatePicker
+                placeholder="Change your Date of Birth"
+                useDatepickerState={minMaxPickerState}
+              />
+            </View>
+          )}
 
           <View style={{}}>
             <Text style={styles.inputText}>Phone Number</Text>

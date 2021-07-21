@@ -102,14 +102,42 @@ const AccountScreen = ({navigation}: Props) => {
           </TouchableOpacity>
 
           <View style={{height: hp(20)}} />
-          <UserDescListTile leading="First Name" value={user_?.firstName} />
-          <UserDescListTile leading="Last Name" value={user_?.lastName} />
+          <UserDescListTile
+            leading="First Name"
+            value={
+              user_ &&
+              user_?.firstName &&
+              typeof user_?.firstName !== "undefined"
+                ? user_?.firstName
+                : user_?.company?.contactFirstName &&
+                  typeof user_?.company?.contactFirstName !== "undefined"
+                ? user_?.company?.contactFirstName
+                : ""
+            }
+          />
+          <UserDescListTile
+            leading="Last Name"
+            value={
+              user_ && user_?.lastName && typeof user_?.lastName !== "undefined"
+                ? user_?.lastName
+                : user_?.company?.contactLastName &&
+                  typeof user_?.company?.contactLastName !== "undefined"
+                ? user_?.company?.contactLastName
+                : ""
+            }
+          />
           <UserDescListTile leading="State" value={addressArray[1]} />
           <UserDescListTile leading="City" value={addressArray[0]} />
-          <UserDescListTile
-            leading="Date of Birth"
-            value={dayjs(user_?.dob).format("DD/MM/YYYY")}
-          />
+
+          {user_ &&
+          typeof user_.userType !== "undefined" &&
+          user_.userType === 5 ? null : (
+            <UserDescListTile
+              leading="Date of Birth"
+              value={dayjs(user_?.dob).format("DD/MM/YYYY")}
+            />
+          )}
+
           <Text
             style={[
               {
