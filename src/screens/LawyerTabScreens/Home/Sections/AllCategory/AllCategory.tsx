@@ -21,6 +21,7 @@ import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
 import {showError} from "../BottomSheet/BottomSheetUtils/FormHelpers";
 import {useScrollToTop} from "@react-navigation/native";
+import {EmptyState} from "screens/LawyerTabScreens/Global/EmptyState";
 
 type Props = StackScreenProps<
   HomeStackParamList,
@@ -79,35 +80,39 @@ export default function AllCategory({navigation, route}: Props) {
             <ActivityIndicator style={styles.indicator} />
           ) : (
             <View style={styles.resultsWrapper}>
-              <FlatList
-                scrollEnabled={true}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                  />
-                }
-                style={{flex: 1}}
-                data={history}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                  <TopFindingsCard
-                    status={item?.status}
-                    history={item}
-                    onClick={() => {
-                      if (item.status === 6) {
-                        return;
-                      } else {
-                        navigation.navigate(
-                          ROUTES.CAT_SERVICE_SCREEN_LAWYER,
-                          item.serviceName,
-                        );
-                      }
-                    }}
-                  />
-                )}
-              />
+              {history.length > 0 ? (
+                <FlatList
+                  scrollEnabled={true}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                  style={{flex: 1}}
+                  data={history}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => (
+                    <TopFindingsCard
+                      status={item?.status}
+                      history={item}
+                      onClick={() => {
+                        if (item.status === 6) {
+                          return;
+                        } else {
+                          navigation.navigate(
+                            ROUTES.CAT_SERVICE_SCREEN_LAWYER,
+                            item.serviceName,
+                          );
+                        }
+                      }}
+                    />
+                  )}
+                />
+              ) : (
+                <EmptyState title="You currently have no requests" />
+              )}
             </View>
           )}
         </View>

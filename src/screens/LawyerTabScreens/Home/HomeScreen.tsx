@@ -4,6 +4,7 @@ import globalStyles from "css/GlobalCss";
 import {HomeStackParamList} from "navigation/LawyerStackScreens/HomeStack";
 import {ROUTES} from "navigation/Routes";
 import React, {useState} from "react";
+import {useFocusEffect} from "@react-navigation/native";
 import {
   SafeAreaView,
   ScrollView,
@@ -15,7 +16,7 @@ import {
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import {hp, wp} from "utils/Dimensions";
+import {wp} from "utils/Dimensions";
 import {Category} from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
@@ -26,7 +27,6 @@ import {useScrollToTop} from "@react-navigation/native";
 
 //--> REDUX
 import {useAppSelector, useAppDispatch} from "redux/hooks";
-import PLButton from "components/PLButton/PLButton.component";
 import COLORS from "utils/Colors";
 import {getUser} from "redux/actions";
 import {RectangularSkeleton} from "components/PLSkeleton/PLSkeleton.component";
@@ -35,10 +35,10 @@ import {
   capitalizeFirstLetter,
   getFirstLetterFromName,
 } from "../Account/UpdateProfile/utilsFn";
-import {widthPercentageToDP} from "react-native-responsive-screen";
+
 import {ServiceHistoryInterface} from "screens/TabScreens/History/HistoryScreen";
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
-import {Ionicons} from "@expo/vector-icons";
+import {EmptyState} from "../Global/EmptyState";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
@@ -85,12 +85,14 @@ const HomeScreen = ({navigation}: Props) => {
     }
   };
 
-  //-->Get User's Categories
-  React.useEffect(() => {
-    getTimePeriod();
-    getCategories();
-    getHistory();
-  }, []);
+  //-->Get User's Categories whenever screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      getTimePeriod();
+      getCategories();
+      getHistory();
+    }, []),
+  );
 
   React.useEffect(() => {
     if (typeof metaData === "undefined") {
@@ -262,34 +264,38 @@ const HomeScreen = ({navigation}: Props) => {
             {!isTopFindingsLoading && (
               <View style={styles.requestWrapper}>
                 {/* map through the list of service requests */}
-                <FlatList
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
-                    />
-                  }
-                  scrollEnabled={true}
-                  data={history.length > 2 ? history.slice(0, 3) : history}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => (
-                    <TopFindingsCard
-                      status={item.status}
-                      history={item}
-                      onClick={() => {
-                        if (item.status === 6) {
-                          return;
-                        } else {
-                          navigation.navigate(
-                            ROUTES.CAT_SERVICE_SCREEN_LAWYER,
-                            item.serviceName,
-                          );
-                        }
-                      }}
-                    />
-                  )}
-                />
+                {history.length > 0 ? (
+                  <FlatList
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                      />
+                    }
+                    scrollEnabled={true}
+                    data={history.length > 2 ? history.slice(0, 3) : history}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => (
+                      <TopFindingsCard
+                        status={item.status}
+                        history={item}
+                        onClick={() => {
+                          if (item.status === 6) {
+                            return;
+                          } else {
+                            navigation.navigate(
+                              ROUTES.CAT_SERVICE_SCREEN_LAWYER,
+                              item.serviceName,
+                            );
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <EmptyState title="You currently have no requests" />
+                )}
               </View>
             )}
 
@@ -301,12 +307,12 @@ const HomeScreen = ({navigation}: Props) => {
                 }>
                 {!isCategoryLoading && (
                   <View style={styles.addCategory}>
-                    <Text style={styles.viewMore}>Add Category</Text>
-                    <Ionicons
+                    <Text style={styles.viewMore}>Add/Remove Category</Text>
+                    {/* <Ionicons
                       name="add-circle-sharp"
                       size={17}
                       color={COLORS.light.primary}
-                    />
+                    /> */}
                   </View>
                 )}
               </TouchableOpacity>
@@ -320,23 +326,27 @@ const HomeScreen = ({navigation}: Props) => {
 
             {!isCategoryLoading && (
               <View style={styles.slidingScroll}>
-                <FlatList
-                  horizontal={true}
-                  data={category}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => (
-                    <CategoryCard
-                      category={item}
-                      onClick={
-                        () => {}
-                        // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER, {
-                        //   category: item,
-                        // })
-                      }
-                    />
-                  )}
-                />
+                {category.length > 0 ? (
+                  <FlatList
+                    horizontal={true}
+                    data={category}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => (
+                      <CategoryCard
+                        category={item}
+                        onClick={
+                          () => {}
+                          // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER, {
+                          //   category: item,
+                          // })
+                        }
+                      />
+                    )}
+                  />
+                ) : (
+                  <EmptyState title="You currently have no selected Categories" />
+                )}
               </View>
             )}
           </View>

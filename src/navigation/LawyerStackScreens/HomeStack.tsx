@@ -14,7 +14,7 @@ import {Category, Service} from "database/DBData";
 import {LawyerModel} from "models/Interfaces";
 import LawyerUpdateImageScreen from "screens/LawyerTabScreens/Account/UpdateImage";
 import {ServiceHistoryInterface} from "screens/LawyerTabScreens/History/HistoryScreen";
-import LayerAddMoreCategories from "screens/LawyerTabScreens/Home/Sections/AddMoreCategories/AddMoreCategories";
+import LayerAddMoreCategories from "screens/LawyerTabScreens/Home/Sections/AddAndRemoveCategories";
 
 export type HomeStackParamList = {
   [ROUTES.HOME_SCREEN_LAWYER]: undefined;
