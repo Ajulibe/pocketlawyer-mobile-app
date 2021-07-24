@@ -63,6 +63,7 @@ export const useLogin = (navigation: any) => {
       await AsyncStorage.setItem("userID", JSON.stringify(userID));
       await AsyncStorage.setItem("firstName", firstName);
       await AsyncStorageUtil.setUser(JSON.stringify(data));
+      console.log(data);
 
       //--> Checking th etype of user loggin in
       if (userType === 1 || userType === 2) {

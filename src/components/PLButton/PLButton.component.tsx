@@ -3,6 +3,12 @@ import {StyleSheet, ActivityIndicator, Platform} from "react-native";
 import {wp} from "../../utils/Dimensions";
 import COLORS from "../../utils/Colors";
 import {Button} from "@ui-kitten/components";
+import * as Animatable from "react-native-animatable";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 
 export interface ButtonProps {
   textColor: string;
@@ -29,6 +35,21 @@ export default function PLButton({
   loadingText,
   ...rest
 }: ButtonProps) {
+  const pressed = useSharedValue(false);
+
+  const uas = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: withSpring(pressed.value ? 0.95 : 1)}],
+    };
+  });
+
+  const setAmin = () => {
+    pressed.value = true;
+    setTimeout(() => {
+      pressed.value = false;
+    }, 80);
+  };
+
   return isLoading ? (
     <Button
       style={[styles.btn, style]}
@@ -38,13 +59,23 @@ export default function PLButton({
       {loadingText}
     </Button>
   ) : (
-    <Button
-      onPress={onClick}
-      style={[styles.btn, style]}
-      {...rest}
-      disabled={disabled ? disabled : false}>
-      {btnText}
-    </Button>
+    <Animated.View style={[styles.btnContainer, uas]}>
+      <Animatable.View style={[styles.btnContainer]} animation="pulse">
+        <Button
+          // onPress={onClick}
+          onPress={(e) => {
+            setAmin();
+            setTimeout(() => {
+              onClick(e);
+            }, 200);
+          }}
+          style={[styles.btn, style]}
+          {...rest}
+          disabled={disabled ? disabled : false}>
+          {btnText}
+        </Button>
+      </Animatable.View>
+    </Animated.View>
   );
 }
 
@@ -53,8 +84,11 @@ const styles = StyleSheet.create({
     width: wp(375),
     borderWidth: 1,
   },
-  btn: {
+  btnContainer: {
     width: wp(312),
+  },
+  btn: {
+    width: "100%",
     height: wp(50),
     backgroundColor: COLORS.light.primary,
     justifyContent: "center",

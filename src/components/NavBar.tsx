@@ -8,11 +8,11 @@ import {
   TextInput,
   ViewStyle,
 } from "react-native";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
+import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
 import COLORS from "../utils/Colors";
-import { wp, hp } from "../utils/Dimensions";
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {wp, hp} from "../utils/Dimensions";
+import {Ionicons} from "@expo/vector-icons";
+import {TouchableOpacity} from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 
 interface NavProps {
@@ -22,7 +22,7 @@ interface NavProps {
   style?: ViewStyle;
 }
 
-const NavBar = ({ onPress, navText, textStyle, style }: NavProps) => {
+const NavBar = ({onPress, navText, textStyle, style}: NavProps) => {
   return (
     <View style={[styles.navigationBar, style]}>
       <TouchableOpacity onPress={onPress} style={styles.backIcon}>
@@ -33,7 +33,9 @@ const NavBar = ({ onPress, navText, textStyle, style }: NavProps) => {
         />
       </TouchableOpacity>
 
-      <Animatable.Text animation="fadeIn" style={[styles.navText, textStyle]}>
+      <Animatable.Text
+        animation="fadeInLeft"
+        style={[styles.navText, textStyle]}>
         {navText}
       </Animatable.Text>
 

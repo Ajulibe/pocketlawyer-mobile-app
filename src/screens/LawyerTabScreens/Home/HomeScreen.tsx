@@ -118,7 +118,7 @@ const HomeScreen = ({navigation}: Props) => {
       const getCats = await axiosClient.get(
         `Category/GetUserCategories/${userID}`,
       );
-      if (getCats != null && getCats?.data?.data?.length != 0) {
+      if (getCats !== null && getCats?.data?.data?.length !== 0) {
         const cats: Category[] = getCats?.data?.data;
 
         setCategory(cats);
@@ -326,7 +326,7 @@ const HomeScreen = ({navigation}: Props) => {
 
             {!isCategoryLoading && (
               <View style={styles.slidingScroll}>
-                {category.length > 0 ? (
+                {category?.length > 0 ? (
                   <FlatList
                     horizontal={true}
                     data={category}
