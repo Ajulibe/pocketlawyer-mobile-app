@@ -1,5 +1,12 @@
 import React from "react";
-import {View, StyleSheet, SafeAreaView, Text, Alert} from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Alert,
+  Platform,
+} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
 import {RootStackParamList} from "../../../navigation/MainNavigator";
 import {ROUTES} from "../../../navigation/Routes";
@@ -8,6 +15,7 @@ import {wp, hp} from "../../../utils/Dimensions";
 import PLButton from "../../../components/PLButton/PLButton.component";
 import {Radio, RadioGroup} from "@ui-kitten/components";
 import * as Animatable from "react-native-animatable";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -72,13 +80,15 @@ const styles = StyleSheet.create({
   },
   selectText: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     color: COLORS.light.black,
-    marginTop: hp(20),
+    marginTop: hp(10),
+    lineHeight: Platform.OS === "ios" ? hp(32) : hp(40),
   },
   welcomeText: {
     textAlign: "left",
     marginTop: hp(33),
+    width: widthPercentageToDP("90"),
   },
   radiobtnFirstWrapper: {
     width: wp(335),
@@ -94,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.checkpurple,
   },
   plButton: {
-    marginTop: hp(202),
+    marginTop: hp(172),
   },
 });
 

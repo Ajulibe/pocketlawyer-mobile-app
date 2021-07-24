@@ -36,6 +36,19 @@ const App: FC = () => {
       "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
       Roboto: require("./src/assets/fonts/Roboto-Regular.ttf"),
       "Roboto-Thin": require("./src/assets/fonts/Roboto-Thin.ttf"),
+      //-->LATO FONTS
+      "Lato-Black": require("./src/assets/fonts/Lato-Black.ttf"),
+      "Lato-Bold": require("./src/assets/fonts/Lato-Bold.ttf"),
+      "Lato-Light": require("./src/assets/fonts/Lato-Light.ttf"),
+      "Lato-Regular": require("./src/assets/fonts/Lato-Regular.ttf"),
+      "Lato-Thin": require("./src/assets/fonts/Lato-Thin.ttf"),
+
+      //--> HK FONT
+      "HK-Bold": require("./src/assets/fonts/hk-grotesk.bold.otf"),
+      "HK-SemiBold": require("./src/assets/fonts/hk-grotesk.semibold.otf"),
+      "HK-Medium": require("./src/assets/fonts/hk-grotesk.medium.otf"),
+      "HK-Regular": require("./src/assets/fonts/hk-grotesk.regular.otf"),
+      "HK-Light": require("./src/assets/fonts/hk-grotesk.light.otf"),
     });
   };
 

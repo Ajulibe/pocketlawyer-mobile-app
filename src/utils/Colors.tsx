@@ -13,6 +13,7 @@ const COLORS = {
     imageinputbg: "rgba(234, 234, 234, 0.3)",
     imageinputborder: "#D5D3D3",
     splashscreenbg: "#F7F6FE",
+    grey: "#374151",
 
     //inspected from expo
     inputBackgnd: "#f7f9fc",
