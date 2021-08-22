@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   signUpText: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontSize: wp(12),
     color: COLORS.light.black,
     lineHeight: hp(20),
   },
@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(11),
+    fontSize: wp(12),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },

@@ -61,6 +61,8 @@ export default function PickLawyer({navigation, route}: Props) {
     setIsLoading(false);
   };
 
+  console.log(service);
+
   return (
     <>
       {isLoading ? (
@@ -69,7 +71,8 @@ export default function PickLawyer({navigation, route}: Props) {
         <SafeAreaView style={globalStyles.AndroidSafeArea}>
           <CustomAppbar
             navigation={navigation}
-            title={category.categoryName}
+            // title={category.categoryName}
+            title={service?.serviceName}
             showBorderBottom={true}
           />
           <View style={[styles.container, {flexGrow: 1}]}>

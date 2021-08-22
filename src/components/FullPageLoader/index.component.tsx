@@ -8,10 +8,10 @@ import {
   StatusBar,
 } from "react-native";
 import IMAGES from "utils/Images";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "navigation/MainNavigator";
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "navigation/MainNavigator";
 import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import globalStyles from "css/GlobalCss";
 
@@ -19,7 +19,7 @@ interface Props {
   message: string;
 }
 
-const index: React.FC<Props> = ({ message }) => {
+const index: React.FC<Props> = ({message}) => {
   return (
     <SafeAreaView
       style={{
@@ -27,8 +27,7 @@ const index: React.FC<Props> = ({ message }) => {
         backgroundColor: COLORS.light.white,
         height: "100%",
         width: "100%",
-      }}
-    >
+      }}>
       <View style={styles.container}>
         <StatusBar
           backgroundColor={COLORS.light.white}
@@ -62,7 +61,7 @@ const styles = StyleSheet.create({
   loading: {
     color: COLORS.light.primary,
     fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontSize: wp(14),
     marginTop: wp(32),
   },
   logo: {

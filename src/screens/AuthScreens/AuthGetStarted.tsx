@@ -10,6 +10,7 @@ import {wp, hp} from "../../utils/Dimensions";
 import PLButton from "../../components/PLButton/PLButton.component";
 import {TouchableOpacity} from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
+import {FS} from "utils/FontSize";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
   },
   intro: {
     textAlign: "center",
-    fontFamily: "HK-Medium",
-    fontSize: wp(17),
+    fontFamily: "HKL-Medium",
+    fontSize: FS.mainBody,
     width: "100%",
     lineHeight: Platform.OS === "ios" ? hp(32) : hp(40),
     color: COLORS.light.black,
@@ -84,13 +85,13 @@ const styles = StyleSheet.create({
   },
   textHeader: {
     fontFamily: "HK-Bold",
-    fontSize: wp(24),
+    fontSize: FS.bigHeading,
     color: COLORS.light.primary,
     marginTop: hp(78),
   },
   already: {
     fontFamily: "HK-Medium",
-    fontSize: wp(17),
+    fontSize: FS.mainBody,
     lineHeight: hp(20),
     color: COLORS.light.black,
   },
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "HK-Bold",
-    fontSize: wp(17),
+    fontSize: FS.mainBody,
     lineHeight: hp(16),
     letterSpacing: 0,
     color: COLORS.light.primary,

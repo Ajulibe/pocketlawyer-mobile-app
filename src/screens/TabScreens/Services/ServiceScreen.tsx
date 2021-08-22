@@ -1,11 +1,11 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
-import { CategoryDb } from "database/CategoryDb";
-import { ServiceDb } from "database/ServiceDb";
-import { ROUTES } from "navigation/Routes";
-import { ServiceStackParamList } from "navigation/ServiceStack";
+import {CategoryDb} from "database/CategoryDb";
+import {ServiceDb} from "database/ServiceDb";
+import {ROUTES} from "navigation/Routes";
+import {ServiceStackParamList} from "navigation/ServiceStack";
 import React from "react";
 import {
   FlatList,
@@ -14,28 +14,44 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-import { widthPercentageToDP } from "react-native-responsive-screen";
-import { hp, wp } from "utils/Dimensions";
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import {hp, wp} from "utils/Dimensions";
 import ServiceCardTile from "./Components/ServiceCardTile";
-import { useScrollToTop } from "@react-navigation/native";
+import {useScrollToTop} from "@react-navigation/native";
 
 type Props = StackScreenProps<ServiceStackParamList, ROUTES.SERVICE_SCREEN>;
+interface filtered {
+  categoryCode: string;
+  image: number;
+  serviceCode: string;
+  serviceName: string;
+}
 
-const ServiceScreen = ({ navigation }: Props) => {
+const ServiceScreen = ({navigation}: Props) => {
   const ref = React.useRef<FlatList | null>(null);
+  const [search, setSearch] = React.useState<string | any>();
+  const [filteredData, setFilteredData] = React.useState<filtered[]>();
 
   useScrollToTop(ref);
+
+  // console.log(ServiceDb.services);
+
+  const filterCategories = (search: string): filtered[] => {
+    const result = ServiceDb.services.filter((item) => {
+      return item.serviceName.startsWith(search);
+    });
+
+    return result;
+  };
 
   return (
     <>
       <SafeAreaView
-        style={[globalStyles.AndroidSafeArea, styles.safeAreaContainer]}
-      >
+        style={[globalStyles.AndroidSafeArea, styles.safeAreaContainer]}>
         <KeyboardAvoidingView
           behavior={"padding"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}
-        >
+          style={{flex: 1}}
+          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}>
           <CustomAppbar
             navigation={navigation}
             title="Services"
@@ -43,7 +59,20 @@ const ServiceScreen = ({ navigation }: Props) => {
             hideBackButton={true}
           />
 
-          <ServiceSearch style={styles.searchBar} />
+          <ServiceSearch
+            filteredData={filteredData}
+            search={search}
+            style={styles.searchBar}
+            searchFn={(value) => {
+              setSearch(value);
+              setFilteredData(filterCategories(value));
+            }}
+            onNavigateClick={(_: filtered) => {
+              navigation.navigate(ROUTES.PICK_LAWYER_SCREEN, {
+                service: _,
+              });
+            }}
+          />
 
           <FlatList
             ref={ref}
@@ -52,7 +81,7 @@ const ServiceScreen = ({ navigation }: Props) => {
             bounces={false}
             contentContainerStyle={[styles.container]}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <ServiceCardTile
                 service={item}
                 onClick={() => {

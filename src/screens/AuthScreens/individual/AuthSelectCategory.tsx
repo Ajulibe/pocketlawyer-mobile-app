@@ -16,6 +16,7 @@ import PLButton from "../../../components/PLButton/PLButton.component";
 import {Radio, RadioGroup} from "@ui-kitten/components";
 import * as Animatable from "react-native-animatable";
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import {FS} from "utils/FontSize";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -75,12 +76,12 @@ const styles = StyleSheet.create({
   },
   Hello: {
     fontFamily: "Roboto-Bold",
-    fontSize: wp(20),
+    fontSize: FS.heading,
     color: COLORS.light.primary,
   },
   selectText: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(16),
+    fontSize: FS.mainBody,
     color: COLORS.light.black,
     marginTop: hp(10),
     lineHeight: Platform.OS === "ios" ? hp(32) : hp(40),

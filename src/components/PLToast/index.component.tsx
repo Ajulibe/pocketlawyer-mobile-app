@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import Toast, {BaseToast} from "react-native-toast-message";
 
-import {wp} from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import {icons, colors} from "./assets";
 
 interface PLToastProps {
@@ -15,7 +16,7 @@ interface PLToastProps {
 
 export const PLToast = ({
   message,
-  duration = 4000,
+  duration = 2000,
   type,
   position = "top",
 }: PLToastProps) => {
@@ -48,30 +49,27 @@ export const toastConfig = {
     <BaseToast
       {...rest}
       style={{
-        borderLeftColor: colors.mantis,
         borderLeftWidth: 1,
-        borderWidth: 1,
-        borderColor: colors.mantis,
-        borderRadius: 6,
-        backgroundColor: "#DDEADE",
+        paddingLeft: wp(20),
+        borderRadius: 4,
+        backgroundColor: colors.mantis,
+        height: hp(70),
       }}
-      leadingIcon={icons.success}
-      leadingIconStyle={{backgroundColor: "white", borderRadius: wp(50)}}
       text1Style={{
-        fontSize: wp(15),
+        fontSize: wp(16),
         fontFamily: "Roboto-Bold",
-        color: colors.mantis,
+        color: "white",
       }}
       onTrailingIconPress={() => {
         Toast.hide();
       }}
       text2Style={{
-        fontSize: wp(13),
+        fontSize: wp(14),
         fontFamily: "Roboto-Regular",
-        color: colors.mantis,
+        color: "white",
       }}
       text1={
-        type === "success" ? "Success" : type === "error" ? "Error" : "Info"
+        type === "success" ? "SUCCESS" : type === "error" ? "ERROR" : "INFO"
       }
       text1NumberOfLines={1}
       text2NumberOfLines={1}
@@ -82,17 +80,14 @@ export const toastConfig = {
     <BaseToast
       {...rest}
       style={{
-        borderLeftColor: colors.red,
+        borderRadius: 4,
+        backgroundColor: colors.red,
         borderLeftWidth: 1,
-        borderWidth: 1,
-        borderColor: colors.red,
-        borderRadius: 6,
-        backgroundColor: colors.lightRed,
+        paddingLeft: wp(20),
+        height: hp(70),
       }}
-      leadingIcon={icons.error}
-      leadingIconStyle={{backgroundColor: "white", borderRadius: wp(50)}}
       text1Style={{
-        fontSize: wp(15),
+        fontSize: wp(16),
         fontFamily: "Roboto-Bold",
         color: "white",
       }}
@@ -100,12 +95,12 @@ export const toastConfig = {
         Toast.hide();
       }}
       text2Style={{
-        fontSize: wp(13),
+        fontSize: wp(14),
         fontFamily: "Roboto-Regular",
         color: "white",
       }}
       text1={
-        type === "success" ? "Success" : type === "error" ? "Error" : "Info"
+        type === "success" ? "SUCCESS" : type === "error" ? "ERROR" : "INFO"
       }
       text1NumberOfLines={1}
       text2NumberOfLines={1}

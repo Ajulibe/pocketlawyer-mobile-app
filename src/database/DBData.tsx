@@ -30,18 +30,6 @@ export const allCategories: Category[] = [
     ),
   },
   {
-    categoryName: "Company Secretarial Services",
-    categoryCode: "02",
-    image: IMAGES["cat-company-reg"],
-    newImage: (
-      <AntDesign
-        name="customerservice"
-        size={wp(15)}
-        color={COLORS.light.primary}
-      />
-    ),
-  },
-  {
     categoryName: "Post-Incorporation",
     categoryCode: "03",
     image: IMAGES["cat-company-reg"],
@@ -51,22 +39,6 @@ export const allCategories: Category[] = [
         size={wp(15)}
         color={COLORS.light.primary}
       />
-    ),
-  },
-  {
-    categoryName: "Review of Legal Documents",
-    categoryCode: "04",
-    image: IMAGES["cat-company-reg"],
-    newImage: (
-      <AntDesign name="file1" size={wp(14)} color={COLORS.light.primary} />
-    ),
-  },
-  {
-    categoryName: "Legal Advice and Consultancy",
-    categoryCode: "05",
-    image: IMAGES["cat-pre-incorporation"],
-    newImage: (
-      <Octicons name="law" size={wp(16)} color={COLORS.light.primary} />
     ),
   },
   {
@@ -81,6 +53,7 @@ export const allCategories: Category[] = [
       />
     ),
   },
+
   {
     categoryName: "Registration",
     categoryCode: "07",
@@ -99,6 +72,35 @@ export const allCategories: Category[] = [
     image: IMAGES["cat-company-reg"],
     newImage: (
       <Foundation name="mountains" size={wp(18)} color={COLORS.light.primary} />
+    ),
+  },
+  {
+    categoryName: "Company Secretarial Services",
+    categoryCode: "02",
+    image: IMAGES["cat-company-reg"],
+    newImage: (
+      <AntDesign
+        name="customerservice"
+        size={wp(15)}
+        color={COLORS.light.primary}
+      />
+    ),
+  },
+
+  {
+    categoryName: "Review of Legal Documents",
+    categoryCode: "04",
+    image: IMAGES["cat-company-reg"],
+    newImage: (
+      <AntDesign name="file1" size={wp(14)} color={COLORS.light.primary} />
+    ),
+  },
+  {
+    categoryName: "Legal Advice and Consultancy",
+    categoryCode: "05",
+    image: IMAGES["cat-pre-incorporation"],
+    newImage: (
+      <Octicons name="law" size={wp(16)} color={COLORS.light.primary} />
     ),
   },
 ];

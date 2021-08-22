@@ -74,7 +74,7 @@ const Input: React.FC<Props> = (props) => {
         <View style={{width: "70%", paddingLeft: wp(20)}}>
           <Text
             style={{
-              fontSize: wp(13),
+              fontSize: wp(14),
               fontFamily: "Roboto-Medium",
               color: COLORS.light.disabled,
             }}>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    fontSize: wp(13),
+    fontSize: wp(14),
     fontFamily: "Roboto-Medium",
     // minHeight: hp(30),
     borderColor: COLORS.light.primaryLight,

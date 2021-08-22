@@ -1,10 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
-import { HistoryStackParamList } from "navigation/HistoryStack";
-import { ROUTES } from "navigation/Routes";
-import React, { useState } from "react";
+import {HistoryStackParamList} from "navigation/HistoryStack";
+import {ROUTES} from "navigation/Routes";
+import React, {useState} from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -17,10 +17,10 @@ import {
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import { hp, wp } from "utils/Dimensions";
-import { showError } from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
+import {hp, wp} from "utils/Dimensions";
+import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import HistoryListTile from "./Components/HistoryListTile";
-import { useScrollToTop } from "@react-navigation/native";
+import {useScrollToTop} from "@react-navigation/native";
 
 // type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
 type Props = StackScreenProps<HistoryStackParamList, ROUTES.HISTORY_SCREEN>;
@@ -41,7 +41,7 @@ export interface ServiceHistoryInterface {
   serviceProviderImage: string;
 }
 
-const HistoryScreen = ({ navigation }: Props) => {
+const HistoryScreen = ({navigation}: Props) => {
   const [history, setHistory] = React.useState<ServiceHistoryInterface[]>([]);
   const ref = React.useRef<FlatList | null>(null);
 
@@ -55,14 +55,14 @@ const HistoryScreen = ({ navigation }: Props) => {
     try {
       const userID = await AsyncStorageUtil.getUserId();
       const response = await axiosClient.get(
-        `Service/GetServiceHistory?UserID=${userID}`
+        `Service/GetServiceHistory?UserID=${userID}`,
       );
       const totalCount = response?.data?.count;
       const data = response?.data?.data;
 
       if (response != null && response?.data?.data?.length != 0) {
         const history: ServiceHistoryInterface[] = data.map(
-          (h: any) => h?.serviceHistory
+          (h: any) => h?.serviceHistory,
         );
         setHistory(history);
       } else {
@@ -84,7 +84,7 @@ const HistoryScreen = ({ navigation }: Props) => {
   const CategoryHeader = () => (
     <>
       <ServiceSearch />
-      <View style={{ height: hp(13) }} />
+      <View style={{height: hp(13)}} />
     </>
   );
   return (
@@ -92,9 +92,8 @@ const HistoryScreen = ({ navigation }: Props) => {
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <KeyboardAvoidingView
           behavior={"padding"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}
-        >
+          style={{flex: 1}}
+          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}>
           <CustomAppbar
             navigation={navigation}
             title="Service History"
@@ -105,10 +104,10 @@ const HistoryScreen = ({ navigation }: Props) => {
             ref={ref}
             data={history}
             showsHorizontalScrollIndicator={false}
-            ListHeaderComponent={() => CategoryHeader()}
+            // ListHeaderComponent={() => CategoryHeader()}
             contentContainerStyle={[styles.container]}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <HistoryListTile
                 history={item}
                 onClick={() => {

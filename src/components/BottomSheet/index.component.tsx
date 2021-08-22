@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
   View,
   StyleSheet,
@@ -7,10 +7,10 @@ import {
   ViewStyle,
 } from "react-native";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
-import { Entypo } from "@expo/vector-icons";
-import { BottomSheet, ListItem } from "react-native-elements";
-import { widthPercentageToDP } from "react-native-responsive-screen";
+import {wp, hp} from "utils/Dimensions";
+import {Entypo} from "@expo/vector-icons";
+import {BottomSheet, ListItem} from "react-native-elements";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 interface Props {
   isVisible: boolean;
@@ -50,7 +50,7 @@ export const PLBottomSheet: React.FC<Props> = ({
       containerStyle: {
         backgroundColor: COLORS.light.primary,
       },
-      titleStyle: { color: "white" },
+      titleStyle: {color: "white"},
       onPress: () => setIsVisible(false),
     },
   ];
@@ -73,21 +73,18 @@ export const PLBottomSheet: React.FC<Props> = ({
             alignItems: "center",
           },
           style,
-        ]}
-      >
+        ]}>
         <TouchableOpacity
           onPress={() => {
             setIsVisible(true);
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
-            }}
-          >
-            <View style={{ width: wp(300) }}>
+            }}>
+            <View style={{width: wp(300)}}>
               <Text
                 style={{
                   marginLeft: wp(16),
@@ -97,8 +94,7 @@ export const PLBottomSheet: React.FC<Props> = ({
                     statePlaceholder === 0
                       ? COLORS.light.darkgrey
                       : COLORS.light.black,
-                }}
-              >
+                }}>
                 {state}
               </Text>
             </View>
@@ -106,8 +102,7 @@ export const PLBottomSheet: React.FC<Props> = ({
               style={{
                 width: wp(30),
                 alignItems: "flex-end",
-              }}
-            >
+              }}>
               <Entypo name="chevron-small-down" size={20} color="grey" />
             </View>
           </View>
@@ -120,15 +115,13 @@ export const PLBottomSheet: React.FC<Props> = ({
           statusBarTranslucent: true,
         }}
         isVisible={isVisible}
-        containerStyle={{ backgroundColor: COLORS.light.primary }}
-      >
+        containerStyle={{backgroundColor: COLORS.light.primary}}>
         {data.map((l: any, i: any) => (
           <ListItem
             key={i}
             onPress={() => {
               setState(l.state);
-            }}
-          >
+            }}>
             <ListItem.Content>
               <ListItem.Title>
                 <Text>{l.state}</Text>
@@ -140,8 +133,7 @@ export const PLBottomSheet: React.FC<Props> = ({
           <ListItem
             key={i}
             containerStyle={l.containerStyle}
-            onPress={l.onPress}
-          >
+            onPress={l.onPress}>
             <ListItem.Content>
               <ListItem.Title style={l.titleStyle}>
                 <Text>{l.title}</Text>

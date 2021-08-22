@@ -22,7 +22,7 @@ export type HomeStackParamList = {
   [ROUTES.LAWYER_DETAIL_SCREEN]: {
     lawyer: LawyerModel;
     category: Category;
-    service: Service;
+    service: Service | string;
   };
   [ROUTES.CHECKOUT_SCREEN]: {
     lawyer: LawyerModel;

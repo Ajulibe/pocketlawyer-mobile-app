@@ -50,7 +50,7 @@ const CustomAppbar = (props: Props) => {
         <MaterialIcons
           name="keyboard-arrow-left"
           size={28}
-          color={"rgba(0, 0, 0, 0.7)"}
+          color={COLORS.light.primary}
         />
       </TouchableOpacity>
 
@@ -75,7 +75,9 @@ const CustomAppbar = (props: Props) => {
       ) : null}
 
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{props.title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {props.title}
+        </Text>
         {props.subtitle && (
           <Text style={styles.subtitle}>{props.subtitle}</Text>
         )}
@@ -110,12 +112,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Bold",
     lineHeight: hp(24),
-    fontSize: wp(20),
+    fontSize: wp(18),
     textAlign: "center",
     fontWeight: "700",
-    color: "rgba(0, 0, 0, 0.7)",
+    // color: "rgba(0, 0, 0, 0.7)",
+    color: COLORS.light.primary,
     width: "100%",
   },
   subtitle: {

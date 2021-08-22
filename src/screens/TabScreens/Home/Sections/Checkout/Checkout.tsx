@@ -25,7 +25,6 @@ import CONSTANTS from "utils/Constants";
 import {hp, wp} from "utils/Dimensions";
 import UserDescListTile from "screens/TabScreens/Account/Components/UserDescListTile";
 import CustomButton from "components/CustomButton";
-import moment from "moment";
 import axiosClient from "utils/axiosClient";
 import {PLToast} from "components/PLToast/index.component";
 import Utilities from "utils/Utilities";
@@ -48,6 +47,7 @@ type Props = StackScreenProps<RootStackParamList, ROUTES.CHECKOUT_SCREEN>;
 const Checkout = ({navigation, route}: Props) => {
   const [showModal, setshowModal] = useState(false);
   const [userEmail, setUserEmail] = useState("pluser@gmail.com");
+  const [firstName, setFirstName] = useState("");
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState,
@@ -60,6 +60,7 @@ const Checkout = ({navigation, route}: Props) => {
 
   //--> lawyer details
   const {name, address} = lawyer;
+  // console.log(lawyer);
 
   React.useEffect(() => {
     getUser();
@@ -69,17 +70,25 @@ const Checkout = ({navigation, route}: Props) => {
   const getUser = async () => {
     let user: any = await AsyncStorageUtil.getUser();
     const userObject = JSON.parse(user);
-    const {email} = userObject.data.user_;
+    const email = userObject?.email;
+    const firstname = userObject?.firstName;
     if (user != null || typeof user !== "undefined") {
       user = JSON.parse(user);
       setUserEmail(email);
+      setFirstName(firstname);
     }
   };
 
-  console.log(amount, userEmail, showModal);
+  // navigation.goBack();
+
+  // console.log(amount, userEmail, showModal);
 
   const showPaymentModal = () => {
-    setshowModal(true);
+    if (validateEmail(userEmail)) {
+      setshowModal(true);
+    } else {
+      showError("User Email is Invalid");
+    }
   };
 
   const submitPayment = async (transactionRef: string | number) => {
@@ -116,6 +125,13 @@ const Checkout = ({navigation, route}: Props) => {
     loadingDispatch({type: LoadingActionType.HIDE});
   };
   LogBox.ignoreAllLogs();
+
+  function validateEmail(email: string) {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   return (
     <>
       <LoadingSpinner
@@ -133,15 +149,24 @@ const Checkout = ({navigation, route}: Props) => {
           keyboardShouldPersistTaps="handled"
           bounces={false}>
           <Text style={styles.subTitle}>
-            Hello Tola, confirm the details you have entered before you proceed
-            to make payment.
+            Hello&nbsp;
+            <Text
+              style={{
+                color: COLORS.light.primary,
+                fontFamily: "Roboto-Bold",
+                fontSize: wp(16),
+              }}>
+              {firstName}
+            </Text>
+            , confirm the details you have entered before you proceed to make
+            payment.
           </Text>
-          <View style={{height: hp(16)}} />
+          <View style={{height: hp(12)}} />
           <Text style={styles.subTitle}>
-            Please note that in a situation where service is not offered your
+            Please note that in a situation where a service is not offered your
             consultation fee would be fully refunded.
           </Text>
-          <View style={{height: hp(60)}} />
+          <View style={{height: hp(36)}} />
           <UserDescListTile leading="Service" value={service?.serviceName} />
           <UserDescListTile leading="Lawyer" value={name!} />
           <UserDescListTile leading="Location" value={address!} />
@@ -164,8 +189,16 @@ const Checkout = ({navigation, route}: Props) => {
             value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
           />
 
-          <Text style={[{...styles.subTitle, textAlign: "center"}]}>
-            You will receive notification on the progress of your request on
+          <Text
+            style={[
+              {
+                ...styles.subTitle,
+                textAlign: "center",
+                fontSize: wp(14),
+                marginBottom: 20,
+              },
+            ]}>
+            You will receive a notification on the progress of your request on
             your service history.
           </Text>
           <View style={{flex: 1}} />
@@ -234,10 +267,10 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontWeight: "300",
-    fontSize: wp(12),
-    lineHeight: hp(20),
+    fontSize: wp(15),
+    lineHeight: hp(24),
     marginTop: hp(6),
-    color: "rgba(0, 0, 0, 0.7)",
-    fontFamily: "Roboto",
+    color: "rgba(0, 0, 0, 0.9)",
+    fontFamily: "Roboto-Regular",
   },
 });

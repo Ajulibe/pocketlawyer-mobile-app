@@ -371,12 +371,11 @@ const AuthGetStarted: React.FC<Props> = ({navigation}) => {
             <Text style={styles.skip}>Skip</Text>
           </TouchableOpacity>
 
-          <PLButton
+          <TouchableOpacity
             style={styles.nextButton}
-            textColor={COLORS.light.white}
-            btnText={"Next"}
-            onClick={filterCategories}
-          />
+            onPress={filterCategories}>
+            <Text style={[styles.skip, {color: "white"}]}>Next</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -437,7 +436,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: wp(44),
+    height: wp(50),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {
@@ -455,7 +454,19 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     width: wp(156),
+    backgroundColor: COLORS.light.primary,
     borderRadius: wp(7),
+    borderWidth: 1,
+    borderColor: COLORS.light.primary,
+    height: wp(50),
+    justifyContent: "center",
+    alignItems: "center",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowColor: COLORS.light.primaryLight,
+    shadowOpacity: 0.2,
   },
 });
 

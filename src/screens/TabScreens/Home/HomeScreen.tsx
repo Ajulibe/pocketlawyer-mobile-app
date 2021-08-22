@@ -29,17 +29,21 @@ import {useAppSelector, useAppDispatch} from "redux/hooks";
 import PLButton from "components/PLButton/PLButton.component";
 import COLORS from "utils/Colors";
 import {getUser} from "redux/actions";
-import {RectangularSkeleton} from "components/PLSkeleton/PLSkeleton.component";
+import {
+  RectangularSkeleton,
+  CategoriesSkeleton,
+} from "components/PLSkeleton/PLSkeleton.component";
 import {Avatar} from "react-native-elements";
 import {
   capitalizeFirstLetter,
   getFirstLetterFromName,
 } from "../Account/UpdateProfile/utilsFn";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({navigation}: Props) => {
-  const [category, setCategory] = React.useState<Category[]>([]);
+  const [category, setCategory] = React.useState<any>("");
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   const time = React.useRef("");
   const [profileImage, setProfileImage] = useState("abc.jpg");
@@ -49,7 +53,6 @@ const HomeScreen = ({navigation}: Props) => {
 
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
   const {user_, metaData} = userData;
-  console.log(user_);
 
   const dispatch = useAppDispatch();
 
@@ -105,11 +108,12 @@ const HomeScreen = ({navigation}: Props) => {
       if (getCats != null && getCats?.data?.data?.length != 0) {
         const cats: Category[] = getCats?.data?.data;
         setCategory(cats);
-        getLawyers();
-        setIsCategoryLoading(false);
+        setTimeout(() => {
+          setIsCategoryLoading(false);
+        }, 5000);
       } else {
         setCategory(CategoryDb.categories.slice(0, 4));
-        setIsCategoryLoading(false);
+        // setIsCategoryLoading(false);
       }
     } catch (error) {
       return error;
@@ -125,27 +129,30 @@ const HomeScreen = ({navigation}: Props) => {
   }, [getLawyersFn]);
 
   const getLawyers = async () => {
-    if (category == null) return;
-    const catCodes = category.map((item) => {
-      return {CategoryCode: item.categoryCode};
-    });
+    if (category !== null) {
+      const catCodes = category.map((item: any) => {
+        return {CategoryCode: item.categoryCode};
+      });
 
-    try {
-      const {data} = await axiosClient.post(
-        "Category/GetSPUserCategories",
-        catCodes,
-      );
+      try {
+        const {data} = await axiosClient.post(
+          "Category/GetSPUserCategories",
+          catCodes,
+        );
 
-      if (data != null) {
-        const lawyers: LawyerModel[] = data?.data;
+        if (data != null) {
+          const lawyers: LawyerModel[] = data?.data;
 
-        setLawyers(lawyers);
-        setTimeout(() => {
-          setIsTopFindingsLoading(false);
-        }, 2000);
-      }
-    } catch (error) {}
+          setLawyers(lawyers);
+          setTimeout(() => {
+            setIsTopFindingsLoading(false);
+          }, 500);
+        }
+      } catch (error) {}
+    }
   };
+
+  const skeletonArray = [1, 2, 3, 4, 5];
 
   LogBox.ignoreAllLogs();
   return (
@@ -194,7 +201,7 @@ const HomeScreen = ({navigation}: Props) => {
             />
           </View>
 
-          <ServiceSearch />
+          {/* <ServiceSearch /> */}
 
           <ScrollView
             style={{flex: 1}}
@@ -214,7 +221,11 @@ const HomeScreen = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
 
-            <RectangularSkeleton isLoading={isCategoryLoading} />
+            <View style={{width: "100%", flexDirection: "row"}}>
+              {skeletonArray.map(() => {
+                return <CategoriesSkeleton isLoading={isCategoryLoading} />;
+              })}
+            </View>
 
             <View style={styles.slidingScroll}>
               {!isCategoryLoading && (
@@ -250,28 +261,33 @@ const HomeScreen = ({navigation}: Props) => {
                 Based on selected categories
               </Text>
 
-              <RectangularSkeleton isLoading={isTopFindingsLoading} />
-              <RectangularSkeleton isLoading={isTopFindingsLoading} />
-              <RectangularSkeleton isLoading={isTopFindingsLoading} />
-              <RectangularSkeleton isLoading={isTopFindingsLoading} />
+              <View style={{width: "100%"}}>
+                {skeletonArray.map(() => {
+                  return (
+                    <RectangularSkeleton
+                      isLoading={isTopFindingsLoading}
+                      style={{width: "100%"}}
+                    />
+                  );
+                })}
+              </View>
 
-              {!isTopFindingsLoading && (
-                <FlatList
-                  data={lawyers}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => (
+              {!isTopFindingsLoading &&
+                lawyers.map((item) => {
+                  return (
                     <TopFindingsCard
                       lawyer={item}
-                      onClick={() => {
-                        // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
-                        //   category: item,
-                        // });
-                      }}
+                      onClick={() =>
+                        navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN, {
+                          lawyer: item,
+                          category: category,
+                          // service: "FROM_HOME_SCREEN",
+                          service: item.categoryName,
+                        })
+                      }
                     />
-                  )}
-                />
-              )}
+                  );
+                })}
             </View>
           </ScrollView>
         </View>

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { wp, hp } from "utils/Dimensions";
-import { Input } from "@ui-kitten/components";
+import React, {useState} from "react";
+import {View, StyleSheet, Text} from "react-native";
+import {wp, hp} from "utils/Dimensions";
+import {Input} from "@ui-kitten/components";
 import COLORS from "utils/Colors";
 
 export interface Props {
@@ -55,7 +55,7 @@ export const PLTextInput: React.FC<Props> = (props) => {
         style={[
           styles.Input,
 
-          props.error ? { borderColor: "red" } : null,
+          props.error ? {borderColor: "red"} : null,
           props.style,
         ]}
         maxLength={props.maxLength ? props.maxLength : 555}
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     // borderColor: COLORS.light.textinputborder,
   },
   textStyle: {
-    fontSize: wp(13),
-    fontFamily: "Roboto-Medium",
+    fontSize: wp(14),
+    fontFamily: "HK-Regular",
     color: COLORS.light.black,
   },
   error: {
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     marginBottom: wp(10),
   },
   label: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(13),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

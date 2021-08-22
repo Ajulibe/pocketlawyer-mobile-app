@@ -6,6 +6,7 @@ import {
   View,
   Text,
   ViewStyle,
+  ScrollView,
 } from "react-native";
 import COLORS from "utils/Colors";
 import {hp, wp} from "utils/Dimensions";
@@ -14,13 +15,30 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from "react-native-responsive-screen";
+import ServiceCardTile from "screens/TabScreens/Services/Components/ServiceCardTile";
 
+interface filtered {
+  categoryCode: string;
+  image: number;
+  serviceCode: string;
+  serviceName: string;
+}
 interface ISearch {
   style?: ViewStyle;
+  searchFn?: (value: string) => void;
+  search?: string;
+  filteredData?: filtered[];
+  onNavigateClick?: any;
 }
 
-const ServiceSearch: React.FC<ISearch> = ({style}) => {
-  const [search, setSearch] = useState<string | any>();
+const ServiceSearch: React.FC<ISearch> = ({
+  style,
+  searchFn,
+  search = "",
+  filteredData,
+  onNavigateClick,
+}) => {
+  // const [search, setSearch] = useState<string | any>();
   const [focus, setFocus] = useState<boolean>(false);
   const searchBar = React.useRef<any>();
   const fadeAnim = React.useRef<any>(new Animated.Value(0)).current;
@@ -42,9 +60,10 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
       useNativeDriver: true,
     }).start();
   };
-  const searchFn = (searchTerm: string) => {
-    setSearch(searchTerm);
-  };
+  // const searchFn = (searchTerm: string) => {
+  //   setSearch(searchTerm);
+  // };
+
   return (
     <>
       <View
@@ -59,14 +78,13 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
           },
           style,
         ]}>
+        {/* @ts-ignore */}
         <SearchBar
           ref={searchBar}
           inputStyle={styles.searchbar}
           inputContainerStyle={styles.inputContainerStyle}
           placeholder="Search for services.."
-          onChangeText={() => {
-            return true;
-          }}
+          onChangeText={() => {}}
           onFocus={() => {
             if (focus) {
               return;
@@ -82,19 +100,14 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
               width: "100%",
             },
           ]}
-          cancelButtonProps={{
-            buttonStyle: {width: "wp(30)"},
-            color: "red",
-            buttonTextStyle: {color: "blue"},
-          }}
         />
       </View>
 
       {focus ? (
         <Animated.View
           style={{
-            flexDirection: "row",
-            alignItems: "flex-start",
+            flexDirection: "column",
+            alignItems: "center",
             width: widthPercentageToDP("100%"),
             marginBottom: hp(20),
             position: "absolute",
@@ -102,7 +115,7 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
             flex: 1,
             height: heightPercentageToDP("100%"),
             zIndex: 100000,
-            justifyContent: "center",
+            // justifyContent: "center",
             paddingTop: hp(20),
             // Bind opacity to animated value
             opacity: fadeAnim,
@@ -117,12 +130,12 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
             }}>
             <SearchBar
               inputStyle={styles.searchbar}
+              autoFocus
               inputContainerStyle={styles.inputContainerStyle}
               placeholder="Search for services.."
               // @ts-ignore
               onChangeText={searchFn}
               value={search}
-              showLoading
               showCancel
               lightTheme={true}
               containerStyle={[
@@ -156,6 +169,20 @@ const ServiceSearch: React.FC<ISearch> = ({style}) => {
               </TouchableOpacity>
             )}
           </View>
+          <ScrollView
+            style={styles.result}
+            showsVerticalScrollIndicator={false}>
+            {filteredData?.map((item) => {
+              return (
+                <ServiceCardTile
+                  service={item}
+                  onClick={() => {
+                    onNavigateClick(item);
+                  }}
+                />
+              );
+            })}
+          </ScrollView>
         </Animated.View>
       ) : null}
     </>
@@ -177,9 +204,13 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     backgroundColor: "#F2F3F2",
-    fontSize: 14,
+    fontSize: wp(14),
     fontFamily: "Roboto-Regular",
     color: "#7C7C7C",
+  },
+  result: {
+    width: "90%",
+    height: heightPercentageToDP("80%"),
   },
 });
 

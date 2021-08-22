@@ -27,6 +27,8 @@ import Utilities from "utils/Utilities";
 import {Category} from "database/DBData";
 import FullPageLoader from "components/FullPageLoader/index.component";
 import {AntDesign} from "@expo/vector-icons";
+import {getFirstLetterFromName} from "screens/TabScreens/Account/UpdateProfile/utilsFn";
+import {Avatar} from "react-native-elements";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
 
@@ -76,6 +78,27 @@ export default function LawyerDetail({navigation, route}: Props) {
       navigation.goBack();
     }
   };
+  console.log(service);
+
+  // console.log(lawyer, "called lawyers");
+
+  const colors = [
+    "#727072",
+    "#c7c8de",
+    "#3b3d8b",
+    "#1b1464",
+    "#c33d41",
+    "#4a4e69",
+    "#5282bb",
+  ];
+
+  const randomColor = (colors: Array<string>) => {
+    var i = Math.floor(Math.random() * colors.length);
+    if (colors && i in colors) {
+      return colors.splice(i, 1)[0];
+    }
+    return colors[i];
+  };
 
   //--> Get history ID before you proceed
   async function getHistory() {
@@ -84,7 +107,7 @@ export default function LawyerDetail({navigation, route}: Props) {
     } else {
       setSpinnerText("Initializing form...");
       setIsLoading(true);
-      const hID = await getHistoryId(service.serviceCode);
+      const hID = await getHistoryId(service?.serviceCode);
       setIsLoading(false);
 
       if (hID == null) {
@@ -145,11 +168,21 @@ export default function LawyerDetail({navigation, route}: Props) {
             contentContainerStyle={[styles.container, {flexGrow: 1}]}
             keyboardShouldPersistTaps="handled"
             bounces={false}>
-            <Image
-              source={{
-                uri: CONSTANTS.user,
+            <Avatar
+              titleStyle={{
+                fontFamily: "Roboto-Bold",
+                fontSize: wp(16),
+                color: COLORS.light.white,
               }}
-              style={styles.userPhoto}
+              containerStyle={styles.userPhoto}
+              size="medium"
+              placeholderStyle={{backgroundColor: randomColor(colors)}}
+              rounded
+              title={`${getFirstLetterFromName(lawyer?.name ?? "")}`}
+              source={{
+                uri: `https://${lawyer?.avatar}`,
+              }}
+              activeOpacity={0}
             />
             <Text style={styles.name}>{lawyer?.name}</Text>
             <View style={styles.userDetails}>
@@ -174,7 +207,8 @@ export default function LawyerDetail({navigation, route}: Props) {
                     <AntDesign
                       name="checkcircle"
                       size={12}
-                      color={COLORS.light.primary}
+                      // color={COLORS.light.blackLight}
+                      color="rgba(0, 0, 0, 0.4)"
                     />
                     <Text style={styles.categoryHeading}>
                       {cat.categoryName}
@@ -182,8 +216,13 @@ export default function LawyerDetail({navigation, route}: Props) {
                   </View>
                 ))}
               </View>
-              <View style={{flex: 1}} />
-              <CustomButton btnText="Confirm" onClick={getHistory} />
+
+              {service !== "FROM_HOME_SCREEN" && (
+                <>
+                  <View style={{flex: 1}} />
+                  <CustomButton btnText="Confirm" onClick={getHistory} />
+                </>
+              )}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -199,17 +238,16 @@ const styles = StyleSheet.create({
     ...globalStyles.centerHorizontal,
   },
   userPhoto: {
-    resizeMode: "contain",
-    width: wp(117),
-    height: wp(117),
-    borderRadius: 150,
+    width: wp(70),
+    height: wp(70),
+    borderRadius: wp(70),
   },
   name: {
     lineHeight: hp(20),
     fontWeight: "500",
-    fontSize: wp(14),
+    fontSize: wp(16),
     color: COLORS.light.primary,
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Bold",
     marginTop: hp(17),
     marginBottom: hp(17),
     textAlign: "center",
@@ -233,7 +271,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: wp(16),
     color: "rgba(0, 0, 0, 0.7)",
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Bold",
     marginBottom: hp(18),
   },
   tileWrapper: {
@@ -247,7 +285,7 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
     lineHeight: hp(20),
     color: "rgba(0, 0, 0, 0.7)",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Medium",
   },
   tileTrailing: {
     fontWeight: "700",

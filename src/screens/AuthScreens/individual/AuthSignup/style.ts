@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     lineHeight: Platform.OS === "ios" ? hp(27) : hp(34),
     textAlign: "left",
     color: COLORS.light.black,
@@ -55,13 +55,13 @@ export const styles = StyleSheet.create({
   signUpText: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontSize: wp(12),
     color: COLORS.light.black,
     lineHeight: Platform.OS === "ios" ? hp(20) : hp(28),
   },
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(13),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(15),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

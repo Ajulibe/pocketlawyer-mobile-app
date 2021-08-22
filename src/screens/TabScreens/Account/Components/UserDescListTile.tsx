@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 
 interface Props {
   leading: String;
@@ -9,7 +10,7 @@ interface Props {
   makeBold?: boolean;
 }
 export default function UserDescListTile(props: Props) {
-  const { leading, value, makeBold } = props;
+  const {leading, value, makeBold} = props;
   return (
     <View style={styles.tileWrapper}>
       <Text style={styles.tileLeading}>{leading}</Text>
@@ -17,11 +18,11 @@ export default function UserDescListTile(props: Props) {
         style={[
           styles.tileTrailing,
           {
-            fontSize: makeBold ? wp(16) : wp(12),
+            fontSize: makeBold ? wp(14) : wp(14),
             color: makeBold ? COLORS.light.primary : "rgba(0, 0, 0, 1)",
+            fontFamily: makeBold ? "Roboto-Bold" : "Roboto-Medium",
           },
-        ]}
-      >
+        ]}>
         {value}
       </Text>
     </View>
@@ -41,16 +42,17 @@ const styles = StyleSheet.create({
   },
   tileLeading: {
     fontWeight: "400",
-    fontSize: wp(12),
+    fontSize: wp(14),
     lineHeight: hp(20),
-    color: "rgba(0, 0, 0, 0.7)",
-    fontFamily: "Roboto",
+    color: "rgba(0, 0, 0, 1)",
+    fontFamily: "Roboto-Bold",
   },
   tileTrailing: {
     fontWeight: "700",
     fontSize: wp(12),
-    // lineHeight: hp(14),
-    color: "rgba(0, 0, 0, 1)",
-    fontFamily: "Roboto-Bold",
+    width: widthPercentageToDP("70%"),
+    textAlign: "right",
+    color: "rgba(0, 0, 0, 0.7)",
+    fontFamily: "Roboto-Medium",
   },
 });

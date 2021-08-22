@@ -3,7 +3,7 @@ import * as DocumentPicker from "expo-document-picker";
 import AsyncStorageUtil from "../utils/AsyncStorageUtil";
 import axiosClient from "../utils/axiosClient";
 import * as FileSystem from "expo-file-system";
-import { Buffer } from "buffer";
+import {Buffer} from "buffer";
 
 export interface DocUploadInterface {
   fileName?: string;
@@ -53,14 +53,14 @@ export const pickFile = async (): Promise<FileInterface | null> => {
 
 export const uploadFileToS3 = async (
   payload: DocUploadInterface,
-  pickFile: FileInterface
+  pickFile: FileInterface,
 ): Promise<DocUploadResponse | null> => {
   //--> Pick file(PDF/IMG/OTHER)
   if (pickFile.type !== "success") {
     //--> Toast error
     return null;
   } else {
-    let { name, size, uri } = pickFile;
+    let {name, size, uri} = pickFile;
     const fileBody = await getBlob(uri);
     const fileType = fileBody["type"];
     if (fileBody == null) {
@@ -78,7 +78,7 @@ export const uploadFileToS3 = async (
         //--> Toast error
         return null;
       } else {
-        const { url, uploadID, fileName } = signedUrl.data.data;
+        const {url, uploadID, fileName} = signedUrl.data.data;
 
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,
@@ -90,7 +90,7 @@ export const uploadFileToS3 = async (
           url: url,
           // data: `data:image/jpeg;base64,${base64uu}`,
           data: buffer,
-          headers: { "Content-Type": fileType ?? "image/jpeg" },
+          headers: {"Content-Type": fileType ?? "image/jpeg"},
         });
         if (uploadFile.status === 200) {
           // console.log(uploadFile);

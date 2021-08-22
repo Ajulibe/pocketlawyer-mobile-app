@@ -1,6 +1,6 @@
-import { Platform, StyleSheet } from "react-native";
+import {Platform, StyleSheet} from "react-native";
 import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 
 const modalFormstyles = StyleSheet.create({
   formContainer: {
@@ -10,12 +10,13 @@ const modalFormstyles = StyleSheet.create({
     paddingBottom: 60,
   },
   titleDesc: {
-    fontSize: wp(12),
-    lineHeight: hp(14),
+    fontSize: wp(16),
+    lineHeight: hp(22),
     fontWeight: "400",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Medium",
     color: "rgba(0, 0, 0, 0.7)",
-    marginVertical: hp(24),
+    marginBottom: hp(26),
+    marginTop: hp(10),
   },
   subHeader: {
     fontSize: wp(13),

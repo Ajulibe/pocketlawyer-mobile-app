@@ -26,14 +26,15 @@ const App: FC = () => {
   }
 
   //load fonts
+  //--> the roboto fonts below are referencing some HK fonts
   const fetchFonts = () => {
     return Font.loadAsync({
       "Roboto-Black": require("./src/assets/fonts/Roboto-Black.ttf"),
-      "Roboto-Bold": require("./src/assets/fonts/Roboto-Bold.ttf"),
-      "Roboto-Light": require("./src/assets/fonts/Roboto-Light.ttf"),
-      "Roboto-Medium": require("./src/assets/fonts/Roboto-Medium.ttf"),
+      "Roboto-Bold": require("./src/assets/fonts/hk-grotesk.bold.otf"),
+      "Roboto-Light": require("./src/assets/fonts/hk-grotesk.light.otf"),
+      "Roboto-Medium": require("./src/assets/fonts/hk-grotesk.medium.otf"),
       "Roboto-MediumItalic": require("./src/assets/fonts/Roboto-MediumItalic.ttf"),
-      "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
+      "Roboto-Regular": require("./src/assets/fonts/hk-grotesk.medium.otf"),
       Roboto: require("./src/assets/fonts/Roboto-Regular.ttf"),
       "Roboto-Thin": require("./src/assets/fonts/Roboto-Thin.ttf"),
       //-->LATO FONTS
@@ -45,10 +46,19 @@ const App: FC = () => {
 
       //--> HK FONT
       "HK-Bold": require("./src/assets/fonts/hk-grotesk.bold.otf"),
+      "HKL-Bold": require("./src/assets/fonts/hk-grotesk.bold-legacy.otf"),
+
       "HK-SemiBold": require("./src/assets/fonts/hk-grotesk.semibold.otf"),
-      "HK-Medium": require("./src/assets/fonts/hk-grotesk.medium.otf"),
+      "HKL-SemiBold": require("./src/assets/fonts/hk-grotesk.semibold-legacy.otf"),
+
+      "HK-Medium": require("./src/assets/fonts/hk-grotesk.medium-legacy.otf"),
+      "HKL-Medium": require("./src/assets/fonts/hk-grotesk.medium.otf"),
+
       "HK-Regular": require("./src/assets/fonts/hk-grotesk.regular.otf"),
+      "HKL-Regular": require("./src/assets/fonts/hk-grotesk.regular-legacy.otf"),
+
       "HK-Light": require("./src/assets/fonts/hk-grotesk.light.otf"),
+      "HKL-Light": require("./src/assets/fonts/hk-grotesk.light-legacy.otf"),
     });
   };
 

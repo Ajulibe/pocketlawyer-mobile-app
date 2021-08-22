@@ -85,7 +85,8 @@ export type RootStackParamList = {
 
   //INDIVIDUAL TAB/STACK SCREENS STACK
   [ROUTES.TABSCREEN_STACK]: undefined;
-  [ROUTES.PICK_LAWYER_SCREEN]: {category: Category; service: Service};
+  // [ROUTES.PICK_LAWYER_SCREEN]: {category: Category; service: Service};
+  [ROUTES.PICK_LAWYER_SCREEN]: {service: Service};
   [ROUTES.LAWYER_DETAIL_SCREEN]: {
     lawyer: LawyerModel;
     category: Category;

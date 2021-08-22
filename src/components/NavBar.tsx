@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   navText: {
     fontFamily: "Roboto-Bold",
-    fontSize: wp(20),
+    fontSize: wp(24),
     fontWeight: "bold",
     color: COLORS.light.primary,
     flex: 1,

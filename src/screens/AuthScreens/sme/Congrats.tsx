@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   intro: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     width: "100%",
     fontStyle: "normal",
     lineHeight: Platform.OS === "ios" ? hp(24) : hp(32),

@@ -1,15 +1,8 @@
 import globalStyles from "css/GlobalCss";
 import {View} from "native-base";
 import React from "react";
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import {Platform, StyleSheet, Text, TouchableOpacity} from "react-native";
 import COLORS from "utils/Colors";
-import CONSTANTS from "utils/Constants";
 import {Category} from "database/DBData";
 import {hp, wp} from "utils/Dimensions";
 import {CategoryDb} from "database/CategoryDb";
@@ -63,7 +56,7 @@ const styles = StyleSheet.create({
   title: {
     lineHeight: hp(20),
     fontWeight: "400",
-    fontSize: wp(12),
+    fontSize: wp(14),
     color: COLORS.light.primary,
     fontFamily: "Roboto",
     marginTop: hp(16),

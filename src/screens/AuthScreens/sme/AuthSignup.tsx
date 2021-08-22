@@ -333,7 +333,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                     <Text
                       style={{
                         marginLeft: wp(16),
-                        fontSize: wp(12),
+                        fontSize: wp(14),
                         fontFamily: "Roboto-Medium",
                         color:
                           stateBusinessPlaceholder === 0
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
   signUpText: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontSize: wp(12),
     color: COLORS.light.black,
     lineHeight: hp(14),
   },
@@ -552,7 +552,7 @@ const styles = StyleSheet.create({
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(11),
+    fontSize: wp(12),
     lineHeight: hp(14),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
