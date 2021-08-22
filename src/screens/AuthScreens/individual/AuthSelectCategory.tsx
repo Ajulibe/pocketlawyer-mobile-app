@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: COLORS.light.white,
   },
   Hello: {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   radiobtnFirstWrapper: {
     width: wp(335),
     height: hp(208),
-    marginTop: hp(139),
+    marginTop: hp(90),
     justifyContent: "center",
   },
   radioBtn: {

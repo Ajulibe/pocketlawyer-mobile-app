@@ -11,9 +11,9 @@ import COLORS from "utils/Colors";
 import {wp} from "utils/Dimensions";
 
 export interface Category {
-  categoryName: string;
-  categoryCode: string;
-  image: any;
+  categoryName?: string;
+  categoryCode?: string;
+  image?: any;
   newImage?: any;
 }
 export const allCategories: Category[] = [
@@ -106,10 +106,10 @@ export const allCategories: Category[] = [
 ];
 
 export interface Service {
-  serviceCode: string;
-  serviceName: string;
-  categoryCode: string;
-  image: any;
+  serviceCode?: string;
+  serviceName?: string;
+  categoryCode?: string;
+  image?: any;
 }
 export const allServices: Service[] = [
   //-->Pre-Incorporation

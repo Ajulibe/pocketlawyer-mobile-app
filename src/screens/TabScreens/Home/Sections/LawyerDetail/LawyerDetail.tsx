@@ -13,6 +13,8 @@ import {
   View,
   Button,
   Platform,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 import {hp, wp} from "utils/Dimensions";
 import CONSTANTS from "utils/Constants";
@@ -29,8 +31,14 @@ import FullPageLoader from "components/FullPageLoader/index.component";
 import {AntDesign} from "@expo/vector-icons";
 import {getFirstLetterFromName} from "screens/TabScreens/Account/UpdateProfile/utilsFn";
 import {Avatar} from "react-native-elements";
+import {ServiceDb} from "database/ServiceDb";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.LAWYER_DETAIL_SCREEN>;
+
+interface IItem {
+  categoryCode: string;
+  categoryName: string;
+}
 
 export default function LawyerDetail({navigation, route}: Props) {
   const category = route.params.category;
@@ -78,9 +86,6 @@ export default function LawyerDetail({navigation, route}: Props) {
       navigation.goBack();
     }
   };
-  console.log(service);
-
-  // console.log(lawyer, "called lawyers");
 
   const colors = [
     "#727072",
@@ -90,6 +95,9 @@ export default function LawyerDetail({navigation, route}: Props) {
     "#c33d41",
     "#4a4e69",
     "#5282bb",
+    "#ff6f5c",
+    "#c5283d",
+    "#7a0050",
   ];
 
   const randomColor = (colors: Array<string>) => {
@@ -107,7 +115,7 @@ export default function LawyerDetail({navigation, route}: Props) {
     } else {
       setSpinnerText("Initializing form...");
       setIsLoading(true);
-      const hID = await getHistoryId(service?.serviceCode);
+      const hID = await getHistoryId(service?.serviceCode ?? "");
       setIsLoading(false);
 
       if (hID == null) {
@@ -120,6 +128,14 @@ export default function LawyerDetail({navigation, route}: Props) {
       }
     }
   }
+
+  const getServices = () => {
+    ServiceDb.findByCategoryCode({
+      catCode: category.categoryCode,
+    });
+  };
+
+  // getServices();
 
   const DescTile = ({
     leading,
@@ -185,39 +201,97 @@ export default function LawyerDetail({navigation, route}: Props) {
               activeOpacity={0}
             />
             <Text style={styles.name}>{lawyer?.name}</Text>
-            <View style={styles.userDetails}>
+            <View
+              style={[
+                styles.userDetails,
+                {flex: service?.serviceCode === "FROM_HOME_SCREEN" ? 0.06 : 1},
+              ]}>
               <Text style={styles.descTitle}>Brief Description</Text>
               <DescTile leading="Location:" value={lawyer?.address!} />
-              <DescTile
-                leading="Price:"
-                value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
-              />
-              <DescTile leading="Years of Experience:" value="2yrs" />
-              <View style={styles.servicesWrapper}>
-                {lawyerCats.map((cat, index) => (
-                  // <DescTile
-                  //   leading={cat.categoryName}
-                  //   value="12/03/21"
-                  //   faintTrailing={true}
-                  //   key={`${index}.${cat.categoryName}`}
-                  // />
-                  <View
-                    style={styles.catWrapper}
-                    key={`${index}.${cat.categoryName}`}>
-                    <AntDesign
-                      name="checkcircle"
-                      size={12}
-                      // color={COLORS.light.blackLight}
-                      color="rgba(0, 0, 0, 0.4)"
-                    />
-                    <Text style={styles.categoryHeading}>
-                      {cat.categoryName}
-                    </Text>
-                  </View>
-                ))}
-              </View>
 
-              {service !== "FROM_HOME_SCREEN" && (
+              {service?.serviceCode !== "FROM_HOME_SCREEN" && (
+                <DescTile
+                  leading="Price:"
+                  value={`\u20A6 ${Utilities.formateToMoney(amount)}`}
+                />
+              )}
+              {/* <DescTile leading="Years of Experience:" value="2yrs" /> */}
+
+              {service?.serviceCode !== "FROM_HOME_SCREEN" && (
+                <View style={styles.servicesWrapper}>
+                  <Text style={[styles.descTitle, {marginTop: 20}]}>
+                    Services Rendered
+                  </Text>
+                  {lawyerCats.map((cat, index) => (
+                    // <DescTile
+                    //   leading={cat.categoryName}
+                    //   value="12/03/21"
+                    //   faintTrailing={true}
+                    //   key={`${index}.${cat.categoryName}`}
+                    // />
+                    <View
+                      style={styles.catWrapper}
+                      key={`${index}.${cat.categoryName}`}>
+                      <AntDesign
+                        name="checkcircle"
+                        size={12}
+                        // color={COLORS.light.blackLight}
+                        color="rgba(0, 0, 0, 0.4)"
+                      />
+                      <Text style={styles.categoryHeading}>
+                        {cat.categoryName}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {service?.serviceCode === "FROM_HOME_SCREEN" && (
+                <>
+                  <Text style={[styles.descTitle, {marginTop: 20}]}>
+                    Services Rendered
+                  </Text>
+
+                  {category?.map((item: IItem) => {
+                    return (
+                      <TouchableOpacity
+                        key={item.categoryCode}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                        onPress={() => {
+                          // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                          //   category: item,
+                          // });
+                        }}>
+                        <Text
+                          style={[
+                            styles.tileLeading,
+                            {
+                              marginBottom: hp(12),
+                            },
+                          ]}>
+                          <AntDesign
+                            name="checkcircle"
+                            size={12}
+                            color="rgba(0, 0, 0, 0.4)"
+                          />
+                          &nbsp; &nbsp;
+                          {item?.categoryName}
+                          {/* <AntDesign
+                            name="arrowright"
+                            size={14}
+                            color="black"
+                          /> */}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </>
+              )}
+
+              {service?.serviceCode !== "FROM_HOME_SCREEN" && (
                 <>
                   <View style={{flex: 1}} />
                   <CustomButton btnText="Confirm" onClick={getHistory} />
@@ -253,7 +327,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   userDetails: {
-    flex: 1,
     backgroundColor: "rgba(243, 242, 253, 0.51)",
     margin: 1,
     width: "100%",
@@ -272,7 +345,7 @@ const styles = StyleSheet.create({
     fontSize: wp(16),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto-Bold",
-    marginBottom: hp(18),
+    marginBottom: hp(8),
   },
   tileWrapper: {
     display: "flex",

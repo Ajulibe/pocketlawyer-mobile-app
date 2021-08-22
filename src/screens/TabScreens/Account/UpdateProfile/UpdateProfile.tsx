@@ -359,7 +359,7 @@ const UpdateProfile = ({navigation}: Props) => {
             loadingText="Updating..."
             style={[
               styles.plButton,
-              {marginTop: user_ && user_?.userType === 2 ? hp(80) : hp(1)},
+              {marginTop: user_ && user_?.userType === 2 ? hp(80) : hp(31)},
             ]}
             textColor={COLORS.light.white}
             btnText={"Update details"}

@@ -1,4 +1,4 @@
-import { View } from "native-base";
+import {View} from "native-base";
 import React from "react";
 import {
   Image,
@@ -8,26 +8,25 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "utils/Colors";
-import { hp, wp } from "utils/Dimensions";
-import { MaterialIcons } from "@expo/vector-icons";
+import {hp, wp} from "utils/Dimensions";
+import {MaterialIcons} from "@expo/vector-icons";
 import globalStyles from "css/GlobalCss";
-import { Service } from "database/DBData";
-import { ServiceDb } from "database/ServiceDb";
+import {Service} from "database/DBData";
+import {ServiceDb} from "database/ServiceDb";
 
 interface Props {
   service: Service;
   onClick: () => void;
 }
-export default function ServiceCardTile({ service, onClick }: Props) {
+export default function ServiceCardTile({service, onClick}: Props) {
   return (
     <TouchableOpacity
       style={[styles.wrapper, globalStyles.shadowLight]}
-      onPress={onClick}
-    >
+      onPress={onClick}>
       <View style={globalStyles.iconWrapper}>
         <Image
           source={
-            ServiceDb.findByServiceCode({ serviceCode: service.serviceCode })
+            ServiceDb.findByServiceCode({serviceCode: service.serviceCode})
               .image
           }
           style={styles.icon}

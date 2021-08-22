@@ -43,7 +43,7 @@ import {widthPercentageToDP} from "react-native-responsive-screen";
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
 const HomeScreen = ({navigation}: Props) => {
-  const [category, setCategory] = React.useState<any>("");
+  const [category, setCategory] = React.useState<any>([]);
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   const time = React.useRef("");
   const [profileImage, setProfileImage] = useState("abc.jpg");
@@ -153,6 +153,7 @@ const HomeScreen = ({navigation}: Props) => {
   };
 
   const skeletonArray = [1, 2, 3, 4, 5];
+  console.log(category);
 
   LogBox.ignoreAllLogs();
   return (
@@ -281,8 +282,7 @@ const HomeScreen = ({navigation}: Props) => {
                         navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN, {
                           lawyer: item,
                           category: category,
-                          // service: "FROM_HOME_SCREEN",
-                          service: item.categoryName,
+                          service: {serviceCode: "FROM_HOME_SCREEN"},
                         })
                       }
                     />

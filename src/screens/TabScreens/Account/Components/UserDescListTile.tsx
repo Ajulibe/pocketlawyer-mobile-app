@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   tileTrailing: {
     fontWeight: "700",
     fontSize: wp(12),
-    width: widthPercentageToDP("70%"),
+    width: "70%",
     textAlign: "right",
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto-Medium",

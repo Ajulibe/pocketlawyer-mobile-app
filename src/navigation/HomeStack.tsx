@@ -21,8 +21,8 @@ export type HomeStackParamList = {
   [ROUTES.UPDATE_IMAGE]: any;
   [ROUTES.LAWYER_DETAIL_SCREEN]: {
     lawyer: LawyerModel;
-    category: Category;
-    service: Service | string;
+    category: Category | any;
+    service: Service | {serviceCode: string};
   };
   [ROUTES.CHECKOUT_SCREEN]: {
     lawyer: LawyerModel;
