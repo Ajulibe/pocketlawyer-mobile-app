@@ -21,6 +21,7 @@ import {Entypo} from "@expo/vector-icons";
 import {FontAwesome} from "@expo/vector-icons";
 import {BottomSheet, ListItem} from "react-native-elements";
 import {states} from "utils/nigerianStates";
+import {MOI} from "utils/meansOfIdentification";
 import {ScrollView} from "react-native-gesture-handler";
 import axiosClient from "utils/axiosClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -248,214 +249,208 @@ const AuthGetStarted = ({navigation}: Props) => {
           }}
           navText="Education Details"
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.contentWraper}>
-            <Text style={styles.welcomeMessage}>
-              <Text style={styles.verifyEmail}>
-                An email has been sent to you to verify your email address.
-              </Text>
-              &nbsp; Kindly fill in your &nbsp;
-              <Text style={styles.educationDetails}>education details </Text> to
-              complete your profile as a lawyer.
+        <View style={styles.contentWraper}>
+          <Text style={styles.welcomeMessage}>
+            <Text style={styles.verifyEmail}>
+              An email has been sent to you to verify your email address.
             </Text>
+            &nbsp; Kindly fill in your &nbsp;
+            <Text style={styles.educationDetails}>education details </Text> to
+            complete your profile as a lawyer.
+          </Text>
 
-            <View>
-              <PLTextInput
-                onChangeText={setSchool}
-                labelText="School"
-                error={false}
-                name="School"
-                textContentType="none"
-                style={styles.input}
-                placeholder="Type the name of institution attended"
-              />
-            </View>
+          <View>
+            <PLTextInput
+              onChangeText={setSchool}
+              labelText="School"
+              error={false}
+              name="School"
+              textContentType="none"
+              style={styles.input}
+              placeholder="Type the name of institution attended"
+            />
+          </View>
 
-            <View>
-              <PLTextInput
-                onChangeText={setCGPA}
-                labelText="CGPA"
-                error={false}
-                name="CGPA"
-                textContentType="none"
-                keyboardType="numeric"
-                style={styles.input}
-                placeholder="Type your grade"
-              />
-            </View>
+          <View>
+            <PLTextInput
+              onChangeText={setCGPA}
+              labelText="CGPA"
+              error={false}
+              name="CGPA"
+              textContentType="none"
+              keyboardType="numeric"
+              style={styles.input}
+              placeholder="Type your grade"
+            />
+          </View>
 
-            <View style={{marginTop: wp(4)}}>
-              <Text style={styles.inputText}>Means of Identification</Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  width: wp(334),
-                  height: wp(40),
-                  borderRadius: 4,
-                  borderColor: COLORS.light.textinputborder,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsVisible(true);
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}>
-                    <View style={{width: wp(300)}}>
-                      <Text
-                        style={{
-                          marginLeft: wp(16),
-                          fontSize: wp(12),
-                          fontFamily: "Roboto-Medium",
-                          color:
-                            identificationPlaceholder === 0
-                              ? COLORS.light.darkgrey
-                              : COLORS.light.black,
-                        }}>
-                        {Identification}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: wp(30),
-                        alignItems: "flex-end",
-                      }}>
-                      <Entypo
-                        name="chevron-small-down"
-                        size={20}
-                        color="grey"
-                      />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <BottomSheet
-                modalProps={{
-                  visible: isVisible,
-                  statusBarTranslucent: true,
-                }}
-                isVisible={isVisible}
-                containerStyle={{backgroundColor: COLORS.light.primary}}>
-                {states.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    onPress={() => {
-                      setIdentification(l.state);
-                    }}>
-                    <ListItem.Content>
-                      <ListItem.Title>
-                        <Text>{l.state}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-                {list.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    containerStyle={l.containerStyle}
-                    onPress={l.onPress}>
-                    <ListItem.Content>
-                      <ListItem.Title style={l.titleStyle}>
-                        <Text>{l.title}</Text>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-              </BottomSheet>
-            </View>
-
-            <View>
-              <PLTextInput
-                onChangeText={setIdNumber}
-                labelText="ID Number"
-                error={false}
-                name="ID Number"
-                textContentType="none"
-                style={styles.input}
-                placeholder="Type identification number"
-              />
-            </View>
-
-            <View style={styles.fileSelectBox}>
-              <Text style={styles.inputText}>
-                Resume
-                <Text style={styles.required}>
-                  &nbsp; * must be less than 1MB
-                </Text>
-              </Text>
+          <View style={{marginTop: wp(4)}}>
+            <Text style={styles.inputText}>Means of Identification</Text>
+            <View
+              style={{
+                borderWidth: 1,
+                width: wp(334),
+                height: wp(40),
+                borderRadius: 4,
+                borderColor: COLORS.light.textinputborder,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
               <TouchableOpacity
                 onPress={() => {
-                  uploadFile("resume");
-                }}
-                style={styles.inputButton}>
-                <Text style={styles.selectText}>{resumeName}</Text>
-                <AntDesign
-                  name="clouduploado"
-                  size={14}
-                  color={COLORS.light.primary}
-                />
+                  setIsVisible(true);
+                }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}>
+                  <View style={{width: wp(300)}}>
+                    <Text
+                      style={{
+                        marginLeft: wp(16),
+                        fontSize: wp(14),
+                        fontFamily: "Roboto-Regular",
+                        color:
+                          identificationPlaceholder === 0
+                            ? COLORS.light.darkgrey
+                            : COLORS.light.black,
+                      }}>
+                      {Identification}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      width: wp(30),
+                      alignItems: "flex-end",
+                    }}>
+                    <Entypo name="chevron-small-down" size={20} color="grey" />
+                  </View>
+                </View>
               </TouchableOpacity>
-              {errors ? (
+            </View>
+
+            <BottomSheet
+              modalProps={{
+                visible: isVisible,
+                statusBarTranslucent: true,
+              }}
+              isVisible={isVisible}
+              containerStyle={{backgroundColor: "rgba(0,0,0,0.7)"}}>
+              {MOI.map((l, i) => (
+                <ListItem
+                  key={i}
+                  onPress={() => {
+                    setIdentification(l);
+                  }}>
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Text>{l}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {list.map((l, i) => (
+                <ListItem
+                  key={i}
+                  containerStyle={l.containerStyle}
+                  onPress={l.onPress}>
+                  <ListItem.Content>
+                    <ListItem.Title style={l.titleStyle}>
+                      <Text>{l.title}</Text>
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+            </BottomSheet>
+          </View>
+
+          <View>
+            <PLTextInput
+              onChangeText={setIdNumber}
+              labelText="ID Number"
+              error={false}
+              name="ID Number"
+              textContentType="none"
+              style={styles.input}
+              placeholder="Type identification number"
+            />
+          </View>
+
+          <View style={styles.fileSelectBox}>
+            <Text style={styles.inputText}>
+              Resume
+              {/* <Text style={styles.required}>
+                &nbsp; * must be less than 1MB
+              </Text> */}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                uploadFile("resume");
+              }}
+              style={styles.inputButton}>
+              <Text style={styles.selectText}>{resumeName}</Text>
+              <AntDesign
+                name="clouduploado"
+                size={14}
+                color={COLORS.light.primary}
+              />
+            </TouchableOpacity>
+            {/* {errors ? (
                 <View style={styles.errorView}>
                   <Text style={[styles.inputText, styles.errorText]}>
                     File must be less than 1MB
                   </Text>
                 </View>
+              ) : null} */}
+            <View style={styles.errorView}>
+              {isUploaded === false ? (
+                <View style={styles.progressView}>
+                  <Text style={[styles.inputText, styles.progressText]}>
+                    Uploading File..Please wait
+                  </Text>
+                  <Text>&nbsp;</Text>
+                  <Text>&nbsp;</Text>
+                  <ActivityIndicator />
+                </View>
               ) : null}
-              <View style={styles.errorView}>
-                {isUploaded === false ? (
-                  <View style={styles.progressView}>
-                    <Text style={[styles.inputText, styles.progressText]}>
-                      Uploading File..Please wait
-                    </Text>
-                    <Text>&nbsp;</Text>
-                    <Text>&nbsp;</Text>
-                    <ActivityIndicator />
-                  </View>
-                ) : null}
-              </View>
-            </View>
-
-            <View style={styles.carouselWrapper}>
-              <View style={styles.carouselIcon}>
-                <FontAwesome
-                  name="circle"
-                  size={12}
-                  color={COLORS.light.primary}
-                />
-                <Entypo name="circle" size={10} color={COLORS.light.primary} />
-                <Entypo name="circle" size={10} color={COLORS.light.primary} />
-              </View>
-            </View>
-
-            <View style={styles.btnWrapper}>
-              <TouchableOpacity
-                style={styles.skipButton}
-                onPress={() =>
-                  navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
-                }>
-                <Text style={styles.skip}>Skip</Text>
-              </TouchableOpacity>
-
-              <PLButton
-                disabled={disabled}
-                isLoading={isLoading}
-                loadingText="Submitting..."
-                style={styles.nextButton}
-                textColor={COLORS.light.white}
-                btnText={"Next"}
-                onClick={submitMetadata}
-              />
             </View>
           </View>
-        </ScrollView>
+
+          <View style={styles.carouselWrapper}>
+            <View style={styles.carouselIcon}>
+              <FontAwesome
+                name="circle"
+                size={12}
+                color={COLORS.light.primary}
+              />
+              <Entypo name="circle" size={10} color={COLORS.light.primary} />
+              <Entypo name="circle" size={10} color={COLORS.light.primary} />
+            </View>
+          </View>
+
+          <View style={styles.btnWrapper}>
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={() =>
+                navigation.navigate(ROUTES.AUTH_PROFILE_IMAGE_LAWYER)
+              }>
+              <Text style={styles.skip}>Skip</Text>
+            </TouchableOpacity>
+
+            <PLButton
+              disabled={disabled}
+              isLoading={isLoading}
+              loadingText="Submitting..."
+              style={styles.nextButton}
+              textColor={COLORS.light.white}
+              btnText={"Next"}
+              onClick={submitMetadata}
+            />
+          </View>
+        </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
@@ -463,8 +458,8 @@ const AuthGetStarted = ({navigation}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   wrapper: {
     flex: 1,
@@ -505,7 +500,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(24),
+    marginTop: hp(20),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -539,7 +534,8 @@ const styles = StyleSheet.create({
   },
   selectText: {
     color: COLORS.light.darkgrey,
-    fontSize: 12,
+    fontSize: wp(14),
+    fontFamily: "Roboto-Regular",
   },
 
   verifyEmail: {
@@ -550,6 +546,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: hp(21),
     width: wpercent("90%"),
+    marginBottom: hp(20),
   },
   skipButton: {
     width: wp(156),
@@ -557,7 +554,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: wp(45),
+    height: wp(50),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {
@@ -575,12 +572,13 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     width: wp(156),
-    borderRadius: wp(7),
+    alignSelf: "flex-end",
+    // borderRadius: wp(7),
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

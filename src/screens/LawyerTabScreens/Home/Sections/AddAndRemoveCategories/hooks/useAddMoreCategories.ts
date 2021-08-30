@@ -20,6 +20,8 @@ export const useAddMoreCategories = (
   const [reviewofLegal, setReviewofLegal] = React.useState<boolean>(false);
   const [legaladvice, setLegaladvice] = React.useState<boolean>(false);
   const [legaldrafting, setLegaldrafting] = React.useState<boolean>(false);
+  const [registration, setRegistration] = React.useState<boolean>(false);
+  const [landDocuments, setLandDocuments] = React.useState<boolean>(false);
 
   const [catadata, setCatData] = React.useState<any>([]);
   const [selectedcat, setSelectedCat] = React.useState<string[]>([]);
@@ -82,27 +84,37 @@ export const useAddMoreCategories = (
     {
       name: CategoryDb.categories[1].categoryName,
       code: CategoryDb.categories[1].categoryCode,
-      value: companysecretarial,
+      value: postincorporation,
     },
     {
       name: CategoryDb.categories[2].categoryName,
       code: CategoryDb.categories[2].categoryCode,
-      value: postincorporation,
+      value: legaldrafting,
     },
     {
       name: CategoryDb.categories[3].categoryName,
       code: CategoryDb.categories[3].categoryCode,
-      value: reviewofLegal,
+      value: registration,
     },
     {
       name: CategoryDb.categories[4].categoryName,
       code: CategoryDb.categories[4].categoryCode,
-      value: legaladvice,
+      value: landDocuments,
     },
     {
       name: CategoryDb.categories[5].categoryName,
       code: CategoryDb.categories[5].categoryCode,
-      value: legaldrafting,
+      value: companysecretarial,
+    },
+    {
+      name: CategoryDb.categories[6].categoryName,
+      code: CategoryDb.categories[6].categoryCode,
+      value: reviewofLegal,
+    },
+    {
+      name: CategoryDb.categories[7].categoryName,
+      code: CategoryDb.categories[7].categoryCode,
+      value: legaladvice,
     },
   ];
 
@@ -111,7 +123,7 @@ export const useAddMoreCategories = (
     const catDb: string[] = [];
 
     selectedCategories.map((item) => {
-      arrayDb.push(item.name);
+      arrayDb.push(item.name!);
     });
 
     catadata.map((item: any) => {
@@ -147,6 +159,7 @@ export const useAddMoreCategories = (
       const Payload: submitCategories = {
         UserId: userID === null ? "" : JSON.parse(userID),
         UserType: userType === null ? "" : JSON.parse(userType),
+        //@ts-ignore
         Categorylist: Categorylist,
       };
 
@@ -161,28 +174,34 @@ export const useAddMoreCategories = (
 
     const endpoint = add ? "AddUSerCategory" : "RemoveUSerCategory";
 
-    console.log(add, Payload);
+    if (!add && data.length === Payload.Categorylist.length) {
+      PLToast({message: "Cannot Remove all Categories", type: "error"});
+      setLoading(false);
+      return;
+    } else {
+      try {
+        await axiosClient.post(`Category/${endpoint}`, Payload);
+        setTimeout(() => {
+          setLoading(false);
+          PLToast({
+            message: add ? "Categories added" : "Categories removed",
+            type: "success",
+          });
 
-    try {
-      await axiosClient.post(`Category/${endpoint}`, Payload);
-      setTimeout(() => {
+          navigation.goBack();
+        }, 3000);
+      } catch (error) {
         setLoading(false);
+
         PLToast({
-          message: add ? "Categories added" : "Categories removed",
-          type: "success",
+          message: add
+            ? "Error Adding Categories"
+            : "Error Removing Categories",
+          type: "error",
         });
 
-        navigation.goBack();
-      }, 3000);
-    } catch (error) {
-      setLoading(false);
-
-      PLToast({
-        message: add ? "Error Adding Categories" : "Error Removing Categories",
-        type: "error",
-      });
-
-      return;
+        return;
+      }
     }
   };
 
@@ -200,6 +219,10 @@ export const useAddMoreCategories = (
         return setLegaladvice(!legaladvice);
       case "Legal Drafting":
         return setLegaldrafting(!legaldrafting);
+      case "Land Documents":
+        return setLandDocuments(!landDocuments);
+      case "Registration":
+        return setRegistration(!registration);
       default:
         break;
     }
@@ -219,6 +242,10 @@ export const useAddMoreCategories = (
         return legaladvice;
       case "Legal Drafting":
         return legaldrafting;
+      case "Land Documents":
+        return landDocuments;
+      case "Registration":
+        return registration;
       default:
         break;
     }

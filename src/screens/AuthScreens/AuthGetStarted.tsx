@@ -1,7 +1,10 @@
 import React from "react";
 import {View, StyleSheet, Image, Text, Platform} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "../../navigation/MainNavigator";
 import {ROUTES} from "../../navigation/Routes";
 import COLORS from "../../utils/Colors";
@@ -68,7 +71,8 @@ const styles = StyleSheet.create({
     height: hp(252),
   },
   plButton: {
-    marginTop: hp(115),
+    marginTop: Platform.OS === "ios" ? hp(90) : hp(70),
+    width: widthPercentageToDP("90%"),
   },
   intro: {
     textAlign: "center",
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
   already: {
     fontFamily: "HK-Medium",
     fontSize: FS.mainBody,
-    lineHeight: hp(20),
+    lineHeight: hp(24),
     color: COLORS.light.black,
   },
   loginWrapper: {
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
   login: {
     fontFamily: "HK-Bold",
     fontSize: FS.mainBody,
-    lineHeight: hp(16),
+    lineHeight: hp(24),
     letterSpacing: 0,
     color: COLORS.light.primary,
     justifyContent: "center",

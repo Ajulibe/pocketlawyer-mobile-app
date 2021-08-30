@@ -78,7 +78,7 @@ export function DirectorsInfo(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         props.onSubmit(formMeta);
@@ -234,9 +234,9 @@ export function DirectorsInfo(props: Props) {
             </TouchableOpacity>
           )}
         </View>
+        <View style={{height: 36}} />
+        <CustomButton btnText="Next" onClick={submit} />
       </KeyboardAwareScrollView>
-      <View style={{height: 16}} />
-      <CustomButton btnText="Next" onClick={submit} />
     </View>
   );
 }

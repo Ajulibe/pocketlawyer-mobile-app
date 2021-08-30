@@ -332,6 +332,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: wp(24),
     paddingVertical: hp(17),
+    marginBottom: hp(15),
     paddingHorizontal: wp(28),
     borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.carouselBtn2,
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
     fontSize: wp(16),
     color: "rgba(0, 0, 0, 0.7)",
     fontFamily: "Roboto-Bold",
-    marginBottom: hp(8),
+    marginBottom: hp(12),
   },
   tileWrapper: {
     display: "flex",

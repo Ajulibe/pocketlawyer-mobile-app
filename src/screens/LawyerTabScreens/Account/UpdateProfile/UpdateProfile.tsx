@@ -202,7 +202,7 @@ const UpdateProfile = ({navigation}: Props) => {
 
           <View>
             <PLTextInput
-              labelText="last Name"
+              labelText="Last Name"
               labelTextRequired={false}
               onChangeText={setLastName}
               textContentType="familyName"

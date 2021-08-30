@@ -24,7 +24,10 @@ const AddMoreCategories: React.FC<Props> = ({navigation, route}) => {
 
       <ScrollView contentContainerStyle={styles.contentWraper}>
         <AddCategories routedata={data} navigation={navigation} />
-        <RemoveCategories routedata={data} navigation={navigation} />
+        {/* @ts-ignore */}
+        {data?.length === 1 ? null : (
+          <RemoveCategories routedata={data} navigation={navigation} />
+        )}
       </ScrollView>
     </SafeAreaView>
   );

@@ -17,6 +17,7 @@ export type AccountStackParamList = {
   [ROUTES.UPDATE_PASSWORD_LAWYER]: any;
   [ROUTES.UPDATE_PROFILE_LAWYER]: any;
   [ROUTES.UPDATE_IMAGE_LAWYER]: any;
+  [ROUTES.AUTH_LOGIN]: any;
 };
 
 const AccountStack = createStackNavigator<AccountStackParamList>();

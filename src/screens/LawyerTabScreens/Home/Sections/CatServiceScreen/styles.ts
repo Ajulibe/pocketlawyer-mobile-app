@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: wp(14),
-    lineHeight: hp(16),
+    lineHeight: hp(27),
     fontWeight: "500",
     fontFamily: "Roboto-Medium",
     color: "rgba(0, 0, 0, 0.7)",
@@ -58,8 +58,8 @@ export const styles = StyleSheet.create({
   },
   formWrapper: {
     color: COLORS.light.primary,
-    fontSize: wp(15),
-    lineHeight: hp(25),
+    fontSize: wp(16),
+    lineHeight: hp(27),
     textDecorationLine: "underline",
     fontFamily: "Roboto-Regular",
   },
@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.red,
-    height: wp(45),
+    height: wp(50),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {

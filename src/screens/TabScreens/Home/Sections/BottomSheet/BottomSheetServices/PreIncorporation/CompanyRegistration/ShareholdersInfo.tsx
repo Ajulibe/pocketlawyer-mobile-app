@@ -79,7 +79,7 @@ export function ShareholdersInfo(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         props.onSubmit(formMeta);
@@ -235,9 +235,9 @@ export function ShareholdersInfo(props: Props) {
             </TouchableOpacity>
           )}
         </View>
+        <View style={{height: 36}} />
+        <CustomButton btnText="Next" onClick={submit} />
       </KeyboardAwareScrollView>
-      <View style={{height: 16}} />
-      <CustomButton btnText="Next" onClick={submit} />
     </View>
   );
 }

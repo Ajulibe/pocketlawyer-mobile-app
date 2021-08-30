@@ -3,6 +3,7 @@
 import React from "react";
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import Toast, {BaseToast} from "react-native-toast-message";
+import {Platform} from "react-native";
 
 import {wp, hp} from "utils/Dimensions";
 import {icons, colors} from "./assets";
@@ -16,7 +17,7 @@ interface PLToastProps {
 
 export const PLToast = ({
   message,
-  duration = 2000,
+  duration = 700,
   type,
   position = "top",
 }: PLToastProps) => {
@@ -26,7 +27,7 @@ export const PLToast = ({
     visibilityTime: duration,
     type: type,
     position: position,
-    topOffset: 60,
+    topOffset: hp(10),
   });
 };
 
@@ -45,7 +46,11 @@ export interface ToastProps {
 
 //--> to be properly configured later
 export const toastConfig = {
-  success: ({type, ...rest}: ToastProps) => (
+  success: ({
+    type,
+    topOffset = Platform.OS === "ios" ? hp(10) : hp(3),
+    ...rest
+  }: ToastProps) => (
     <BaseToast
       {...rest}
       style={{
@@ -57,7 +62,7 @@ export const toastConfig = {
       }}
       text1Style={{
         fontSize: wp(16),
-        fontFamily: "Roboto-Bold",
+        fontFamily: "HK-SemiBold",
         color: "white",
       }}
       onTrailingIconPress={() => {

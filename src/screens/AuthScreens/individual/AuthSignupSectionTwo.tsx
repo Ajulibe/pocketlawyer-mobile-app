@@ -8,7 +8,10 @@ import {
   Platform,
 } from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
@@ -98,7 +101,8 @@ const AuthGetStarted = ({navigation}: Props) => {
       date === null ||
       state.length === 0 ||
       city.length === 0 ||
-      password.length === 0
+      password.length === 0 ||
+      password.length < 8
     ) {
       setIsDisabled(true);
       return;
@@ -186,12 +190,6 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
-      <NavBar
-        onPress={() => {
-          navigation.goBack();
-        }}
-        navText="Complete Account Setup"
-      />
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
@@ -201,6 +199,12 @@ const AuthGetStarted = ({navigation}: Props) => {
           alignItems: "center",
           justifyContent: "center",
         }}>
+        <NavBar
+          onPress={() => {
+            navigation.goBack();
+          }}
+          navText="Complete Account Setup"
+        />
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
             Complete your account setup to access top notch legal services.
@@ -324,6 +328,16 @@ const AuthGetStarted = ({navigation}: Props) => {
                 onChangeText={setPassword}
               />
             </View>
+            {password.length < 8 && password.length > 0 ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "Roboto-Bold",
+                }}>
+                *At least 8 Characters
+              </Text>
+            ) : null}
           </View>
 
           <View style={styles.carouselWrapper}>
@@ -409,7 +423,7 @@ const styles = StyleSheet.create({
     width: wpercent("90%"),
     alignItems: "center",
     justifyContent: "flex-start",
-    marginTop: hp(38),
+    marginTop: hp(20),
   },
   input: {
     width: wp(334),
@@ -429,6 +443,7 @@ const styles = StyleSheet.create({
 
   plButton: {
     marginTop: hp(31),
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",

@@ -1,22 +1,22 @@
-import { ROUTES } from "navigation/Routes";
+import {ROUTES} from "navigation/Routes";
 import React from "react";
-import { addMetadata, submitHistory } from "services/UploadDocsService";
-import { BottomSheetProps } from "../../../BottomSheetUtils/BottomSheetProps";
-import { showError, showSuccess } from "../../../BottomSheetUtils/FormHelpers";
+import {addMetadata, submitHistory} from "services/UploadDocsService";
+import {BottomSheetProps} from "../../../BottomSheetUtils/BottomSheetProps";
+import {showError, showSuccess} from "../../../BottomSheetUtils/FormHelpers";
 import {
   loadingReducer,
   loadingInitialState,
   LoadingActionType,
 } from "../../../BottomSheetUtils/LoadingReducer";
 import PagerView from "react-native-pager-view";
-import { TrusteeRegistration } from "./TrusteeRegistration";
-import { TrusteeMemberInfo } from "./TrusteeMemberInfo";
+import {TrusteeRegistration} from "./TrusteeRegistration";
+import {TrusteeMemberInfo} from "./TrusteeMemberInfo";
 
 export function RegOfIncTrustees(props: BottomSheetProps) {
-  const { navigation, closeModal, service, lawyer, historyId } = props;
+  const {navigation, closeModal, service, lawyer, historyId} = props;
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
-    loadingInitialState
+    loadingInitialState,
   );
   const [formData1, setFormData1] = React.useState<any>([]);
   const ref = React.useRef<PagerView>(null);
@@ -30,10 +30,10 @@ export function RegOfIncTrustees(props: BottomSheetProps) {
     const formMeta = [...formData1, ...meta2];
     loadingDispatch({
       type: LoadingActionType.SHOW_WITH_CONTENT,
-      payload: { content: "Submiting, please wait..." },
+      payload: {content: "Submiting, please wait..."},
     });
     const submit = await addMetadata(formMeta);
-    loadingDispatch({ type: LoadingActionType.HIDE });
+    loadingDispatch({type: LoadingActionType.HIDE});
     if (submit === 200) {
       //--> Submit Service
       try {
@@ -63,13 +63,12 @@ export function RegOfIncTrustees(props: BottomSheetProps) {
   return (
     <PagerView
       ref={ref}
-      style={{ flex: 1 }}
+      style={{flex: 1}}
       initialPage={0}
       showPageIndicator={true}
       pageMargin={8}
       scrollEnabled={true}
-      orientation="horizontal"
-    >
+      orientation="horizontal">
       <TrusteeRegistration
         key="1"
         {...props}

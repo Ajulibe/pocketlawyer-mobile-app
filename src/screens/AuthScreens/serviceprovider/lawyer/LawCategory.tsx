@@ -19,6 +19,7 @@ import {CommonActions} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {CategoryDb} from "database/CategoryDb";
 import globalStyles from "css/GlobalCss";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -91,6 +92,7 @@ const AuthGetStarted = ({navigation}: Props) => {
       const Payload: submitCategories = {
         UserId: userID === null ? "" : JSON.parse(userID),
         UserType: userType === null ? "" : JSON.parse(userType),
+        //@ts-ignore
         Categorylist: Categorylist,
       };
 
@@ -164,251 +166,260 @@ const AuthGetStarted = ({navigation}: Props) => {
     <FullPageLoader message="SUBMITTING CATEGORIES" />
   ) : (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
-      <View style={styles.contentWraper}>
-        <Text style={styles.heading}>Select your category of law</Text>
-        <RNECheckBox
-          title="Pre-Incorporation"
-          iconRight
-          containerStyle={[
-            styles.checkBoxWrapper,
-            {
-              backgroundColor:
-                preincorporation === true
-                  ? COLORS.light.primary
-                  : COLORS.light.checkpurple,
-              marginTop: wp(40),
-            },
-          ]}
-          textStyle={[
-            styles.textStyle,
-            {
-              color:
-                preincorporation === true
-                  ? COLORS.light.white
-                  : COLORS.light.primary,
-            },
-          ]}
-          checkedIcon={
-            <AntDesign
-              name="checksquare"
-              size={18}
-              color={COLORS.light.white}
-            />
-          }
-          uncheckedIcon={
-            <MaterialIcons
-              name="check-box-outline-blank"
-              size={20}
-              color={COLORS.light.primary}
-            />
-          }
-          checkedColor={COLORS.light.primary}
-          checked={preincorporation}
-          onPress={() => setPreIncorporation(!preincorporation)}
-        />
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        enableOnAndroid={true}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+        <View style={styles.contentWraper}>
+          <Text style={styles.heading}>Select your category of law</Text>
+          <RNECheckBox
+            title="Pre-Incorporation"
+            iconRight
+            containerStyle={[
+              styles.checkBoxWrapper,
+              {
+                backgroundColor:
+                  preincorporation === true
+                    ? COLORS.light.primary
+                    : COLORS.light.checkpurple,
+                marginTop: wp(40),
+              },
+            ]}
+            textStyle={[
+              styles.textStyle,
+              {
+                color:
+                  preincorporation === true
+                    ? COLORS.light.white
+                    : COLORS.light.primary,
+              },
+            ]}
+            checkedIcon={
+              <AntDesign
+                name="checksquare"
+                size={18}
+                color={COLORS.light.white}
+              />
+            }
+            uncheckedIcon={
+              <MaterialIcons
+                name="check-box-outline-blank"
+                size={20}
+                color={COLORS.light.primary}
+              />
+            }
+            checkedColor={COLORS.light.primary}
+            checked={preincorporation}
+            onPress={() => setPreIncorporation(!preincorporation)}
+          />
 
-        <RNECheckBox
-          title="Company Secretarial Services"
-          iconRight
-          containerStyle={[
-            styles.checkBoxWrapper,
-            {
-              backgroundColor:
-                companysecretarial === true
-                  ? COLORS.light.primary
-                  : COLORS.light.checkpurple,
-            },
-          ]}
-          textStyle={[
-            styles.textStyle,
-            {
-              color:
-                companysecretarial === true
-                  ? COLORS.light.white
-                  : COLORS.light.primary,
-            },
-          ]}
-          checkedIcon={
-            <AntDesign
-              name="checksquare"
-              size={18}
-              color={COLORS.light.white}
-            />
-          }
-          uncheckedIcon={
-            <MaterialIcons
-              name="check-box-outline-blank"
-              size={20}
-              color={COLORS.light.primary}
-            />
-          }
-          checkedColor={COLORS.light.primary}
-          checked={companysecretarial}
-          onPress={() => setCompanysecretarial(!companysecretarial)}
-        />
+          <RNECheckBox
+            title="Company Secretarial Services"
+            iconRight
+            containerStyle={[
+              styles.checkBoxWrapper,
+              {
+                backgroundColor:
+                  companysecretarial === true
+                    ? COLORS.light.primary
+                    : COLORS.light.checkpurple,
+              },
+            ]}
+            textStyle={[
+              styles.textStyle,
+              {
+                color:
+                  companysecretarial === true
+                    ? COLORS.light.white
+                    : COLORS.light.primary,
+              },
+            ]}
+            checkedIcon={
+              <AntDesign
+                name="checksquare"
+                size={18}
+                color={COLORS.light.white}
+              />
+            }
+            uncheckedIcon={
+              <MaterialIcons
+                name="check-box-outline-blank"
+                size={20}
+                color={COLORS.light.primary}
+              />
+            }
+            checkedColor={COLORS.light.primary}
+            checked={companysecretarial}
+            onPress={() => setCompanysecretarial(!companysecretarial)}
+          />
 
-        <RNECheckBox
-          title="Post-Incorporation"
-          iconRight
-          containerStyle={[
-            styles.checkBoxWrapper,
-            {
-              backgroundColor:
-                postincorporation === true
-                  ? COLORS.light.primary
-                  : COLORS.light.checkpurple,
-            },
-          ]}
-          textStyle={[
-            styles.textStyle,
-            {
-              color:
-                postincorporation === true
-                  ? COLORS.light.white
-                  : COLORS.light.primary,
-            },
-          ]}
-          checkedIcon={
-            <AntDesign
-              name="checksquare"
-              size={18}
-              color={COLORS.light.white}
-            />
-          }
-          uncheckedIcon={
-            <MaterialIcons
-              name="check-box-outline-blank"
-              size={20}
-              color={COLORS.light.primary}
-            />
-          }
-          checkedColor={COLORS.light.primary}
-          checked={postincorporation}
-          onPress={() => setPostincorporation(!postincorporation)}
-        />
+          <RNECheckBox
+            title="Post-Incorporation"
+            iconRight
+            containerStyle={[
+              styles.checkBoxWrapper,
+              {
+                backgroundColor:
+                  postincorporation === true
+                    ? COLORS.light.primary
+                    : COLORS.light.checkpurple,
+              },
+            ]}
+            textStyle={[
+              styles.textStyle,
+              {
+                color:
+                  postincorporation === true
+                    ? COLORS.light.white
+                    : COLORS.light.primary,
+              },
+            ]}
+            checkedIcon={
+              <AntDesign
+                name="checksquare"
+                size={18}
+                color={COLORS.light.white}
+              />
+            }
+            uncheckedIcon={
+              <MaterialIcons
+                name="check-box-outline-blank"
+                size={20}
+                color={COLORS.light.primary}
+              />
+            }
+            checkedColor={COLORS.light.primary}
+            checked={postincorporation}
+            onPress={() => setPostincorporation(!postincorporation)}
+          />
 
-        <RNECheckBox
-          title="Review of Legal Documents"
-          iconRight
-          containerStyle={[
-            styles.checkBoxWrapper,
-            {
-              backgroundColor:
-                reviewofLegal === true
-                  ? COLORS.light.primary
-                  : COLORS.light.checkpurple,
-            },
-          ]}
-          textStyle={[
-            styles.textStyle,
-            {
-              color:
-                reviewofLegal === true
-                  ? COLORS.light.white
-                  : COLORS.light.primary,
-            },
-          ]}
-          checkedIcon={
-            <AntDesign
-              name="checksquare"
-              size={18}
-              color={COLORS.light.white}
-            />
-          }
-          uncheckedIcon={
-            <MaterialIcons
-              name="check-box-outline-blank"
-              size={20}
-              color={COLORS.light.primary}
-            />
-          }
-          checkedColor={COLORS.light.primary}
-          checked={reviewofLegal}
-          onPress={() => setReviewofLegal(!reviewofLegal)}
-        />
+          <RNECheckBox
+            title="Review of Legal Documents"
+            iconRight
+            containerStyle={[
+              styles.checkBoxWrapper,
+              {
+                backgroundColor:
+                  reviewofLegal === true
+                    ? COLORS.light.primary
+                    : COLORS.light.checkpurple,
+              },
+            ]}
+            textStyle={[
+              styles.textStyle,
+              {
+                color:
+                  reviewofLegal === true
+                    ? COLORS.light.white
+                    : COLORS.light.primary,
+              },
+            ]}
+            checkedIcon={
+              <AntDesign
+                name="checksquare"
+                size={18}
+                color={COLORS.light.white}
+              />
+            }
+            uncheckedIcon={
+              <MaterialIcons
+                name="check-box-outline-blank"
+                size={20}
+                color={COLORS.light.primary}
+              />
+            }
+            checkedColor={COLORS.light.primary}
+            checked={reviewofLegal}
+            onPress={() => setReviewofLegal(!reviewofLegal)}
+          />
 
-        <RNECheckBox
-          title="Legal Advice and Consultancy"
-          iconRight
-          containerStyle={[
-            styles.checkBoxWrapper,
-            {
-              backgroundColor:
-                legaladvice === true
-                  ? COLORS.light.primary
-                  : COLORS.light.checkpurple,
-            },
-          ]}
-          textStyle={[
-            styles.textStyle,
-            {
-              color:
-                legaladvice === true
-                  ? COLORS.light.white
-                  : COLORS.light.primary,
-            },
-          ]}
-          checkedIcon={
-            <AntDesign
-              name="checksquare"
-              size={18}
-              color={COLORS.light.white}
-            />
-          }
-          uncheckedIcon={
-            <MaterialIcons
-              name="check-box-outline-blank"
-              size={20}
-              color={COLORS.light.primary}
-            />
-          }
-          checkedColor={COLORS.light.primary}
-          checked={legaladvice}
-          onPress={() => setLegaladvice(!legaladvice)}
-        />
+          <RNECheckBox
+            title="Legal Advice and Consultancy"
+            iconRight
+            containerStyle={[
+              styles.checkBoxWrapper,
+              {
+                backgroundColor:
+                  legaladvice === true
+                    ? COLORS.light.primary
+                    : COLORS.light.checkpurple,
+              },
+            ]}
+            textStyle={[
+              styles.textStyle,
+              {
+                color:
+                  legaladvice === true
+                    ? COLORS.light.white
+                    : COLORS.light.primary,
+              },
+            ]}
+            checkedIcon={
+              <AntDesign
+                name="checksquare"
+                size={18}
+                color={COLORS.light.white}
+              />
+            }
+            uncheckedIcon={
+              <MaterialIcons
+                name="check-box-outline-blank"
+                size={20}
+                color={COLORS.light.primary}
+              />
+            }
+            checkedColor={COLORS.light.primary}
+            checked={legaladvice}
+            onPress={() => setLegaladvice(!legaladvice)}
+          />
 
-        <RNECheckBox
-          title="Legal Drafting"
-          iconRight
-          containerStyle={[
-            styles.checkBoxWrapper,
-            {
-              backgroundColor:
-                legaldrafting === true
-                  ? COLORS.light.primary
-                  : COLORS.light.checkpurple,
-            },
-          ]}
-          textStyle={[
-            styles.textStyle,
-            {
-              color:
-                legaldrafting === true
-                  ? COLORS.light.white
-                  : COLORS.light.primary,
-            },
-          ]}
-          checkedIcon={
-            <AntDesign
-              name="checksquare"
-              size={18}
-              color={COLORS.light.white}
-            />
-          }
-          uncheckedIcon={
-            <MaterialIcons
-              name="check-box-outline-blank"
-              size={20}
-              color={COLORS.light.primary}
-            />
-          }
-          checkedColor={COLORS.light.primary}
-          checked={legaldrafting}
-          onPress={() => setLegaldrafting(!legaldrafting)}
-        />
+          <RNECheckBox
+            title="Legal Drafting"
+            iconRight
+            containerStyle={[
+              styles.checkBoxWrapper,
+              {
+                backgroundColor:
+                  legaldrafting === true
+                    ? COLORS.light.primary
+                    : COLORS.light.checkpurple,
+              },
+            ]}
+            textStyle={[
+              styles.textStyle,
+              {
+                color:
+                  legaldrafting === true
+                    ? COLORS.light.white
+                    : COLORS.light.primary,
+              },
+            ]}
+            checkedIcon={
+              <AntDesign
+                name="checksquare"
+                size={18}
+                color={COLORS.light.white}
+              />
+            }
+            uncheckedIcon={
+              <MaterialIcons
+                name="check-box-outline-blank"
+                size={20}
+                color={COLORS.light.primary}
+              />
+            }
+            checkedColor={COLORS.light.primary}
+            checked={legaldrafting}
+            onPress={() => setLegaldrafting(!legaldrafting)}
+          />
 
-        <View style={[styles.btnWrapper]}>
-          {/* {showBtn ? (
+          <View style={[styles.btnWrapper]}>
+            {/* {showBtn ? (
             <TouchableOpacity
               style={styles.skipButton}
               onPress={() => navigation.navigate(ROUTES.TABSCREEN_STACK)}
@@ -417,15 +428,16 @@ const AuthGetStarted = ({navigation}: Props) => {
             </TouchableOpacity>
           ) : null} */}
 
-          <PLButton
-            style={styles.nextButton}
-            disabled={disabled}
-            textColor={COLORS.light.white}
-            btnText={"Submit"}
-            onClick={filterCategories}
-          />
+            <PLButton
+              style={styles.nextButton}
+              disabled={disabled}
+              textColor={COLORS.light.white}
+              btnText={"Submit"}
+              onClick={filterCategories}
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -438,7 +450,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   heading: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "HK-SemiBold",
     fontSize: wp(20),
     fontWeight: "bold",
     color: COLORS.light.black,
@@ -467,7 +479,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(5),
   },
   checkBox: {
     alignSelf: "flex-end",
@@ -502,8 +514,7 @@ const styles = StyleSheet.create({
     color: COLORS.light.primary,
   },
   nextButton: {
-    // width: wp(156),
-    width: "90%",
+    width: wpercent("90%"),
     borderRadius: wp(7),
   },
 });

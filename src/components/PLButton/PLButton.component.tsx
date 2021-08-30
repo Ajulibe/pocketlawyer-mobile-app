@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   btnContainer: {
-    width: wp(312),
+    // width: "100%",
+    // borderWidth: 1,
   },
   btn: {
     width: "100%",

@@ -28,6 +28,8 @@ import axiosClient from "utils/axiosClient";
 import globalStyles from "css/GlobalCss";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import {Terms} from "components/TermsOfService";
+import InputValidation from "utils/InputValidation";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -79,6 +81,7 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   //--> Next button disabled state
   const [isDisabled, setIsDisabled] = useState(true);
+  const {hasWhiteSpace} = InputValidation;
 
   //--> check the state of the input forms and enable the button when all fields are complete
   React.useEffect(() => {
@@ -86,6 +89,8 @@ const AuthGetStarted = ({navigation}: Props) => {
       firstName.length === 0 ||
       lastName.length === 0 ||
       phonenumber.length === 0 ||
+      hasWhiteSpace(lastName.trim()) ||
+      hasWhiteSpace(firstName.trim()) ||
       designation.length === 0
     ) {
       setIsDisabled(true);
@@ -110,8 +115,8 @@ const AuthGetStarted = ({navigation}: Props) => {
         company: {
           name: initialState.company.name,
           CompanyType: 1,
-          ContactFirstName: firstName,
-          ContactLastName: lastName,
+          ContactFirstName: firstName.trim(),
+          ContactLastName: lastName.trim(),
           ContactEmail: initialState.email,
           ContactPhone: phonenumber,
         },
@@ -194,6 +199,16 @@ const AuthGetStarted = ({navigation}: Props) => {
               style={styles.input}
               placeholder="Type your first name"
             />
+            {hasWhiteSpace(firstName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "Roboto-Bold",
+                }}>
+                *Invalid First Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -206,6 +221,16 @@ const AuthGetStarted = ({navigation}: Props) => {
               style={styles.input}
               placeholder="Type your last name"
             />
+            {hasWhiteSpace(lastName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "Roboto-Bold",
+                }}>
+                *Invalid Last Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -298,13 +323,7 @@ const AuthGetStarted = ({navigation}: Props) => {
               getData();
             }}
           />
-          <View style={styles.loginWrapper}>
-            <Text style={styles.signUpText}>
-              By signing up, you agree with the
-              <Text style={styles.login}> Terms of services </Text>and{" "}
-              <Text style={styles.login}>Privacy policy </Text>
-            </Text>
-          </View>
+          <Terms />
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -334,7 +353,7 @@ const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
@@ -344,7 +363,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(25),
+    marginTop: hp(35),
   },
   input: {
     width: wp(334),
@@ -378,7 +397,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(110),
+    marginTop: hp(50),
     width: wpercent("90%"),
   },
   carouselIcon: {
@@ -420,7 +439,7 @@ const styles = StyleSheet.create({
   },
   ContactPerson: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
+    fontSize: wp(16),
     color: COLORS.light.primary,
   },
   inputPhoneNumber: {

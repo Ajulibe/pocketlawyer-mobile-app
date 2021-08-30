@@ -6,6 +6,8 @@ import {
   Text,
   Alert,
   Platform,
+  StatusBar,
+  TouchableOpacity,
 } from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
 import {RootStackParamList} from "../../../navigation/MainNavigator";
@@ -35,6 +37,7 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
+      <StatusBar barStyle="dark-content" backgroundColor="rgba(0,0,0,0.5)" />
       <View style={styles.welcomeText}>
         <Animatable.Text animation="slideInDown" style={styles.Hello}>
           Hello 👋
@@ -63,6 +66,17 @@ const AuthGetStarted = ({navigation}: Props) => {
         btnText={"Next"}
         onClick={selectCategory}
       />
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate(ROUTES.AUTH_LOGIN);
+        }}
+        style={{justifyContent: "center", marginTop: hp(30)}}>
+        <Text style={styles.already}>
+          Already have an account? &nbsp;
+          <Text style={styles.login}>Log in</Text>
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -106,6 +120,21 @@ const styles = StyleSheet.create({
   },
   plButton: {
     marginTop: hp(172),
+    width: widthPercentageToDP("90%"),
+  },
+  already: {
+    fontFamily: "HK-Medium",
+    fontSize: FS.mainBody,
+    lineHeight: hp(24),
+    color: COLORS.light.black,
+  },
+  login: {
+    fontFamily: "HK-Bold",
+    fontSize: FS.mainBody,
+    lineHeight: hp(24),
+    letterSpacing: 0,
+    color: COLORS.light.primary,
+    justifyContent: "center",
   },
 });
 

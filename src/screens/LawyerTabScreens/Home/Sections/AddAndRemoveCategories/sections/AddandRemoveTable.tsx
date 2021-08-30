@@ -87,7 +87,7 @@ const AddandRemove: React.FC<IProps> = ({
           ) : (
             <View style={styles.emptyState}>
               {isloading === null ? (
-                <ActivityIndicator />
+                <ActivityIndicator color={COLORS.light.primary} />
               ) : (
                 <>
                   <MaterialIcons

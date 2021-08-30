@@ -5,6 +5,7 @@ import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import {AccountStackParamList} from "navigation/AccountStack";
 import {ROUTES} from "navigation/Routes";
+import {Feather} from "@expo/vector-icons";
 
 import {
   Platform,
@@ -25,6 +26,7 @@ import dayjs from "dayjs";
 //--> REDUX
 import {useAppSelector} from "redux/hooks";
 import {getFirstLetterFromName} from "./UpdateProfile/utilsFn";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<AccountStackParamList, ROUTES.ACCOUNT_SCREEN>;
 
@@ -56,16 +58,16 @@ const AccountScreen = ({navigation}: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <CustomAppbar
-          navigation={navigation}
-          title="My Account"
-          showBorderBottom={false}
-          hideBackButton={true}
-        />
         <ScrollView
           contentContainerStyle={[styles.container, {flexGrow: 1}]}
           keyboardShouldPersistTaps="handled"
           bounces={false}>
+          <CustomAppbar
+            navigation={navigation}
+            title="My Account"
+            showBorderBottom={false}
+            hideBackButton={true}
+          />
           <Avatar
             rounded
             titleStyle={{
@@ -127,7 +129,29 @@ const AccountScreen = ({navigation}: Props) => {
               />
             </>
           ) : null}
+          <View style={{height: hp(18)}} />
+          <Text style={styles.subTitle}>Contact Information</Text>
+          <View style={{height: hp(18)}} />
+          <UserDescListTile leading="Phone Number" value={user_?.phone} />
+          <UserDescListTile leading="Email Address" value={user_?.email} />
 
+          <TouchableOpacity
+            style={styles.changePasswordBth}
+            onPress={() => navigation.navigate(ROUTES.UPDATE_PASSWORD)}>
+            <Text
+              style={[
+                styles.passBtnText,
+                {color: "black", fontFamily: "Roboto-Bold"},
+              ]}>
+              Update Password
+            </Text>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              color={COLORS.light.black}
+            />
+          </TouchableOpacity>
+          <View style={{height: hp(18)}} />
           <Text
             style={[
               {
@@ -138,22 +162,26 @@ const AccountScreen = ({navigation}: Props) => {
               },
             ]}>
             If you have any issues with your information, please send a message
-            to info@pocket-lawyers.com
+            to&nbsp;
+            <Text style={{color: COLORS.light.primary}}>
+              info@pocket-lawyers.com
+            </Text>
           </Text>
-          <Text style={styles.subTitle}>Contact Information</Text>
           <View style={{height: hp(18)}} />
-          <UserDescListTile leading="Phone Number" value={user_?.phone} />
-          <UserDescListTile leading="Email Address" value={user_?.email} />
-
           <TouchableOpacity
             style={styles.changePasswordBth}
-            onPress={() => navigation.navigate(ROUTES.UPDATE_PASSWORD)}>
-            <Text style={styles.passBtnText}>Update Password</Text>
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={24}
-              color={COLORS.light.black}
-            />
+            onPress={async () => {
+              AsyncStorage.clear();
+              navigation.navigate(ROUTES.AUTH_LOGIN);
+            }}>
+            <Text
+              style={[
+                styles.passBtnText,
+                {color: "black", fontFamily: "Roboto-Bold"},
+              ]}>
+              Logout
+            </Text>
+            <Feather name="log-out" size={14} color="black" />
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -192,13 +220,14 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: wp(14),
-    lineHeight: hp(16),
+    lineHeight: hp(20),
     fontWeight: "500",
-    fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
+    fontFamily: "Roboto-Regular",
+    color: COLORS.light.primary,
     marginBottom: hp(2),
+    textAlign: "center",
     width: "100%",
-    marginTop: hp(24),
+    // marginTop: hp(24),
   },
   changePasswordBth: {
     width: "100%",

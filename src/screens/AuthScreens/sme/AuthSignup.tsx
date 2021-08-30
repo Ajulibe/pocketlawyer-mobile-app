@@ -7,6 +7,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
 import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
@@ -21,6 +22,7 @@ import {FontAwesome} from "@expo/vector-icons";
 import {CountryCode, Country, CallingCode} from "../../../types";
 import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
 import {states} from "utils/nigerianStates";
+import {businessCats} from "utils/businessCat";
 import {PLPasswordInput} from "components/PLPasswordInput/PLPasswordInput.component";
 import * as Animatable from "react-native-animatable";
 import {ScrollView} from "react-native-gesture-handler";
@@ -109,6 +111,7 @@ const AuthGetStarted = ({navigation}: Props) => {
       state === "" ||
       business === "" ||
       password === "" ||
+      password.length < 8 ||
       city === ""
     ) {
       setDisabled(true);
@@ -162,12 +165,7 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-        }}
-        navText="Sign Up"
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="rgba(0,0,0,0.5)" />
 
       <KeyboardAwareScrollView
         extraScrollHeight={wp(120)}
@@ -178,6 +176,12 @@ const AuthGetStarted = ({navigation}: Props) => {
           alignItems: "center",
           justifyContent: "center",
         }}>
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+          }}
+          navText="Sign Up"
+        />
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <View style={styles.TextWrapper}>
             <Text style={styles.welcomeMessage}>
@@ -238,7 +242,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                     <Text
                       style={{
                         marginLeft: wp(16),
-                        fontSize: wp(12),
+                        fontSize: wp(14),
                         fontFamily: "Roboto-Medium",
                         color:
                           statePlaceholder === 0
@@ -340,7 +344,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                             ? COLORS.light.darkgrey
                             : COLORS.light.black,
                       }}>
-                      {state}
+                      {business}
                     </Text>
                   </View>
                   <View
@@ -361,15 +365,15 @@ const AuthGetStarted = ({navigation}: Props) => {
               }}
               isVisible={isVisibleBusiness}
               containerStyle={{backgroundColor: COLORS.light.primary}}>
-              {states.map((l, i) => (
+              {businessCats.map((l, i) => (
                 <ListItem
                   key={i}
                   onPress={() => {
-                    setBusiness(l.state);
+                    setBusiness(l);
                   }}>
                   <ListItem.Content>
                     <ListItem.Title>
-                      <Text>{l.state}</Text>
+                      <Text>{l}</Text>
                     </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
@@ -399,6 +403,16 @@ const AuthGetStarted = ({navigation}: Props) => {
                 onChangeText={setPassword}
               />
             </View>
+            {password.length < 8 && password.length > 0 ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "HK-SemiBold",
+                }}>
+                *At least 8 Characters
+              </Text>
+            ) : null}
           </View>
 
           <View style={styles.carouselWrapper}>
@@ -419,13 +433,13 @@ const AuthGetStarted = ({navigation}: Props) => {
             btnText={"Next"}
             onClick={onClick}
           />
-          <View style={styles.loginWrapper}>
+          {/* <View style={styles.loginWrapper}>
             <Text style={styles.signUpText}>
               By signing up, you agree with the
               <Text style={styles.login}> Terms of services </Text>and{" "}
               <Text style={styles.login}>Privacy policy </Text>
             </Text>
-          </View>
+          </View> */}
         </Animatable.View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -445,7 +459,7 @@ const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
@@ -462,7 +476,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: wp(12),
     color: COLORS.light.black,
-    lineHeight: hp(14),
+    lineHeight: hp(20),
   },
   input: {
     width: wp(334),
@@ -510,8 +524,8 @@ const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
@@ -524,7 +538,8 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(10),
+    marginTop: hp(20),
+    marginBottom: hp(30),
   },
   carouselWrapper: {
     justifyContent: "center",
@@ -568,7 +583,7 @@ const styles = StyleSheet.create({
   },
   CompanyDetails: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
+    fontSize: wp(16),
     // lineHeight: hp(20),
     color: COLORS.light.primary,
   },

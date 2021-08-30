@@ -55,7 +55,7 @@ export function CompReg(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         props.onSubmit(formMeta);
@@ -69,7 +69,7 @@ export function CompReg(props: Props) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
 
@@ -111,9 +111,9 @@ export function CompReg(props: Props) {
             handleTextChange({field: FormKeys.shareCapital, value: text});
           }}
         />
+        <View style={{height: 36}} />
+        <CustomButton btnText="Next" onClick={submit} />
       </KeyboardAwareScrollView>
-      <View style={{height: 16}} />
-      <CustomButton btnText="Next" onClick={submit} />
     </View>
   );
 }

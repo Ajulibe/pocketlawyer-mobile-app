@@ -1,6 +1,6 @@
-import { Platform, StatusBar, StyleSheet } from "react-native";
+import {Platform, StatusBar, StyleSheet} from "react-native";
 import COLORS from "../utils/Colors";
-import { hp, wp } from "../utils/Dimensions";
+import {hp, wp} from "../utils/Dimensions";
 
 const globalStyles = StyleSheet.create({
   AndroidSafeArea: {
@@ -44,7 +44,7 @@ const globalStyles = StyleSheet.create({
   },
   shadowLight: {
     shadowColor: COLORS.light.blackLight,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.2,
     shadowRadius: 0,
     elevation: Platform.OS === "ios" ? 8 : 0,
@@ -55,11 +55,11 @@ const globalStyles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
-    paddingTop: wp(12),
+    paddingTop: wp(9),
   },
   iconWrapper: {
-    width: wp(30),
-    height: wp(30),
+    width: wp(33),
+    height: wp(33),
     borderRadius: wp(35),
     backgroundColor: COLORS.light.white,
     alignItems: "center",
@@ -69,7 +69,7 @@ const globalStyles = StyleSheet.create({
     // borderWidth: 1,
 
     shadowColor: COLORS.light.black,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.2,
     shadowRadius: 1,
   },

@@ -1,6 +1,9 @@
 import {StyleSheet, Platform} from "react-native";
 import COLORS from "utils/Colors";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {wp, hp} from "utils/Dimensions";
 
 export const styles = StyleSheet.create({
@@ -20,7 +23,7 @@ export const styles = StyleSheet.create({
     lineHeight: Platform.OS === "ios" ? hp(27) : hp(34),
     textAlign: "left",
     color: COLORS.light.black,
-    marginTop: hp(10),
+    marginTop: hp(5),
     marginBottom: hp(29),
     width: wpercent("90%"),
   },
@@ -76,6 +79,7 @@ export const styles = StyleSheet.create({
   plButton: {
     marginTop: hp(20),
     marginBottom: hp(12),
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",

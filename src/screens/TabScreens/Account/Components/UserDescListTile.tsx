@@ -1,5 +1,5 @@
 import React from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View, Platform} from "react-native";
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import COLORS from "utils/Colors";
 import {hp, wp} from "utils/Dimensions";
@@ -20,7 +20,11 @@ export default function UserDescListTile(props: Props) {
           {
             fontSize: makeBold ? wp(14) : wp(14),
             color: makeBold ? COLORS.light.primary : "rgba(0, 0, 0, 1)",
-            fontFamily: makeBold ? "Roboto-Bold" : "Roboto-Medium",
+            fontFamily: makeBold
+              ? "Roboto-Bold"
+              : Platform.OS === "ios"
+              ? "Roboto-Medium"
+              : "Roboto-Light",
           },
         ]}>
         {value}

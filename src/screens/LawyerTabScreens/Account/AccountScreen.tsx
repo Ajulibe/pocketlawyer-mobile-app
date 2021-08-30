@@ -5,6 +5,7 @@ import CustomAppbar from "components/CustomAppbar";
 import globalStyles from "css/GlobalCss";
 import {AccountStackParamList} from "navigation/LawyerStackScreens/AccountStack";
 import {ROUTES} from "navigation/Routes";
+import {Feather} from "@expo/vector-icons";
 
 import {
   Platform,
@@ -25,6 +26,7 @@ import dayjs from "dayjs";
 //--> REDUX
 import {useAppSelector} from "redux/hooks";
 import {getFirstLetterFromName} from "./UpdateProfile/utilsFn";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<
   AccountStackParamList,
@@ -57,16 +59,16 @@ const AccountScreen = ({navigation}: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <CustomAppbar
-          navigation={navigation}
-          title="My Account"
-          showBorderBottom={false}
-          hideBackButton={true}
-        />
         <ScrollView
           contentContainerStyle={[styles.container, {flexGrow: 1}]}
           keyboardShouldPersistTaps="handled"
           bounces={false}>
+          <CustomAppbar
+            navigation={navigation}
+            title="My Account"
+            showBorderBottom={false}
+            hideBackButton={true}
+          />
           <Avatar
             rounded
             titleStyle={{
@@ -137,19 +139,7 @@ const AccountScreen = ({navigation}: Props) => {
               value={dayjs(user_?.dob).format("DD/MM/YYYY")}
             />
           )}
-
-          <Text
-            style={[
-              {
-                ...styles.changePhotoBtn,
-                textAlign: "center",
-                color: COLORS.light.black,
-                marginTop: hp(10),
-              },
-            ]}>
-            If you have any issues with your information, please send a message
-            to info@pocket-lawyers.com
-          </Text>
+          <View style={{height: hp(18)}} />
           <Text style={styles.subTitle}>Contact Information</Text>
           <View style={{height: hp(18)}} />
           <UserDescListTile leading="Phone Number" value={user_?.phone} />
@@ -164,6 +154,40 @@ const AccountScreen = ({navigation}: Props) => {
               size={24}
               color={COLORS.light.black}
             />
+          </TouchableOpacity>
+
+          <View style={{height: hp(18)}} />
+          <Text
+            style={[
+              {
+                ...styles.changePhotoBtn,
+                textAlign: "center",
+                color: COLORS.light.black,
+                marginTop: hp(10),
+              },
+            ]}>
+            If you have any issues with your information, please send a message
+            to&nbsp;
+            <Text style={{color: COLORS.light.primary}}>
+              info@pocket-lawyers.com
+            </Text>
+          </Text>
+          <View style={{height: hp(18)}} />
+
+          <TouchableOpacity
+            style={[styles.changePasswordBth, {paddingTop: hp(15)}]}
+            onPress={async () => {
+              AsyncStorage.clear();
+              navigation.navigate(ROUTES.AUTH_LOGIN);
+            }}>
+            <Text
+              style={[
+                styles.passBtnText,
+                {color: "red", fontFamily: "Roboto-Regular"},
+              ]}>
+              Logout
+            </Text>
+            <Feather name="log-out" size={14} color="red" />
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -202,13 +226,13 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: wp(14),
-    lineHeight: hp(16),
+    lineHeight: hp(27),
     fontWeight: "500",
     fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
+    color: COLORS.light.primary,
     marginBottom: hp(2),
     width: "100%",
-    marginTop: hp(24),
+    textAlign: "center",
   },
   changePasswordBth: {
     width: "100%",

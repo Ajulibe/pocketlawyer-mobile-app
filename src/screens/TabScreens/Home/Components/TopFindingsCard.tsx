@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: wp(14),
-    lineHeight: hp(15),
+    lineHeight: hp(20),
     fontWeight: "300",
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",

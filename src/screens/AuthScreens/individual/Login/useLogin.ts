@@ -7,6 +7,7 @@ import {PLToast} from "components/PLToast/index.component";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {CommonActions} from "@react-navigation/native";
+import {BackHandler, Platform} from "react-native";
 
 export const useLogin = (navigation: any) => {
   const [visible, setVisible] = React.useState(false);
@@ -36,6 +37,20 @@ export const useLogin = (navigation: any) => {
     }
   }, [resetemail]);
   //----------------------------------------------------------
+
+  function handleBackButton() {
+    return true;
+  }
+
+  React.useEffect(() => {
+    if (Platform.OS === "android") {
+      BackHandler.addEventListener("hardwareBackPress", handleBackButton);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
+      };
+    }
+  }, []);
 
   const Login = async () => {
     setIsLoading(true);

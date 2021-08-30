@@ -9,6 +9,7 @@ import PLButton from "components/PLButton/PLButton.component";
 import {Radio, RadioGroup} from "@ui-kitten/components";
 import NavBar from "components/NavBar";
 import globalStyles from "css/GlobalCss";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -72,8 +73,8 @@ const styles = StyleSheet.create({
 
   selectText: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
-    lineHeight: hp(27),
+    fontSize: wp(16),
+    lineHeight: hp(29),
     color: COLORS.light.black,
   },
   welcomeText: {
@@ -99,6 +100,7 @@ const styles = StyleSheet.create({
   },
   plButton: {
     marginTop: hp(150),
+    width: widthPercentageToDP("90%"),
   },
 });
 

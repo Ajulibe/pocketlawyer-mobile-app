@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     color: COLORS.light.primary,
   },
   nextButton: {
-    width: "100%",
+    width: wpercent("80%"),
     borderRadius: wp(7),
   },
   emptyState: {

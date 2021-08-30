@@ -1,7 +1,10 @@
 import React from "react";
 import {View, StyleSheet, Image, Text, Platform} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "../../../navigation/MainNavigator";
 import {ROUTES} from "../../../navigation/Routes";
 import COLORS from "../../../utils/Colors";
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
   },
   plButton: {
     marginTop: hp(115),
+    width: widthPercentageToDP("90%"),
   },
   intro: {
     textAlign: "center",
@@ -77,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: wp(16),
     width: "100%",
     fontStyle: "normal",
-    lineHeight: Platform.OS === "ios" ? hp(24) : hp(32),
+    lineHeight: Platform.OS === "ios" ? hp(30) : hp(32),
     color: COLORS.light.black,
   },
   textWrapper: {
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
   textHeader: {
     width: wp(264),
     height: wp(24),
-    fontFamily: "Roboto-Bold",
+    fontFamily: "HK-SemiBold",
     fontSize: wp(20),
     color: COLORS.light.primary,
     marginTop: hp(10),
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   login: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "HK-SemiBold",
     fontSize: wp(14),
     lineHeight: hp(16),
     letterSpacing: 0,

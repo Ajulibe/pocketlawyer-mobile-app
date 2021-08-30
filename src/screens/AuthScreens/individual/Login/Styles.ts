@@ -1,7 +1,10 @@
 import {StyleSheet} from "react-native";
 import COLORS from "utils/Colors";
 import {wp, hp} from "utils/Dimensions";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -12,12 +15,12 @@ export const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     lineHeight: hp(20),
     textAlign: "left",
     alignSelf: "flex-start",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginBottom: hp(20),
   },
   contentWraper: {
     width: wpercent("90%"),
@@ -53,8 +56,8 @@ export const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(13),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
@@ -74,7 +77,8 @@ export const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(306),
+    marginTop: hp(246),
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",

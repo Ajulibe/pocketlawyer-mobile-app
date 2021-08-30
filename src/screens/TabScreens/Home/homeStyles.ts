@@ -82,6 +82,18 @@ const styles = StyleSheet.create({
     color: COLORS.light.primary,
     marginBottom: hp(20),
   },
+  topFindingswrapper: {
+    display: "flex",
+    flexDirection: "row",
+    paddingVertical: hp(10),
+    paddingHorizontal: wp(15),
+    alignItems: "center",
+    backgroundColor: "#F3F2FD",
+    borderRadius: 8,
+    marginBottom: wp(9),
+    borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
+    borderColor: COLORS.light.carouselBtn2,
+  },
 });
 
 export default styles;

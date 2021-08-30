@@ -184,9 +184,9 @@ const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
-    lineHeight: hp(20),
-    textAlign: "center",
+    fontSize: wp(16),
+    lineHeight: hp(27),
+    textAlign: "left",
     alignSelf: "flex-start",
     color: COLORS.light.black,
     marginBottom: hp(39),
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   selectText: {
     color: COLORS.light.primary,
-    fontSize: 12,
+    fontSize: wp(12),
     marginTop: hp(12),
     fontFamily: "Roboto-Medium",
   },
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   btnWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: hp(21),
+    marginTop: hp(30),
     width: wpercent("90%"),
   },
   skipButton: {
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(150),
+    marginTop: hp(90),
     width: wpercent("90%"),
   },
 

@@ -19,7 +19,7 @@ import axiosClient from "utils/axiosClient";
 import {hp, wp} from "utils/Dimensions";
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import HistoryListTile from "./Components/HistoryListTile";
-import {useScrollToTop} from "@react-navigation/native";
+import {useScrollToTop, useFocusEffect} from "@react-navigation/native";
 
 // type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
 type Props = StackScreenProps<any>;
@@ -46,9 +46,15 @@ const HistoryScreen = ({navigation}: Props) => {
 
   useScrollToTop(ref);
 
-  React.useEffect(() => {
-    getHistory();
-  }, []);
+  // React.useEffect(() => {
+  //   getHistory();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getHistory();
+    }, []),
+  );
 
   const getHistory = async () => {
     try {
@@ -58,13 +64,13 @@ const HistoryScreen = ({navigation}: Props) => {
       );
       const totalCount = response?.data?.count;
       const data = response?.data?.data;
-      console.log(data);
 
       if (response != null && response?.data?.data?.length != 0) {
         const history: ServiceHistoryInterface[] = data.map(
           (h: any) => h?.serviceHistory,
         );
         setHistory(history);
+        console.log(history);
       } else {
         showError("Error encountered while loading service history");
       }
@@ -86,7 +92,7 @@ const HistoryScreen = ({navigation}: Props) => {
             showBorderBottom={false}
             hideBackButton={true}
           />
-          <ServiceSearch />
+          {/* <ServiceSearch /> */}
           <FlatList
             ref={ref}
             data={history}

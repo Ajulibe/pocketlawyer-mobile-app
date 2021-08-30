@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
-import {wp} from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import {Category} from "database/DBData";
 import CategoryCard from "./Components/CategoryCard";
 import TopFindingsCard from "./Components/TopFindingsCard";
@@ -29,7 +29,10 @@ import {useScrollToTop} from "@react-navigation/native";
 import {useAppSelector, useAppDispatch} from "redux/hooks";
 import COLORS from "utils/Colors";
 import {getUser} from "redux/actions";
-import {RectangularSkeleton} from "components/PLSkeleton/PLSkeleton.component";
+import {
+  RectangularSkeleton,
+  CategoriesSkeleton,
+} from "components/PLSkeleton/PLSkeleton.component";
 import {Avatar} from "react-native-elements";
 import {
   capitalizeFirstLetter,
@@ -39,6 +42,7 @@ import {
 import {ServiceHistoryInterface} from "screens/TabScreens/History/HistoryScreen";
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import {EmptyState} from "../Global/EmptyState";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
@@ -120,6 +124,12 @@ const HomeScreen = ({navigation}: Props) => {
       );
       if (getCats !== null && getCats?.data?.data?.length !== 0) {
         const cats: Category[] = getCats?.data?.data;
+        const arr: string[] = [];
+        cats.map((item: any) => {
+          arr.push(item.categoryName);
+        });
+
+        const unique = [...new Set(arr)];
 
         setCategory(cats);
         getLawyers();
@@ -175,6 +185,8 @@ const HomeScreen = ({navigation}: Props) => {
       return;
     }
   };
+
+  const skeletonArray = [1, 2, 3, 4, 5];
 
   return (
     <>
@@ -237,7 +249,7 @@ const HomeScreen = ({navigation}: Props) => {
             />
           </View>
 
-          <ServiceSearch />
+          {/* <ServiceSearch /> */}
 
           <View style={{flex: 1}}>
             <View style={styles.titleWithViewMore}>
@@ -254,7 +266,14 @@ const HomeScreen = ({navigation}: Props) => {
             </View>
 
             {isTopFindingsLoading ? (
-              <View style={styles.skeleton}>
+              <View
+                style={[
+                  styles.skeleton,
+                  {
+                    width: widthPercentageToDP("90%"),
+                    alignSelf: "center",
+                  },
+                ]}>
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
                 <RectangularSkeleton isLoading={isTopFindingsLoading} />
@@ -300,7 +319,9 @@ const HomeScreen = ({navigation}: Props) => {
             )}
 
             <View style={styles.titleWithViewMore}>
-              <Text style={globalStyles.H2Style}>Your Categories</Text>
+              <Text style={[globalStyles.H2Style, {marginBottom: hp(5)}]}>
+                Your Categories
+              </Text>
               <TouchableOpacity
                 onPress={() =>
                   navigation.push(ROUTES.ADD_MORE_CATEGORIES, category)
@@ -319,8 +340,20 @@ const HomeScreen = ({navigation}: Props) => {
             </View>
 
             {isCategoryLoading ? (
-              <View style={styles.skeletonScroll}>
-                <RectangularSkeleton isLoading={isCategoryLoading} />
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  height: hp(150),
+                }}>
+                {skeletonArray.map((item) => {
+                  return (
+                    <CategoriesSkeleton
+                      isLoading={isCategoryLoading}
+                      key={item}
+                    />
+                  );
+                })}
               </View>
             ) : null}
 

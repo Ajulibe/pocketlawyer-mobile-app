@@ -30,7 +30,7 @@ const App: FC = () => {
   const fetchFonts = () => {
     return Font.loadAsync({
       "Roboto-Black": require("./src/assets/fonts/Roboto-Black.ttf"),
-      "Roboto-Bold": require("./src/assets/fonts/hk-grotesk.bold.otf"),
+      "Roboto-Bold": require("./src/assets/fonts/hk-grotesk.semibold.otf"),
       "Roboto-Light": require("./src/assets/fonts/hk-grotesk.light.otf"),
       "Roboto-Medium": require("./src/assets/fonts/hk-grotesk.medium.otf"),
       "Roboto-MediumItalic": require("./src/assets/fonts/Roboto-MediumItalic.ttf"),

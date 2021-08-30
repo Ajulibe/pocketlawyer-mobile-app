@@ -90,12 +90,12 @@ const ValidateEmail = ({navigation}: Props) => {
       <View style={styles.contentWraper}>
         <View style={styles.TextWrapper}>
           <Text style={styles.welcomeMessage}>
-            A validation code has been sent to &nbsp;
+            A validation code has been sent to&nbsp;
             <Text style={styles.ContactPerson}>{email}</Text>
           </Text>
         </View>
 
-        <View style={{height: wp(130)}}>
+        <View style={{height: wp(130), marginTop: hp(20)}}>
           <Text style={styles.inputText}>Code</Text>
           <PLTextInput
             maxLength={6}
@@ -127,8 +127,8 @@ const ValidateEmail = ({navigation}: Props) => {
               navigation.navigate(ROUTES.AUTH_SIGN_UP_SME);
             }}>
             <Text style={styles.signUpText}>
-              Wrong Email?
-              <Text style={styles.login}> &nbsp; Start Over </Text>
+              Wrong Email?&nbsp;
+              <Text style={styles.login}>Start Over</Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -147,17 +147,17 @@ const styles = StyleSheet.create({
   signUpText: {
     textAlign: "center",
     fontFamily: "Roboto-Regular",
-    fontSize: wp(11),
+    fontSize: wp(14),
     color: COLORS.light.black,
-    lineHeight: hp(14),
+    lineHeight: hp(24),
   },
   TextWrapper: {
     width: wpercent("90%"),
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
-    lineHeight: hp(27),
+    fontSize: wp(16),
+    lineHeight: hp(32),
     textAlign: "left",
     color: COLORS.light.black,
     marginBottom: hp(10),
@@ -181,8 +181,8 @@ const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontFamily: "Roboto-Bold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: wp(12),
   },
   plButton: {
-    marginTop: hp(340),
+    marginTop: hp(280),
   },
   carouselWrapper: {
     justifyContent: "center",
@@ -221,12 +221,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: wpercent("80%"),
     justifyContent: "space-around",
-    marginTop: hp(18),
+    marginTop: hp(25),
   },
   login: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(11),
-    lineHeight: hp(14),
+    fontSize: wp(14),
+    lineHeight: hp(24),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
@@ -241,8 +241,8 @@ const styles = StyleSheet.create({
   },
   ContactPerson: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
-    lineHeight: hp(20),
+    fontSize: wp(16),
+    lineHeight: hp(32),
     color: COLORS.light.primary,
   },
   inputPhoneNumber: {

@@ -138,12 +138,12 @@ const Checkout = ({navigation, route}: Props) => {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
+      <CustomAppbar
+        navigation={navigation}
+        title="Checkout"
+        showBorderBottom={false}
+      />
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <CustomAppbar
-          navigation={navigation}
-          title="Checkout"
-          showBorderBottom={false}
-        />
         <ScrollView
           contentContainerStyle={[styles.container, {flexGrow: 1}]}
           keyboardShouldPersistTaps="handled"
@@ -167,7 +167,7 @@ const Checkout = ({navigation, route}: Props) => {
             consultation fee would be fully refunded.
           </Text>
           <View style={{height: hp(36)}} />
-          <UserDescListTile leading="Service" value={service?.serviceName} />
+          <UserDescListTile leading="Service" value={service?.serviceName!} />
           <UserDescListTile leading="Lawyer" value={name!} />
           <UserDescListTile leading="Location" value={address!} />
           <UserDescListTile
@@ -216,6 +216,7 @@ const Checkout = ({navigation, route}: Props) => {
             paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
             amount={amount}
             billingEmail={userEmail} //change this email to the inidividuals email
+            // billingEmail="a.ajulibe@yahoo.com"
             billingMobile="0531714677" //change
             billingName="Akachukwu Ajulibe"
             channels={JSON.stringify([

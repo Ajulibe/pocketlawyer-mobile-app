@@ -4,8 +4,9 @@ import {hp, wp} from "utils/Dimensions";
 
 const modalFormstyles = StyleSheet.create({
   formContainer: {
-    flex: 1,
-    paddingBottom: Platform.OS === "android" ? hp(60) : hp(30),
+    // flex: 1,
+    paddingBottom: Platform.OS === "android" ? hp(30) : hp(30),
+    height: hp(600),
   },
   extraScrollHeight: {
     paddingBottom: 60,

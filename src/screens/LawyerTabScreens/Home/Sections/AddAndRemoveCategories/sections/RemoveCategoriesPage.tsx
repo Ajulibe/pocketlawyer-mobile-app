@@ -38,7 +38,7 @@ export const RemoveCategories = ({routedata, navigation}: any) => {
 
       {loading ? (
         <View style={styles.activityIndicatorStyle}>
-          <ActivityIndicator />
+          <ActivityIndicator color={COLORS.light.primary} />
         </View>
       ) : (
         <Remove

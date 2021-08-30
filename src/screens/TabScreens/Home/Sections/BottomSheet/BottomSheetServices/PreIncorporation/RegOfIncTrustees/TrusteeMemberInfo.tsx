@@ -77,7 +77,7 @@ export function TrusteeMemberInfo(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         props.onSubmit(formMeta);

@@ -142,8 +142,10 @@ const HomeScreen = ({navigation}: Props) => {
 
         if (data != null) {
           const lawyers: LawyerModel[] = data?.data;
+          console.log(lawyers);
 
-          setLawyers(lawyers);
+          setLawyers(lawyers.slice(0, 6));
+
           setTimeout(() => {
             setIsTopFindingsLoading(false);
           }, 500);
@@ -153,7 +155,6 @@ const HomeScreen = ({navigation}: Props) => {
   };
 
   const skeletonArray = [1, 2, 3, 4, 5];
-  console.log(category);
 
   LogBox.ignoreAllLogs();
   return (
@@ -223,8 +224,13 @@ const HomeScreen = ({navigation}: Props) => {
             </View>
 
             <View style={{width: "100%", flexDirection: "row"}}>
-              {skeletonArray.map(() => {
-                return <CategoriesSkeleton isLoading={isCategoryLoading} />;
+              {skeletonArray.map((item) => {
+                return (
+                  <CategoriesSkeleton
+                    isLoading={isCategoryLoading}
+                    key={item}
+                  />
+                );
               })}
             </View>
 
@@ -232,11 +238,12 @@ const HomeScreen = ({navigation}: Props) => {
               {!isCategoryLoading && (
                 <FlatList
                   horizontal={true}
-                  data={category}
+                  data={category == null ? CategoryDb?.categories : category}
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({item}) => (
                     <CategoryCard
+                      key={item}
                       category={item}
                       onClick={() =>
                         navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
@@ -263,9 +270,10 @@ const HomeScreen = ({navigation}: Props) => {
               </Text>
 
               <View style={{width: "100%"}}>
-                {skeletonArray.map(() => {
+                {skeletonArray.map((item) => {
                   return (
                     <RectangularSkeleton
+                      key={item}
                       isLoading={isTopFindingsLoading}
                       style={{width: "100%"}}
                     />
@@ -273,7 +281,18 @@ const HomeScreen = ({navigation}: Props) => {
                 })}
               </View>
 
-              {!isTopFindingsLoading &&
+              {!isTopFindingsLoading && lawyers.length === 0 ? (
+                <Text
+                  style={[
+                    styles.topFindingswrapper,
+                    {
+                      fontFamily: "Roboto-Bold",
+                      color: COLORS.light.primary,
+                    },
+                  ]}>
+                  You Have no Top Finding
+                </Text>
+              ) : (
                 lawyers.map((item) => {
                   return (
                     <TopFindingsCard
@@ -287,7 +306,8 @@ const HomeScreen = ({navigation}: Props) => {
                       }
                     />
                   );
-                })}
+                })
+              )}
             </View>
           </ScrollView>
         </View>

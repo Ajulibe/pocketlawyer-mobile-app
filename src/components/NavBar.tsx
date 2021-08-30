@@ -20,18 +20,27 @@ interface NavProps {
   navText?: string;
   textStyle?: TextStyle;
   style?: ViewStyle;
+  isDisabledGoBack?: boolean;
 }
 
-const NavBar = ({onPress, navText, textStyle, style}: NavProps) => {
+const NavBar = ({
+  onPress,
+  navText,
+  textStyle,
+  style,
+  isDisabledGoBack,
+}: NavProps) => {
   return (
     <View style={[styles.navigationBar, style]}>
-      <TouchableOpacity onPress={onPress} style={styles.backIcon}>
-        <Ionicons
-          name="chevron-back-outline"
-          size={27}
-          color={COLORS.light.black}
-        />
-      </TouchableOpacity>
+      {isDisabledGoBack ? null : (
+        <TouchableOpacity onPress={onPress} style={styles.backIcon}>
+          <Ionicons
+            name="chevron-back-outline"
+            size={27}
+            color={COLORS.light.black}
+          />
+        </TouchableOpacity>
+      )}
 
       <Animatable.Text
         animation="fadeInLeft"
@@ -56,7 +65,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     width: wpercent("93%"),
-    marginTop: hp(15),
+    marginTop: Platform.OS === "ios" ? 0 : hp(5),
   },
   navText: {
     fontFamily: "Roboto-Bold",

@@ -125,9 +125,9 @@ export default function MainNavigator() {
       // initialRouteName={ROUTES.TABSCREEN_STACK}
       headerMode={"none"}
       screenOptions={{
-        // headerStyle: {
-        //   // backgroundColor: "#fff",
-        // },
+        headerStyle: {
+          backgroundColor: "#fff",
+        },
         cardStyle: {backgroundColor: Colors.light.white},
       }}>
       <MainStack.Screen
@@ -166,7 +166,7 @@ export default function MainNavigator() {
       <MainStack.Screen
         name={ROUTES.AUTH_LOGIN}
         component={AuthLogin}
-        options={{headerShown: false}}
+        options={{headerShown: false, gestureEnabled: false}}
       />
       <MainStack.Screen
         name={ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR}

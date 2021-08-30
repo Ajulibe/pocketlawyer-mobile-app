@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: wp(12),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     fontWeight: "300",
     color: COLORS.light.primary,
     marginBottom: hp(9),

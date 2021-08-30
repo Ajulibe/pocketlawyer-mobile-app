@@ -38,6 +38,10 @@ export interface Props {
 }
 
 export const PLTextInput: React.FC<Props> = (props) => {
+  // function hasWhiteSpace(s: string) {
+  //   return /\s/g.test(s);
+  // }
+
   return (
     <View style={styles.InputWrapper}>
       {typeof props.labelText !== "undefined" && (
@@ -63,7 +67,14 @@ export const PLTextInput: React.FC<Props> = (props) => {
         textStyle={styles.textStyle}
         placeholderTextColor={COLORS.light.darkgrey}
       />
-      {/* <Text>{props.errorMessage}</Text> */}
+      {/* {(props.textContentType === "givenName" ||
+        props.textContentType === "familyName") &&
+      hasWhiteSpace(props.value.trim()) ? (
+        <Text
+          style={{color: "red", fontSize: wp(10), fontFamily: "Roboto-Bold"}}>
+          Invalid
+        </Text>
+      ) : null} */}
 
       {props.error && (
         <View style={styles.errorWrapper}>

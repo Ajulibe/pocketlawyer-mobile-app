@@ -17,7 +17,7 @@ export default function CategoryCard({category, onClick}: Props) {
     <TouchableOpacity style={styles.wrapper} onPress={() => onClick()}>
       <View style={globalStyles.topWrapper}>
         <View style={globalStyles.iconWrapper}>
-          {CategoryDb.findByCode({catCode: category.categoryCode}).newImage}
+          {CategoryDb.findByCode({catCode: category.categoryCode!}).newImage}
           {/* <Image
             source={
               CategoryDb.findByCode({ catCode: category.categoryCode }).image

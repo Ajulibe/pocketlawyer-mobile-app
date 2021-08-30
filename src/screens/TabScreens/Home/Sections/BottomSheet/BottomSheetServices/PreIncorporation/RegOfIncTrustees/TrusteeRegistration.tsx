@@ -58,7 +58,7 @@ export function TrusteeRegistration(props: Props) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         props.onSubmit(formMeta);
@@ -100,7 +100,7 @@ export function TrusteeRegistration(props: Props) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={globalStyles.H1Style}>{formTitle}</Text>
         <Text style={modalFormstyles.titleDesc}>{subTitle}</Text>
 
@@ -149,9 +149,9 @@ export function TrusteeRegistration(props: Props) {
           }
           icon
         />
+        <View style={{height: 46}} />
+        <CustomButton btnText="Next" onClick={submit} />
       </ScrollView>
-      <View style={{height: 16}} />
-      <CustomButton btnText="Next" onClick={submit} />
     </View>
   );
 }

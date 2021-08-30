@@ -42,6 +42,7 @@ const AuthLogin = ({navigation}: Props) => {
           navigation.goBack();
         }}
         navText="Login"
+        isDisabledGoBack={true}
       />
       <View style={styles.contentWraper}>
         <Text style={styles.welcomeMessage}>

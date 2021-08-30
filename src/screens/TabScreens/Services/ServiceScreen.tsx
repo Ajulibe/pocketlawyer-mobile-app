@@ -38,7 +38,7 @@ const ServiceScreen = ({navigation}: Props) => {
 
   const filterCategories = (search: string): filtered[] => {
     const result = ServiceDb.services.filter((item) => {
-      return item.serviceName.startsWith(search);
+      return item.serviceName!.startsWith(search);
     });
 
     return result;

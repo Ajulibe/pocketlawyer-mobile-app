@@ -24,6 +24,7 @@ import {lawyerPayload} from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
+import InputValidation from "utils/InputValidation";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -72,6 +73,7 @@ const AuthGetStarted = ({navigation}: Props) => {
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("Select State");
+  const {hasWhiteSpace} = InputValidation;
 
   //--> state  for bottom sheet
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -89,6 +91,8 @@ const AuthGetStarted = ({navigation}: Props) => {
     //--> check if the payload has be completely filled
     if (
       email === "" ||
+      hasWhiteSpace(lastName.trim()) ||
+      hasWhiteSpace(firstName.trim()) ||
       firstName === "" ||
       lastName === "" ||
       city === "" ||
@@ -186,10 +190,20 @@ const AuthGetStarted = ({navigation}: Props) => {
               labelTextRequired={true}
               error={false}
               name="FirstName"
-              textContentType="name"
+              textContentType="givenName"
               style={styles.input}
               placeholder="Type your first name"
             />
+            {hasWhiteSpace(firstName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "HK-SemiBold",
+                }}>
+                *Invalid First Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -203,6 +217,16 @@ const AuthGetStarted = ({navigation}: Props) => {
               style={styles.input}
               placeholder="Type your last name"
             />
+            {hasWhiteSpace(lastName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "HK-SemiBold",
+                }}>
+                *Invalid Last Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -234,7 +258,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                       // eslint-disable-next-line react-native/no-inline-styles
                       style={{
                         marginLeft: wp(16),
-                        fontSize: wp(12),
+                        fontSize: wp(14),
                         fontFamily: "Roboto-Medium",
                         color:
                           statePlaceholder === 0
@@ -369,8 +393,8 @@ const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

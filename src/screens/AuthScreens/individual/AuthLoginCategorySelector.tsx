@@ -1,5 +1,5 @@
 import React from "react";
-import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {View, StyleSheet, SafeAreaView, Text, Platform} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
 import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
@@ -86,6 +86,7 @@ const AuthGetStarted: React.FC<Props> = ({navigation}) => {
       const Payload: submitCategories = {
         UserId: userID === null ? "" : JSON.parse(userID),
         UserType: userType === null ? "" : JSON.parse(userType),
+        // @ts-ignore
         Categorylist: Categorylist,
       };
 
@@ -419,7 +420,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: Platform.OS === "ios" ? hp(10) : 0,
   },
   checkBox: {
     alignSelf: "flex-end",

@@ -1,5 +1,5 @@
 import React from "react";
-import {View, StyleSheet, SafeAreaView, Text} from "react-native";
+import {View, StyleSheet, SafeAreaView, Text, Platform} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
 import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
 import {RootStackParamList} from "../../../navigation/MainNavigator";
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light.white,
   },
   heading: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "HK-SemiBold",
     fontSize: wp(20),
     fontWeight: "bold",
     color: COLORS.light.black,
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: Platform.OS === "ios" ? hp(10) : 0,
   },
   checkBox: {
     alignSelf: "flex-end",

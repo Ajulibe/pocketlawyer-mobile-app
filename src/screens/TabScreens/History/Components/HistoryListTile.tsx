@@ -11,19 +11,48 @@ import COLORS from "utils/Colors";
 import {hp, wp} from "utils/Dimensions";
 import Utilities from "utils/Utilities";
 import {ServiceHistoryInterface} from "../HistoryScreen";
-import {Avatar, Badge, Icon, withBadge} from "react-native-elements";
+import {Avatar, Icon, withBadge} from "react-native-elements";
 import {getFirstLetterFromName} from "screens/TabScreens/Account/UpdateProfile/utilsFn";
+import {Badge} from "native-base";
 
 interface Props {
   history: ServiceHistoryInterface;
   onClick: () => void;
 }
 export default function HistoryListTile({history, onClick}: Props) {
-  const status = () => {
-    if (history.status === 1) {
-      return "pending";
-    } else {
-      return "completed";
+  const renderBadge = () => {
+    const status = history.status;
+    switch (status) {
+      case 1:
+        return (
+          <Badge info style={styles.badge}>
+            <Text style={styles.badgetitle}>Not Paid</Text>
+          </Badge>
+        );
+      case 2:
+        return (
+          <Badge warning style={styles.badge}>
+            <Text style={styles.badgetitle}>In progress</Text>
+          </Badge>
+        );
+      case 4:
+        return (
+          <Badge success style={styles.badge}>
+            <Text style={styles.badgetitle}>Accepted</Text>
+          </Badge>
+        );
+      case 6:
+        return (
+          <Badge danger style={styles.badge}>
+            <Text style={styles.badgetitle}>Declined</Text>
+          </Badge>
+        );
+      default:
+        return (
+          <Badge info style={styles.badge}>
+            <Text style={styles.badgetitle}>Unassigned</Text>
+          </Badge>
+        );
     }
   };
 
@@ -83,7 +112,7 @@ export default function HistoryListTile({history, onClick}: Props) {
         <Text style={styles.trailingTitle}>
           {Utilities.dateTime(history.createdAt.toString())}
         </Text>
-        <Text style={styles.status}>{status()}</Text>
+        <View>{renderBadge()}</View>
       </View>
     </TouchableOpacity>
   );
@@ -93,7 +122,7 @@ const styles = StyleSheet.create({
   wrapper: {
     display: "flex",
     flexDirection: "row",
-    paddingVertical: hp(10),
+    paddingVertical: hp(15),
     paddingHorizontal: wp(15),
     alignItems: "center",
     backgroundColor: "#F3F2FD",
@@ -164,16 +193,13 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Medium",
     marginBottom: hp(8),
   },
-  status: {
-    paddingVertical: hp(4),
-    paddingHorizontal: wp(7),
+
+  badge: {
+    height: hp(20),
+  },
+  badgetitle: {
     fontSize: wp(8),
-    lineHeight: hp(10),
-    fontWeight: "400",
-    color: COLORS.light.primary,
-    fontFamily: "Roboto",
-    backgroundColor: "#DEFFD6",
-    borderRadius: 9,
-    overflow: "hidden",
+    color: COLORS.light.white,
+    fontFamily: "Roboto-Regular",
   },
 });

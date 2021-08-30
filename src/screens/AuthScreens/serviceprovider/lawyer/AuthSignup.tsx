@@ -9,7 +9,10 @@ import {
   Platform,
 } from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
@@ -27,6 +30,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {ScrollView} from "react-native-gesture-handler";
 import globalStyles from "css/GlobalCss";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import InputValidation from "utils/InputValidation";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -81,6 +85,8 @@ const AuthGetStarted = ({navigation}: Props) => {
     //--> check if the payload has be completely filled
     if (
       email === "" ||
+      hasWhiteSpace(lastName.trim()) ||
+      hasWhiteSpace(firstName.trim()) ||
       firstName === "" ||
       lastName === "" ||
       suppremecourtnumber === "" ||
@@ -96,6 +102,7 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   //--> disabling button
   const [disabled, setDisabled] = useState<boolean>(true);
+  const {hasWhiteSpace} = InputValidation;
 
   //-->  data for bottom sheet
   const list = [
@@ -136,13 +143,6 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR);
-        }}
-        navText="Sign Up"
-      />
-
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
         showsVerticalScrollIndicator={false}
@@ -152,6 +152,12 @@ const AuthGetStarted = ({navigation}: Props) => {
           alignItems: "center",
           justifyContent: "center",
         }}>
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.SERVICE_PROVIDER_CATEGORY_SELECTOR);
+          }}
+          navText="Sign Up"
+        />
         <View style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
             Welcome to Pocket Lawyer. To create an account, please enter your
@@ -165,10 +171,20 @@ const AuthGetStarted = ({navigation}: Props) => {
               labelTextRequired={true}
               error={false}
               name="FirstName"
-              textContentType="name"
+              textContentType="givenName"
               style={styles.input}
               placeholder="Type your first name"
             />
+            {hasWhiteSpace(firstName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "HK-SemiBold",
+                }}>
+                *Invalid First Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -182,6 +198,16 @@ const AuthGetStarted = ({navigation}: Props) => {
               style={styles.input}
               placeholder="Type your last name"
             />
+            {hasWhiteSpace(lastName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "Roboto-Bold",
+                }}>
+                *Invalid Last Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -240,7 +266,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                     <Text
                       style={{
                         marginLeft: wp(16),
-                        fontSize: wp(12),
+                        fontSize: wp(14),
                         fontFamily: "Roboto-Medium",
                         color:
                           statePlaceholder === 0
@@ -318,9 +344,9 @@ const AuthGetStarted = ({navigation}: Props) => {
             btnText={"Next"}
             onClick={() => {
               const payload = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                email: email.trim(),
                 userType: 3,
                 address: `${city},${state}`,
                 SuppremeCourtNumber: suppremecourtnumber,
@@ -335,6 +361,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                 fontFamily: "Roboto-Regular",
                 fontSize: wp(12),
                 color: COLORS.light.black,
+                lineHeight: hp(24),
               }}>
               By signing up, you agree with the
               <Text style={styles.login}> Terms of services </Text>and{" "}
@@ -370,7 +397,7 @@ const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
@@ -404,8 +431,8 @@ const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontFamily: "Roboto-Bold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,
@@ -419,6 +446,7 @@ const styles = StyleSheet.create({
   },
   plButton: {
     marginTop: hp(30),
+    width: widthPercentageToDP("90%"),
   },
 
   phoneNumberWrapper: {
@@ -434,11 +462,12 @@ const styles = StyleSheet.create({
     width: wpercent("80%"),
     justifyContent: "space-around",
     marginTop: hp(12),
+    marginBottom: hp(20),
   },
   login: {
     fontFamily: "Roboto-Medium",
     fontSize: wp(12),
-    lineHeight: hp(16),
+    lineHeight: hp(24),
     letterSpacing: 0,
     color: COLORS.light.lightpurple,
   },
@@ -453,7 +482,7 @@ const styles = StyleSheet.create({
   },
   CompanyDetails: {
     fontFamily: "Roboto-Medium",
-    fontSize: wp(14),
+    fontSize: wp(16),
     color: COLORS.light.primary,
   },
   required: {

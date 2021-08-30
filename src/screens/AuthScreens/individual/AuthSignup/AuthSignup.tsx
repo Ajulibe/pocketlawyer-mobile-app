@@ -19,6 +19,8 @@ import {IndividualSignUpInterface} from "navigation/interfaces";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import globalStyles from "css/GlobalCss";
 import {styles} from "./style";
+import InputValidation from "utils/InputValidation";
+import {StatusBar} from "react-native";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -37,12 +39,15 @@ const AuthGetStarted = ({navigation}: Props) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
+  const {hasWhiteSpace} = InputValidation;
 
   //--> check to ensure all values are filled and enable button
   React.useEffect(() => {
     //--> check if the payload has be completely filled
     if (
       email === "" ||
+      hasWhiteSpace(lastName.trim()) ||
+      hasWhiteSpace(firstName.trim()) ||
       firstName === "" ||
       lastName === "" ||
       phonenumber === ""
@@ -60,10 +65,10 @@ const AuthGetStarted = ({navigation}: Props) => {
   //--> creating payload and saving to async
   const onClick = () => {
     const Payload: IndividualSignUpInterface = {
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      phone: phonenumber,
+      email: email.trim(),
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      phone: phonenumber.trim(),
     };
 
     //-->  saving payload to local staorage
@@ -82,15 +87,7 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
-      <NavBar
-        onPress={() => {
-          navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
-        }}
-        navText="Sign Up"
-        style={{
-          marginBottom: hp(30),
-        }}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="rgba(0,0,0,0.5)" />
 
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
@@ -98,6 +95,16 @@ const AuthGetStarted = ({navigation}: Props) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps={"handled"}
         contentContainerStyle={styles.contentContainerStyle}>
+        <NavBar
+          onPress={() => {
+            navigation.navigate(ROUTES.AUTH_SELECT_CATEGORY);
+          }}
+          navText="Sign Up"
+          style={{
+            marginBottom: hp(20),
+          }}
+        />
+
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <View style={styles.TextWrapper}>
             <Animatable.Text animation="fadeIn" style={styles.welcomeMessage}>
@@ -114,10 +121,20 @@ const AuthGetStarted = ({navigation}: Props) => {
               name="FirstName"
               onChangeText={setFirstName}
               value={firstName}
-              textContentType="name"
+              textContentType="givenName"
               style={styles.input}
               placeholder="Type your first name"
             />
+            {hasWhiteSpace(firstName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "Roboto-Bold",
+                }}>
+                *Invalid First Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -132,6 +149,16 @@ const AuthGetStarted = ({navigation}: Props) => {
               style={styles.input}
               placeholder="Type your last name"
             />
+            {hasWhiteSpace(lastName.trim()) ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "Roboto-Bold",
+                }}>
+                *Invalid Last Name
+              </Text>
+            ) : null}
           </View>
 
           <View>
@@ -203,13 +230,13 @@ const AuthGetStarted = ({navigation}: Props) => {
             btnText={"Next"}
             onClick={onClick}
           />
-          <View style={styles.loginWrapper}>
+          {/* <View style={styles.loginWrapper}>
             <Text style={styles.signUpText}>
               By signing up, you agree with the
               <Text style={styles.login}> Terms of services </Text>and{" "}
               <Text style={styles.login}>Privacy policy </Text>
             </Text>
-          </View>
+          </View> */}
         </Animatable.View>
       </KeyboardAwareScrollView>
     </SafeAreaView>

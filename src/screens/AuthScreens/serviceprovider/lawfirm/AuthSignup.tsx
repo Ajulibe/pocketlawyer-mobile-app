@@ -205,7 +205,7 @@ const AuthGetStarted = ({navigation}: Props) => {
                     <Text
                       style={{
                         marginLeft: wp(16),
-                        fontSize: wp(12),
+                        fontSize: wp(14),
                         fontFamily: "Roboto-Medium",
                         color:
                           statePlaceholder === 0
@@ -378,8 +378,8 @@ const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(12),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

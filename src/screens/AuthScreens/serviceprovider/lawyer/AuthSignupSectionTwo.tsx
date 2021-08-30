@@ -3,7 +3,10 @@
 import React, {useState} from "react";
 import {View, StyleSheet, SafeAreaView, Text} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
@@ -100,7 +103,8 @@ const AuthGetStarted = ({navigation, route}: Props) => {
       if (
         phonenumber.length === 0 ||
         password.length === 0 ||
-        destination.length === 0
+        destination.length === 0 ||
+        password.length < 8
       ) {
         setIsDisabled(true);
         return;
@@ -108,7 +112,11 @@ const AuthGetStarted = ({navigation, route}: Props) => {
         setIsDisabled(false);
       }
     } else {
-      if (phonenumber.length === 0 || password.length === 0) {
+      if (
+        phonenumber.length === 0 ||
+        password.length === 0 ||
+        password.length < 8
+      ) {
         setIsDisabled(true);
         return;
       } else {
@@ -248,18 +256,18 @@ const AuthGetStarted = ({navigation, route}: Props) => {
 
   return (
     <SafeAreaView style={[styles.wrapper, globalStyles.AndroidSafeArea]}>
-      <NavBar
-        onPress={() => {
-          navigation.goBack();
-        }}
-        navText="Complete Account Setup"
-      />
       <KeyboardAwareScrollView
         extraScrollHeight={wp(100)}
         keyboardShouldPersistTaps={"handled"}
         showsVerticalScrollIndicator={false}
         enableOnAndroid={true}
         contentContainerStyle={styles.container}>
+        <NavBar
+          onPress={() => {
+            navigation.goBack();
+          }}
+          navText="Complete Account Setup"
+        />
         <Animatable.View animation="fadeIn" style={styles.contentWraper}>
           <Text style={styles.welcomeMessage}>
             Complete your account setup.
@@ -326,6 +334,16 @@ const AuthGetStarted = ({navigation, route}: Props) => {
                 onChangeText={setPassword}
               />
             </View>
+            {password.length < 8 && password.length > 0 ? (
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: wp(10),
+                  fontFamily: "HK-SemiBold",
+                }}>
+                *At least 8 Characters
+              </Text>
+            ) : null}
           </View>
 
           <View style={styles.carouselWrapper}>
@@ -411,7 +429,7 @@ const styles = StyleSheet.create({
   },
   welcomeMessage: {
     fontFamily: "Roboto-Regular",
-    fontSize: wp(14),
+    fontSize: wp(16),
     lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
@@ -455,6 +473,7 @@ const styles = StyleSheet.create({
 
   plButton: {
     marginTop: hp(31),
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",
