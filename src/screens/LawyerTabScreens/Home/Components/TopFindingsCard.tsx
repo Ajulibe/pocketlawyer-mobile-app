@@ -26,6 +26,12 @@ type actionType = "warning" | "success" | "danger" | "info";
 
 const renderBadge = (status: number) => {
   switch (status) {
+    case 1:
+      return (
+        <Badge info style={styles.badge}>
+          <Text style={styles.badgetitle}>Not Paid</Text>
+        </Badge>
+      );
     case 2:
       return (
         <Badge warning style={styles.badge}>
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     lineHeight: hp(20),
     fontWeight: "700",
     color: COLORS.light.primary,
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Bold",
     marginBottom: hp(6),
   },
   subtitle: {

@@ -77,7 +77,7 @@ export function ReviewOfLegalDocs(props: BottomSheetProps) {
           const formMeta = await transformMeta(
             newData,
             historyId,
-            service.serviceCode,
+            service.serviceCode!,
           );
 
           loadingDispatch({
@@ -151,7 +151,12 @@ export function ReviewOfLegalDocs(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{}}>
         <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
         <Text style={modalFormstyles.titleDesc}>
           Please fill the form with your proposed business details

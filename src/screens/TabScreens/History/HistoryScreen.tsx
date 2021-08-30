@@ -20,7 +20,7 @@ import axiosClient from "utils/axiosClient";
 import {hp, wp} from "utils/Dimensions";
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import HistoryListTile from "./Components/HistoryListTile";
-import {useScrollToTop} from "@react-navigation/native";
+import {useScrollToTop, useFocusEffect} from "@react-navigation/native";
 
 // type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
 type Props = StackScreenProps<HistoryStackParamList, ROUTES.HISTORY_SCREEN>;
@@ -47,9 +47,15 @@ const HistoryScreen = ({navigation}: Props) => {
 
   useScrollToTop(ref);
 
-  React.useEffect(() => {
-    getHistory();
-  }, []);
+  // React.useEffect(() => {
+  //   getHistory();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getHistory();
+    }, []),
+  );
 
   const getHistory = async () => {
     try {
@@ -87,6 +93,8 @@ const HistoryScreen = ({navigation}: Props) => {
       <View style={{height: hp(13)}} />
     </>
   );
+
+  console.log(history, "history");
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>

@@ -94,7 +94,9 @@ export default function HistoryListTile({history, onClick}: Props) {
       />
 
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>{history.serviceProvider}</Text>
+        <Text style={styles.title} numberOfLines={1}>
+          {history.serviceProvider}
+        </Text>
         <Text style={styles.subtitle} numberOfLines={2}>
           {history.serviceName}
         </Text>
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
     marginBottom: wp(12),
     borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.carouselBtn2,
+    paddingBottom: hp(27),
   },
   user: {
     resizeMode: "cover",
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: wp(10),
-    lineHeight: hp(14),
+    lineHeight: hp(20),
     fontWeight: "300",
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
@@ -187,7 +190,7 @@ const styles = StyleSheet.create({
   },
   trailingTitle: {
     fontSize: wp(10),
-    lineHeight: hp(12),
+    lineHeight: hp(20),
     fontWeight: "400",
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",

@@ -84,11 +84,12 @@ const Checkout = ({navigation, route}: Props) => {
   // console.log(amount, userEmail, showModal);
 
   const showPaymentModal = () => {
-    if (validateEmail(userEmail)) {
-      setshowModal(true);
-    } else {
-      showError("User Email is Invalid");
-    }
+    setshowModal(true);
+    // if (validateEmail(userEmail)) {
+    //   setshowModal(true);
+    // } else {
+    //   showError("User Email is Invalid");
+    // }
   };
 
   const submitPayment = async (transactionRef: string | number) => {
@@ -215,8 +216,8 @@ const Checkout = ({navigation, route}: Props) => {
             showPayButton={false}
             paystackKey="pk_test_1f4d08ee4ca98bceccd324a474105e184faf4407"
             amount={amount}
-            billingEmail={userEmail} //change this email to the inidividuals email
-            // billingEmail="a.ajulibe@yahoo.com"
+            // billingEmail={userEmail} //change this email to the inidividuals email
+            billingEmail="a.ajulibe@yahoo.com"
             billingMobile="0531714677" //change
             billingName="Akachukwu Ajulibe"
             channels={JSON.stringify([

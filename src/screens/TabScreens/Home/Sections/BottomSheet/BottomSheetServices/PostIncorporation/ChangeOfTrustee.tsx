@@ -34,6 +34,7 @@ import COLORS from "utils/Colors";
 import PickerInput from "components/PickerInput";
 import {meansOfIdentification} from "../../BottomSheetUtils/FormStaticData";
 import ModalFormLabel from "../../BottomSheetUtils/ModalFormLabel";
+import {wp} from "utils/Dimensions";
 
 const allFomKeys = [...Array(10).keys()].map((item, index) => {
   const idx = index + 1;
@@ -81,7 +82,7 @@ export function ChangeOfTrustee(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         loadingDispatch({
@@ -163,147 +164,142 @@ export function ChangeOfTrustee(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}>
-          <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
-          <Text style={modalFormstyles.titleDesc}>
-            Please fill the form with the required details
-          </Text>
 
-          {[...Array(noOfTrustee).keys()].map((item, index) => {
-            const idx = index + 1;
-            const FormKeys = allFomKeys[index];
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{}}>
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
+          Please fill the form with the required details
+        </Text>
 
-            return (
-              <View key={`${index}`}>
-                <Text style={modalFormstyles.subHeader}>
-                  Trustee's Info {idx}
-                </Text>
+        {[...Array(noOfTrustee).keys()].map((item, index) => {
+          const idx = index + 1;
+          const FormKeys = allFomKeys[index];
 
-                <ModalFormLabel text="Company Name" giveMargin={false} />
-                <Input
-                  placeholder="Type company name"
-                  errorText={formData?.[FormKeys?.[`companyName${idx}`]]?.error}
-                  onChangeText={(text: string) => {
-                    handleTextChange({
-                      field: FormKeys?.[`companyName${idx}`],
-                      value: text,
-                    });
-                  }}
-                />
-                <ModalFormLabel text="Company Registration Number" />
-                <Input
-                  placeholder="Type company registration number"
-                  errorText={
-                    formData?.[FormKeys?.[`companyRegNo${idx}`]]?.error
-                  }
-                  onChangeText={(text: string) => {
-                    handleTextChange({
-                      field: FormKeys?.[`companyRegNo${idx}`],
-                      value: text,
-                    });
-                  }}
-                />
-                <ModalFormLabel text="Name of New Trustee" />
-                <Input
-                  placeholder="Type name of new director"
-                  errorText={
-                    formData?.[FormKeys?.[`nameOfNewTrustee${idx}`]]?.error
-                  }
-                  onChangeText={(text: string) => {
-                    handleTextChange({
-                      field: FormKeys?.[`nameOfNewTrustee${idx}`],
-                      value: text,
-                    });
-                  }}
-                />
-                <ModalFormLabel text="Means of Identification" />
-                <PickerInput
-                  data={meansOfIdentification}
-                  errorText={formData?.[FormKeys?.[`meansOfId${idx}`]]?.error}
-                  dataValue={
-                    formData?.[FormKeys?.[`meansOfId${idx}`]]?.value ??
-                    "Select your means of Identification"
-                  }
-                  onSelectChange={(text: string) => {
-                    handleTextChange({
-                      field: FormKeys?.[`meansOfId${idx}`],
-                      value: text,
-                    });
-                  }}
-                />
-                <ModalFormLabel text="ID Number" />
-                <Input
-                  placeholder="Type identification number"
-                  errorText={formData?.[FormKeys?.[`idNo${idx}`]]?.error}
-                  onChangeText={(text: string) => {
-                    handleTextChange({
-                      field: FormKeys?.[`idNo${idx}`],
-                      value: text,
-                    });
-                  }}
-                />
-                <ModalFormLabel text="Upload Means of Identification" />
-                <Input
-                  onPress={() =>
-                    uploadFile(FormKeys?.[`uploadMeansOfId${idx}`])
-                  }
-                  errorText={
-                    formData?.[FormKeys?.[`uploadMeansOfId${idx}`]]?.error
-                  }
-                  dataValue={
-                    formData?.[FormKeys?.[`uploadMeansOfId${idx}`]]?.value ??
-                    "Upload means of identification"
-                  }
-                  icon
-                />
-                <ModalFormLabel text="Signature" />
-                <Input
-                  onPress={() => uploadFile(FormKeys?.[`signature${idx}`])}
-                  errorText={formData?.[FormKeys?.[`signature${idx}`]]?.error}
-                  dataValue={
-                    formData?.[FormKeys?.[`signature${idx}`]]?.value ??
-                    "Upload signature"
-                  }
-                  icon
-                />
-                <View style={{height: 16}} />
-              </View>
-            );
-          })}
-          <View style={modalFormstyles.addMoreWrapper}>
-            {noOfTrustee < allFomKeys.length ? (
-              <TouchableOpacity
-                style={modalFormstyles.addMoreBtn}
-                onPress={() => addNew()}>
-                <Ionicons
-                  name="ios-add"
-                  size={18}
-                  color={COLORS.light.primary}
-                />
-                <Text style={modalFormstyles.addText}>Add New Trustee</Text>
-              </TouchableOpacity>
-            ) : (
-              <View />
-            )}
+          return (
+            <View key={`${index}`}>
+              <Text style={modalFormstyles.subHeader}>
+                Trustee's Info {idx}
+              </Text>
 
-            {noOfTrustee > 1 && (
-              <TouchableOpacity
-                style={modalFormstyles.addMoreBtn}
-                onPress={() => remove()}>
-                <MaterialCommunityIcons
-                  name="minus"
-                  size={18}
-                  color={COLORS.light.primary}
-                />
-                <Text style={modalFormstyles.addText}>Remove</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </KeyboardAwareScrollView>
-      </ScrollView>
+              <ModalFormLabel text="Company Name" giveMargin={false} />
+              <Input
+                placeholder="Type company name"
+                errorText={formData?.[FormKeys?.[`companyName${idx}`]]?.error}
+                onChangeText={(text: string) => {
+                  handleTextChange({
+                    field: FormKeys?.[`companyName${idx}`],
+                    value: text,
+                  });
+                }}
+              />
+              <ModalFormLabel text="Company Registration Number" />
+              <Input
+                placeholder="Type company registration number"
+                errorText={formData?.[FormKeys?.[`companyRegNo${idx}`]]?.error}
+                onChangeText={(text: string) => {
+                  handleTextChange({
+                    field: FormKeys?.[`companyRegNo${idx}`],
+                    value: text,
+                  });
+                }}
+              />
+              <ModalFormLabel text="Name of New Trustee" />
+              <Input
+                placeholder="Type name of new director"
+                errorText={
+                  formData?.[FormKeys?.[`nameOfNewTrustee${idx}`]]?.error
+                }
+                onChangeText={(text: string) => {
+                  handleTextChange({
+                    field: FormKeys?.[`nameOfNewTrustee${idx}`],
+                    value: text,
+                  });
+                }}
+              />
+              <ModalFormLabel text="Means of Identification" />
+              <PickerInput
+                data={meansOfIdentification}
+                errorText={formData?.[FormKeys?.[`meansOfId${idx}`]]?.error}
+                dataValue={
+                  formData?.[FormKeys?.[`meansOfId${idx}`]]?.value ??
+                  "Select your means of Identification"
+                }
+                onSelectChange={(text: string) => {
+                  handleTextChange({
+                    field: FormKeys?.[`meansOfId${idx}`],
+                    value: text,
+                  });
+                }}
+              />
+              <ModalFormLabel text="ID Number" />
+              <Input
+                placeholder="Type identification number"
+                errorText={formData?.[FormKeys?.[`idNo${idx}`]]?.error}
+                onChangeText={(text: string) => {
+                  handleTextChange({
+                    field: FormKeys?.[`idNo${idx}`],
+                    value: text,
+                  });
+                }}
+              />
+              <ModalFormLabel text="Upload Means of Identification" />
+              <Input
+                onPress={() => uploadFile(FormKeys?.[`uploadMeansOfId${idx}`])}
+                errorText={
+                  formData?.[FormKeys?.[`uploadMeansOfId${idx}`]]?.error
+                }
+                dataValue={
+                  formData?.[FormKeys?.[`uploadMeansOfId${idx}`]]?.value ??
+                  "Upload means of identification"
+                }
+                icon
+              />
+              <ModalFormLabel text="Signature" />
+              <Input
+                onPress={() => uploadFile(FormKeys?.[`signature${idx}`])}
+                errorText={formData?.[FormKeys?.[`signature${idx}`]]?.error}
+                dataValue={
+                  formData?.[FormKeys?.[`signature${idx}`]]?.value ??
+                  "Upload signature"
+                }
+                icon
+              />
+              <View style={{height: 16}} />
+            </View>
+          );
+        })}
+        <View style={modalFormstyles.addMoreWrapper}>
+          {noOfTrustee < allFomKeys.length ? (
+            <TouchableOpacity
+              style={modalFormstyles.addMoreBtn}
+              onPress={() => addNew()}>
+              <Ionicons name="ios-add" size={18} color={COLORS.light.primary} />
+              <Text style={modalFormstyles.addText}>Add New Trustee</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+
+          {noOfTrustee > 1 && (
+            <TouchableOpacity
+              style={modalFormstyles.addMoreBtn}
+              onPress={() => remove()}>
+              <MaterialCommunityIcons
+                name="minus"
+                size={18}
+                color={COLORS.light.primary}
+              />
+              <Text style={modalFormstyles.addText}>Remove</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </KeyboardAwareScrollView>
+
       <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>

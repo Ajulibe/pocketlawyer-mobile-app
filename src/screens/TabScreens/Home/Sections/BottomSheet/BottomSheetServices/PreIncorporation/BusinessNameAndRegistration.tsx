@@ -67,7 +67,7 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         loadingDispatch({
@@ -139,70 +139,72 @@ export function BusinessNameAndRegistration(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <KeyboardAwareScrollView
-          showsVerticalScrollIndicator={false}
-          enableOnAndroid={true}
-          keyboardShouldPersistTaps={"handled"}>
-          <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
-          <Text style={modalFormstyles.titleDesc}>
-            Please fill the form with your proposed business details
-          </Text>
 
-          <ModalFormLabel text="Proposed Business Name 1" giveMargin={false} />
-          <Input
-            placeholder="Type business name 1"
-            errorText={formData?.[FormKeys.name1]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.name1, value: text});
-            }}
-          />
-          <ModalFormLabel text="Proposed Business Name 2" />
-          <Input
-            placeholder="Type business name 2"
-            errorText={formData?.[FormKeys.name2]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.name2, value: text});
-            }}
-          />
-          <ModalFormLabel text="Nature of Business" />
-          <Input
-            placeholder="Type the business nature"
-            errorText={formData?.[FormKeys.nature]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.nature, value: text});
-            }}
-          />
-          <ModalFormLabel text="Means of Identification" />
-          <PickerInput
-            data={meansOfIdentification}
-            errorText={formData?.[FormKeys.meansOfId]?.error}
-            dataValue={
-              formData?.[FormKeys.meansOfId]?.value ??
-              "Select your means of identification"
-            }
-            onSelectChange={(text: string) => {
-              handleTextChange({field: FormKeys.meansOfId, value: text});
-            }}
-          />
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{}}>
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
+          Please fill the form with your proposed business details
+        </Text>
 
-          <ModalFormLabel text="ID Number" />
-          <Input
-            placeholder="Type identification number"
-            errorText={formData?.[FormKeys.idNo]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.idNo, value: text});
-            }}
-          />
-          <ModalFormLabel text="Signature" />
-          <Input
-            onPress={() => uploadFile(FormKeys.signature)}
-            errorText={formData?.[FormKeys.signature]?.error}
-            dataValue={formData?.[FormKeys.signature]?.value ?? "Select file"}
-            icon
-          />
-        </KeyboardAwareScrollView>
-      </ScrollView>
+        <ModalFormLabel text="Proposed Business Name 1" giveMargin={false} />
+        <Input
+          placeholder="Type business name 1"
+          errorText={formData?.[FormKeys.name1]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.name1, value: text});
+          }}
+        />
+        <ModalFormLabel text="Proposed Business Name 2" />
+        <Input
+          placeholder="Type business name 2"
+          errorText={formData?.[FormKeys.name2]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.name2, value: text});
+          }}
+        />
+        <ModalFormLabel text="Nature of Business" />
+        <Input
+          placeholder="Type the business nature"
+          errorText={formData?.[FormKeys.nature]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.nature, value: text});
+          }}
+        />
+        <ModalFormLabel text="Means of Identification" />
+        <PickerInput
+          data={meansOfIdentification}
+          errorText={formData?.[FormKeys.meansOfId]?.error}
+          dataValue={
+            formData?.[FormKeys.meansOfId]?.value ??
+            "Select your means of identification"
+          }
+          onSelectChange={(text: string) => {
+            handleTextChange({field: FormKeys.meansOfId, value: text});
+          }}
+        />
+
+        <ModalFormLabel text="ID Number" />
+        <Input
+          placeholder="Type identification number"
+          errorText={formData?.[FormKeys.idNo]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.idNo, value: text});
+          }}
+        />
+        <ModalFormLabel text="Signature" />
+        <Input
+          onPress={() => uploadFile(FormKeys.signature)}
+          errorText={formData?.[FormKeys.signature]?.error}
+          dataValue={formData?.[FormKeys.signature]?.value ?? "Select file"}
+          icon
+        />
+      </KeyboardAwareScrollView>
+
       <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>

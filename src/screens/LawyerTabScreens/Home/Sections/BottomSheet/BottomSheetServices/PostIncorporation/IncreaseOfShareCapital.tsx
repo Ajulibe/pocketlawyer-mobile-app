@@ -63,7 +63,7 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
         const formMeta = await transformMeta(
           newData,
           historyId,
-          service.serviceCode,
+          service.serviceCode!,
         );
 
         loadingDispatch({
@@ -135,62 +135,67 @@ export function IncreaseOfShareCapital(props: BottomSheetProps) {
         modalVisible={loadingState.isVisible ?? false}
         content={loadingState.content}
       />
-      <ScrollView>
-        <KeyboardAwareScrollView extraScrollHeight={wp(100)}>
-          <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
-          <Text style={modalFormstyles.titleDesc}>
-            Please fill the form with your proposed business details
-          </Text>
-          <Text style={modalFormstyles.inputLabel}>
-            Company Name <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type company name"
-            errorText={formData?.[FormKeys.companyName]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.companyName, value: text});
-            }}
-          />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Company Registration Number{" "}
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type company registration number "
-            errorText={formData?.[FormKeys.companyRegNo]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.companyRegNo, value: text});
-            }}
-          />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Means of Identification
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            onPress={() => uploadFile(FormKeys.meansOfId)}
-            errorText={formData?.[FormKeys.meansOfId]?.error}
-            dataValue={
-              formData?.[FormKeys.meansOfId]?.value ??
-              "Upload means of identification"
-            }
-            icon
-          />
-          <View style={{height: 16}} />
-          <Text style={modalFormstyles.inputLabel}>
-            Number of New Shares to be Added
-            <Text style={modalFormstyles.required}>*</Text>
-          </Text>
-          <Input
-            placeholder="Type number of shares to be added"
-            errorText={formData?.[FormKeys.noOfShares]?.error}
-            onChangeText={(text: string) => {
-              handleTextChange({field: FormKeys.noOfShares, value: text});
-            }}
-          />
-        </KeyboardAwareScrollView>
-      </ScrollView>
+
+      <KeyboardAwareScrollView
+        extraScrollHeight={wp(100)}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{}}>
+        <Text style={globalStyles.H1Style}>{service.serviceName}</Text>
+        <Text style={modalFormstyles.titleDesc}>
+          Please fill the form with your proposed business details
+        </Text>
+        <Text style={modalFormstyles.inputLabel}>
+          Company Name <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type company name"
+          errorText={formData?.[FormKeys.companyName]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.companyName, value: text});
+          }}
+        />
+        <View style={{height: 16}} />
+        <Text style={modalFormstyles.inputLabel}>
+          Company Registration Number{" "}
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type company registration number "
+          errorText={formData?.[FormKeys.companyRegNo]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.companyRegNo, value: text});
+          }}
+        />
+        <View style={{height: 16}} />
+        <Text style={modalFormstyles.inputLabel}>
+          Means of Identification
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          onPress={() => uploadFile(FormKeys.meansOfId)}
+          errorText={formData?.[FormKeys.meansOfId]?.error}
+          dataValue={
+            formData?.[FormKeys.meansOfId]?.value ??
+            "Upload means of identification"
+          }
+          icon
+        />
+        <View style={{height: 16}} />
+        <Text style={modalFormstyles.inputLabel}>
+          Number of New Shares to be Added
+          <Text style={modalFormstyles.required}>*</Text>
+        </Text>
+        <Input
+          placeholder="Type number of shares to be added"
+          errorText={formData?.[FormKeys.noOfShares]?.error}
+          onChangeText={(text: string) => {
+            handleTextChange({field: FormKeys.noOfShares, value: text});
+          }}
+        />
+      </KeyboardAwareScrollView>
+
       <View style={{height: 16}} />
       <CustomButton btnText="Submit" onClick={submit} />
     </View>
