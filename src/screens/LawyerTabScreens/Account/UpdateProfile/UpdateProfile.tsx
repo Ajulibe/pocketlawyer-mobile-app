@@ -135,30 +135,41 @@ const UpdateProfile = ({navigation}: Props) => {
         dob: dob === "" ? null : dob,
       };
 
-      const companyPayload = {
-        userid: Number(userID),
-        address: state === "Change your location" ? null : `${city},${state}`,
-        phone: phonenumber === "" ? null : phonenumber,
-        company: {
-          ContactFirstName: firstName === "" ? null : firstName,
-          ContactLastName: lastName === "" ? null : lastName,
-        },
-      };
+      if (
+        (state !== "Change your location" && !city) ||
+        (city && state === "Change your location")
+      ) {
+        setIsLoading(false);
+        PLToast({message: "Update State and City together", type: "error"});
+        return;
+      } else {
+        const companyPayload = {
+          userid: Number(userID),
+          address: `${!city ? null : city},${
+            state === "Change your location" ? null : state
+          }`,
+          phone: phonenumber === "" ? null : phonenumber,
+          company: {
+            ContactFirstName: firstName === "" ? null : firstName,
+            ContactLastName: lastName === "" ? null : lastName,
+          },
+        };
 
-      const payload =
-        user_ && typeof user_.userType !== "undefined" && user_.userType === 5
-          ? companyPayload
-          : updatePayload;
+        const payload =
+          user_ && typeof user_.userType !== "undefined" && user_.userType === 5
+            ? companyPayload
+            : updatePayload;
 
-      await axiosClient.post("User/UpdateProfile", payload);
-      dispatch(getUser({userID: Number(userID)}));
-      setIsLoading(false);
-      PLToast({message: "Profile Updated", type: "success"});
-      setTimeout(() => {
-        navigation.goBack();
-      }, 300);
+        await axiosClient.post("User/UpdateProfile", payload);
+        dispatch(getUser({userID: Number(userID)}));
+        setIsLoading(false);
+        PLToast({message: "Profile Updated", type: "success"});
+        setTimeout(() => {
+          navigation.goBack();
+        }, 300);
+      }
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       const {message} = error?.response.data;
       setIsDisabled(true);
       PLToast({message: message, type: "error"});

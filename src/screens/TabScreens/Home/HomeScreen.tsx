@@ -293,9 +293,10 @@ const HomeScreen = ({navigation}: Props) => {
                   You Have no Top Finding
                 </Text>
               ) : (
-                lawyers.map((item) => {
+                lawyers.map((item, i) => {
                   return (
                     <TopFindingsCard
+                      key={`${item}${i}`}
                       lawyer={item}
                       onClick={() =>
                         navigation.navigate(ROUTES.LAWYER_DETAIL_SCREEN, {

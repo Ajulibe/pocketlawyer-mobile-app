@@ -317,7 +317,7 @@ const AuthGetStarted = ({navigation, route}: Props) => {
                 labelTextRequired={true}
                 error={false}
                 name="Designation"
-                textContentType="name"
+                textContentType="jobTitle"
                 style={styles.input}
                 placeholder="Type the job designation"
               />
@@ -462,8 +462,8 @@ const styles = StyleSheet.create({
   },
 
   inputText: {
-    fontFamily: "Roboto-Medium",
-    fontSize: wp(13),
+    fontFamily: "HK-SemiBold",
+    fontSize: wp(16),
     lineHeight: hp(24),
     textAlign: "left",
     color: COLORS.light.black,

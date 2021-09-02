@@ -1,5 +1,8 @@
 import {StyleSheet, Platform} from "react-native";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import COLORS from "utils/Colors";
 import {wp, hp} from "utils/Dimensions";
 
@@ -69,6 +72,7 @@ export const styles = StyleSheet.create({
   plButton: {
     marginTop: hp(31),
     borderWidth: 1,
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",

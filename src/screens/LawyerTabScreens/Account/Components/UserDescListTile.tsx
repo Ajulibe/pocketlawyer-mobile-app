@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: wp(14),
     lineHeight: hp(20),
-    color: "rgba(0, 0, 0, 0.7)",
-    fontFamily: "Roboto",
-  },
-  tileTrailing: {
-    fontWeight: "700",
-    fontSize: wp(14),
-    // lineHeight: hp(14),
     color: "rgba(0, 0, 0, 1)",
     fontFamily: "Roboto-Bold",
+  },
+  tileTrailing: {
+    fontSize: wp(12),
+    width: "70%",
+    textAlign: "right",
+    color: "rgba(0, 0, 0, 0.7)",
+    fontFamily: "Roboto-Medium",
   },
 });

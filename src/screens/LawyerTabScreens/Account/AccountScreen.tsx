@@ -183,11 +183,11 @@ const AccountScreen = ({navigation}: Props) => {
             <Text
               style={[
                 styles.passBtnText,
-                {color: "red", fontFamily: "Roboto-Regular"},
+                {color: "black", fontFamily: "Roboto-Regular"},
               ]}>
               Logout
             </Text>
-            <Feather name="log-out" size={14} color="red" />
+            <Feather name="log-out" size={14} color="black" />
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -244,10 +244,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   passBtnText: {
+    fontWeight: "400",
     fontSize: wp(14),
     lineHeight: hp(20),
-    fontWeight: "500",
-    fontFamily: "Roboto-Medium",
-    color: "rgba(0, 0, 0, 0.7)",
+    color: "rgba(0, 0, 0, 1)",
+    fontFamily: "Roboto-Bold",
   },
 });

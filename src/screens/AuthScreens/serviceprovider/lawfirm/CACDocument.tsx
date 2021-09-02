@@ -9,7 +9,10 @@ import {
   Image,
 } from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
@@ -157,18 +160,21 @@ const AuthGetStarted = ({navigation}: Props) => {
                 width: "100%",
                 borderColor: COLORS.light.imageinputborder,
                 backgroundColor: COLORS.light.splashscreenbg,
-                padding: 10,
+                paddingBottom: Platform.OS === "ios" ? wp(10) : wp(10),
+                paddingHorizontal: wp(10),
               }}>
               <Text
                 style={{
                   color: COLORS.light.primary,
                   fontSize: wp(15),
+                  lineHeight: wp(27),
                   fontFamily: "Roboto-Medium",
-                  marginBottom: hp(10),
                 }}>
                 Selected File
               </Text>
-              <Text>{CAC}</Text>
+              <Text style={styles.selectedFileName} numberOfLines={1}>
+                {CAC}
+              </Text>
             </Animatable.View>
           ) : null}
         </View>
@@ -209,6 +215,11 @@ const styles = StyleSheet.create({
     color: COLORS.light.black,
     marginBottom: hp(39),
     width: wpercent("90%"),
+  },
+  selectedFileName: {
+    fontFamily: "Roboto-Regular",
+    fontSize: wp(14),
+    color: COLORS.light.black,
   },
   contentWraper: {
     width: wpercent("90%"),
@@ -256,7 +267,7 @@ const styles = StyleSheet.create({
   },
   selectText: {
     color: COLORS.light.primary,
-    fontSize: 12,
+    fontSize: wp(12),
     marginTop: hp(12),
     fontFamily: "Roboto-Medium",
   },
@@ -341,6 +352,7 @@ const styles = StyleSheet.create({
   },
   plButton: {
     marginTop: hp(17),
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",

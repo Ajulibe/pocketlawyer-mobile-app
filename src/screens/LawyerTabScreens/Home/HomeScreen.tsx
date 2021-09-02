@@ -195,7 +195,7 @@ const HomeScreen = ({navigation}: Props) => {
           <View style={[styles.header, {paddingHorizontal: wp(20)}]}>
             <View style={styles.headerTitleWrapper}>
               <Text style={globalStyles.H1Style}>
-                Hi &nbsp;
+                Hi&nbsp;
                 {capitalizeFirstLetter(
                   user_ &&
                     user_?.firstName &&
@@ -297,6 +297,7 @@ const HomeScreen = ({navigation}: Props) => {
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (
                       <TopFindingsCard
+                        key={item.userID}
                         status={item.status}
                         history={item}
                         onClick={() => {

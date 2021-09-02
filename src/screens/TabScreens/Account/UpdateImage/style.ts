@@ -1,7 +1,10 @@
-import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wpercent } from "react-native-responsive-screen";
+import {StyleSheet} from "react-native";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import COLORS from "utils/Colors";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -102,9 +105,9 @@ export const styles = StyleSheet.create({
     width: wpercent("90%"),
   },
   nextButton: {
-    width: "90%",
     borderRadius: wp(7),
     alignSelf: "center",
+    width: widthPercentageToDP("90%"),
   },
 
   inputText: {

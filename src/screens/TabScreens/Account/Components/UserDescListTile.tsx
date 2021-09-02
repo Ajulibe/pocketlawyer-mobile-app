@@ -20,11 +20,13 @@ export default function UserDescListTile(props: Props) {
           {
             fontSize: makeBold ? wp(14) : wp(14),
             color: makeBold ? COLORS.light.primary : "rgba(0, 0, 0, 1)",
-            fontFamily: makeBold
-              ? "Roboto-Bold"
-              : Platform.OS === "ios"
-              ? "Roboto-Medium"
-              : "Roboto-Light",
+            fontFamily: "Roboto-Medium",
+
+            // fontFamily: makeBold
+            // ? "Roboto-Bold"
+            // : Platform.OS === "ios"
+            // ? "Roboto-Medium"
+            // : "Roboto-Light",
           },
         ]}>
         {value}
@@ -52,7 +54,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Bold",
   },
   tileTrailing: {
-    fontWeight: "700",
     fontSize: wp(12),
     width: "70%",
     textAlign: "right",

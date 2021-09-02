@@ -22,9 +22,12 @@ export const AddCategories = ({routedata, navigation}: any) => {
   } = useAddMoreCategories(routedata, navigation, true);
 
   return (
-    <>
+    <View style={styles.adjustContainer}>
       <TouchableOpacity
-        style={[styles.changePasswordBth, {marginBottom: hp(10)}]}
+        style={[
+          styles.changePasswordBth,
+          {marginBottom: hp(10), width: "100%"},
+        ]}
         onPress={() => {
           setIsAddmoreOpen(!isAddmoreOpen);
         }}>
@@ -54,6 +57,6 @@ export const AddCategories = ({routedata, navigation}: any) => {
           emptyStateMessage="You have no selected categories"
         />
       )}
-    </>
+    </View>
   );
 };

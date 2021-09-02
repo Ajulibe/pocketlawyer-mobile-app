@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontFamily: "Roboto-Regular",
-    fontWeight: "400",
     fontSize: wp(14),
     lineHeight: Platform.OS === "ios" ? hp(24) : hp(28),
     color: "rgba(0, 0, 0, 0.7)",
@@ -43,7 +42,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   searchInput: {
-    fontWeight: "500",
     fontSize: wp(12),
     color: COLORS.light.primary,
     margin: 0,
@@ -65,7 +63,6 @@ const styles = StyleSheet.create({
     textDecorationStyle: "solid",
     textDecorationLine: "underline",
     fontFamily: "Roboto",
-    fontWeight: "400",
     fontSize: wp(12),
     lineHeight: hp(24),
   },
@@ -76,7 +73,6 @@ const styles = StyleSheet.create({
   },
   topFindingSubtitle: {
     fontFamily: "Roboto",
-    fontWeight: "300",
     fontSize: wp(14),
     lineHeight: hp(20),
     color: COLORS.light.primary,

@@ -94,7 +94,7 @@ const ValidateEmail = ({navigation, route}: Props) => {
           <PLTextInput
             maxLength={6}
             disabled={validating}
-            textContentType="name"
+            textContentType="oneTimeCode"
             onChangeText={setOTP}
             style={styles.input}
             placeholder="Enter code "

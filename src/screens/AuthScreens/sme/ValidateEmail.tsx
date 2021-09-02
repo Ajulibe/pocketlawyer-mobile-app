@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from "react";
 import {View, StyleSheet, SafeAreaView, Text, BackHandler} from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
@@ -100,7 +103,7 @@ const ValidateEmail = ({navigation}: Props) => {
           <PLTextInput
             maxLength={6}
             disabled={validating}
-            textContentType="name"
+            textContentType="oneTimeCode"
             onChangeText={setOTP}
             style={styles.input}
             placeholder="Enter code "
@@ -196,6 +199,7 @@ const styles = StyleSheet.create({
   },
   plButton: {
     marginTop: hp(280),
+    width: widthPercentageToDP("90%"),
   },
   carouselWrapper: {
     justifyContent: "center",

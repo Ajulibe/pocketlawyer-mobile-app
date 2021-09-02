@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   contentWraper: {
     width: wpercent("90%"),
     alignItems: "center",
-    marginTop: hp(38),
+    marginTop: hp(10),
   },
 
   inputButton: {
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(7),
     borderWidth: 1,
     borderColor: COLORS.light.primary,
-    height: wp(45),
+    height: wp(50),
     justifyContent: "center",
     alignItems: "center",
     shadowOffset: {

@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     color: COLORS.light.black,
     marginBottom: hp(4),
-    marginTop: hp(20),
+    marginTop: hp(10),
     width: "100%",
   },
   contentWraper: {

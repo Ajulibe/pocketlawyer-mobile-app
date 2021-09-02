@@ -8,7 +8,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import {StackScreenProps} from "@react-navigation/stack";
-import {widthPercentageToDP as wpercent} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wpercent,
+} from "react-native-responsive-screen";
 import {RootStackParamList} from "navigation/MainNavigator";
 import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
@@ -404,6 +407,7 @@ const styles = StyleSheet.create({
 
   plButton: {
     marginTop: hp(80),
+    width: widthPercentageToDP("90%"),
   },
 
   loginWrapper: {
@@ -411,6 +415,7 @@ const styles = StyleSheet.create({
     width: wpercent("80%"),
     justifyContent: "space-around",
     marginTop: hp(6),
+    marginBottom: hp(14),
   },
   login: {
     fontFamily: "Roboto-Medium",

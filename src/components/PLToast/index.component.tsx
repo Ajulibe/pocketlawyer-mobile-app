@@ -13,11 +13,12 @@ interface PLToastProps {
   duration?: number;
   type: string;
   position?: "top" | "bottom";
+  topOffset?: number;
 }
 
 export const PLToast = ({
   message,
-  duration = 700,
+  duration = 500,
   type,
   position = "top",
 }: PLToastProps) => {
@@ -27,7 +28,6 @@ export const PLToast = ({
     visibilityTime: duration,
     type: type,
     position: position,
-    topOffset: hp(10),
   });
 };
 
@@ -46,11 +46,7 @@ export interface ToastProps {
 
 //--> to be properly configured later
 export const toastConfig = {
-  success: ({
-    type,
-    topOffset = Platform.OS === "ios" ? hp(10) : hp(3),
-    ...rest
-  }: ToastProps) => (
+  success: ({type, ...rest}: ToastProps) => (
     <BaseToast
       {...rest}
       style={{
@@ -62,7 +58,7 @@ export const toastConfig = {
       }}
       text1Style={{
         fontSize: wp(16),
-        fontFamily: "HK-SemiBold",
+        fontFamily: "HK-Bold",
         color: "white",
       }}
       onTrailingIconPress={() => {

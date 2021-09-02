@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: "HK-SemiBold",
     fontSize: wp(20),
-    fontWeight: "bold",
+    fontWeight: "400",
     color: COLORS.light.black,
     textAlign: "center",
   },
@@ -470,7 +470,8 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: "left",
     color: COLORS.light.primary,
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Regular",
+    fontWeight: "400",
     fontSize: wp(14),
     lineHeight: wp(16),
     marginRight: wp(50),

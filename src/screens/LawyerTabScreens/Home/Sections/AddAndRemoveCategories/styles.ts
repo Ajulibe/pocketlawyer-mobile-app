@@ -33,6 +33,7 @@ export const styles = StyleSheet.create({
   },
   textStyle: {
     textAlign: "left",
+    fontWeight: "400",
     color: COLORS.light.primary,
     fontFamily: "Roboto-Medium",
     fontSize: wp(14),
@@ -41,7 +42,7 @@ export const styles = StyleSheet.create({
     width: wp(200),
   },
   contentWraper: {
-    width: wpercent("90%"),
+    width: wpercent("86%"),
     alignItems: "center",
   },
   checkBox: {
@@ -96,7 +97,7 @@ export const styles = StyleSheet.create({
     marginTop: hp(30),
   },
   dataWrapper: {
-    width: widthPercentageToDP("90"),
+    width: "97.5%",
     backgroundColor: COLORS.light.white,
     borderRadius: 8,
     marginTop: hp(10),
@@ -118,14 +119,18 @@ export const styles = StyleSheet.create({
   },
   formWrapper: {
     color: COLORS.light.primary,
-    fontSize: wp(15),
+    fontSize: wp(16),
     lineHeight: hp(25),
     textDecorationLine: "underline",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Bold",
   },
   activityIndicatorStyle: {
     height: hp(150),
     justifyContent: "center",
     alignItems: "center",
+  },
+  adjustContainer: {
+    marginBottom: hp(10),
+    width: "100%",
   },
 });

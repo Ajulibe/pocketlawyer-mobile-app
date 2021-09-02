@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     lineHeight: hp(27),
     textAlign: "left",
     color: COLORS.light.black,
-    marginBottom: hp(39),
+    marginBottom: hp(26),
     width: wpercent("90%"),
   },
   signUpText: {
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(64),
+    marginTop: hp(60),
     width: wpercent("90%"),
   },
   carouselIcon: {

@@ -6,6 +6,8 @@ import {MaterialIcons} from "@expo/vector-icons";
 import {styles} from "../styles";
 import Remove from "./AddandRemoveTable";
 import {useAddMoreCategories} from "../hooks/useAddMoreCategories";
+import {hp} from "utils/Dimensions";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
 export const RemoveCategories = ({routedata, navigation}: any) => {
   const {
@@ -21,13 +23,13 @@ export const RemoveCategories = ({routedata, navigation}: any) => {
   } = useAddMoreCategories(routedata, navigation, false);
 
   return (
-    <>
+    <View style={[styles.adjustContainer, {marginBottom: hp(50)}]}>
       <TouchableOpacity
-        style={[styles.changePasswordBth]}
+        style={[styles.changePasswordBth, {width: "100%"}]}
         onPress={() => {
           setIsRemoveOpen(!isRemoveOpen);
         }}>
-        <Text style={styles.formWrapper}>RemoveCategories</Text>
+        <Text style={styles.formWrapper}>Remove Categories</Text>
 
         <MaterialIcons
           name="keyboard-arrow-right"
@@ -53,6 +55,6 @@ export const RemoveCategories = ({routedata, navigation}: any) => {
           emptyStateMessage="You have no selected categories"
         />
       )}
-    </>
+    </View>
   );
 };
