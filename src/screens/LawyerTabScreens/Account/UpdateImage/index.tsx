@@ -30,9 +30,10 @@ import globalStyles from "css/GlobalCss";
 import {styles} from "./style";
 
 //--> REDUX
-import {useAppDispatch} from "redux/hooks";
+import {useAppDispatch, useAppSelector} from "redux/hooks";
 import {getUser} from "redux/actions";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import {PLToast} from "components/PLToast/index.component";
 
 type Props = StackScreenProps<
   RootStackParamList,
@@ -42,14 +43,14 @@ type Props = StackScreenProps<
 const UpdateImage = ({navigation}: Props) => {
   const [image, setImage] = useState<string>("");
   const [disabled, setDisabled] = useState(true);
-  const imageSelected = React.useRef<any>({});
+  const imageChanged = React.useRef<any>(false);
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState,
   );
-
+  const metaData = useAppSelector((state) => state?.users?.user.metaData);
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const [activeProfile, setActiveProfile] = React.useState(false);
   const dispatch = useAppDispatch();
 
   function handleTextChange(arg0: {field: string; value: any}) {
@@ -69,13 +70,30 @@ const UpdateImage = ({navigation}: Props) => {
   }, []);
 
   React.useEffect(() => {
-    if (image.length === 0) {
+    if (!imageChanged.current) {
       setDisabled(true);
       return;
     } else {
       setDisabled(false);
     }
   }, [image]);
+
+  React.useEffect(() => {
+    let latestAvatar = metaData
+      .slice()
+      .reverse()
+      .find((item: any) => {
+        return item.key === "Avatar";
+      });
+    if (metaData?.length !== 0) {
+      setActiveProfile(true);
+      setImage(latestAvatar?.value);
+    } else {
+      setActiveProfile(false);
+    }
+  }, []);
+
+  console.log(imageChanged.current);
 
   const uploadFile = async (field: string) => {
     const payload: DocUploadInterface = {
@@ -110,7 +128,11 @@ const UpdateImage = ({navigation}: Props) => {
           } else {
             const userID = await AsyncStorageUtil.getUserId();
             dispatch(getUser({userID: Number(userID)}));
+            setActiveProfile(false);
+            imageChanged.current = true;
             setImage(uri);
+            setIsLoading(true);
+            PLToast({message: "Image Uploaded", type: "success"});
             handleTextChange({field: field, value: confirm?.url});
           }
         }
@@ -134,7 +156,7 @@ const UpdateImage = ({navigation}: Props) => {
       />
       <View style={styles.contentWraper}>
         <Text style={styles.welcomeMessage}>
-          Upload an Image for your Profile
+          {image ? "Update Profile Image" : "Upload an Image for your Profile"}
         </Text>
 
         <View style={styles.fileSelectBox}>
@@ -155,13 +177,13 @@ const UpdateImage = ({navigation}: Props) => {
             <Animatable.Image
               animation="fadeIn"
               easing="ease-in"
-              source={{uri: image}}
+              source={{uri: activeProfile ? `https://${image}` : image}}
               style={{width: wp(120), height: hp(100), borderRadius: wp(7)}}
             />
           ) : null}
         </Animatable.View>
 
-        <View style={styles.btnWrapper}>
+        {/* <View style={styles.btnWrapper}>
           <PLButton
             isLoading={isLoading}
             style={styles.nextButton}
@@ -175,7 +197,7 @@ const UpdateImage = ({navigation}: Props) => {
               }, 3000);
             }}
           />
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );

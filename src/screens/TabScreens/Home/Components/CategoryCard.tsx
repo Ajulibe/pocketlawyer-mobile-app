@@ -27,7 +27,9 @@ export default function CategoryCard({category, onClick}: Props) {
         </View>
       </View>
 
-      <Text style={styles.title}>{category.categoryName}</Text>
+      <Text style={styles.title} numberOfLines={2}>
+        {category.categoryName}
+      </Text>
     </TouchableOpacity>
   );
 }

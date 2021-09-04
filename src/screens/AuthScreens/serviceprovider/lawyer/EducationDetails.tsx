@@ -210,7 +210,7 @@ const AuthGetStarted = ({navigation}: Props) => {
         {
           key: "Identification",
           value: Identification,
-          userID: 1,
+          userID: userID,
         },
         {
           key: "idNumber",

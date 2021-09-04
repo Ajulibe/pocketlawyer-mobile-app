@@ -52,7 +52,9 @@ const HomeScreen = ({navigation}: Props) => {
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
 
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
-  const {user_, metaData} = userData;
+  const {user_ = [], metaData} = userData;
+
+  console.log(metaData, "data.otherData?.history");
 
   const dispatch = useAppDispatch();
 
@@ -89,8 +91,16 @@ const HomeScreen = ({navigation}: Props) => {
   }, [metaData]);
 
   const setAvatar = () => {
+    let latestAvatar = metaData
+      .slice()
+      .reverse()
+      .find((item: any) => {
+        return item.key === "Avatar";
+      });
+
     if (metaData?.length !== 0) {
-      setProfileImage(metaData[metaData?.length - 1]?.value);
+      // setProfileImage(metaData[metaData?.length - 1]?.value);
+      setProfileImage(latestAvatar?.value);
     } else {
       setProfileImage("abc.jpg");
     }

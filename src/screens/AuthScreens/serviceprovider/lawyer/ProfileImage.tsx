@@ -112,7 +112,7 @@ const AuthGetStarted = ({navigation}: Props) => {
       />
       <NavBar
         onPress={() => {
-          navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
+          navigation.goBack();
         }}
         navText="Profile Image"
       />
@@ -157,7 +157,7 @@ const AuthGetStarted = ({navigation}: Props) => {
           <TouchableOpacity
             style={styles.skipButton}
             onPress={() =>
-              navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
+              navigation.navigate(ROUTES.AUTH_LAW_CATEGORY_LAWYER)
             }>
             <Text style={styles.skip}>Skip</Text>
           </TouchableOpacity>

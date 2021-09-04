@@ -106,8 +106,15 @@ const HomeScreen = ({navigation}: Props) => {
   }, [metaData]);
 
   const setAvatar = () => {
+    let latestAvatar = metaData
+      .slice()
+      .reverse()
+      .find((item: any) => {
+        return item.key === "Avatar";
+      });
+
     if (metaData?.length !== 0) {
-      setProfileImage(metaData[metaData?.length - 1]?.value);
+      setProfileImage(latestAvatar?.value);
     } else {
       setProfileImage("abc.jpg");
     }
