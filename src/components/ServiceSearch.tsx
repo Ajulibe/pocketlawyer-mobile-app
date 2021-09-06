@@ -172,9 +172,10 @@ const ServiceSearch: React.FC<ISearch> = ({
           <ScrollView
             style={styles.result}
             showsVerticalScrollIndicator={false}>
-            {filteredData?.map((item) => {
+            {filteredData?.map((item, index) => {
               return (
                 <ServiceCardTile
+                  key={`${item}${index}`}
                   service={item}
                   onClick={() => {
                     onNavigateClick(item);

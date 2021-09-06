@@ -127,9 +127,7 @@ const HomeScreen = ({navigation}: Props) => {
       if (getCats != null && getCats?.data?.data?.length != 0) {
         const cats: Category[] = getCats?.data?.data;
         setCategory(cats);
-        setTimeout(() => {
-          setIsCategoryLoading(false);
-        }, 5000);
+        setIsCategoryLoading(false);
       } else {
         setCategory(CategoryDb.categories.slice(0, 4));
         // setIsCategoryLoading(false);
@@ -161,13 +159,8 @@ const HomeScreen = ({navigation}: Props) => {
 
         if (data != null) {
           const lawyers: LawyerModel[] = data?.data;
-          console.log(lawyers);
-
           setLawyers(lawyers.slice(0, 6));
-
-          setTimeout(() => {
-            setIsTopFindingsLoading(false);
-          }, 500);
+          setIsTopFindingsLoading(false);
         }
       } catch (error) {}
     }

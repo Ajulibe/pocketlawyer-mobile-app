@@ -42,9 +42,7 @@ const NavBar = ({
         </TouchableOpacity>
       )}
 
-      <Animatable.Text
-        animation="fadeInLeft"
-        style={[styles.navText, textStyle]}>
+      <Animatable.Text animation="fadeIn" style={[styles.navText, textStyle]}>
         {navText}
       </Animatable.Text>
 

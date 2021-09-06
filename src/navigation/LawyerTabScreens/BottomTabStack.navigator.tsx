@@ -40,7 +40,7 @@ export default function LawyerBottomTabStack() {
           options={() => ({
             tabBarLabel: ({focused}: any) => <Text></Text>,
             tabBarIcon: ({color, focused}: any) => (
-              <Entypo name="home" size={18} color={color} />
+              <Entypo name="home" size={22} color={color} />
             ),
           })}
         />
@@ -50,7 +50,7 @@ export default function LawyerBottomTabStack() {
           options={() => ({
             tabBarLabel: () => <Text></Text>,
             tabBarIcon: ({color, focused}: any) => (
-              <FontAwesome5 name="business-time" size={15} color={color} />
+              <FontAwesome5 name="business-time" size={19} color={color} />
             ),
           })}
         />
@@ -60,7 +60,7 @@ export default function LawyerBottomTabStack() {
           options={{
             tabBarLabel: () => <Text></Text>,
             tabBarIcon: ({color, focused}: any) => (
-              <FontAwesome name="history" size={16} color={color} />
+              <FontAwesome name="history" size={20} color={color} />
             ),
           }}
         />
@@ -70,7 +70,7 @@ export default function LawyerBottomTabStack() {
           options={{
             tabBarLabel: () => <Text></Text>,
             tabBarIcon: ({color, focused}: any) => (
-              <MaterialCommunityIcons name="account" size={23} color={color} />
+              <MaterialCommunityIcons name="account" size={27} color={color} />
             ),
           }}
         />

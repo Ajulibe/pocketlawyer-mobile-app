@@ -1,12 +1,12 @@
-import { CommonActions } from "@react-navigation/routers";
-import { StackScreenProps } from "@react-navigation/stack";
+import {CommonActions} from "@react-navigation/routers";
+import {StackScreenProps} from "@react-navigation/stack";
 import CustomAppbar from "components/CustomAppbar";
 import ServiceSearch from "components/ServiceSearch";
 import globalStyles from "css/GlobalCss";
-import { CategoryDb } from "database/CategoryDb";
-import { ServiceDb } from "database/ServiceDb";
-import { ROUTES } from "navigation/Routes";
-import { ServiceStackParamList } from "navigation/ServiceStack";
+import {CategoryDb} from "database/CategoryDb";
+import {ServiceDb} from "database/ServiceDb";
+import {ROUTES} from "navigation/Routes";
+import {ServiceStackParamList} from "navigation/ServiceStack";
 import React from "react";
 import {
   FlatList,
@@ -18,16 +18,16 @@ import {
   Text,
   View,
 } from "react-native";
-import { hp, wp } from "utils/Dimensions";
+import {hp, wp} from "utils/Dimensions";
 import ServiceCardTile from "./Components/ServiceCardTile";
 
 type Props = StackScreenProps<ServiceStackParamList, ROUTES.SERVICE_SCREEN>;
 
-const ServiceScreen = ({ navigation }: Props) => {
+const ServiceScreen = ({navigation}: Props) => {
   const ServiceHeader = () => (
     <>
       <ServiceSearch />
-      <View style={{ height: hp(13) }} />
+      <View style={{height: hp(13)}} />
     </>
   );
 
@@ -44,7 +44,7 @@ const ServiceScreen = ({ navigation }: Props) => {
             // }
           },
         ],
-      })
+      }),
     );
   };
   return (
@@ -52,9 +52,8 @@ const ServiceScreen = ({ navigation }: Props) => {
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
         <KeyboardAvoidingView
           behavior={"padding"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}
-        >
+          style={{flex: 1}}
+          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}>
           <CustomAppbar
             navigation={navigation}
             title="Services"
@@ -71,7 +70,7 @@ const ServiceScreen = ({ navigation }: Props) => {
             contentContainerStyle={[styles.container]}
             keyExtractor={(item, index) => index.toString()}
             ListHeaderComponent={() => ServiceHeader()}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <ServiceCardTile
                 service={item}
                 onClick={() => {
@@ -85,14 +84,14 @@ const ServiceScreen = ({ navigation }: Props) => {
                             screen: ROUTES.PICK_LAWYER_SCREEN,
                             params: {
                               category: CategoryDb.findByCode({
-                                catCode: item.categoryCode,
+                                catCode: item.categoryCode!,
                               }),
                               service: item,
                             },
                           },
                         },
                       ],
-                    })
+                    }),
                   );
                   // navigation.push(ROUTES.SERVICE_SCREEN, {
                   //   screen: ROUTES.TABSCREEN_STACK,

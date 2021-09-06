@@ -13,7 +13,11 @@ interface Props {
   colors: string;
 }
 
-export default function CategoryCard({category, onClick, colors}: Props) {
+export default function CategoryCard({
+  category,
+  onClick,
+  colors = "#F3F2FD",
+}: Props) {
   return (
     <TouchableOpacity
       style={[styles.wrapper, {backgroundColor: colors}]}
