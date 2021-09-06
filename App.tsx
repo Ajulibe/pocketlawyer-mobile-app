@@ -14,6 +14,7 @@ import {persistor, store} from "redux/store";
 import {Provider} from "react-redux";
 import {toastConfig} from "components/PLToast/index.component";
 import {Platform} from "react-native";
+import {NetworkProvider} from "react-native-offline";
 
 const App: FC = () => {
   const isLoadingComplete = useCachedResources();
@@ -86,7 +87,9 @@ const App: FC = () => {
             <PersistGate
               loading={<FullPageLoader message="LOADING" />}
               persistor={persistor}>
-              <Navigation colorScheme={colorScheme} />
+              <NetworkProvider>
+                <Navigation colorScheme={colorScheme} />
+              </NetworkProvider>
               <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
             </PersistGate>
           </Provider>

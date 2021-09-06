@@ -96,12 +96,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     fontSize: wp(15.94),
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowColor: "black",
-    shadowOpacity: 0.2,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 0,
+    // },
+    // shadowColor: "black",
+    // shadowOpacity: 0.2,
     borderRadius: wp(7),
     borderWidth: Platform.OS === "ios" ? 0.3 : 0.4,
     borderColor: COLORS.light.lightpurple,

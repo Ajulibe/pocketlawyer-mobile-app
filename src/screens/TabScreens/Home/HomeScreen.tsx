@@ -39,6 +39,8 @@ import {
   getFirstLetterFromName,
 } from "../Account/UpdateProfile/utilsFn";
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import {OfflineModal} from "components/OfflineManager";
+import {useIsConnected} from "react-native-offline";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
@@ -52,7 +54,10 @@ const HomeScreen = ({navigation}: Props) => {
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
 
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
-  const {user_ = [], metaData} = userData;
+  // const {user_ , metaData} = userData;
+  const isConnected = useIsConnected();
+  const user_ = userData?.user_;
+  const metaData = userData?.metaData;
 
   console.log(metaData, "data.otherData?.history");
 
@@ -214,6 +219,7 @@ const HomeScreen = ({navigation}: Props) => {
           </View>
 
           {/* <ServiceSearch /> */}
+          {isConnected && <OfflineModal isConnected={isConnected} />}
 
           <ScrollView
             style={{flex: 1}}

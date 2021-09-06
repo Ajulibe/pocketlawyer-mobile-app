@@ -4,8 +4,7 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import * as React from "react";
-import { ColorSchemeName } from "react-native";
-
+import {ColorSchemeName} from "react-native";
 import MainNavigator from "./MainNavigator";
 
 export default function Navigation({
@@ -15,8 +14,7 @@ export default function Navigation({
 }) {
   return (
     <NavigationContainer
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-    >
+      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <MainNavigator />
     </NavigationContainer>
   );

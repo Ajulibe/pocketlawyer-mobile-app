@@ -17,14 +17,21 @@ import {CategoryDb} from "database/CategoryDb";
 interface Props {
   category: Category;
   onClick: () => void;
+  colors: string;
 }
 
-export default function CategoryCard({category, onClick}: Props) {
+export default function CategoryCard({
+  category,
+  onClick,
+  colors = "#F3F2FD",
+}: Props) {
   return (
-    <TouchableOpacity style={styles.wrapper} onPress={() => onClick()}>
+    <TouchableOpacity
+      style={[styles.wrapper, {backgroundColor: colors}]}
+      onPress={() => onClick()}>
       <View style={globalStyles.topWrapper}>
         <View style={globalStyles.iconWrapper}>
-          {CategoryDb.findByCode({catCode: category.categoryCode}).newImage}
+          {CategoryDb.findByCode({catCode: category.categoryCode!}).newImage}
           {/* <Image
             source={
               CategoryDb.findByCode({ catCode: category.categoryCode }).image

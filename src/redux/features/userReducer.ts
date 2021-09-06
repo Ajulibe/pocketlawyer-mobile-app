@@ -1,6 +1,6 @@
-import { setSuccessUser, setErrorUser, setResetUser } from "../actions/index";
-import { createReducer } from "@reduxjs/toolkit";
-
+import {setSuccessUser, setErrorUser, setResetUser} from "../actions/index";
+import {createReducer} from "@reduxjs/toolkit";
+import {reducer as network} from "react-native-offline";
 // Define a type for the slice state
 interface IUser {
   data: number;

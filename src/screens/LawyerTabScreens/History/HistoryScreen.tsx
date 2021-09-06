@@ -20,6 +20,8 @@ import {hp, wp} from "utils/Dimensions";
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import HistoryListTile from "./Components/HistoryListTile";
 import {useScrollToTop, useFocusEffect} from "@react-navigation/native";
+import FullPageLoader from "components/FullPageLoader/index.component";
+import {EmptyState} from "screens/TabScreens/EmptyState";
 
 // type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_STACK>;
 type Props = StackScreenProps<any>;
@@ -43,6 +45,7 @@ export interface ServiceHistoryInterface {
 const HistoryScreen = ({navigation}: Props) => {
   const [history, setHistory] = React.useState<ServiceHistoryInterface[]>([]);
   const ref = React.useRef<FlatList | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useScrollToTop(ref);
 
@@ -57,6 +60,7 @@ const HistoryScreen = ({navigation}: Props) => {
   );
 
   const getHistory = async () => {
+    setIsLoading(true);
     try {
       const userID = await AsyncStorageUtil.getUserId();
       const response = await axiosClient.get(
@@ -76,42 +80,52 @@ const HistoryScreen = ({navigation}: Props) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      <SafeAreaView style={globalStyles.AndroidSafeArea}>
-        <KeyboardAvoidingView
-          behavior={"padding"}
-          style={{flex: 1}}
-          keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}>
-          <CustomAppbar
-            navigation={navigation}
-            title="Service History"
-            showBorderBottom={false}
-            hideBackButton={true}
-          />
-          {/* <ServiceSearch /> */}
-          <FlatList
-            ref={ref}
-            data={history}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[styles.container]}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => (
-              <HistoryListTile
-                history={item}
-                onClick={() => {
-                  // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
-                  //   category: item,
-                  // });
-                }}
-              />
-            )}
-          />
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+      {isLoading ? (
+        <FullPageLoader message="FETCHING HISTORY" />
+      ) : (
+        <SafeAreaView style={globalStyles.AndroidSafeArea}>
+          <KeyboardAvoidingView
+            behavior={"padding"}
+            style={{flex: 1}}
+            keyboardVerticalOffset={Platform.OS == "android" ? -300 : -50}>
+            <CustomAppbar
+              navigation={navigation}
+              title="Service History"
+              showBorderBottom={false}
+              hideBackButton={true}
+            />
+            {/* <ServiceSearch /> */}
+            {history.length === 0 && !isLoading ? (
+              <EmptyState message={"You have no Service History"} />
+            ) : null}
+
+            <FlatList
+              ref={ref}
+              data={history}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={[styles.container]}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item}) => (
+                <HistoryListTile
+                  history={item}
+                  onClick={() => {
+                    // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
+                    //   category: item,
+                    // });
+                  }}
+                />
+              )}
+            />
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      )}
     </>
   );
 };

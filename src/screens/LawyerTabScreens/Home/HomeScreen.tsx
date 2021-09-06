@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
+  Button,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
@@ -24,6 +25,7 @@ import styles from "./homeStyles";
 import {CategoryDb} from "database/CategoryDb";
 import {LawyerModel} from "models/Interfaces";
 import {useScrollToTop} from "@react-navigation/native";
+import {CardColors} from "./CardColors";
 
 //--> REDUX
 import {useAppSelector, useAppDispatch} from "redux/hooks";
@@ -43,6 +45,8 @@ import {ServiceHistoryInterface} from "screens/TabScreens/History/HistoryScreen"
 import {showError} from "../Home/Sections/BottomSheet/BottomSheetUtils/FormHelpers";
 import {EmptyState} from "../Global/EmptyState";
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import {OfflineModal} from "components/OfflineManager";
+import {useIsConnected} from "react-native-offline";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN_LAWYER>;
 
@@ -56,7 +60,10 @@ const HomeScreen = ({navigation}: Props) => {
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
   const userData = useAppSelector((state) => state?.users?.user); //--> state from redux store
-  const {user_, metaData} = userData;
+  // const {user_, metaData} = userData;
+  const isConnected = useIsConnected();
+  const user_ = userData?.user_;
+  const metaData = userData?.metaData;
 
   const dispatch = useAppDispatch();
   const ref = React.useRef<ScrollView | null>(null);
@@ -219,6 +226,7 @@ const HomeScreen = ({navigation}: Props) => {
                 Here are your available services
               </Text>
             </View>
+
             <Avatar
               titleStyle={{
                 fontFamily: "Roboto-Medium",
@@ -257,6 +265,7 @@ const HomeScreen = ({navigation}: Props) => {
           </View>
 
           {/* <ServiceSearch /> */}
+          {isConnected && <OfflineModal isConnected={isConnected} />}
 
           <View style={{flex: 1}}>
             <View style={styles.titleWithViewMore}>
@@ -373,9 +382,10 @@ const HomeScreen = ({navigation}: Props) => {
                     data={category}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item}) => (
+                    renderItem={({item, index}) => (
                       <CategoryCard
                         category={item}
+                        colors={CardColors[index]}
                         onClick={
                           () => {}
                           // navigation.navigate(ROUTES.CAT_SERVICE_SCREEN_LAWYER, {

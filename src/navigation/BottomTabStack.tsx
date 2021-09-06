@@ -83,12 +83,6 @@ export default function HomeBottomTabStack() {
       tabBarOptions={{
         style: {
           backgroundColor: COLORS.light.primary,
-          shadowOffset: {
-            width: 0,
-            height: -5,
-          },
-          shadowColor: COLORS.light.textinputborder,
-          shadowOpacity: 0.2,
           paddingTop: wp(7),
         },
         activeTintColor: COLORS.light.white,

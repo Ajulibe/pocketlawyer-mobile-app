@@ -43,7 +43,7 @@ type Props = StackScreenProps<
 const UpdateImage = ({navigation}: Props) => {
   const [image, setImage] = useState<string>("");
   const [disabled, setDisabled] = useState(true);
-  const imageChanged = React.useRef<any>(false);
+  const imageChanged = React.useRef<boolean>(false);
   const [loadingState, loadingDispatch] = React.useReducer(
     loadingReducer,
     loadingInitialState,
@@ -92,8 +92,6 @@ const UpdateImage = ({navigation}: Props) => {
       setActiveProfile(false);
     }
   }, []);
-
-  console.log(imageChanged.current);
 
   const uploadFile = async (field: string) => {
     const payload: DocUploadInterface = {
