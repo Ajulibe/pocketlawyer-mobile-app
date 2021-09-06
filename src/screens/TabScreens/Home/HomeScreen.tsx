@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   FlatList,
   LogBox,
+  StatusBar,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
@@ -41,6 +42,7 @@ import {
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import {OfflineModal} from "components/OfflineManager";
 import {useIsConnected} from "react-native-offline";
+import {CardColors} from "screens/LawyerTabScreens/Home/CardColors";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
@@ -83,8 +85,10 @@ const HomeScreen = ({navigation}: Props) => {
 
   //-->Get User's Categories
   React.useEffect(() => {
-    getTimePeriod();
-    getCategories();
+    if (isConnected) {
+      getTimePeriod();
+      getCategories();
+    }
     // getUserDetails();
   }, []);
 
@@ -112,7 +116,7 @@ const HomeScreen = ({navigation}: Props) => {
   };
 
   const getCategories = async () => {
-    setIsCategoryLoading(true);
+    // setIsCategoryLoading(true);
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
@@ -175,6 +179,7 @@ const HomeScreen = ({navigation}: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="rgba(0,0,0,0.5)" />
         <View style={[styles.container, {flexGrow: 1, paddingHorizontal: 0}]}>
           <View style={[styles.header, {paddingHorizontal: wp(20)}]}>
             <View style={styles.headerTitleWrapper}>
@@ -193,8 +198,8 @@ const HomeScreen = ({navigation}: Props) => {
             </View>
             <Avatar
               titleStyle={{
-                fontFamily: "Roboto-Medium",
-                fontSize: wp(14),
+                fontFamily: "Roboto-Bold",
+                fontSize: wp(12),
                 color: COLORS.light.white,
               }}
               containerStyle={styles.user}
@@ -219,7 +224,7 @@ const HomeScreen = ({navigation}: Props) => {
           </View>
 
           {/* <ServiceSearch /> */}
-          {isConnected && <OfflineModal isConnected={isConnected} />}
+          {!isConnected && <OfflineModal isConnected={isConnected} />}
 
           <ScrollView
             style={{flex: 1}}
@@ -257,10 +262,11 @@ const HomeScreen = ({navigation}: Props) => {
                   data={category == null ? CategoryDb?.categories : category}
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => (
+                  renderItem={({item, index}) => (
                     <CategoryCard
                       key={item}
                       category={item}
+                      colors={CardColors[index]}
                       onClick={() =>
                         navigation.navigate(ROUTES.CAT_SERVICE_SCREEN, {
                           category: item,

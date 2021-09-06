@@ -33,7 +33,8 @@ type Props = StackScreenProps<AccountStackParamList, ROUTES.ACCOUNT_SCREEN>;
 const AccountScreen = ({navigation}: Props) => {
   //--> state from redux store
   const userData = useAppSelector((state) => state?.users?.user);
-  const {user_, metaData} = userData;
+  const user_ = userData?.user_;
+  const metaData = userData?.metaData;
   const [profileImage, setProfileImage] = useState("abc.jpg");
 
   // console.log(userData);

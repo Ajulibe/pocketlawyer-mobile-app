@@ -14,6 +14,7 @@ import {
   FlatList,
   RefreshControl,
   Button,
+  StatusBar,
 } from "react-native";
 import AsyncStorageUtil from "utils/AsyncStorageUtil";
 import axiosClient from "utils/axiosClient";
@@ -68,6 +69,7 @@ const HomeScreen = ({navigation}: Props) => {
   const dispatch = useAppDispatch();
   const ref = React.useRef<ScrollView | null>(null);
   const [history, setHistory] = React.useState<ServiceHistoryInterface[]>([]);
+  const isMounted = React.useRef(false);
 
   useScrollToTop(ref);
 
@@ -99,9 +101,11 @@ const HomeScreen = ({navigation}: Props) => {
   //-->Get User's Categories whenever screen is focused
   useFocusEffect(
     React.useCallback(() => {
-      getTimePeriod();
-      getCategories();
-      getHistory();
+      if (isConnected) {
+        getTimePeriod();
+        getCategories();
+        getHistory();
+      }
     }, []),
   );
 
@@ -128,7 +132,9 @@ const HomeScreen = ({navigation}: Props) => {
   };
 
   const getCategories = async () => {
-    setIsCategoryLoading(true);
+    if (!isMounted.current) {
+      setIsCategoryLoading(true);
+    }
 
     try {
       const userID = await AsyncStorageUtil.getUserId();
@@ -148,6 +154,7 @@ const HomeScreen = ({navigation}: Props) => {
         setCategory(cats);
         getLawyers();
         setIsCategoryLoading(false);
+        isMounted.current = true;
       } else {
         setCategory(CategoryDb.categories.slice(0, 4));
         setIsCategoryLoading(false);
@@ -205,6 +212,7 @@ const HomeScreen = ({navigation}: Props) => {
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="rgba(0,0,0,0.5)" />
         <View style={[styles.container, {flexGrow: 1, paddingHorizontal: 0}]}>
           <View style={[styles.header, {paddingHorizontal: wp(20)}]}>
             <View style={styles.headerTitleWrapper}>
@@ -229,8 +237,8 @@ const HomeScreen = ({navigation}: Props) => {
 
             <Avatar
               titleStyle={{
-                fontFamily: "Roboto-Medium",
-                fontSize: wp(14),
+                fontFamily: "Roboto-Bold",
+                fontSize: wp(12),
                 color: COLORS.light.white,
               }}
               containerStyle={styles.user}
@@ -265,7 +273,7 @@ const HomeScreen = ({navigation}: Props) => {
           </View>
 
           {/* <ServiceSearch /> */}
-          {isConnected && <OfflineModal isConnected={isConnected} />}
+          {!isConnected && <OfflineModal isConnected={isConnected} />}
 
           <View style={{flex: 1}}>
             <View style={styles.titleWithViewMore}>

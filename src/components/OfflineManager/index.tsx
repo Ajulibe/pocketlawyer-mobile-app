@@ -83,8 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "center",
     marginTop: 10,
-    borderColor: "#FBF2FD",
-    borderWidth: 2,
+    borderColor: "#ef5da8",
     width: widthPercentageToDP("90%"),
   },
   buttonText: {
