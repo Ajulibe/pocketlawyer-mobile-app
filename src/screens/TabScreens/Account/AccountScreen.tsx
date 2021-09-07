@@ -37,8 +37,6 @@ const AccountScreen = ({navigation}: Props) => {
   const metaData = userData?.metaData;
   const [profileImage, setProfileImage] = useState("abc.jpg");
 
-  // console.log(userData);
-
   React.useEffect(() => {
     if (typeof metaData === "undefined") {
       return;
@@ -89,6 +87,7 @@ const AccountScreen = ({navigation}: Props) => {
             )}`}
             source={{
               uri: `https://${profileImage}`,
+              cache: "force-cache",
             }}
             onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE)}
             containerStyle={styles.userPhoto}>
@@ -178,7 +177,11 @@ const AccountScreen = ({navigation}: Props) => {
             <Text
               style={[
                 styles.passBtnText,
-                {color: "black", fontFamily: "Roboto-Bold"},
+                {
+                  color: "black",
+                  fontFamily: "Roboto-Bold",
+                  marginBottom: hp(20),
+                },
               ]}>
               Logout
             </Text>

@@ -30,7 +30,6 @@ export const confirmUpload = async (
   if (response == null) {
     return null;
   }
-  console.log(response?.data?.data);
 
   return response?.data?.data ?? null;
 };
@@ -71,7 +70,7 @@ export const addMetadata = async (payload: any) => {
       "Service/AddMetadataHistory",
       payload,
     );
-    console.log(data, "metadata call response");
+
     return data.status;
   } catch (error) {
     return error;

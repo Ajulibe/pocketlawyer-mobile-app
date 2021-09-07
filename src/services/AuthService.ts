@@ -12,7 +12,7 @@ import {PLToast} from "components/PLToast/index.component";
 //     try {
 //       const { data } = await axiosClient.post("User/Login", payload);
 //       // navigation.navigate(ROUTES.AUTH_LOGIN_CATEGORY_SELECTOR)
-//       console.log(data);
+
 //       setIsLoading(false);
 //     } catch (error) {
 //       setIsLoading(false);

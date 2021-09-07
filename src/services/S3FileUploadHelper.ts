@@ -93,8 +93,6 @@ export const uploadFileToS3 = async (
           headers: {"Content-Type": fileType ?? "image/jpeg"},
         });
         if (uploadFile.status === 200) {
-          // console.log(uploadFile);
-
           //--> Uploaded file details
           const response: DocUploadResponse = {
             fileName: fileName,

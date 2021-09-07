@@ -197,6 +197,7 @@ export default function LawyerDetail({navigation, route}: Props) {
               title={`${getFirstLetterFromName(lawyer?.name ?? "")}`}
               source={{
                 uri: `https://${lawyer?.avatar}`,
+                cache: "force-cache",
               }}
               activeOpacity={0}
             />

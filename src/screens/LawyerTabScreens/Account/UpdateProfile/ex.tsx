@@ -120,21 +120,21 @@ export const useUploadToS3 = () => {
 };
 
 //--> This can be used in your component like a hook
-import React from "react";
-import {useUploadToS3} from "./yourHooksFolder";
+// import React from "react";
+// import {useUploadToS3} from "./yourHooksFolder";
 
-const MazisFuncCmp: React.FC = () => {
-  const {res, pickFile} = useUploadHookToS3();
+// const MazisFuncCmp: React.FC = () => {
+//   const {res, pickFile} = useUploadHookToS3();
 
-  return (
-    <div>
-      <h1>Hi There...</h1>
-      <p>{res}</p>
-      <button type="button" onClick={pickFile}>
-        Click me to test 👨🏽‍🏫
-      </button>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <h1>Hi There...</h1>
+//       <p>{res}</p>
+//       <button type="button" onClick={pickFile}>
+//         Click me to test 👨🏽‍🏫
+//       </button>
+//     </div>
+//   );
+// };
 
-export default MazisFuncCmp;
+// export default MazisFuncCmp;

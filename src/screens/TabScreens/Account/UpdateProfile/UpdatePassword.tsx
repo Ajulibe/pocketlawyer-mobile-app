@@ -93,7 +93,6 @@ const UpdateProfile = ({navigation}: Props) => {
         navigation.goBack();
       }, 300);
     } catch (error: any) {
-      console.log(error);
       const {message} = error?.response.data;
       setIsDisabled(true);
       PLToast({message: message, type: "error"});

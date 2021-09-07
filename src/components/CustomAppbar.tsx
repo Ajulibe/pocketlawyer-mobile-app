@@ -67,6 +67,7 @@ const CustomAppbar = (props: Props) => {
           title="Name"
           source={{
             uri: `https://${props.profileImage}`,
+            cache: "force-cache",
           }}
           onPress={() => {
             return true;

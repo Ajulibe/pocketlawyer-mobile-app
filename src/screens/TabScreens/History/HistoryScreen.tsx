@@ -79,7 +79,6 @@ const HistoryScreen = ({navigation}: Props) => {
         showError("Error encountered while loading service history");
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +99,6 @@ const HistoryScreen = ({navigation}: Props) => {
     </>
   );
 
-  console.log(history, "history");
   return (
     <>
       {isLoading ? (

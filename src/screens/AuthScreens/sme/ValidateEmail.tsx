@@ -30,7 +30,6 @@ const ValidateEmail = ({navigation}: Props) => {
 
   //--> validate OTP
   const validateOTP = React.useCallback(() => {
-    // console.log(OTP);
     navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
   }, []);
 

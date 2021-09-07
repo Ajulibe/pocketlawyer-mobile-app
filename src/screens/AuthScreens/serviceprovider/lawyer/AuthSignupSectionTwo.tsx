@@ -214,11 +214,9 @@ const AuthGetStarted = ({navigation, route}: Props) => {
 
   const register = async (Payload: RegisterInterface) => {
     setIsLoading(true);
-    // console.log(Payload, "calling");
 
     try {
       const {data} = await axiosClient.post("User", Payload);
-      console.log(data);
 
       setIsLoading(false);
       PLToast({message: "Successfully Registered", type: "success"});
@@ -244,7 +242,6 @@ const AuthGetStarted = ({navigation, route}: Props) => {
 
       //--> setting lawyer as the prvios path
       // await AsyncStorage.setItem("previousPath", "barrister");
-      // console.log("called");
     } catch (error: any) {
       const {message} = error?.response.data;
       PLToast({message: message, type: "error"});

@@ -83,8 +83,6 @@ const AuthGetStarted: React.FC<Props> = ({navigation}) => {
       const userType = await AsyncStorage.getItem("userType");
       const userID = await AsyncStorage.getItem("userID");
 
-      console.log(userType);
-
       const Payload: submitCategories = {
         UserId: userID === null ? "" : JSON.parse(userID),
         UserType: userType === null ? "" : JSON.parse(userType),

@@ -74,12 +74,10 @@ const HistoryScreen = ({navigation}: Props) => {
           (h: any) => h?.serviceHistory,
         );
         setHistory(history);
-        console.log(history, "lawyer history");
       } else {
         showError("Error encountered while loading service history");
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }

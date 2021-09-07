@@ -60,7 +60,6 @@ const Checkout = ({navigation, route}: Props) => {
 
   //--> lawyer details
   const {name, address} = lawyer;
-  // console.log(lawyer);
 
   React.useEffect(() => {
     getUser();
@@ -80,8 +79,6 @@ const Checkout = ({navigation, route}: Props) => {
   };
 
   // navigation.goBack();
-
-  // console.log(amount, userEmail, showModal);
 
   const showPaymentModal = () => {
     setshowModal(true);

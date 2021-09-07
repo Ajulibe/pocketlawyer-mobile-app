@@ -1,19 +1,19 @@
 import React from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "navigation/MainNavigator";
-import { ROUTES } from "navigation/Routes";
+import {View, StyleSheet, StatusBar} from "react-native";
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "navigation/MainNavigator";
+import {ROUTES} from "navigation/Routes";
 import COLORS from "utils/Colors";
 import IMAGES from "utils/Images";
-import { wp, hp } from "utils/Dimensions";
+import {wp, hp} from "utils/Dimensions";
 import * as Animatable from "react-native-animatable";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setResetUser } from "redux/actions";
-import { useAppSelector, useAppDispatch } from "redux/hooks";
+import {setResetUser} from "redux/actions";
+import {useAppSelector, useAppDispatch} from "redux/hooks";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SPLASH_SCREEN>;
 
-const AuthSplashScreen = ({ navigation }: Props) => {
+const AuthSplashScreen = ({navigation}: Props) => {
   React.useEffect(() => {
     removeValue();
   }, []);
@@ -21,7 +21,8 @@ const AuthSplashScreen = ({ navigation }: Props) => {
   const userData = useAppSelector((state) => state.users.user);
 
   const removeValue = async () => {
-    dispatch(setResetUser());
+    dispatch(setResetUser()); //remoev this if app is meant to be configured for offline mode
+    //it contains all user data fetched from the api as at the time of running.
     try {
       await AsyncStorage.removeItem("@MyApp_key");
       // await AsyncStorage.removeItem("token");// --> This is meant to persist

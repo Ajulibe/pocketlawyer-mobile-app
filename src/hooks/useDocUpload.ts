@@ -81,10 +81,6 @@ export const useDocUpload = (documentUse: string, section: string) => {
         // const uploadUri =
         //   Platform.OS === "ios" ? uri.replace("file://", "") : uri;
 
-        // console.log(uploadUri);
-
-        // console.log(JSON.stringify(imageBody));
-
         //-->converting the file uri to blob
         const bzse64 = await FileSystem.readAsStringAsync(uri, {
           encoding: "base64",
@@ -98,13 +94,8 @@ export const useDocUpload = (documentUse: string, section: string) => {
         // const imageBody = await resp.blob();
 
         let blob = new Blob([uri]);
-        console.log(blob);
-
-        // console.log(JSON.stringify(imageBody));
 
         const blobURL = URL.createObjectURL(blob);
-
-        console.log(blobURL);
 
         var fileToUpload = [
           {
@@ -132,8 +123,6 @@ export const useDocUpload = (documentUse: string, section: string) => {
         setDocName(name);
         setResume(fileToUpload);
         // }
-
-        // console.log(fileToUpload, "...............file");
       }
     } catch (error) {}
   };
@@ -187,7 +176,7 @@ export const useDocUpload = (documentUse: string, section: string) => {
 
         // const formData = new FormData();
         // formData.append("myData", fileToUpload as any);
-        // console.log(formData);
+
         // formData.append("fileName", fileName);
 
         //--> post document to the received s3 url
@@ -203,7 +192,6 @@ export const useDocUpload = (documentUse: string, section: string) => {
             },
           })
           .then((res) => {
-            // console.log(res, "putting to s3");
             //--> confirm upload
             const confirmPayload = {
               fileName: fileName,
@@ -232,10 +220,9 @@ export const useDocUpload = (documentUse: string, section: string) => {
       );
 
       PLToast({message: data.message, type: "success"});
-      console.log(data, "resposne");
 
       setIsUploaded("success");
-    } catch (error) {
+    } catch (error: any) {
       const {message} = error?.response.data;
       PLToast({message: message, type: "success"});
       setIsUploaded("intial");

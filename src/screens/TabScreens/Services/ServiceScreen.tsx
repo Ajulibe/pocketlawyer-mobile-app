@@ -34,8 +34,6 @@ const ServiceScreen = ({navigation}: Props) => {
 
   useScrollToTop(ref);
 
-  // console.log(ServiceDb.services);
-
   const filterCategories = (search: string): filtered[] => {
     const result = ServiceDb.services.filter((item) => {
       return item.serviceName!.startsWith(search);

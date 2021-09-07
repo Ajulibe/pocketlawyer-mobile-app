@@ -142,7 +142,6 @@ const CatServiceScreen = ({navigation, route}: Props) => {
       setAccepted("true");
     }
   };
-  console.log(documents, "documents");
 
   return (
     <>

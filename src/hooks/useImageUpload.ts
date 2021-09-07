@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Alert, Platform } from "react-native";
+import React, {useState} from "react";
+import {Alert, Platform} from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
 
 import axiosClient from "utils/axiosClient";
-import { DocUploadUserInfo } from "navigation/interfaces";
+import {DocUploadUserInfo} from "navigation/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ export const useImageUpload = (documentUse: string, section: string) => {
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
-        const { status } =
+        const {status} =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== "granted") {
           alert("Sorry, we need camera roll permissions to make this work!");
@@ -38,7 +38,7 @@ export const useImageUpload = (documentUse: string, section: string) => {
 
       if (!result.cancelled) {
         setImage(result.uri);
-        let { type, uri } = result;
+        let {type, uri} = result;
         let nameParts = uri.split(".");
         let fileType = nameParts[nameParts.length - 1];
         const contentType = `${type}/${fileType}`;
@@ -80,9 +80,9 @@ export const useImageUpload = (documentUse: string, section: string) => {
     //-> generate a signed URL
     try {
       axiosClient.post("Upload/Generates3URL", payload).then((res) => {
-        const { url, uploadID, fileName } = res.data.data;
+        const {url, uploadID, fileName} = res.data.data;
 
-        const { uri } = imageSelected.current;
+        const {uri} = imageSelected.current;
 
         var fileToUpload = [
           {
@@ -103,7 +103,6 @@ export const useImageUpload = (documentUse: string, section: string) => {
             },
           })
           .then((res) => {
-            console.log(res.data);
             //--> confirm upload
             // const confirmPayload = {
             //   fileName: fileName,
@@ -111,7 +110,6 @@ export const useImageUpload = (documentUse: string, section: string) => {
             //   userID: payload.userID,
             //   uploadID: uploadID,
             // };
-
             // confirmUpload<confirmLawyerResume>(confirmPayload);
           })
 

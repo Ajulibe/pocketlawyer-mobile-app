@@ -144,7 +144,6 @@ const AuthGetStarted = ({navigation}: Props) => {
 
   const register = async (individualPayload: RegisterInterface) => {
     setIsLoading(true);
-    console.log(individualPayload);
 
     try {
       const {data} = await axiosClient.post("User", individualPayload);

@@ -104,6 +104,7 @@ const HomeScreen = ({navigation}: Props) => {
       if (isConnected) {
         getTimePeriod();
         getCategories();
+
         getHistory();
       }
     }, []),
@@ -132,10 +133,6 @@ const HomeScreen = ({navigation}: Props) => {
   };
 
   const getCategories = async () => {
-    if (!isMounted.current) {
-      setIsCategoryLoading(true);
-    }
-
     try {
       const userID = await AsyncStorageUtil.getUserId();
       dispatch(getUser({userID: Number(userID)}));
@@ -154,7 +151,6 @@ const HomeScreen = ({navigation}: Props) => {
         setCategory(cats);
         getLawyers();
         setIsCategoryLoading(false);
-        isMounted.current = true;
       } else {
         setCategory(CategoryDb.categories.slice(0, 4));
         setIsCategoryLoading(false);
@@ -266,6 +262,7 @@ const HomeScreen = ({navigation}: Props) => {
               )}`}
               source={{
                 uri: `https://${profileImage}`,
+                cache: "force-cache",
               }}
               activeOpacity={0}
               onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE_LAWYER)}

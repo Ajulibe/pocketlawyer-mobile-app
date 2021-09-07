@@ -91,6 +91,7 @@ const AccountScreen = ({navigation}: Props) => {
             )}`}
             source={{
               uri: `https://${profileImage}`,
+              cache: "force-cache",
             }}
             onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE_LAWYER)}
             containerStyle={styles.userPhoto}>
@@ -185,7 +186,11 @@ const AccountScreen = ({navigation}: Props) => {
             <Text
               style={[
                 styles.passBtnText,
-                {color: "black", fontFamily: "Roboto-Regular"},
+                {
+                  color: "black",
+                  fontFamily: "Roboto-Regular",
+                  marginBottom: hp(20),
+                },
               ]}>
               Logout
             </Text>

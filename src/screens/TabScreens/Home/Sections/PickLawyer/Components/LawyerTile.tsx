@@ -49,6 +49,7 @@ export default function LawyerTile({data, onClick}: Props) {
           title={`${getFirstLetterFromName(data?.name ?? "")}`}
           source={{
             uri: `https://${data?.avatar}`,
+            cache: "force-cache",
           }}
           activeOpacity={0}
         />

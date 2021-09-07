@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import {
   persistStore,
@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import persistedRootReducer from "./reducers";
 import rootSaga from "./rootSaga";
+import Reactotron from "config/ReactotronConfig";
 
 // Setup Middlewares
 const sagaMiddleware = createSagaMiddleware();
@@ -26,9 +27,16 @@ const middleware = [
   sagaMiddleware,
 ];
 
+// let createStoreFunction;
+
+// if (__DEV__) {
+//   createStoreFunction = Reactotron.createEnhancer;
+// }
 // Create Store
 const store = configureStore({
   reducer: persistedRootReducer,
+  //@ts-ignore
+  enhancers: [__DEV__ && Reactotron.createEnhancer()],
   middleware,
   devTools: process.env.NODE_ENV !== "production",
 });
@@ -42,4 +50,4 @@ const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export { store, persistor };
+export {store, persistor};

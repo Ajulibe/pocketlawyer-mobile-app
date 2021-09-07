@@ -89,6 +89,7 @@ export default function HistoryListTile({history, onClick}: Props) {
         title={`${getFirstLetterFromName(history?.serviceProvider ?? "")}`}
         source={{
           uri: `https://${history?.serviceProviderImage}`,
+          cache: "force-cache",
         }}
         activeOpacity={0}
       />

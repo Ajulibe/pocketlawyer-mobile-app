@@ -16,7 +16,6 @@ test("button has correct intial color", () => {
 
   //--> you can test using thr JSON print of the component
   // const element = render(<Button />).toJSON();
-  // console.log(render(<Button />).toJSON());
 
   //--> expect the background color to be red
   expect(element).toHaveStyle({

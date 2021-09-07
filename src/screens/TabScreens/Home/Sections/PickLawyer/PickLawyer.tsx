@@ -61,8 +61,6 @@ export default function PickLawyer({navigation, route}: Props) {
     setIsLoading(false);
   };
 
-  console.log(service);
-
   return (
     <>
       {isLoading ? (

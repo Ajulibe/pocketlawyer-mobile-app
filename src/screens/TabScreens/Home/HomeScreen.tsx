@@ -43,6 +43,7 @@ import {widthPercentageToDP} from "react-native-responsive-screen";
 import {OfflineModal} from "components/OfflineManager";
 import {useIsConnected} from "react-native-offline";
 import {CardColors} from "screens/LawyerTabScreens/Home/CardColors";
+import CachedAvatarImage from "components/PLCacheImage";
 
 type Props = StackScreenProps<HomeStackParamList, ROUTES.HOME_SCREEN>;
 
@@ -51,7 +52,7 @@ const HomeScreen = ({navigation}: Props) => {
   const [lawyers, setLawyers] = React.useState<LawyerModel[]>([]);
   const time = React.useRef("");
   const [profileImage, setProfileImage] = useState("abc.jpg");
-
+  const isMounted = React.useRef(false);
   const [isCategoryLoading, setIsCategoryLoading] = React.useState(true);
   const [isTopFindingsLoading, setIsTopFindingsLoading] = React.useState(true);
 
@@ -60,8 +61,6 @@ const HomeScreen = ({navigation}: Props) => {
   const isConnected = useIsConnected();
   const user_ = userData?.user_;
   const metaData = userData?.metaData;
-
-  console.log(metaData, "data.otherData?.history");
 
   const dispatch = useAppDispatch();
 
@@ -116,8 +115,6 @@ const HomeScreen = ({navigation}: Props) => {
   };
 
   const getCategories = async () => {
-    // setIsCategoryLoading(true);
-
     try {
       const userID = await AsyncStorageUtil.getUserId();
       dispatch(getUser({userID: Number(userID)}));
@@ -127,10 +124,9 @@ const HomeScreen = ({navigation}: Props) => {
       if (getCats != null && getCats?.data?.data?.length != 0) {
         const cats: Category[] = getCats?.data?.data;
         setCategory(cats);
-        setIsCategoryLoading(false);
       } else {
         setCategory(CategoryDb.categories.slice(0, 4));
-        // setIsCategoryLoading(false);
+        /// setIsCategoryLoading(false);
       }
     } catch (error) {
       return error;
@@ -142,11 +138,15 @@ const HomeScreen = ({navigation}: Props) => {
   }, [category]);
 
   React.useEffect(() => {
-    getLawyersFn();
+    if (!isMounted.current) {
+      if (isConnected) {
+        getLawyersFn();
+      }
+    }
   }, [getLawyersFn]);
 
   const getLawyers = async () => {
-    if (category !== null) {
+    if (category.length > 0) {
       const catCodes = category.map((item: any) => {
         return {CategoryCode: item.categoryCode};
       });
@@ -160,8 +160,11 @@ const HomeScreen = ({navigation}: Props) => {
         if (data != null) {
           const lawyers: LawyerModel[] = data?.data;
           setLawyers(lawyers.slice(0, 6));
+          setIsCategoryLoading(false); //just for UX purposes. should be in getCategories
           setIsTopFindingsLoading(false);
         }
+
+        isMounted.current = true;
       } catch (error) {}
     }
   };
@@ -210,6 +213,7 @@ const HomeScreen = ({navigation}: Props) => {
               )}`}
               source={{
                 uri: `https://${profileImage}`,
+                cache: "force-cache",
               }}
               activeOpacity={0}
               onPress={() => navigation.navigate(ROUTES.UPDATE_IMAGE)}
@@ -296,7 +300,7 @@ const HomeScreen = ({navigation}: Props) => {
                 })}
               </View>
 
-              {!isTopFindingsLoading && lawyers.length === 0 ? (
+              {!isTopFindingsLoading && lawyers.length === 0 && (
                 <Text
                   style={[
                     styles.topFindingswrapper,
@@ -307,7 +311,10 @@ const HomeScreen = ({navigation}: Props) => {
                   ]}>
                   You Have no Top Finding
                 </Text>
-              ) : (
+              )}
+
+              {!isTopFindingsLoading &&
+                lawyers.length > 0 &&
                 lawyers.map((item, i) => {
                   return (
                     <TopFindingsCard
@@ -322,8 +329,7 @@ const HomeScreen = ({navigation}: Props) => {
                       }
                     />
                   );
-                })
-              )}
+                })}
             </View>
           </ScrollView>
         </View>

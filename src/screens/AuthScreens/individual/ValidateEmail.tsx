@@ -28,7 +28,7 @@ const ValidateEmail = ({navigation, route}: Props) => {
 
     const path = await AsyncStorage.getItem("previousPath");
     //--> check the previous Path
-    console.log(path);
+
     if (path === "lawyer" || path === "solicitor") {
       navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
     } else if (path === "lawfirm") {
