@@ -29,22 +29,24 @@ const middleware = [
 
 let store;
 
+const composables = {
+  reducer: persistedRootReducer,
+  middleware,
+  devTools: process.env.NODE_ENV !== "production",
+};
+
 if (__DEV__) {
   //create store in dev with Redux saga state tree observer enhancer
   store = configureStore({
-    reducer: persistedRootReducer,
     //@ts-ignore
     enhancers: [__DEV__ && Reactotron.createEnhancer()],
-    middleware,
-    devTools: process.env.NODE_ENV !== "production",
+    ...composables,
   });
 } else {
   //Create Store in production without the Redux saga state tree observer enhancer
   //do not add enhancer in production as it is currently buggy with typescript
   store = configureStore({
-    reducer: persistedRootReducer,
-    middleware,
-    devTools: process.env.NODE_ENV !== "production",
+    ...composables,
   });
 }
 
