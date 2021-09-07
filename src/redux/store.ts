@@ -27,19 +27,26 @@ const middleware = [
   sagaMiddleware,
 ];
 
-// let createStoreFunction;
+let store;
 
-// if (__DEV__) {
-//   createStoreFunction = Reactotron.createEnhancer;
-// }
-// Create Store
-const store = configureStore({
-  reducer: persistedRootReducer,
-  //@ts-ignore
-  enhancers: [__DEV__ && Reactotron.createEnhancer()],
-  middleware,
-  devTools: process.env.NODE_ENV !== "production",
-});
+if (__DEV__) {
+  //create store in dev with Redux saga state tree observer enhancer
+  store = configureStore({
+    reducer: persistedRootReducer,
+    //@ts-ignore
+    enhancers: [__DEV__ && Reactotron.createEnhancer()],
+    middleware,
+    devTools: process.env.NODE_ENV !== "production",
+  });
+} else {
+  //Create Store in production without the Redux saga state tree observer enhancer
+  //do not add enhancer in production as it is currently buggy with typescript
+  store = configureStore({
+    reducer: persistedRootReducer,
+    middleware,
+    devTools: process.env.NODE_ENV !== "production",
+  });
+}
 
 // Start rootSaga
 sagaMiddleware.run(rootSaga);

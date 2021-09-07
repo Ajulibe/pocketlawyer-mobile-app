@@ -18,7 +18,7 @@ let ReactotronInstance = Reactotron.configure({
   .use(asyncStorage({}))
   .use(networking())
   //@ts-ignore
-  .useReactNative() // add all built-in react native plugins
+  .useReactNative({asyncStorage: true}) // add all built-in react native plugins
   .use(reactotronRedux.reactotronRedux()).setAsyncStorageHandler!(
   //  <- here i am!
   AsyncStorage,
