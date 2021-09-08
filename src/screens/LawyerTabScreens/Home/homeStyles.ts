@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   requestWrapper: {
     paddingTop: hp(7),
     paddingHorizontal: wp(15),
-    maxHeight: hp(290),
+    // maxHeight: hp(330),
     overflow: "hidden",
     paddingBottom: hp(7),
   },

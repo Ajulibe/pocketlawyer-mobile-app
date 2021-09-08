@@ -104,7 +104,6 @@ const HomeScreen = ({navigation}: Props) => {
       if (isConnected) {
         getTimePeriod();
         getCategories();
-
         getHistory();
       }
     }, []),
@@ -150,7 +149,7 @@ const HomeScreen = ({navigation}: Props) => {
 
         setCategory(cats);
         getLawyers();
-        setIsCategoryLoading(false);
+        // setIsCategoryLoading(false);
       } else {
         setCategory(CategoryDb.categories.slice(0, 4));
         setIsCategoryLoading(false);
@@ -159,6 +158,12 @@ const HomeScreen = ({navigation}: Props) => {
       return error;
     }
   };
+
+  React.useEffect(() => {
+    if (isConnected) {
+      getLawyers();
+    }
+  }, [category]);
 
   const getLawyers = async () => {
     if (category == null) return;
@@ -176,6 +181,7 @@ const HomeScreen = ({navigation}: Props) => {
         const lawyers: LawyerModel[] = data?.data;
         setLawyers(lawyers);
         setIsTopFindingsLoading(false);
+        setIsCategoryLoading(false); //added here for UX purposes
       }
     } catch (error) {}
   };
@@ -313,7 +319,7 @@ const HomeScreen = ({navigation}: Props) => {
                       />
                     }
                     scrollEnabled={true}
-                    data={history.length > 2 ? history.slice(0, 3) : history}
+                    data={history.length > 5 ? history.slice(0, 4) : history}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (

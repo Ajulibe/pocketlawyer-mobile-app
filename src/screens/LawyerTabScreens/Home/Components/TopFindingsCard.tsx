@@ -7,6 +7,8 @@ import {hp, wp} from "utils/Dimensions";
 import StarRating from "react-native-star-rating";
 import {ServiceHistoryInterface} from "screens/LawyerTabScreens/History/HistoryScreen";
 import {Badge} from "native-base";
+import {Avatar} from "react-native-elements";
+import {getFirstLetterFromName} from "screens/LawyerTabScreens/Account/UpdateProfile/utilsFn";
 
 interface Props {
   onClick?: () => void;
@@ -63,11 +65,28 @@ export default function TopFindingsCard({onClick, history, status}: Props) {
   return (
     <Pressable onPress={onClick}>
       <View style={styles.wrapper}>
-        <Image
+        {/* <Image
           style={styles.user}
           source={{
             uri: `https://${history?.serviceProviderImage}`,
           }}
+        /> */}
+        <Avatar
+          titleStyle={{
+            fontFamily: "Roboto-Bold",
+            fontSize: wp(12),
+            color: COLORS.light.white,
+          }}
+          containerStyle={styles.user}
+          size="medium"
+          placeholderStyle={{backgroundColor: COLORS.light.primary}}
+          rounded
+          title={`${getFirstLetterFromName(history?.serviceProvider ?? "")}`}
+          source={{
+            uri: `https://${history?.serviceProviderImage}`,
+            cache: "force-cache",
+          }}
+          activeOpacity={0}
         />
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>{history?.serviceProvider}</Text>

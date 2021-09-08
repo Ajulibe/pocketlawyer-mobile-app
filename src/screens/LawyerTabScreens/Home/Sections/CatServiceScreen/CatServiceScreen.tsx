@@ -25,6 +25,7 @@ import axiosClient from "utils/axiosClient";
 import {showError} from "../BottomSheet/BottomSheetUtils/FormHelpers";
 import PLButton from "components/PLButton/PLButton.component";
 import {styles} from "./styles";
+import {Colors} from "react-native/Libraries/NewAppScreen";
 
 type Props = StackScreenProps<
   HomeStackParamList,
@@ -143,6 +144,20 @@ const CatServiceScreen = ({navigation, route}: Props) => {
     }
   };
 
+  //using hashmaps to get the most recent documents submitted to S3.
+  const RecentDocuments = documents.slice().reverse();
+  const result = [];
+  const map = new Map();
+  for (const item of RecentDocuments) {
+    if (!map.has(item.name)) {
+      map.set(item.name, true); // set any value to Map
+      result.push({
+        link: item.link,
+        name: item.name,
+      });
+    }
+  }
+
   return (
     <>
       <SafeAreaView style={globalStyles.AndroidSafeArea}>
@@ -170,7 +185,9 @@ const CatServiceScreen = ({navigation, route}: Props) => {
             onPress={() => {
               setIsOpen(!isOpen);
             }}>
-            <Text style={styles.formWrapper}>Business Registration Form</Text>
+            <Text style={[styles.formWrapper, {fontFamily: "Roboto-Bold"}]}>
+              Business Registration Form
+            </Text>
 
             <MaterialIcons
               name="keyboard-arrow-right"
@@ -188,13 +205,24 @@ const CatServiceScreen = ({navigation, route}: Props) => {
               {history?.map((item: any, i: any) => {
                 return (
                   <View key={i}>
-                    <Text style={styles.subTitle}>
+                    <Text
+                      style={[
+                        styles.subTitle,
+                        {
+                          color: COLORS.light.primary,
+                          fontFamily: "Roboto-Bold",
+                        },
+                      ]}>
                       {_.startCase(item?.name)}
                     </Text>
                     <UserDescListTile
                       leading={item.link}
                       value=""
                       makeBold={false}
+                      leadingStyle={{
+                        color: COLORS.light.primary,
+                        fontFamily: "Roboto-Regular",
+                      }}
                     />
                   </View>
                 );
@@ -207,7 +235,9 @@ const CatServiceScreen = ({navigation, route}: Props) => {
             onPress={() => {
               setAttachmentIsOpen(!isAttachmentOpen);
             }}>
-            <Text style={styles.formWrapper}>Required Documents</Text>
+            <Text style={[styles.formWrapper, {fontFamily: "Roboto-Bold"}]}>
+              Required Documents
+            </Text>
 
             <MaterialIcons
               name="keyboard-arrow-right"
@@ -222,8 +252,8 @@ const CatServiceScreen = ({navigation, route}: Props) => {
               duration={500}
               easing="ease-in"
               style={styles.dataWrapper}>
-              {documents?.length > 0 ? (
-                documents?.map((item: any, i: any) => {
+              {result?.length > 0 ? (
+                result?.map((item: any, i: any) => {
                   return (
                     <TouchableOpacity
                       key={i}

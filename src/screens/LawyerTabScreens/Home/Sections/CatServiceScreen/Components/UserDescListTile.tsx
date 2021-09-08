@@ -1,5 +1,5 @@
 import React from "react";
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, TextStyle} from "react-native";
 import COLORS from "utils/Colors";
 import {hp, wp} from "utils/Dimensions";
 
@@ -7,9 +7,11 @@ interface Props {
   leading: String;
   value: any;
   makeBold?: boolean;
+  trailingStyle?: TextStyle;
+  leadingStyle?: TextStyle;
 }
 export default function UserDescListTile(props: Props) {
-  const {leading, value, makeBold} = props;
+  const {leading, value, makeBold, trailingStyle, leadingStyle} = props;
   return (
     <View style={styles.tileWrapper}>
       <Text
@@ -21,6 +23,7 @@ export default function UserDescListTile(props: Props) {
             fontWeight: makeBold ? "700" : "500",
             fontFamily: makeBold ? "Roboto-Medium" : "Roboto-Regular",
           },
+          leadingStyle,
         ]}>
         {leading}
       </Text>
@@ -33,6 +36,7 @@ export default function UserDescListTile(props: Props) {
             fontWeight: makeBold ? "700" : "500",
             fontFamily: makeBold ? "Roboto-Regular" : "Roboto-Thin",
           },
+          trailingStyle,
         ]}>
         {value}
       </Text>
