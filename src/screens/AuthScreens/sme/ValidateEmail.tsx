@@ -11,13 +11,14 @@ import COLORS from "utils/Colors";
 import {wp, hp} from "utils/Dimensions";
 import NavBar from "components/NavBar";
 import PLButton from "components/PLButton/PLButton.component";
-
+import {PLToast} from "components/PLToast/index.component";
 import {PLTextInput} from "components/PLTextInput/PLTextInput.component";
-
+import axiosClient from "utils/axiosClient";
 import {TouchableOpacity} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import globalStyles from "css/GlobalCss";
 import {useFocusEffect} from "@react-navigation/native";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -27,11 +28,6 @@ const ValidateEmail = ({navigation}: Props) => {
   const [validating, setSetValidating] = useState<boolean>(false);
   const [errors, setErrors] = useState<boolean>(true);
   const [email, setEmail] = useState("");
-
-  //--> validate OTP
-  const validateOTP = React.useCallback(() => {
-    navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
-  }, []);
 
   //--> prevent back button from working
   useFocusEffect(
@@ -47,24 +43,41 @@ const ValidateEmail = ({navigation}: Props) => {
     }, []),
   );
 
+  //--> send OTP
+  const validateOTP = React.useCallback(async () => {
+    //--> disable the text input button when making the api call
+    setSetValidating(true);
+    setErrors(true);
+    try {
+      const userID = await AsyncStorageUtil.getUserId();
+      await axiosClient.post("User/ConfirmOtp", {
+        Isfor: "Registration",
+        user_ID: Number(userID),
+        Token: OTP,
+      });
+
+      //--> enable the text input button after making the api call
+      setErrors(false);
+      PLToast({message: "Successful", type: "success"});
+      setTimeout(() => {
+        navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
+      }, 500);
+    } catch (error: any) {
+      const {message} = error?.response.data;
+      PLToast({message: message, type: "error"});
+    } finally {
+      setSetValidating(false);
+    }
+  }, []);
+
   //-> listen to OTP Change and call validation
   useEffect(() => {
     if (OTP === "" || OTP.length < 6) {
       setErrors(true);
       return;
+    } else {
+      validateOTP();
     }
-    //--> disable the text input button when making the api call
-    setSetValidating(true);
-    setErrors(true);
-
-    //--> simulation for a real API call to remove errors and enable button
-    setTimeout(() => {
-      //--> enable the text input button after making the api call
-      setSetValidating(false);
-      setErrors(false);
-    }, 3000);
-
-    validateOTP();
   }, [OTP, validateOTP]);
 
   useEffect(() => {

@@ -12,6 +12,9 @@ import {TouchableOpacity} from "react-native-gesture-handler";
 import ActivityIndicatorPage from "components/ActivityIndicator/index.component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import globalStyles from "css/GlobalCss";
+import axiosClient from "utils/axiosClient";
+import AsyncStorageUtil from "utils/AsyncStorageUtil";
+import {PLToast} from "components/PLToast/index.component";
 
 type Props = StackScreenProps<RootStackParamList, ROUTES.AUTH_SIGN_UP>;
 
@@ -23,7 +26,7 @@ const ValidateEmail = ({navigation, route}: Props) => {
   const [errors, setErrors] = useState<boolean>(true);
 
   //--> validate OTP
-  const validateOTP = async () => {
+  const redirectAfterValidation = async () => {
     //--> make the OTP api call and in the .then add this navigation
 
     const path = await AsyncStorage.getItem("previousPath");
@@ -43,21 +46,36 @@ const ValidateEmail = ({navigation, route}: Props) => {
     if (OTP === "" || OTP.length < 6) {
       setErrors(true);
       return;
+    } else {
+      const sendOTP = async () => {
+        //--> disable the text input button when making the api call
+        setSetValidating(true);
+        setErrors(true);
+        try {
+          const userID = await AsyncStorageUtil.getUserId();
+          await axiosClient.post("User/ConfirmOtp", {
+            Isfor: "Registration",
+            user_ID: Number(userID),
+            Token: OTP,
+          });
+
+          //--> enable the text input button after making the api call
+          setErrors(false);
+          PLToast({message: "Successful", type: "success"});
+          setTimeout(() => {
+            //--> chcek to see the previous route and redirect
+            redirectAfterValidation();
+          }, 500);
+        } catch (error: any) {
+          const {message} = error?.response.data;
+          PLToast({message: message, type: "error"});
+        } finally {
+          setSetValidating(false);
+        }
+      };
+
+      sendOTP();
     }
-    //--> disable the text input button when making the api call
-    setSetValidating(true);
-    setErrors(true);
-
-    //--> simulation for a real API call to remove errors and enable button
-    setTimeout(() => {
-      //--> enable the text input button after making the api call
-      setSetValidating(false);
-      setErrors(false);
-    }, 3000);
-
-    //--> chcek to see the previous route and redirect
-
-    validateOTP();
   }, [OTP]);
 
   useEffect(() => {
@@ -108,27 +126,6 @@ const ValidateEmail = ({navigation, route}: Props) => {
 
         {validating && <ActivityIndicatorPage />}
 
-        {/* <PLButton
-          isLoading={validating}
-          loadingText="Validating..."
-          disabled={errors}
-          style={styles.plButton}
-          textColor={COLORS.light.white}
-          btnText={"Next"}
-          onClick={async () => {
-            const path = await AsyncStorage.getItem("previousPath");
-            //--> check the previous Path
-            if (
-              path === "barrister" ||
-              path === "solicitor" ||
-              path === "lawfirm"
-            ) {
-              navigation.navigate(ROUTES.AUTH_EDUCATION_LAWYER);
-            } else if (path === null) {
-              navigation.navigate(ROUTES.AUTH_CONGRATS_SME);
-            }
-          }}
-        /> */}
         <View style={styles.loginWrapper}>
           <TouchableOpacity
             onPress={() => {

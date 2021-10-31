@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontSize: wp(14),
-    fontFamily: "HK-Regular",
+    fontFamily: "HK-Medium",
     color: COLORS.light.black,
   },
   error: {
