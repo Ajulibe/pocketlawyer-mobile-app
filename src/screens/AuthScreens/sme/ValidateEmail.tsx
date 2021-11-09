@@ -51,7 +51,7 @@ const ValidateEmail = ({navigation}: Props) => {
     try {
       const userID = await AsyncStorageUtil.getUserId();
       await axiosClient.post("User/ConfirmOtp", {
-        Isfor: "Registration",
+        Isfor: "Email",
         user_ID: Number(userID),
         Token: OTP,
       });
